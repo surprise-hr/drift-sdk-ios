@@ -18,13 +18,13 @@ DriftSDK is the official Drift SDK written in Swift enabling you to both send an
 DriftSDK can be added to your project using CocoaPods by adding the following line to your `Podfile`:
 
 ```ruby
-pod 'Drift', '~> 0.1'
+pod 'Drift', '~> 0.0.1'
 ```
 
 For Carthage you can add a dependency on DriftSDK by adding it to your `Cartfile`:
 
 ```
-github "Driftt/sdk-ios" ~> 0.1
+github "Driftt/sdk-ios" ~> 0.0.1
 ```
 
 ## Registering
