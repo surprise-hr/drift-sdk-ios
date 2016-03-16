@@ -24,7 +24,7 @@ pod 'Drift', '~> 0.0.1'
 For Carthage you can add a dependency on DriftSDK by adding it to your `Cartfile`:
 
 ```
-github "Driftt/sdk-ios" ~> 0.0.1
+github "Driftt/drift-sdk-ios" ~> 0.0.1
 ```
 
 ## Registering
