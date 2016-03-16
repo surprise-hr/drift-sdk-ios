@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		2CF43EA31C7E045F008E6748 /* ColorPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF43EA21C7E045F008E6748 /* ColorPalette.swift */; };
 		2CF43EA71C7E056F008E6748 /* DriftImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CF43EA61C7E056F008E6748 /* DriftImages.xcassets */; };
-		6159ED6C6D4D522955E64B77 /* Pods_DriftTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34DCE94A9E8799A6E95ADD38 /* Pods_DriftTests.framework */; };
 		630205181C52A24E00C02F5E /* CampaignsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630205171C52A24E00C02F5E /* CampaignsManager.swift */; };
 		6302051A1C52AC5100C02F5E /* DriftManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630205191C52AC5100C02F5E /* DriftManager.swift */; };
 		6302051C1C52AD7900C02F5E /* Embed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6302051B1C52AD7900C02F5E /* Embed.swift */; };
@@ -48,13 +47,16 @@
 		634950DF1C511A410097C474 /* Drift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 634950D41C511A410097C474 /* Drift.framework */; };
 		6362426A1C7FBCB400632F0E /* NPSCompleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636242691C7FBCB400632F0E /* NPSCompleteView.swift */; };
 		6362426C1C7FBCC300632F0E /* NPSCompleteView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6362426B1C7FBCC300632F0E /* NPSCompleteView.xib */; };
+		637E48FE1C9A08010067F105 /* Gloss.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63C257361C9A009E003C4C81 /* Gloss.framework */; };
+		637E48FF1C9A08040067F105 /* LayerKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63C257381C9A00AE003C4C81 /* LayerKit.framework */; };
 		6387309A1C7E85EF00105867 /* TopController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638730991C7E85EF00105867 /* TopController.swift */; };
 		63BBABB41C7C9D850014768A /* ErrorManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBABB31C7C9D850014768A /* ErrorManager.swift */; };
 		63BBABB61C7CD6210014768A /* ColorHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBABB51C7CD6210014768A /* ColorHelper.swift */; };
+		63C257371C9A009E003C4C81 /* Gloss.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63C257361C9A009E003C4C81 /* Gloss.framework */; };
+		63C257391C9A00AE003C4C81 /* LayerKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63C257381C9A00AE003C4C81 /* LayerKit.framework */; };
 		63F858201C63B22E00872B0D /* CampaignOrganizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F8581F1C63B22E00872B0D /* CampaignOrganizer.swift */; };
 		63F858221C63B55E00872B0D /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F858211C63B55E00872B0D /* ImageLoader.swift */; };
 		63F95DBF1C5B8676003BCEE0 /* Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F95DBE1C5B8676003BCEE0 /* Auth.swift */; };
-		773605E5D4905D08207A4473 /* Pods_Drift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32D73F6DDE7993AB46ED02AA /* Pods_Drift.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -132,6 +134,8 @@
 		638730991C7E85EF00105867 /* TopController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TopController.swift; path = Drift/Helpers/TopController.swift; sourceTree = SOURCE_ROOT; };
 		63BBABB31C7C9D850014768A /* ErrorManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ErrorManager.swift; path = Drift/Managers/ErrorManager.swift; sourceTree = SOURCE_ROOT; };
 		63BBABB51C7CD6210014768A /* ColorHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ColorHelper.swift; path = Drift/Helpers/ColorHelper.swift; sourceTree = SOURCE_ROOT; };
+		63C257361C9A009E003C4C81 /* Gloss.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Gloss.framework; path = Carthage/Build/iOS/Gloss.framework; sourceTree = "<group>"; };
+		63C257381C9A00AE003C4C81 /* LayerKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LayerKit.framework; path = "Carthage/Checkouts/releases-ios/LayerKit.framework"; sourceTree = "<group>"; };
 		63F8581F1C63B22E00872B0D /* CampaignOrganizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CampaignOrganizer.swift; path = Drift/Models/CampaignOrganizer.swift; sourceTree = SOURCE_ROOT; };
 		63F858211C63B55E00872B0D /* ImageLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImageLoader.swift; path = Drift/Helpers/ImageLoader.swift; sourceTree = SOURCE_ROOT; };
 		63F95DBE1C5B8676003BCEE0 /* Auth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Auth.swift; path = Drift/Models/Auth.swift; sourceTree = SOURCE_ROOT; };
@@ -144,7 +148,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				63356A541C52A0D20064F652 /* UIKit.framework in Frameworks */,
-				773605E5D4905D08207A4473 /* Pods_Drift.framework in Frameworks */,
+				63C257371C9A009E003C4C81 /* Gloss.framework in Frameworks */,
+				63C257391C9A00AE003C4C81 /* LayerKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -153,7 +158,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				634950DF1C511A410097C474 /* Drift.framework in Frameworks */,
-				6159ED6C6D4D522955E64B77 /* Pods_DriftTests.framework in Frameworks */,
+				637E48FE1C9A08010067F105 /* Gloss.framework in Frameworks */,
+				637E48FF1C9A08040067F105 /* LayerKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -325,6 +331,8 @@
 		74DE7736A181ADE78FB587A2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				63C257381C9A00AE003C4C81 /* LayerKit.framework */,
+				63C257361C9A009E003C4C81 /* Gloss.framework */,
 				63356A531C52A0D20064F652 /* UIKit.framework */,
 				32D73F6DDE7993AB46ED02AA /* Pods_Drift.framework */,
 				34DCE94A9E8799A6E95ADD38 /* Pods_DriftTests.framework */,
@@ -361,13 +369,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 634950E81C511A410097C474 /* Build configuration list for PBXNativeTarget "Drift" */;
 			buildPhases = (
-				9061ED441EC0B0C55A1D6DEC /* Check Pods Manifest.lock */,
 				634950CF1C511A410097C474 /* Sources */,
 				634950D01C511A410097C474 /* Frameworks */,
 				634950D11C511A410097C474 /* Headers */,
 				634950D21C511A410097C474 /* Resources */,
 				634951201C511D5A0097C474 /* Copy Frameworks */,
-				FC5115073661902AB6CD09C4 /* Copy Pods Resources */,
+				630144FD1C9A117F002812AB /* Carthage */,
 			);
 			buildRules = (
 			);
@@ -382,12 +389,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 634950EB1C511A410097C474 /* Build configuration list for PBXNativeTarget "DriftTests" */;
 			buildPhases = (
-				D4F2AC72787A0331C0C2BFD3 /* Check Pods Manifest.lock */,
 				634950DA1C511A410097C474 /* Sources */,
 				634950DB1C511A410097C474 /* Frameworks */,
 				634950DC1C511A410097C474 /* Resources */,
-				C5C8BBEC0F1C273F8BA4CA43 /* Embed Pods Frameworks */,
-				2302A5C41D2AE01249A8409B /* Copy Pods Resources */,
+				630144FC1C9A0F21002812AB /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -460,80 +465,36 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		2302A5C41D2AE01249A8409B /* Copy Pods Resources */ = {
+		630144FC1C9A0F21002812AB /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/Gloss.framework",
+				"$(SRCROOT)/Carthage/Checkouts/releases-ios/LayerKit.framework",
 			);
-			name = "Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-DriftTests/Pods-DriftTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
+			shellScript = "/usr/local/bin/carthage copy-frameworks";
 		};
-		9061ED441EC0B0C55A1D6DEC /* Check Pods Manifest.lock */ = {
+		630144FD1C9A117F002812AB /* Carthage */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/Gloss.framework",
+				"$(SRCROOT)/Carthage/Checkouts/releases-ios/LayerKit.framework",
 			);
-			name = "Check Pods Manifest.lock";
+			name = Carthage;
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		C5C8BBEC0F1C273F8BA4CA43 /* Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-DriftTests/Pods-DriftTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		D4F2AC72787A0331C0C2BFD3 /* Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		FC5115073661902AB6CD09C4 /* Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Drift/Pods-Drift-resources.sh\"\n";
-			showEnvVarsInLog = 0;
+			shellScript = "/usr/local/bin/carthage copy-frameworks";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -690,13 +651,18 @@
 		};
 		634950E91C511A410097C474 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2EEFE2A425D17843C6767DBA /* Pods-Drift.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)/Carthage/Checkouts/releases-ios",
+				);
 				INFOPLIST_FILE = Drift/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -710,13 +676,18 @@
 		};
 		634950EA1C511A410097C474 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 342547D9FDAE99DFAAD8E93E /* Pods-Drift.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)/Carthage/Checkouts/releases-ios",
+				);
 				INFOPLIST_FILE = Drift/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -729,8 +700,13 @@
 		};
 		634950EC1C511A410097C474 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F33689BD7A58FEEE172AD2D1 /* Pods-DriftTests.debug.xcconfig */;
 			buildSettings = {
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Checkouts/releases-ios",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = DriftTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.drift.DriftTests;
@@ -740,8 +716,13 @@
 		};
 		634950ED1C511A410097C474 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0E89DD2C78E3927A8BA526F7 /* Pods-DriftTests.release.xcconfig */;
 			buildSettings = {
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Checkouts/releases-ios",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = DriftTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.drift.DriftTests;
