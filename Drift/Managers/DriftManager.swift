@@ -20,7 +20,7 @@ class DriftManager: NSObject {
     
     private override init(){
         super.init()
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "didEnterForeground", name: UIApplicationWillEnterForegroundNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(DriftManager.didEnterForeground), name: UIApplicationWillEnterForegroundNotification, object: nil)
     }
     
     deinit {

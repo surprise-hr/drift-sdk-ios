@@ -1,0 +1,13 @@
+PODS:
+  - Gloss (0.7.1)
+  - LayerKit (0.20.2)
+
+DEPENDENCIES:
+  - Gloss (~> 0.7)
+  - LayerKit (~> 0.17)
+
+SPEC CHECKSUMS:
+  Gloss: e674d7aa06a7e292a591d0d39a759b826daf503e
+  LayerKit: 78419d6b6b5bf3bff317c982d4dab37897e9f895
+
+COCOAPODS: 0.39.0

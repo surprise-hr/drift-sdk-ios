@@ -133,19 +133,18 @@ class LayerManager: NSObject, LYRClientDelegate {
     }
     
     func layerClientDidConnect(client: LYRClient) {
-        print(client.authenticatedUserID)
         LoggerManager.log("Did connect")
     }
     
     ///Make sure we have all changes before we pass off to campaigns manager
     func layerClient(client: LYRClient, objectsDidChange changes: [LYRObjectChange]) {
         synchronizationTimer?.invalidate()
-        synchronizationTimer = NSTimer.scheduledTimerWithTimeInterval(2.0, target: self, selector: "didFinishSync", userInfo: nil, repeats: false)
+        synchronizationTimer = NSTimer.scheduledTimerWithTimeInterval(2.0, target: self, selector: #selector(LayerManager.didFinishSync), userInfo: nil, repeats: false)
     }
     
     func layerClient(client: LYRClient, didFinishSynchronizationWithChanges changes: [LYRObjectChange]) {        
         synchronizationTimer?.invalidate()
-        synchronizationTimer = NSTimer.scheduledTimerWithTimeInterval(2.0, target: self, selector: "didFinishSync", userInfo: nil, repeats: false)
+        synchronizationTimer = NSTimer.scheduledTimerWithTimeInterval(2.0, target: self, selector: #selector(LayerManager.didFinishSync), userInfo: nil, repeats: false)
     }
     
     

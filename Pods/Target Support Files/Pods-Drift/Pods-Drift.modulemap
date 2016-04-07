@@ -1,0 +1,6 @@
+framework module Pods_Drift {
+  umbrella header "Pods-Drift-umbrella.h"
+
+  export *
+  module * { export * }
+}

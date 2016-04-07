@@ -52,8 +52,8 @@ class NPSContainerView: CampaignView {
     override func didMoveToWindow() {
         super.didMoveToWindow()
         if window != nil {
-            NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardShown:", name: UIKeyboardWillShowNotification, object: nil)
-            NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardHidden:", name: UIKeyboardWillHideNotification, object: nil)
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(NPSContainerView.keyboardShown(_:)), name: UIKeyboardWillShowNotification, object: nil)
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(NPSContainerView.keyboardHidden(_:)), name: UIKeyboardWillHideNotification, object: nil)
         }
     }
     

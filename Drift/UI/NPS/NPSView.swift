@@ -68,7 +68,7 @@ class NPSView: ContainerSubView {
         let foreground = DriftDataStore.sharedInstance.generateForegroundColor()
         
         for button in buttons {
-            button.addTarget(self, action: "didSelectButton:", forControlEvents: .TouchUpInside)
+            button.addTarget(self, action: #selector(NPSView.didSelectButton(_:)), forControlEvents: .TouchUpInside)
             button.hidden = true
             button.titleColor = foreground
             button.backgroundColor = UIColor.clearColor()

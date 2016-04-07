@@ -86,7 +86,7 @@ class AnnouncmentExpandedView: CampaignView, UIScrollViewDelegate {
     override func showOnWindow(window: UIWindow) {
         window.addSubview(self)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "didRotate", name: UIApplicationDidChangeStatusBarOrientationNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(AnnouncmentExpandedView.didRotate), name: UIApplicationDidChangeStatusBarOrientationNotification, object: nil)
         
         translatesAutoresizingMaskIntoConstraints = false
         
