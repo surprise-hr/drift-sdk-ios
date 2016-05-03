@@ -56,7 +56,7 @@ class DriftManager: NSObject {
     class func registerUser(userId: String, email: String, attrs: [String: AnyObject]? = nil){
         
         guard let orgId = DriftDataStore.sharedInstance.embed?.orgId else {
-            LoggerManager.log("No Embed, not registering user - Wating for Embeds to complete")
+            LoggerManager.log("No Embed, not registering user - Waiting for Embeds to complete")
             DriftManager.sharedInstance.registerInfo = (userId,email, attrs)
             return
         }
@@ -120,7 +120,7 @@ class DriftManager: NSObject {
                 }
             })
         }else{
-            LoggerManager.log("Not enought data to get Auth")
+            LoggerManager.log("Not enough data to get Auth")
         }
     }
     
@@ -147,7 +147,7 @@ class DriftManager: NSObject {
                     do {
                         try CampaignsManager.checkForCampaigns()
                     } catch {
-                        LoggerManager.log("Accouncments Error")
+                        LoggerManager.log("Announcements Error")
                     }
                 }
             }
