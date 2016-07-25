@@ -7,17 +7,22 @@
 //
 
 
-import Gloss
+import ObjectMapper
 ///Data Structure for the Drift user who made the campaign
-class CampaignOrganizer: Decodable {
+class CampaignOrganizer: Mappable {
     
     var userId: Int?
     var name: String?
     var avatarURL: NSURL?
     
-    required init?(json: JSON) {
-        self.userId = "id" <~~ json
-        self.name = "name" <~~ json
-        self.avatarURL = "avatarUrl" <~~ json
+    required convenience init?(_ map: Map) {
+        self.init()
     }
+   
+    func mapping(map: Map) {
+        userId      <- map["id"]
+        name        <- map["name"]
+        avatarURL   <- map["avatarUrl"]
+    }
+    
 }

@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Gloss
+import ObjectMapper
 
 class APIManager {
     
@@ -205,12 +205,12 @@ class APIManager {
     }
     
     //Maps response to result T using Gloss JSON parsing
-    private class func mapResponse<T: Decodable>(result: Result<AnyObject>) -> Result<T> {
+    private class func mapResponse<T: Mappable>(result: Result<AnyObject>) -> Result<T> {
         
         switch result {
         case .Success(let res):
             if let json = res as? [String : AnyObject] {
-                let response = T(json:json)     ///If initialisation is done in if let this can result in getting an object back when nil is returned - This is a bug in swift
+                let response = Mapper<T>().map(json)     ///If initialisation is done in if let this can result in getting an object back when nil is returned - This is a bug in swift
                 if let response = response {
                     return .Success(response)
                 }
@@ -222,13 +222,14 @@ class APIManager {
     }
     
     //Maps response to result [T] using Gloss JSON parsing
-    private class func mapResponse<T: Decodable>(result: Result<AnyObject>) -> Result<[T]> {
+    private class func mapResponse<T: Mappable>(result: Result<AnyObject>) -> Result<[T]> {
         
         switch result {
         case .Success(let res):
             if let json = res as? [[String: AnyObject]] {
-                let response = [T].fromJSONArray(json)
-                return .Success(response)
+                if let response: [T] = Mapper<T>().mapArray(json){
+                    return .Success(response)
+                }
             }
             fallthrough
         default:
@@ -415,7 +416,7 @@ func escape(string: String) -> String {
         while index != string.endIndex {
             let startIndex = index
             let endIndex = index.advancedBy(batchSize, limit: string.endIndex)
-            let range = Range(start: startIndex, end: endIndex)
+            let range = startIndex..<endIndex
             
             let substring = string.substringWithRange(range)
             

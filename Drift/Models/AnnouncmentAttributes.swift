@@ -6,17 +6,22 @@
 //  Copyright © 2016 Drift. All rights reserved.
 //
 
-import Gloss
+import ObjectMapper
 
-class AnnouncmentAttributes: Decodable {
+class AnnouncmentAttributes: Mappable {
     
     var cta: CTA?
     var title: String?
     var campaignId: Int?
     
-    required init?(json: JSON) {
-        self.cta = "cta" <~~ json
-        self.title = "title" <~~ json
-        self.campaignId = "campaignId" <~~ json
+    required convenience init?(_ map: Map) {
+        self.init()
+    }
+    
+    func mapping(map: Map) {
+        cta         <- map["cta"]
+        title       <- map["title"]
+        campaignId  <- map["campaignId"]
+
     }
 }

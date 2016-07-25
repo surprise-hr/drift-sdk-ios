@@ -8,6 +8,7 @@
 
 import Foundation
 import LayerKit
+import ObjectMapper
 
 class CampaignsManager {
     /**
@@ -71,7 +72,7 @@ class CampaignsManager {
                         case "application/json":
                             
                             if let data = part.data, json = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments) as? [String: AnyObject] {
-                                if let newAnnouncment = Campaign(json: json) where newAnnouncment.messageType != nil{
+                                if let newAnnouncment = Mapper<Campaign>().map(json) where newAnnouncment.messageType != nil{
                                     announcments.append(newAnnouncment)
                                 }
                             }

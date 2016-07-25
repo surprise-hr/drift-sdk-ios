@@ -6,8 +6,8 @@
 //  Copyright © 2016 Drift. All rights reserved.
 //
 
-import Gloss
-class Campaign: Decodable {
+import ObjectMapper
+class Campaign: Mappable {
     
     /**
         The type of message that the SDK can parse
@@ -34,28 +34,29 @@ class Campaign: Decodable {
     var announcmentAttributes: AnnouncmentAttributes?
     var npsResponseAttributes: NPSResponseAttributes? 
     
-    required init?(json: JSON) {
-        
-        self.orgId = "orgId" <~~ json
-        self.id = "id" <~~ json
-        self.uuid = "uuid" <~~ json
-        self.messageType = "type" <~~ json
-        self.createdAt = Decoder.decodeDriftDate("createdAt", json: json)
-        self.bodyText = "body" <~~ json
-        self.authorId = "authorId" <~~ json
-        self.conversationId = "conversationId" <~~ json
-        
+    required convenience init?(_ map: Map) {
+        self.init()
+    }
+    
+    func mapping(map: Map) {
+        orgId           <- map["orgId"]
+        id              <- map["id"]
+        uuid            <- map["uuid"]
+        messageType     <- map["type"]
+        createdAt       <- (map["createdAt"], DateTransform())
+        bodyText        <- map["body"]
+        authorId        <- map["authorId"]
+        conversationId  <- map["conversationId"]
         
         if let messageType = messageType {
-            
             switch messageType {
             case .Announcement:
-                self.announcmentAttributes = "attributes" <~~ json
+                announcmentAttributes <- map["attributes"]
             case .NPS:
-                self.npsAttributes = "attributes" <~~ json
+                npsAttributes         <- map["attributes"]
             case .NPSResponse:
-                self.npsResponseAttributes = "attributes" <~~ json
-            }   
+                npsResponseAttributes <- map["attributes"]
+            }
         }
     }
 }
