@@ -66,6 +66,10 @@
 		A80A64501D466B7C00A41A41 /* MessageSubscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = A80A644F1D466B7C00A41A41 /* MessageSubscription.swift */; };
 		A82CF5681D42585D00D570FF /* ObjectMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A82CF5671D42585D00D570FF /* ObjectMapper.framework */; };
 		A8DBDD281D4259BF00E827CF /* ObjectMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A82CF5671D42585D00D570FF /* ObjectMapper.framework */; };
+		A8F5899D1D478A2D0043DB8D /* ConversationListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F5899B1D478A2D0043DB8D /* ConversationListViewController.swift */; };
+		A8F5899E1D478A2D0043DB8D /* ConversationListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A8F5899C1D478A2D0043DB8D /* ConversationListViewController.xib */; };
+		A8F589A31D478F0A0043DB8D /* ConversationListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F589A11D478F0A0043DB8D /* ConversationListTableViewCell.swift */; };
+		A8F589A41D478F0A0043DB8D /* ConversationListTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A8F589A21D478F0A0043DB8D /* ConversationListTableViewCell.xib */; };
 		B24E7E355476327343D34A70 /* Pods_Drift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 827DB2871F99163085B5B96C /* Pods_Drift.framework */; };
 /* End PBXBuildFile section */
 
@@ -157,6 +161,10 @@
 		A80A644D1D466B5E00A41A41 /* ConversationSubscription.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConversationSubscription.swift; path = Drift/Models/ConversationSubscription.swift; sourceTree = SOURCE_ROOT; };
 		A80A644F1D466B7C00A41A41 /* MessageSubscription.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MessageSubscription.swift; path = Drift/Models/MessageSubscription.swift; sourceTree = SOURCE_ROOT; };
 		A82CF5671D42585D00D570FF /* ObjectMapper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ObjectMapper.framework; path = "../../../../Library/Developer/Xcode/DerivedData/Drift-fazaqbkkelkzfnbpeedxtxrmdjjs/Build/Products/Debug-iphonesimulator/ObjectMapper/ObjectMapper.framework"; sourceTree = "<group>"; };
+		A8F5899B1D478A2D0043DB8D /* ConversationListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConversationListViewController.swift; path = "Drift/UI/Conversation List View/ConversationListViewController.swift"; sourceTree = SOURCE_ROOT; };
+		A8F5899C1D478A2D0043DB8D /* ConversationListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ConversationListViewController.xib; path = "Drift/UI/Conversation List View/ConversationListViewController.xib"; sourceTree = SOURCE_ROOT; };
+		A8F589A11D478F0A0043DB8D /* ConversationListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConversationListTableViewCell.swift; path = "Drift/UI/Conversation List View/List View Cell/ConversationListTableViewCell.swift"; sourceTree = SOURCE_ROOT; };
+		A8F589A21D478F0A0043DB8D /* ConversationListTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ConversationListTableViewCell.xib; path = "Drift/UI/Conversation List View/List View Cell/ConversationListTableViewCell.xib"; sourceTree = SOURCE_ROOT; };
 		B830EE3166A8EBB93E22850F /* Pods-DriftTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DriftTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-DriftTests/Pods-DriftTests.release.xcconfig"; sourceTree = "<group>"; };
 		D05CA385937F3836AC8E1B8A /* Pods-Drift.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Drift.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Drift/Pods-Drift.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -190,6 +198,7 @@
 		630E89631C57B2E400195062 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				A80A64541D47779400A41A41 /* Conversation List View */,
 				636242681C7FBC9700632F0E /* NPS Complete View */,
 				2CF43EA61C7E056F008E6748 /* DriftImages.xcassets */,
 				6329CABF1C5933400059C678 /* NPS Comment View */,
@@ -370,6 +379,26 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		A80A64541D47779400A41A41 /* Conversation List View */ = {
+			isa = PBXGroup;
+			children = (
+				A8F589A01D478ECD0043DB8D /* List View Cell */,
+				A8F5899B1D478A2D0043DB8D /* ConversationListViewController.swift */,
+				A8F5899C1D478A2D0043DB8D /* ConversationListViewController.xib */,
+			);
+			name = "Conversation List View";
+			path = "Drift/UI/Conversation List View";
+			sourceTree = "<group>";
+		};
+		A8F589A01D478ECD0043DB8D /* List View Cell */ = {
+			isa = PBXGroup;
+			children = (
+				A8F589A11D478F0A0043DB8D /* ConversationListTableViewCell.swift */,
+				A8F589A21D478F0A0043DB8D /* ConversationListTableViewCell.xib */,
+			);
+			path = "List View Cell";
+			sourceTree = "<group>";
+		};
 		BDA453BC1886AFB2D80A1EF0 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -485,6 +514,8 @@
 				630E89651C57B99000195062 /* AnnouncmentView.xib in Resources */,
 				63359F9F1C774C31007321DA /* AnnouncmentExpandedView.xib in Resources */,
 				6362426C1C7FBCC300632F0E /* NPSCompleteView.xib in Resources */,
+				A8F5899E1D478A2D0043DB8D /* ConversationListViewController.xib in Resources */,
+				A8F589A41D478F0A0043DB8D /* ConversationListTableViewCell.xib in Resources */,
 				6329CAC11C5933590059C678 /* NPSCommentView.xib in Resources */,
 				6329CABE1C58E68F0059C678 /* NPSContainerView.xib in Resources */,
 			);
@@ -625,6 +656,7 @@
 				A80A64421D46534D00A41A41 /* DriftDateTransformer.swift in Sources */,
 				63356A4D1C529C760064F652 /* Campaign.swift in Sources */,
 				630E89671C57B9AC00195062 /* AnnouncmentView.swift in Sources */,
+				A8F589A31D478F0A0043DB8D /* ConversationListTableViewCell.swift in Sources */,
 				A80A64481D4665E500A41A41 /* Conversation.swift in Sources */,
 				63356A451C529C6C0064F652 /* APIManager.swift in Sources */,
 				63356A421C529C610064F652 /* Drift.swift in Sources */,
@@ -645,6 +677,7 @@
 				6329CAC31C59336E0059C678 /* NPSCommentView.swift in Sources */,
 				A80A644A1D46671B00A41A41 /* Message.swift in Sources */,
 				630E89691C57C77300195062 /* NibLoader.swift in Sources */,
+				A8F5899D1D478A2D0043DB8D /* ConversationListViewController.swift in Sources */,
 				630E89621C57944400195062 /* PresentationManager.swift in Sources */,
 				63356A461C529C6C0064F652 /* LayerManager.swift in Sources */,
 				63356A4B1C529C760064F652 /* AnnouncmentAttributes.swift in Sources */,

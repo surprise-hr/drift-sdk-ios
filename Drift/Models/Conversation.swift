@@ -14,7 +14,7 @@ public enum ConversationStatus: String{
     case Pending = "PENDING"
 }
 
-public class Conversation: Mappable{
+public class Conversation: Mappable, Equatable{
     var id: Int!
     var orgId: Int!
     var uuid: String?

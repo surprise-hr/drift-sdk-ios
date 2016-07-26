@@ -14,13 +14,11 @@ public protocol ConversationDelegate: class{
 
 public class ConversationSubscription {
     
-    public convenience init(delegate: ConversationDelegate, inboxId: Int) {
+    public convenience init(delegate: ConversationDelegate) {
         self.init()
         self.delegate = delegate
-        self.inboxId = inboxId
     }
     
     weak var delegate: ConversationDelegate?
-    var inboxId: Int!
 }
 

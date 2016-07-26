@@ -86,17 +86,13 @@ public class InboxManager {
     //Alert delegates of updated to Conversations
     func conversationsDidUpdate(inboxId: Int, conversations: [Conversation]){
         for conversationSubscription in conversationSubscriptions{
-            if conversationSubscription.inboxId == inboxId{
-                conversationSubscription.delegate?.conversationsDidUpdate(conversations)
-            }
+            conversationSubscription.delegate?.conversationsDidUpdate(conversations)
         }
     }
     
     func conversationDidUpdate(conversation: Conversation){
         for conversationSubscription in conversationSubscriptions{
-            if conversationSubscription.inboxId == conversation.inboxId{
-                conversationSubscription.delegate?.conversationDidUpdate(conversation)
-            }
+            conversationSubscription.delegate?.conversationDidUpdate(conversation)
         }
     }
     
