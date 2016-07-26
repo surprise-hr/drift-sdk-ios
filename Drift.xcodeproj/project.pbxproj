@@ -57,6 +57,13 @@
 		63F95DBF1C5B8676003BCEE0 /* Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F95DBE1C5B8676003BCEE0 /* Auth.swift */; };
 		A80A643E1D464CDE00A41A41 /* ObjectValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A80A643D1D464CDE00A41A41 /* ObjectValidator.swift */; };
 		A80A64421D46534D00A41A41 /* DriftDateTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A80A64411D46534D00A41A41 /* DriftDateTransformer.swift */; };
+		A80A64441D465E4800A41A41 /* InboxManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A80A64431D465E4800A41A41 /* InboxManager.swift */; };
+		A80A64461D46655900A41A41 /* Inbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = A80A64451D46655900A41A41 /* Inbox.swift */; };
+		A80A64481D4665E500A41A41 /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A80A64471D4665E500A41A41 /* Conversation.swift */; };
+		A80A644A1D46671B00A41A41 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = A80A64491D46671B00A41A41 /* Message.swift */; };
+		A80A644C1D466B3600A41A41 /* InboxSubscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = A80A644B1D466B3600A41A41 /* InboxSubscription.swift */; };
+		A80A644E1D466B5E00A41A41 /* ConversationSubscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = A80A644D1D466B5E00A41A41 /* ConversationSubscription.swift */; };
+		A80A64501D466B7C00A41A41 /* MessageSubscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = A80A644F1D466B7C00A41A41 /* MessageSubscription.swift */; };
 		A82CF5681D42585D00D570FF /* ObjectMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A82CF5671D42585D00D570FF /* ObjectMapper.framework */; };
 		A8DBDD281D4259BF00E827CF /* ObjectMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A82CF5671D42585D00D570FF /* ObjectMapper.framework */; };
 		B24E7E355476327343D34A70 /* Pods_Drift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 827DB2871F99163085B5B96C /* Pods_Drift.framework */; };
@@ -142,6 +149,13 @@
 		8E01BE3EE4C4FBBC0B0CF127 /* Pods-DriftTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DriftTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DriftTests/Pods-DriftTests.debug.xcconfig"; sourceTree = "<group>"; };
 		A80A643D1D464CDE00A41A41 /* ObjectValidator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ObjectValidator.swift; path = Drift/Helpers/ObjectValidator.swift; sourceTree = SOURCE_ROOT; };
 		A80A64411D46534D00A41A41 /* DriftDateTransformer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DriftDateTransformer.swift; path = Drift/Helpers/DriftDateTransformer.swift; sourceTree = SOURCE_ROOT; };
+		A80A64431D465E4800A41A41 /* InboxManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InboxManager.swift; path = Drift/Managers/InboxManager.swift; sourceTree = SOURCE_ROOT; };
+		A80A64451D46655900A41A41 /* Inbox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Inbox.swift; path = Drift/Models/Inbox.swift; sourceTree = SOURCE_ROOT; };
+		A80A64471D4665E500A41A41 /* Conversation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Conversation.swift; path = Drift/Models/Conversation.swift; sourceTree = SOURCE_ROOT; };
+		A80A64491D46671B00A41A41 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Message.swift; path = Drift/Models/Message.swift; sourceTree = SOURCE_ROOT; };
+		A80A644B1D466B3600A41A41 /* InboxSubscription.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InboxSubscription.swift; path = Drift/Models/InboxSubscription.swift; sourceTree = SOURCE_ROOT; };
+		A80A644D1D466B5E00A41A41 /* ConversationSubscription.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConversationSubscription.swift; path = Drift/Models/ConversationSubscription.swift; sourceTree = SOURCE_ROOT; };
+		A80A644F1D466B7C00A41A41 /* MessageSubscription.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MessageSubscription.swift; path = Drift/Models/MessageSubscription.swift; sourceTree = SOURCE_ROOT; };
 		A82CF5671D42585D00D570FF /* ObjectMapper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ObjectMapper.framework; path = "../../../../Library/Developer/Xcode/DerivedData/Drift-fazaqbkkelkzfnbpeedxtxrmdjjs/Build/Products/Debug-iphonesimulator/ObjectMapper/ObjectMapper.framework"; sourceTree = "<group>"; };
 		B830EE3166A8EBB93E22850F /* Pods-DriftTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DriftTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-DriftTests/Pods-DriftTests.release.xcconfig"; sourceTree = "<group>"; };
 		D05CA385937F3836AC8E1B8A /* Pods-Drift.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Drift.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Drift/Pods-Drift.debug.xcconfig"; sourceTree = "<group>"; };
@@ -240,6 +254,12 @@
 				63F95DBE1C5B8676003BCEE0 /* Auth.swift */,
 				6306B51D1C5F91150003F9D3 /* NPSResponseAttributes.swift */,
 				63F8581F1C63B22E00872B0D /* CampaignOrganizer.swift */,
+				A80A64451D46655900A41A41 /* Inbox.swift */,
+				A80A64471D4665E500A41A41 /* Conversation.swift */,
+				A80A64491D46671B00A41A41 /* Message.swift */,
+				A80A644B1D466B3600A41A41 /* InboxSubscription.swift */,
+				A80A644D1D466B5E00A41A41 /* ConversationSubscription.swift */,
+				A80A644F1D466B7C00A41A41 /* MessageSubscription.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -323,6 +343,7 @@
 				6329CAC41C5A91310059C678 /* DriftDataStore.swift */,
 				633920CF1C62514F00C3A3C2 /* CampaignResponseManager.swift */,
 				63BBABB31C7C9D850014768A /* ErrorManager.swift */,
+				A80A64431D465E4800A41A41 /* InboxManager.swift */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -595,6 +616,7 @@
 				6329CABC1C58E6830059C678 /* NPSContainerView.swift in Sources */,
 				63BBABB61C7CD6210014768A /* ColorHelper.swift in Sources */,
 				633920D01C62514F00C3A3C2 /* CampaignResponseManager.swift in Sources */,
+				A80A64461D46655900A41A41 /* Inbox.swift in Sources */,
 				63359F9D1C774C22007321DA /* AnnouncmentExpandedView.swift in Sources */,
 				630205181C52A24E00C02F5E /* CampaignsManager.swift in Sources */,
 				630E896D1C57E63300195062 /* NPSView.swift in Sources */,
@@ -603,6 +625,7 @@
 				A80A64421D46534D00A41A41 /* DriftDateTransformer.swift in Sources */,
 				63356A4D1C529C760064F652 /* Campaign.swift in Sources */,
 				630E89671C57B9AC00195062 /* AnnouncmentView.swift in Sources */,
+				A80A64481D4665E500A41A41 /* Conversation.swift in Sources */,
 				63356A451C529C6C0064F652 /* APIManager.swift in Sources */,
 				63356A421C529C610064F652 /* Drift.swift in Sources */,
 				633920D51C62879100C3A3C2 /* CampaignView.swift in Sources */,
@@ -612,11 +635,15 @@
 				63356A4C1C529C760064F652 /* CTA.swift in Sources */,
 				A80A643E1D464CDE00A41A41 /* ObjectValidator.swift in Sources */,
 				6387309A1C7E85EF00105867 /* TopController.swift in Sources */,
+				A80A644E1D466B5E00A41A41 /* ConversationSubscription.swift in Sources */,
+				A80A64441D465E4800A41A41 /* InboxManager.swift in Sources */,
 				6302051A1C52AC5100C02F5E /* DriftManager.swift in Sources */,
 				63F95DBF1C5B8676003BCEE0 /* Auth.swift in Sources */,
+				A80A644C1D466B3600A41A41 /* InboxSubscription.swift in Sources */,
 				6329CAC51C5A91310059C678 /* DriftDataStore.swift in Sources */,
 				6362426A1C7FBCB400632F0E /* NPSCompleteView.swift in Sources */,
 				6329CAC31C59336E0059C678 /* NPSCommentView.swift in Sources */,
+				A80A644A1D46671B00A41A41 /* Message.swift in Sources */,
 				630E89691C57C77300195062 /* NibLoader.swift in Sources */,
 				630E89621C57944400195062 /* PresentationManager.swift in Sources */,
 				63356A461C529C6C0064F652 /* LayerManager.swift in Sources */,
@@ -624,6 +651,7 @@
 				63356A4E1C529C760064F652 /* NPSAttributes.swift in Sources */,
 				6302051E1C56739000C02F5E /* User.swift in Sources */,
 				6306B51E1C5F91150003F9D3 /* NPSResponseAttributes.swift in Sources */,
+				A80A64501D466B7C00A41A41 /* MessageSubscription.swift in Sources */,
 				63F858201C63B22E00872B0D /* CampaignOrganizer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

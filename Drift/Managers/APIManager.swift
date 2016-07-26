@@ -111,8 +111,8 @@ class APIManager {
     class func recordAnnouncment(conversationId: Int, authToken: String, response: AnnouncmentResponse) {
         
         
-        guard let url = URLStore.conversationURL(conversationId, authToken: authToken) else {
-            LoggerManager.log("Failed in Conversation URL Creation")
+        guard let url = URLStore.messagesURL(conversationId, authToken: authToken) else {
+            LoggerManager.log("Failed in Messages URL Creation")
             return
         }
         
@@ -137,8 +137,8 @@ class APIManager {
     class func recordNPS(conversationId: Int, authToken: String, response: NPSResponse){
         
         
-        guard let url = URLStore.conversationURL(conversationId, authToken: authToken) else {
-            LoggerManager.log("Failed in Conversation URL Creation")
+        guard let url = URLStore.messagesURL(conversationId, authToken: authToken) else {
+            LoggerManager.log("Failed in Messages URL Creation")
             return
         }
         
@@ -173,6 +173,81 @@ class APIManager {
         }
     }
     
+    
+    class func getConversations(endUserId: Int, authToken: String, completion: (result: Result<[Conversation]>) -> ()){
+        
+        
+        guard let url = URLStore.conversationsURL(endUserId, authToken: authToken) else {
+            LoggerManager.log("Failed in Conversations URL Creation")
+            return
+        }
+        
+        let request = Request(url: url).setMethod(.GET)
+        
+        makeRequest(request) { (result) -> () in
+            
+            switch result {
+            case .Success:
+                let conversations: Result<[Conversation]> = mapResponse(result)
+                completion(result: conversations)
+            case .Failure(let error):
+                completion(result: .Failure(DriftError.APIFailure))
+                LoggerManager.log("Unable to get conversations for user: \(error)")
+            }
+        }
+    }
+    
+   
+    class func getMessages(conversationId: Int, authToken: String, completion: (result: Result<[Message]>) -> ()){
+        
+        
+        guard let url = URLStore.messagesURL(conversationId, authToken: authToken) else {
+            LoggerManager.log("Failed in Messages URL Creation")
+            return
+        }
+        
+        let request = Request(url: url).setMethod(.GET)
+        
+        makeRequest(request) { (result) -> () in
+            
+            switch result {
+            case .Success:
+                let messages: Result<[Message]> = mapResponse(result)
+                completion(result: messages)
+            case .Failure(let error):
+                completion(result: .Failure(DriftError.APIFailure))
+                LoggerManager.log("Unable to get messages for conversation: \(error)")
+            }
+        }
+    }
+    
+    
+    class func postMessage(conversationId: Int, message: Message, authToken: String, completion: (result: Result<Message>) -> ()){
+        
+        
+        guard let url = URLStore.messagesURL(conversationId, authToken: authToken) else {
+            LoggerManager.log("Failed in Messages URL Creation")
+            return
+        }
+        
+        let json = message.toJSON()
+        
+        let request = Request(url: url).setData(.JSON(json: json)).setMethod(.POST)
+        
+        makeRequest(request) { (result) -> () in
+            
+            switch result {
+            case .Success:
+                let messages: Result<Message> = mapResponse(result)
+                completion(result: messages)
+            case .Failure(let error):
+                completion(result: .Failure(DriftError.APIFailure))
+                LoggerManager.log("Unable to get messages for conversation: \(error)")
+            }
+        }
+
+    }
+    
     /**
      Responsible for calling a request and parsing its response
      
@@ -204,7 +279,7 @@ class APIManager {
             }.resume()
     }
     
-    //Maps response to result T using Gloss JSON parsing
+    //Maps response to result T using ObjectMapper JSON parsing
     private class func mapResponse<T: Mappable>(result: Result<AnyObject>) -> Result<T> {
         
         switch result {
@@ -221,7 +296,7 @@ class APIManager {
         }
     }
     
-    //Maps response to result [T] using Gloss JSON parsing
+    //Maps response to result [T] using ObjectMapper JSON parsing
     private class func mapResponse<T: Mappable>(result: Result<AnyObject>) -> Result<[T]> {
         
         switch result {
@@ -247,13 +322,19 @@ class URLStore{
 //        return NSURL(string: "https://customer.api.driftt.com/embeds/\(embedId)")
         return NSURL(string: "https://js.driftt.com/embeds/\(refresh ?? "30000")/\(embedId).js")
     }
-    class func conversationURL(conversationId: Int, authToken: String) -> NSURL? {
-        return NSURL(string: "https://conversation.api.driftt.com/conversations/\(conversationId)/messages?access_token=\(authToken)")
-    }
     
     class func campaignUserURL(orgId: Int) -> NSURL? {
         return NSURL(string: "https://customer.api.driftt.com/organizations/\(orgId)/users")
     }
+        
+    class func conversationsURL(endUserId: Int, authToken: String) -> NSURL? {
+        return NSURL(string: "https://conversation.api.driftt.com/conversations/end_users/\(endUserId)?access_token=\(authToken)")
+    }
+    
+    class func messagesURL(conversationId: Int, authToken: String) -> NSURL? {
+        return NSURL(string: "https://conversation.api.driftt.com/conversations/\(conversationId)/messages?access_token=\(authToken)")
+    }
+    
 }
 
 ///Result object for either Success with sucessfully parsed T
