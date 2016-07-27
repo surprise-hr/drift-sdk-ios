@@ -19,7 +19,7 @@ struct Auth: Mappable {
         //These fields are required, without them we fail to init the object
         accessToken = map["accessToken"].validNotEmpty()
         
-        if map.isValidNotEmpty{
+        if !map.isValidNotEmpty{
             LoggerManager.log("Auth Serialisation Failed")
             return nil
         }

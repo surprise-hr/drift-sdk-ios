@@ -14,5 +14,5 @@ Pod::Spec.new do |spec|
   spec.resources = ['Drift/**/*.xib','Drift/**/*.xcassets']
 
   spec.dependency 'LayerKit', '~> 0.17'
-  spec.dependency 'Gloss', '~> 0.7'
+  spec.dependency 'ObjectMapper', '~> 1.2'
 end
