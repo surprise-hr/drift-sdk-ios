@@ -250,15 +250,11 @@ class AnnouncmentExpandedView: CampaignView, UIScrollViewDelegate {
             switch cta.ctaType {
             case .Some(.ChatResponse):
                 if let email = DriftDataStore.sharedInstance.embed?.inboxEmailAddress, topVC = TopController.viewController() where email != "" {
-                    
-                    if MFMailComposeViewController.canSendMail() {
-                        let mailVC = MFMailComposeViewController()
-                        mailVC.setToRecipients([email])
-                        mailVC.setSubject(campaign.announcmentAttributes?.title ?? "")
-                        mailVC.mailComposeDelegate = DriftManager.sharedInstance
-                        topVC.presentViewController(mailVC, animated: true, completion: nil)
-                        
-                    }
+                    let conversationVC = ConversationViewController(nibName: "ConversationViewController", bundle: NSBundle(forClass: ConversationViewController.classForCoder()))
+                    conversationVC.conversationId = campaign.conversationId
+                    let navVC = UINavigationController.init(rootViewController: conversationVC)
+                    navVC.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "closeIcon"), style: .Plain, target: self, action: #selector(AnnouncmentExpandedView.dismissViewController))
+                    topVC.presentViewController(navVC, animated: true, completion: nil)
                 }
             case .Some(.LinkToURL):
                 if let url = cta.urlLink {
@@ -274,6 +270,9 @@ class AnnouncmentExpandedView: CampaignView, UIScrollViewDelegate {
         }
     }
     
+    func dismissViewController(){
+        TopController.viewController()?.dismissViewControllerAnimated(true, completion: nil)
+    }
     
     func presentURL(url: NSURL) {
         

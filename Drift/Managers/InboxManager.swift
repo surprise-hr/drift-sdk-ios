@@ -55,7 +55,7 @@ public class InboxManager {
         }
     }
     
-    func postMessage(message: Message, conversationId: Int, completion:(message: Message?) -> ()){
+    func postMessage(message: Message, conversationId: Int, completion:(message: Message?, requestId: Double) -> ()){
         
 
         guard let auth = DriftDataStore.sharedInstance.auth?.accessToken else {
@@ -65,11 +65,11 @@ public class InboxManager {
         
         APIManager.postMessage(conversationId, message: message, authToken: auth) { (result) in
             switch result{
-            case .Success(let message):
-                completion(message: message)
+            case .Success(let returnedMessage):
+                completion(message: returnedMessage, requestId: message.requestId)
             case .Failure:
                 print("Unable to post message for conversationId: \(conversationId)")
-                completion(message: nil)
+                completion(message: nil, requestId: message.requestId)
             }
         }
     }
@@ -109,14 +109,6 @@ public class InboxManager {
         for messageSubscription in messageSubscriptions{
             if messageSubscription.conversationId == message.conversationId{
                 messageSubscription.delegate?.newMessage(message)
-            }
-        }
-    }
-    
-    func messagesDidCompleteSync(conversationId: Int){
-        for messageSubscription in messageSubscriptions{
-            if messageSubscription.conversationId == conversationId{
-                messageSubscription.delegate?.messagesDidCompleteSync()
             }
         }
     }

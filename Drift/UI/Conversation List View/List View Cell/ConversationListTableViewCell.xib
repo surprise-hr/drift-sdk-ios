@@ -22,14 +22,36 @@
                             <constraint firstAttribute="height" constant="60" id="Pgu-Aq-NA4"/>
                         </constraints>
                     </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fud-qg-5L0">
+                        <rect key="frame" x="76" y="8" width="236" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zQA-Ao-0pH">
+                        <rect key="frame" x="76" y="47" width="236" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
                 <constraints>
+                    <constraint firstAttribute="topMargin" secondItem="fud-qg-5L0" secondAttribute="top" id="5UZ-9G-ST4"/>
                     <constraint firstAttribute="leadingMargin" secondItem="Ht3-zu-vNa" secondAttribute="leading" id="5xq-rp-5dE"/>
+                    <constraint firstItem="fud-qg-5L0" firstAttribute="leading" secondItem="Ht3-zu-vNa" secondAttribute="trailing" constant="8" id="L7r-9q-yN9"/>
+                    <constraint firstItem="zQA-Ao-0pH" firstAttribute="top" secondItem="fud-qg-5L0" secondAttribute="bottom" constant="18" id="TZO-cT-kom"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="fud-qg-5L0" secondAttribute="trailing" id="U8J-51-ESp"/>
+                    <constraint firstItem="zQA-Ao-0pH" firstAttribute="leading" secondItem="Ht3-zu-vNa" secondAttribute="trailing" constant="8" id="Y7g-te-Q3e"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="zQA-Ao-0pH" secondAttribute="trailing" id="eQy-St-4FH"/>
                     <constraint firstAttribute="topMargin" secondItem="Ht3-zu-vNa" secondAttribute="top" id="ecg-jd-N2M"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="zQA-Ao-0pH" secondAttribute="bottom" constant="4" id="m5p-8r-aPX"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="Ht3-zu-vNa" secondAttribute="bottom" constant="4" id="yRO-dy-hlJ"/>
                 </constraints>
             </tableViewCellContentView>
             <connections>
                 <outlet property="avatarImageView" destination="Ht3-zu-vNa" id="QEq-Pb-Lmd"/>
+                <outlet property="messageLabel" destination="zQA-Ao-0pH" id="5XP-R3-fWn"/>
+                <outlet property="nameLabel" destination="fud-qg-5L0" id="s5f-4K-dmw"/>
             </connections>
             <point key="canvasLocation" x="585" y="481"/>
         </tableViewCell>

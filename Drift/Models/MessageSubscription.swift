@@ -8,7 +8,6 @@
 
 public protocol MessageDelegate: class{
     func messagesDidUpdate(messages: [Message])
-    func messagesDidCompleteSync()
     func newMessage(message: Message)
 }
 

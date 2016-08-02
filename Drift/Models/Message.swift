@@ -31,7 +31,7 @@ public enum SendStatus: String{
     case Failed = "FAILED"
 }
 
-public class Message: Mappable{
+public class Message: Mappable, Equatable{
     var id: Int!
     var uuid: String?
     var inboxId: Int!
@@ -44,7 +44,7 @@ public class Message: Mappable{
     var type: Type!
     
     var conversationId: Int!
-    var requestId: Double!
+    var requestId: Double = 0
     var sendStatus: SendStatus!
 
     required convenience public init?(_ map: Map) {
@@ -65,5 +65,9 @@ public class Message: Mappable{
         conversationId          <- map["conversationId"]
     }
 
+}
+
+public func ==(lhs: Message, rhs: Message) -> Bool {
+    return lhs.uuid == rhs.uuid
 }
 

@@ -9,7 +9,7 @@
 import UIKit
 
 class ConversationListViewController: UIViewController {
-
+    
     @IBOutlet weak var tableView: UITableView!
     
     var conversations: [Conversation] = []
@@ -19,7 +19,8 @@ class ConversationListViewController: UIViewController {
         
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.registerNib(UINib(nibName: "ConversationListTableViewCell", bundle: NSBundle.mainBundle()), forCellReuseIdentifier: "ConversationListTableViewCell")
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.registerNib(UINib(nibName: "ConversationListTableViewCell", bundle:  NSBundle(forClass: ConversationListTableViewCell.classForCoder())), forCellReuseIdentifier: "ConversationListTableViewCell")
         InboxManager.sharedInstance.addConversationSubscription(ConversationSubscription(delegate: self))
         
         APIManager.getConversations(DriftDataStore.sharedInstance.auth!.enduser!.userId!, authToken: DriftDataStore.sharedInstance.auth!.accessToken) { (result) in
@@ -32,12 +33,19 @@ class ConversationListViewController: UIViewController {
             }
         }
     }
+    
+    @IBAction func closeButtonPressed(sender: AnyObject) {
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
 }
 
 extension ConversationListViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("ConversationListTableViewCell") as! ConversationListTableViewCell
+        let conversation = conversations[indexPath.row]
+        cell.nameLabel.text = conversation.subject
+        cell.messageLabel.text = conversation.preview
         return cell
     }
     

@@ -7,7 +7,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ConversationListViewController" customModule="Drift" customModuleProvider="target">
             <connections>
-                <outlet property="tableView" destination="32s-lq-gGF" id="rKI-kO-H6Y"/>
+                <outlet property="tableView" destination="oQd-Ej-oou" id="DkZ-8h-MYo"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -16,27 +16,37 @@
             <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oEr-sW-Zh3">
-                    <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
-                    <items>
-                        <navigationItem title="Conversations" id="x6r-CA-4TH"/>
-                    </items>
-                </navigationBar>
-                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="32s-lq-gGF">
-                    <rect key="frame" x="0.0" y="44" width="600" height="556"/>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="oQd-Ej-oou">
+                    <rect key="frame" x="0.0" y="52" width="600" height="548"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 </tableView>
+                <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aql-uK-KWQ">
+                    <rect key="frame" x="0.0" y="8" width="600" height="44"/>
+                    <items>
+                        <navigationItem title="Conversations" id="GG5-9p-lBl">
+                            <barButtonItem key="rightBarButtonItem" image="closeIcon" id="IB8-Km-Nml">
+                                <connections>
+                                    <action selector="closeButtonPressed:" destination="-1" id="QLw-OZ-FG2"/>
+                                </connections>
+                            </barButtonItem>
+                        </navigationItem>
+                    </items>
+                </navigationBar>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstItem="32s-lq-gGF" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="Dzz-lU-ZF9"/>
-                <constraint firstItem="oEr-sW-Zh3" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="MXk-Gm-x1u"/>
-                <constraint firstAttribute="trailing" secondItem="oEr-sW-Zh3" secondAttribute="trailing" id="eik-kI-LQM"/>
-                <constraint firstItem="oEr-sW-Zh3" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="v4F-7X-S2E"/>
-                <constraint firstAttribute="bottom" secondItem="32s-lq-gGF" secondAttribute="bottom" id="vVd-tL-bKS"/>
-                <constraint firstAttribute="trailing" secondItem="32s-lq-gGF" secondAttribute="trailing" id="wii-A1-CzS"/>
-                <constraint firstItem="32s-lq-gGF" firstAttribute="top" secondItem="oEr-sW-Zh3" secondAttribute="top" constant="44" id="xqa-Cb-pZf"/>
+                <constraint firstAttribute="trailing" secondItem="oQd-Ej-oou" secondAttribute="trailing" id="3Io-bU-2wN"/>
+                <constraint firstItem="aql-uK-KWQ" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="4uS-R0-yPh"/>
+                <constraint firstAttribute="trailing" secondItem="aql-uK-KWQ" secondAttribute="trailing" id="7NK-Rb-9mu"/>
+                <constraint firstItem="aql-uK-KWQ" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="8" id="Qqh-sJ-LNy"/>
+                <constraint firstItem="oQd-Ej-oou" firstAttribute="top" secondItem="aql-uK-KWQ" secondAttribute="bottom" id="cOT-b4-Upt"/>
+                <constraint firstItem="oQd-Ej-oou" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="hUx-If-tB3"/>
+                <constraint firstAttribute="bottom" secondItem="oQd-Ej-oou" secondAttribute="bottom" id="qZa-Nn-V4N"/>
             </constraints>
+            <point key="canvasLocation" x="325" y="683"/>
         </view>
     </objects>
+    <resources>
+        <image name="closeIcon" width="18" height="18"/>
+    </resources>
 </document>

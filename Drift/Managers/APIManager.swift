@@ -248,6 +248,61 @@ class APIManager {
 
     }
     
+    class func getAttachmentsMetaData(attachmentIds: [Int], authToken: String, completion: (result: Result<Attachment>) -> ()){
+        
+        
+        guard let url = URLStore.attachmentsURL(attachmentIds, authToken: authToken) else {
+            LoggerManager.log("Failed in Messages URL Creation")
+            return
+        }
+        
+        let request = Request(url: url).setMethod(.GET)
+        
+        makeRequest(request) { (result) -> () in
+            
+            switch result {
+            case .Success:
+                let attachments: Result<Attachment> = mapResponse(result)
+                completion(result: attachments)
+            case .Failure(let error):
+                completion(result: .Failure(DriftError.APIFailure))
+                LoggerManager.log("Unable to get attachments metadata: \(error)")
+            }
+        }
+        
+    }
+    
+//    public class func postAttachment(attachment: Attachment, completion: (result: Result<Attachment>) ->()){
+//        
+//        sharedManager.upload(
+//            .POST,
+//            ConversationRouter.PostAttachment.URLRequest.URLString,
+//            multipartFormData: {multipartFormData in
+//                multipartFormData.appendBodyPart(data: attachment.data, name: "file", fileName:attachment.fileName, mimeType: attachment.mimeType)
+//                multipartFormData.appendBodyPart(data: "\(attachment.conversationId)".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!, name: "conversationId")
+//            },
+//            encodingCompletion: { encodingResult in
+//                switch encodingResult {
+//                case .Success(let upload, _, _):
+//                    
+//                    upload.responseJSON { response in
+//                        switch response.result{
+//                        case .Success(let json):
+//                            if let attachment: Attachment = Mapper<Attachment>().map(json){
+//                                completion(result: .Success(attachment))
+//                                return
+//                            }
+//                            fallthrough
+//                        case .Failure(_):
+//                            completion(result: .Failure)
+//                        }
+//                    }
+//                case .Failure(let encodingError):
+//                    print(encodingError)
+//                }
+//        })
+//    }
+    
     /**
      Responsible for calling a request and parsing its response
      
@@ -333,6 +388,16 @@ class URLStore{
     
     class func messagesURL(conversationId: Int, authToken: String) -> NSURL? {
         return NSURL(string: "https://conversation.api.driftt.com/conversations/\(conversationId)/messages?access_token=\(authToken)")
+    }
+    
+    class func attachmentsURL(attachmentIds: [Int], authToken: String) -> NSURL? {
+        var params = ""
+        for id in attachmentIds{
+            params += "&id=\(id)"
+        }
+        params += "&img_auto=compress"
+
+        return NSURL(string: "https://conversation.api.driftt.com/attachments?access_token=\(authToken)\(params)")
     }
     
 }
