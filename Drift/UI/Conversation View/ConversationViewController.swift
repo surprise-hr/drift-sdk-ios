@@ -31,13 +31,16 @@ class ConversationViewController: SLKTextViewController {
     var sections: [[Message]] = []
     var messages: [Message] = []
     var previewItem: DriftPreviewItem?
-    var formatter = NSDateFormatter()
+    var dateFormatter: DriftDateFormatter = DriftDateFormatter()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupSlackTextView()
-        formatter.dateFormat = "HH:mm"
-        formatter.timeStyle = .ShortStyle
+        tableView?.rowHeight = UITableViewAutomaticDimension
+        tableView?.estimatedRowHeight = 65
+        tableView?.registerNib(UINib.init(nibName: "ConversationMessageTableViewCell", bundle: NSBundle(forClass: ConversationMessageTableViewCell.classForCoder())), forCellReuseIdentifier: "ConversationMessageTableViewCell")
+        tableView?.registerNib(UINib.init(nibName: "ConversationImageTableViewCell", bundle: NSBundle(forClass: ConversationImageTableViewCell.classForCoder())), forCellReuseIdentifier: "ConversationImageTableViewCell")
+        tableView?.registerNib(UINib.init(nibName: "ConversationAttachmentsTableViewCell", bundle: NSBundle(forClass: ConversationAttachmentsTableViewCell.classForCoder())), forCellReuseIdentifier: "ConversationAttachmentsTableViewCell")
     }
     
     
@@ -84,33 +87,29 @@ class ConversationViewController: SLKTextViewController {
     
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let message = messages[indexPath.row]
+        let message = sections[indexPath.section].reverse()[indexPath.row]
         let cell: UITableViewCell
+        
         if message.attachments.count > 0{
             cell = tableView.dequeueReusableCellWithIdentifier("ConversationAttachmentsTableViewCell", forIndexPath: indexPath) as! ConversationAttachmentsTableViewCell
         }else{
             cell = tableView.dequeueReusableCellWithIdentifier("ConversationMessageTableViewCell", forIndexPath: indexPath) as! ConversationMessageTableViewCell
-        }
-        
-        if let cell = cell as? ConversationMessageTableViewCell{
-            cell.avatarImageView.image = UIImage.init(named: "closeIcon")
-            cell.nameLabel.text = "Brian McDonald"
-            cell.messageTextView.text = message.body
-            cell.timeLabel.text = formatter.stringFromDate(message.createdAt)
-        }else if let cell = cell as? ConversationAttachmentsTableViewCell{
-            cell.avatarImageView.image = UIImage.init(named: "closeIcon")
-            cell.nameLabel.text = "Brian McDonald"
-            cell.messageTextView.text = message.body
-            cell.timeLabel.text = formatter.stringFromDate(message.createdAt)
-        }else if let cell = cell as? ConversationImageTableViewCell{
-            cell.avatarImageView.image = UIImage.init(named: "closeIcon")
-            cell.nameLabel.text = "Brian McDonald"
-            cell.messageTextView.text = message.body
-            cell.timeLabel.text = formatter.stringFromDate(message.createdAt)
+            if let cell = cell as? ConversationMessageTableViewCell{
+                cell.message = message
+            }
         }
         
         cell.transform = tableView.transform
         return cell
+    }
+    
+    override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+        print(indexPath.row)
+        let message = sections[indexPath.section].reverse()[indexPath.row]
+        if let cell = cell as? ConversationMessageTableViewCell{
+            cell.message = message
+        }
+
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -121,6 +120,20 @@ class ConversationViewController: SLKTextViewController {
         return sections.count
     }
     
+    override func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let headerView: MessageTableHeaderView =  MessageTableHeaderView.fromNib("MessageTableHeaderView") as! MessageTableHeaderView
+        let message = sections[section][0]
+        headerView.headerLabel.text = dateFormatter.headerStringFromDate(message.createdAt)
+        headerView.transform = tableView.transform
+        return headerView
+    }
+    
+    
+    override func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 42
+    }
+    
+    
     func addMessageToConversation(message: Message){
         if sections.count > 0 && NSCalendar.currentCalendar().component(.Day, fromDate: (sections[0].first?.createdAt)!) ==  NSCalendar.currentCalendar().component(.Day, fromDate: NSDate()){
             self.sections[0].append(message)
@@ -130,7 +143,7 @@ class ConversationViewController: SLKTextViewController {
             tableView?.insertSections(NSIndexSet.init(index: 0), withRowAnimation: .Bottom)
         }
     }
-
+    
     
     func getSections() -> [[Message]]{
         var sections: [[Message]] = []
@@ -197,9 +210,6 @@ class ConversationViewController: SLKTextViewController {
                     message.sendStatus = .Failed
                     self.sections[0][index] = message
                 }
-                
-                self.tableView!.reloadRowsAtIndexPaths([NSIndexPath(forRow:self.sections[0].count-index-1, inSection: 0)], withRowAnimation: .None)
-                self.tableView?.scrollToRowAtIndexPath(NSIndexPath(forRow:self.sections[0].count-index-1, inSection: 0), atScrollPosition: .Bottom, animated: true)
             }
         }
     }
@@ -285,7 +295,6 @@ extension ConversationViewController: MessageDelegate{
 //        }
 //    }
 //}
-
 
 extension ConversationViewController: UIDocumentInteractionControllerDelegate{
     func documentInteractionControllerViewControllerForPreview(controller: UIDocumentInteractionController) -> UIViewController {

@@ -10,13 +10,11 @@
 import ObjectMapper
 
 public enum ContentType: String{
-    case PrivateNote = "PRIVATE_NOTE"
     case Chat = "CHAT"
-    case ConversationEvent = "CONVERSATION_EVENT"
+    case ConversationEvent = "ANNOUNCEMENT"
 }
 
 public enum Type: String{
-    case PrivateNote = "PRIVATE_NOTE"
     case Chat = "EMAIL"
 }
 
@@ -36,7 +34,7 @@ public class Message: Mappable, Equatable{
     var uuid: String?
     var inboxId: Int!
     var body: String?
-    var attachments: [Int]!
+    var attachments: [Int] = []
     var contentType = ContentType.Chat.rawValue
     var createdAt = NSDate()
     var authorId: Int!
@@ -48,6 +46,16 @@ public class Message: Mappable, Equatable{
     var sendStatus: SendStatus!
 
     required convenience public init?(_ map: Map) {
+        if map.JSONDictionary["contentType"] as? String == nil || ContentType(rawValue: map.JSONDictionary["contentType"] as! String) == nil{
+            return nil
+        }
+        
+        if let body = map.JSONDictionary["body"] as? String, attachments = map.JSONDictionary["attachments"] as? [Int]{
+            if body == "" && attachments.count == 0{
+                return nil
+            }
+        }
+        
         self.init()
     }
     

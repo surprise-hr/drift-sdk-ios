@@ -1,5 +1,5 @@
 //
-//  AnnouncmentExpandedView.swift
+//  AnnouncementExpandedView.swift
 //  Drift
 //
 //  Created by Eoin O'Connell on 19/02/2016.
@@ -10,7 +10,7 @@ import UIKit
 import SafariServices
 import MessageUI
 
-class AnnouncmentExpandedView: CampaignView, UIScrollViewDelegate {
+class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
     var campaign: Campaign! {
         didSet{
             setupForCampaign()
@@ -59,8 +59,8 @@ class AnnouncmentExpandedView: CampaignView, UIScrollViewDelegate {
     }
     
     @IBOutlet weak var closeButton: UIButton!
-    @IBOutlet weak var announcmentTitleLabel: UILabel!
-    @IBOutlet weak var announcmentInfoTextView: UILabel!
+    @IBOutlet weak var announcementTitleLabel: UILabel!
+    @IBOutlet weak var announcementInfoTextView: UILabel!
     
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var scrollViewContainer: UIView!
@@ -86,7 +86,7 @@ class AnnouncmentExpandedView: CampaignView, UIScrollViewDelegate {
     override func showOnWindow(window: UIWindow) {
         window.addSubview(self)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(AnnouncmentExpandedView.didRotate), name: UIApplicationDidChangeStatusBarOrientationNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(AnnouncementExpandedView.didRotate), name: UIApplicationDidChangeStatusBarOrientationNotification, object: nil)
         
         translatesAutoresizingMaskIntoConstraints = false
         
@@ -190,7 +190,7 @@ class AnnouncmentExpandedView: CampaignView, UIScrollViewDelegate {
     
     func setupForCampaign() {
         
-        if let cta = campaign.announcmentAttributes?.cta {
+        if let cta = campaign.announcementAttributes?.cta {
             if let copy = cta.copy {
                 ctaButton.setTitle(copy, forState: .Normal)
             }else{
@@ -203,8 +203,8 @@ class AnnouncmentExpandedView: CampaignView, UIScrollViewDelegate {
             containerView.layoutIfNeeded()
         }
         
-        if let announcment = campaign.announcmentAttributes {
-            announcmentTitleLabel.text = announcment.title ?? ""
+        if let announcement = campaign.announcementAttributes {
+            announcementTitleLabel.text = announcement.title ?? ""
             
             do {
                 let htmlStringData = (campaign.bodyText ?? "").dataUsingEncoding(NSUTF8StringEncoding)!
@@ -212,12 +212,12 @@ class AnnouncmentExpandedView: CampaignView, UIScrollViewDelegate {
                     NSCharacterEncodingDocumentAttribute: NSUTF8StringEncoding
                 ]
                 let attributedHTMLString = try NSMutableAttributedString(data: htmlStringData, options: options, documentAttributes: nil)
-                announcmentInfoTextView.text = attributedHTMLString.string
+                announcementInfoTextView.text = attributedHTMLString.string
             } catch {
-                announcmentInfoTextView.text = campaign.bodyText ?? ""
+                announcementInfoTextView.text = campaign.bodyText ?? ""
             }
             
-            announcmentInfoTextView.font = UIFont(name: "Avenir", size: 16)
+            announcementInfoTextView.font = UIFont(name: "Avenir", size: 16)
             
         }
     
@@ -243,9 +243,9 @@ class AnnouncmentExpandedView: CampaignView, UIScrollViewDelegate {
     }
     
     @IBAction func ctaButtonPressed(sender: AnyObject) {
-        delegate?.campaignDidFinishWithResponse(self, campaign: campaign, response: .Announcment(.Clicked))
+        delegate?.campaignDidFinishWithResponse(self, campaign: campaign, response: .Announcement(.Clicked))
         
-        if let cta = campaign?.announcmentAttributes?.cta {
+        if let cta = campaign?.announcementAttributes?.cta {
             
             switch cta.ctaType {
             case .Some(.ChatResponse):
@@ -253,7 +253,12 @@ class AnnouncmentExpandedView: CampaignView, UIScrollViewDelegate {
                     let conversationVC = ConversationViewController(nibName: "ConversationViewController", bundle: NSBundle(forClass: ConversationViewController.classForCoder()))
                     conversationVC.conversationId = campaign.conversationId
                     let navVC = UINavigationController.init(rootViewController: conversationVC)
-                    navVC.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "closeIcon"), style: .Plain, target: self, action: #selector(AnnouncmentExpandedView.dismissViewController))
+                    navVC.navigationBar.barTintColor = DriftDataStore.sharedInstance.generateBackgroundColor()
+                    navVC.navigationBar.tintColor = DriftDataStore.sharedInstance.generateForegroundColor()
+                    navVC.navigationBar.translucent = false
+                    let leftButton = UIBarButtonItem(title: "Close", style: UIBarButtonItemStyle.Done, target: self, action: #selector(AnnouncementExpandedView.dismissViewController))
+                    conversationVC.navigationItem.leftBarButtonItem  = leftButton
+                    conversationVC.navigationItem.title = "Conversation"
                     topVC.presentViewController(navVC, animated: true, completion: nil)
                 }
             case .Some(.LinkToURL):
@@ -289,7 +294,7 @@ class AnnouncmentExpandedView: CampaignView, UIScrollViewDelegate {
 
     
     @IBAction func pressedClose(sender: AnyObject) {
-        delegate?.campaignDidFinishWithResponse(self, campaign: campaign, response: .Announcment(.Dismissed))
+        delegate?.campaignDidFinishWithResponse(self, campaign: campaign, response: .Announcement(.Dismissed))
     }
     
     override func hideFromWindow() {

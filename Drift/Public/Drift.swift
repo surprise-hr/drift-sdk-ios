@@ -44,7 +44,7 @@ public class Drift: NSObject {
     /**
 
      This mode enables you to see the output logs of drift for debug purposes
-     This will also stop dismissing announcments from being sticky so you can see the same announcment over and over
+     This will also stop dismissing announcements from being sticky so you can see the same announcement over and over
      
      - parameter debug: A Bool indicating if debug mode should be enabled or not
      

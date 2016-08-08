@@ -22,21 +22,21 @@ class CampaignsManager {
             convo.predicate = LYRPredicate(property: "hasUnreadMessages", predicateOperator: LYRPredicateOperator.IsEqualTo, value: true)
             let conversationController = try LayerManager.sharedInstance.layerClient?.queryControllerWithQuery(convo)
             try conversationController?.execute()
-            var announcments:[Campaign] = []
+            var announcements:[Campaign] = []
             if let countUInt = conversationController?.numberOfObjectsInSection(0) {
                 let count = Int(countUInt)
                 for index: Int in 0..<count {
                     if let conversation = conversationController?.objectAtIndexPath(NSIndexPath(forRow: index, inSection: 0)) as? LYRConversation {
                         LoggerManager.log("Conversation hasunread: \(conversation.hasUnreadMessages)")
                         LoggerManager.log("Conversation Id: \(conversation.identifier)")
-                        let newAnnouncments = try getMessages(conversation)
-                        announcments = announcments + newAnnouncments
+                        let newAnnouncements = try getMessages(conversation)
+                        announcements = announcements + newAnnouncements
                     }
                 }
             }
             
-            let filtered = filtercampaigns(announcments)
-            PresentationManager.sharedInstance.didRecieveCampaigns(filtered.nps + filtered.announcments)
+            let filtered = filtercampaigns(announcements)
+            PresentationManager.sharedInstance.didRecieveCampaigns(filtered.nps + filtered.announcements)
         } catch {
             LoggerManager.log("Error in checking conversations")
         }
@@ -59,7 +59,7 @@ class CampaignsManager {
         let queryController = try LayerManager.sharedInstance.layerClient?.queryControllerWithQuery(messagesQuery)
         try queryController?.execute()
         
-        var announcments:[Campaign] = []
+        var announcements:[Campaign] = []
         if let countUInt = queryController?.numberOfObjectsInSection(0) {
             let count = Int(countUInt)
             for index: Int in 0..<count {
@@ -72,8 +72,8 @@ class CampaignsManager {
                         case "application/json":
                             
                             if let data = part.data, json = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments) as? [String: AnyObject] {
-                                if let newAnnouncment = Mapper<Campaign>().map(json) where newAnnouncment.messageType != nil{
-                                    announcments.append(newAnnouncment)
+                                if let newAnnouncement = Mapper<Campaign>().map(json) where newAnnouncement.messageType != nil{
+                                    announcements.append(newAnnouncement)
                                 }
                             }
                             
@@ -84,16 +84,16 @@ class CampaignsManager {
                 }
             }
         }
-        return announcments
+        return announcements
     }
     
     /**
-        This is responsible for filtering an array of campaigns into NPS and Announcments
+        This is responsible for filtering an array of campaigns into NPS and Announcements
         This will also filter out non presentable campaigns
         - parameter campaign: Array of non filtered campaigns
-        - returns: Tuple of NPS and Announcment Type Campaigns that are presentable in SDK
+        - returns: Tuple of NPS and Announcement Type Campaigns that are presentable in SDK
     */
-    class func filtercampaigns(campaigns: [Campaign]) -> (nps: [Campaign], announcments: [Campaign]){
+    class func filtercampaigns(campaigns: [Campaign]) -> (nps: [Campaign], announcements: [Campaign]){
         
         ///GET NPS or NPS_RESPONSE
         
@@ -101,7 +101,7 @@ class CampaignsManager {
         
         var npsResponse: [Campaign] = []
         var nps: [Campaign] = []
-        var announcments: [Campaign] = []
+        var announcements: [Campaign] = []
         
         for campaign in campaigns {
             
@@ -112,15 +112,15 @@ class CampaignsManager {
             case .Some(.NPSResponse):
                 npsResponse.append(campaign)
             case .Some(.Announcement):
-                //Only show chat response announcments if we have an email
-                if let ctaType = campaign.announcmentAttributes?.cta?.ctaType where ctaType == .ChatResponse{
+                //Only show chat response announcements if we have an email
+                if let ctaType = campaign.announcementAttributes?.cta?.ctaType where ctaType == .ChatResponse{
                     if let email = DriftDataStore.sharedInstance.embed?.inboxEmailAddress where email != ""{
-                        announcments.append(campaign)
+                        announcements.append(campaign)
                     }else{
-                        LoggerManager.log("Did remove chat announcment as we dont have an email")
+                        LoggerManager.log("Did remove chat announcement as we dont have an email")
                     }
                 }else{
-                    announcments.append(campaign)
+                    announcements.append(campaign)
                 }
             default:
                 ()
@@ -137,7 +137,7 @@ class CampaignsManager {
             return false
         }
         
-        return (nps, announcments)
+        return (nps, announcements)
     }
     
     

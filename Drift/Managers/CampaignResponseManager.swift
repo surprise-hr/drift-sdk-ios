@@ -8,7 +8,7 @@
 
 enum CampaignResponse{
     case NPS(NPSResponse)
-    case Announcment(AnnouncmentResponse)
+    case Announcement(AnnouncementResponse)
 }
 
 enum NPSResponse {
@@ -17,7 +17,7 @@ enum NPSResponse {
     case TextAndNumeric(Int, String)
 }
 
-enum AnnouncmentResponse: String {
+enum AnnouncementResponse: String {
     case Opened = "OPENED"
     case Dismissed = "DISMISSED"
     case Clicked = "CLICKED"
@@ -25,9 +25,9 @@ enum AnnouncmentResponse: String {
 
 class CampaignResponseManager {
     
-    class func recordAnnouncmentResponse(campaign: Campaign, response: AnnouncmentResponse){
+    class func recordAnnouncementResponse(campaign: Campaign, response: AnnouncementResponse){
         
-        LoggerManager.log("Recording Announcment Response:\(response) \(campaign.conversationId) ")
+        LoggerManager.log("Recording Announcement Response:\(response) \(campaign.conversationId) ")
         
         guard let auth = DriftDataStore.sharedInstance.auth?.accessToken else {
             LoggerManager.log("No Auth Token for Recording")
@@ -43,7 +43,7 @@ class CampaignResponseManager {
         }
         
         if !DriftManager.sharedInstance.debug {
-            APIManager.recordAnnouncment(conversationId, authToken: auth, response: response)
+            APIManager.recordAnnouncement(conversationId, authToken: auth, response: response)
         }
     }
     

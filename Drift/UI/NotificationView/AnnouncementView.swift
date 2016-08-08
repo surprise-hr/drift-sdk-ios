@@ -9,7 +9,7 @@
 import UIKit
 import SafariServices
 
-class AnnouncmentView: CampaignView {
+class AnnouncementView: CampaignView {
     
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var shadowView: UIView!
@@ -53,8 +53,8 @@ class AnnouncmentView: CampaignView {
         dismissButton.setTitleColor(foreground, forState: .Normal)
         openButton.setTitleColor(foreground, forState: .Normal)
         
-        if let announcment = campaign.announcmentAttributes {
-            titleLabel.text = announcment.title ?? ""
+        if let announcement = campaign.announcementAttributes {
+            titleLabel.text = announcement.title ?? ""
             
             do {
                 let htmlStringData = (campaign.bodyText ?? "").dataUsingEncoding(NSUTF8StringEncoding)!
@@ -140,11 +140,11 @@ class AnnouncmentView: CampaignView {
     }
     
     @IBAction func skipPressed(sender: AnyObject) {
-        delegate?.campaignDidFinishWithResponse(self, campaign: campaign, response: .Announcment(.Dismissed))
+        delegate?.campaignDidFinishWithResponse(self, campaign: campaign, response: .Announcement(.Dismissed))
     }
     
     @IBAction func readPressed(sender: AnyObject) {
-        delegate?.campaignDidFinishWithResponse(self, campaign: campaign, response: .Announcment(.Opened))
+        delegate?.campaignDidFinishWithResponse(self, campaign: campaign, response: .Announcement(.Opened))
     }
     
         

@@ -108,7 +108,7 @@ class APIManager {
     }
     
     
-    class func recordAnnouncment(conversationId: Int, authToken: String, response: AnnouncmentResponse) {
+    class func recordAnnouncement(conversationId: Int, authToken: String, response: AnnouncementResponse) {
         
         
         guard let url = URLStore.messagesURL(conversationId, authToken: authToken) else {
@@ -128,7 +128,7 @@ class APIManager {
             case .Success(let json):
                 LoggerManager.log("Record Annouincment Success: \(json)")
             case .Failure(let error):
-                LoggerManager.log("Record Announcment Failure: \(error)")
+                LoggerManager.log("Record Announcement Failure: \(error)")
             }
         }
     }

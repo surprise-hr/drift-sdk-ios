@@ -1,5 +1,5 @@
 //
-//  AnnouncmentAttributes.swift
+//  AnnouncementAttributes.swift
 //  Driftt
 //
 //  Created by Eoin O'Connell on 22/01/2016.
@@ -8,7 +8,7 @@
 
 import ObjectMapper
 
-class AnnouncmentAttributes: Mappable {
+class AnnouncementAttributes: Mappable {
     
     var cta: CTA?
     var title: String?
@@ -22,6 +22,6 @@ class AnnouncmentAttributes: Mappable {
         cta         <- map["cta"]
         title       <- map["title"]
         campaignId  <- map["campaignId"]
-
     }
+    
 }

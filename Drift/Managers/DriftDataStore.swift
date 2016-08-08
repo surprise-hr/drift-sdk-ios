@@ -129,4 +129,7 @@ extension DriftDataStore{
         return UIColor(red:0.54, green:0.4, blue:1, alpha:1)
     }
     
+    static let primaryFontColor = UIColor(red:0.20, green:0.20, blue:0.20, alpha:1.00)
+    static let secondaryFontColor = UIColor(red:0.60, green:0.60, blue:0.60, alpha:1.00)
+    
 }

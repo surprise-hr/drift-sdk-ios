@@ -11,7 +11,7 @@ class Campaign: Mappable {
     
     /**
         The type of message that the SDK can parse
-        - Announcment: Announcment Campaign
+        - Announcement: Announcement Campaign
         - NPS: NPS Campaign
         - NPS Response: Response to an NPS Campaign - Don't show NPS is conversation contains NPS Response
      */
@@ -31,7 +31,7 @@ class Campaign: Mappable {
     var conversationId: Int?
     
     var npsAttributes: NPSAttributes?
-    var announcmentAttributes: AnnouncmentAttributes?
+    var announcementAttributes: AnnouncementAttributes?
     var npsResponseAttributes: NPSResponseAttributes? 
     
     required convenience init?(_ map: Map) {
@@ -51,7 +51,7 @@ class Campaign: Mappable {
         if let messageType = messageType {
             switch messageType {
             case .Announcement:
-                announcmentAttributes <- map["attributes"]
+                announcementAttributes <- map["attributes"]
             case .NPS:
                 npsAttributes         <- map["attributes"]
             case .NPSResponse:
