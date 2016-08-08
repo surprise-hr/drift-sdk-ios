@@ -76,21 +76,17 @@ class ConversationMessageTableViewCell: UITableViewCell {
                 }
             })
         }else{
-            APIManager.getEndUser(userId, authToken: DriftDataStore.sharedInstance.auth!.accessToken) { (result) ->() in
-                switch result {
-                case .Success(let user):
-                    if let avatar = user.avatarURL {
-                        self.avatarImageView.downloadedFrom(avatar, contentMode: .ScaleAspectFill)
-                    }
-                    
-                    if let creatorName = user.name {
-                        self.nameLabel.text = creatorName
-                    }
-                case .Failure(let error):
-                    LoggerManager.didRecieveError(error)
-                }                
+            if let endUser = DriftDataStore.sharedInstance.auth?.enduser{
+                if let avatar = endUser.avatarURL {
+                    self.avatarImageView.downloadedFrom(NSURL.init(string:avatar)!, contentMode: .ScaleAspectFill)
+                }
+                
+                if let creatorName = endUser.name {
+                    self.nameLabel.text = creatorName
+                }
+
             }
         }
-        
     }
+    
 }
