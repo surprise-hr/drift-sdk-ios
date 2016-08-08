@@ -223,11 +223,11 @@ class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
     
         if let organizerId = campaign.authorId {
             
-            APIManager.campaignOrganizerForId(organizerId, orgId: DriftDataStore.sharedInstance.embed!.orgId, authToken: DriftDataStore.sharedInstance.auth!.accessToken, completion: { (result) -> () in
+            APIManager.getUser(organizerId, orgId: DriftDataStore.sharedInstance.embed!.orgId, authToken: DriftDataStore.sharedInstance.auth!.accessToken, completion: { (result) -> () in
                 switch result {
                 case .Success(let users):
                     if let avatar = users.first?.avatarURL {
-                        self.campaignCreatorImageView.downloadedFrom(avatar, contentMode: .ScaleAspectFill)
+                        self.campaignCreatorImageView.downloadedFrom(NSURL.init(string:avatar)!, contentMode: .ScaleAspectFill)
                     }
                     if let creatorName = users.first?.name {
                         self.campaignCreatorNameLabel.text = creatorName
@@ -256,7 +256,7 @@ class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
                     navVC.navigationBar.barTintColor = DriftDataStore.sharedInstance.generateBackgroundColor()
                     navVC.navigationBar.tintColor = DriftDataStore.sharedInstance.generateForegroundColor()
                     navVC.navigationBar.translucent = false
-                    let leftButton = UIBarButtonItem(title: "Close", style: UIBarButtonItemStyle.Done, target: self, action: #selector(AnnouncementExpandedView.dismissViewController))
+                    let leftButton = UIBarButtonItem(title: "Close", style: UIBarButtonItemStyle.Done, target: conversationVC, action: #selector(ConversationViewController.dismiss))
                     conversationVC.navigationItem.leftBarButtonItem  = leftButton
                     conversationVC.navigationItem.title = "Conversation"
                     topVC.presentViewController(navVC, animated: true, completion: nil)
@@ -273,10 +273,6 @@ class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
             //Read
             LoggerManager.log("No CTA")
         }
-    }
-    
-    func dismissViewController(){
-        TopController.viewController()?.dismissViewControllerAnimated(true, completion: nil)
     }
     
     func presentURL(url: NSURL) {

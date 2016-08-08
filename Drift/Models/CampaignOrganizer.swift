@@ -13,7 +13,7 @@ class CampaignOrganizer: Mappable {
     
     var userId: Int?
     var name: String?
-    var avatarURL: NSURL?
+    var avatarURL: String?
     
     required convenience init?(_ map: Map) {
         self.init()

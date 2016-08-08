@@ -16,6 +16,7 @@ class User: Mappable {
     var name: String?
     var externalId: String?
     var attributes: [String: AnyObject]?
+    var avatarURL: NSURL?
 
     required convenience init?(_ map: Map) {
         self.init()
@@ -28,5 +29,6 @@ class User: Mappable {
         name        <- map["name"]
         attributes  <- map["attributes"]
         externalId  <- map["externalId"]
+        avatarURL   <- map["avatarUrl"]
     }
 }

@@ -56,6 +56,10 @@ class ConversationViewController: SLKTextViewController {
         return .Plain
     }
     
+    func dismiss(){
+        TopController.viewController()?.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
     override func didPressLeftButton(sender: AnyObject?) {
         let uploadController = UIAlertController.init(title: nil, message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
         let imagePicker = UIImagePickerController()
@@ -81,6 +85,7 @@ class ConversationViewController: SLKTextViewController {
     override func didPressRightButton(sender: AnyObject?) {
         let message = Message()
         message.body = textView.text
+        message.authorId = Int(DriftDataStore.sharedInstance.auth!.enduser!.externalId!)
         self.textView.text = ""
         postMessage(message)
     }
@@ -104,7 +109,6 @@ class ConversationViewController: SLKTextViewController {
     }
     
     override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
-        print(indexPath.row)
         let message = sections[indexPath.section].reverse()[indexPath.row]
         if let cell = cell as? ConversationMessageTableViewCell{
             cell.message = message

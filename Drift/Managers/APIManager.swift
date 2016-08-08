@@ -37,6 +37,8 @@ class APIManager {
         }
     }
     
+    
+    
     class func getLayerAccessToken(nonce: String, userId: String, completion: (Result<String>) -> ()){
         
         makeRequest(Request(url: URLStore.layerTokenURL).setMethod(.POST).setData(.JSON(json: ["nonce": nonce, "userId": userId]))) { (result) in
@@ -68,13 +70,14 @@ class APIManager {
     }
     
     
-    class func campaignOrganizerForId(userId: Int, orgId: Int, authToken:String, completion: (Result<[CampaignOrganizer]>) -> ()) {
+    class func getUser(userId: Int, orgId: Int, authToken:String, completion: (Result<[CampaignOrganizer]>) -> ()) {
         
-        guard let url = URLStore.campaignUserURL(orgId) else {
-            LoggerManager.log("Failure in Embed URL creation")
+        guard let url = URLStore.campaignUserURL(orgId, authToken: DriftDataStore.sharedInstance.auth!.accessToken) else {
+            LoggerManager.log("Failure in Campaign Organizer URL creation")
             return
         }
         
+        print(url)
         let params: [String: AnyObject] =
         [   "avatar_w": 102,
             "avatar_h": 102,
@@ -87,6 +90,18 @@ class APIManager {
             completion(mapResponse(result))
         }
         
+    }
+    
+    class func getEndUser(endUserId: Int, authToken:String, completion: (Result<User>) -> ()){
+        
+        guard let url = URLStore.usersURL(endUserId, authToken: authToken) else {
+            LoggerManager.log("Failure in User URL creation")
+            return
+        }
+        
+        makeRequest(Request(url: url).setMethod(.GET)) { (result) in
+            completion(mapResponse(result))
+        }
     }
     
     class func postIdentify(orgId: Int, userId: String, email: String, attributes: [String: AnyObject]?, completion: (Result<User>) -> ()) {
@@ -378,8 +393,8 @@ class URLStore{
         return NSURL(string: "https://js.driftt.com/embeds/\(refresh ?? "30000")/\(embedId).js")
     }
     
-    class func campaignUserURL(orgId: Int) -> NSURL? {
-        return NSURL(string: "https://customer.api.driftt.com/organizations/\(orgId)/users")
+    class func campaignUserURL(orgId: Int, authToken: String) -> NSURL? {
+        return NSURL(string: "https://customer.api.driftt.com/organizations/\(orgId)/users?access_token=\(authToken)")
     }
         
     class func conversationsURL(endUserId: Int, authToken: String) -> NSURL? {
@@ -400,6 +415,9 @@ class URLStore{
         return NSURL(string: "https://conversation.api.driftt.com/attachments?access_token=\(authToken)\(params)")
     }
     
+    class func usersURL(userId: Int, authToken: String) -> NSURL? {
+        return NSURL(string: "https://customer.api.driftt.com/end_users/\(userId)?access_token=\(authToken)")
+    }
 }
 
 ///Result object for either Success with sucessfully parsed T

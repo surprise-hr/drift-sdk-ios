@@ -34,23 +34,63 @@ class ConversationMessageTableViewCell: UITableViewCell {
     }
     
     func displayMessage() {
+        if let authorId = message?.authorId{
+            getUser(authorId)
+        }
+        
+        self.messageTextView.text = ""
+        self.avatarImageView.layer.cornerRadius = 3
+        self.avatarImageView.layer.masksToBounds = true
+        self.nameLabel.textColor = DriftDataStore.primaryFontColor
+        self.messageTextView.text = self.message!.body
+        self.messageTextView.textColor = DriftDataStore.secondaryFontColor
+        self.timeLabel.textColor = DriftDataStore.secondaryFontColor
+        self.timeLabel.text = self.dateFormatter.createdAtStringFromDate(self.message!.createdAt)
+        do {
+            let htmlStringData = (self.message!.body ?? "").dataUsingEncoding(NSUTF8StringEncoding)!
+            let options: [String: AnyObject] = [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,
+                                                NSCharacterEncodingDocumentAttribute: NSUTF8StringEncoding
+            ]
+            let attributedHTMLString = try NSMutableAttributedString(data: htmlStringData, options: options, documentAttributes: nil)
+            self.messageTextView.text = attributedHTMLString.string
+        } catch {
             self.messageTextView.text = ""
-            self.nameLabel.text = "Brian McDonald"
-            self.nameLabel.textColor = DriftDataStore.primaryFontColor
-            self.messageTextView.text = self.message!.body
-            self.messageTextView.textColor = DriftDataStore.secondaryFontColor
-            self.timeLabel.textColor = DriftDataStore.secondaryFontColor
-            self.timeLabel.text = self.dateFormatter.createdAtStringFromDate(self.message!.createdAt)
-            do {
-                let htmlStringData = (self.message!.body ?? "").dataUsingEncoding(NSUTF8StringEncoding)!
-                let options: [String: AnyObject] = [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,
-                                                    NSCharacterEncodingDocumentAttribute: NSUTF8StringEncoding
-                ]
-                let attributedHTMLString = try NSMutableAttributedString(data: htmlStringData, options: options, documentAttributes: nil)
-                self.messageTextView.text = attributedHTMLString.string
-            } catch {
-                self.messageTextView.text = ""
-            }
+        }
     }
     
+    func getUser(userId: Int){
+        if let authorType = message!.authorType where authorType == .User{
+            APIManager.getUser(message!.authorId, orgId: DriftDataStore.sharedInstance.embed!.orgId, authToken: DriftDataStore.sharedInstance.auth!.accessToken, completion: { (result) -> () in
+                switch result {
+                    
+                case .Success(let users):
+                    if let avatar = users.first?.avatarURL {
+                        self.avatarImageView.downloadedFrom(NSURL.init(string: avatar)!, contentMode: .ScaleAspectFill)
+                    }
+                    
+                    if let creatorName =  users.first?.name {
+                        self.nameLabel.text = creatorName
+                    }
+                case .Failure(let error):
+                    LoggerManager.didRecieveError(error)
+                }
+            })
+        }else{
+            APIManager.getEndUser(userId, authToken: DriftDataStore.sharedInstance.auth!.accessToken) { (result) ->() in
+                switch result {
+                case .Success(let user):
+                    if let avatar = user.avatarURL {
+                        self.avatarImageView.downloadedFrom(avatar, contentMode: .ScaleAspectFill)
+                    }
+                    
+                    if let creatorName = user.name {
+                        self.nameLabel.text = creatorName
+                    }
+                case .Failure(let error):
+                    LoggerManager.didRecieveError(error)
+                }                
+            }
+        }
+        
+    }
 }

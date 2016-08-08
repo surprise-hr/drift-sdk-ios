@@ -70,12 +70,12 @@ class AnnouncementView: CampaignView {
 
         if let organizerId = campaign.authorId {
             
-            APIManager.campaignOrganizerForId(organizerId, orgId: DriftDataStore.sharedInstance.embed!.orgId, authToken: DriftDataStore.sharedInstance.auth!.accessToken, completion: { (result) -> () in
+            APIManager.getUser(organizerId, orgId: DriftDataStore.sharedInstance.embed!.orgId, authToken: DriftDataStore.sharedInstance.auth!.accessToken, completion: { (result) -> () in
                 switch result {
                     
                 case .Success(let users):
                     if let avatar = users.first?.avatarURL {
-                        self.userImageView.downloadedFrom(avatar, contentMode: .ScaleAspectFill)
+                        self.userImageView.downloadedFrom(NSURL.init(string:avatar)!, contentMode: .ScaleAspectFill)
                     }
                 case .Failure(let error):
                     LoggerManager.didRecieveError(error)

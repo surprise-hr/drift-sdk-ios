@@ -14,7 +14,6 @@ struct Auth: Mappable {
     var accessToken: String!
     var enduser: User?
     
-    
     init?(_ map: Map) {
         //These fields are required, without them we fail to init the object
         accessToken = map["accessToken"].validNotEmpty()
