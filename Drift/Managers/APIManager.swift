@@ -263,6 +263,37 @@ class APIManager {
 
     }
     
+    class func createConversation(body: String, authorId:Int?, authToken: String, completion: (result: Result<Message>) -> ()){
+        
+        
+        guard let url = URLStore.createConversationURL(authToken) else {
+            LoggerManager.log("Failed in Create Conversation URL Creation")
+            return
+        }
+        
+        var json: [String : AnyObject] = ["body":body]
+        
+//        if let authorId = authorId {
+//            json["to"] = ["id":authorId]
+//        }
+        
+        let request = Request(url: url).setData(.JSON(json: json)).setMethod(.POST)
+        
+        makeRequest(request) { (result) -> () in
+            
+            switch result {
+            case .Success:
+                let messages: Result<Message> = mapResponse(result)
+                completion(result: messages)
+            case .Failure(let error):
+                completion(result: .Failure(DriftError.APIFailure))
+                LoggerManager.log("Unable to get messages for conversation: \(error)")
+            }
+        }
+        
+    }
+    
+    
     class func getAttachmentsMetaData(attachmentIds: [Int], authToken: String, completion: (result: Result<Attachment>) -> ()){
         
         
@@ -389,8 +420,8 @@ class URLStore{
     static let layerTokenURL = NSURL(string: "https://customer.api.driftt.com/layer/token")!
     static let tokenURL = NSURL(string: "https://customer.api.driftt.com/oauth/token")!
     class func embedURL(embedId: String, refresh: String?) -> NSURL? {
-//        return NSURL(string: "https://customer.api.driftt.com/embeds/\(embedId)")
-        return NSURL(string: "https://js.driftt.com/embeds/\(refresh ?? "30000")/\(embedId).js")
+        return NSURL(string: "https://customer.api.driftt.com/embeds/\(embedId)")
+//        return NSURL(string: "https://js.driftt.com/embeds/\(refresh ?? "30000")/\(embedId).js")
     }
     
     class func campaignUserURL(orgId: Int, authToken: String) -> NSURL? {
@@ -403,6 +434,10 @@ class URLStore{
     
     class func messagesURL(conversationId: Int, authToken: String) -> NSURL? {
         return NSURL(string: "https://conversation.api.driftt.com/conversations/\(conversationId)/messages?access_token=\(authToken)")
+    }
+    
+    class func createConversationURL(authToken: String) -> NSURL? {
+        return NSURL(string: "https://conversation.api.drift.com/messages?access_token=\(authToken)")
     }
     
     class func attachmentsURL(attachmentIds: [Int], authToken: String) -> NSURL? {

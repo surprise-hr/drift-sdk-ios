@@ -24,7 +24,7 @@ class LoggerManager {
     
     class func log(text: String) {
         if DriftManager.sharedInstance.debug {
-            print(text)
+            print("🚀🚀\(text)🚀🚀")
         }
     }
 }

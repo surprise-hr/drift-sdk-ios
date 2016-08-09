@@ -16,7 +16,7 @@ class CampaignsManager {
         Calls Presentation Manager to present any Campaigns to be shown
      */
     class func checkForCampaigns() throws{
-        
+        LoggerManager.log("Checking for campaigns")
         do {
             let convo = LYRQuery(queryableClass: LYRConversation.self)
             convo.predicate = LYRPredicate(property: "hasUnreadMessages", predicateOperator: LYRPredicateOperator.IsEqualTo, value: true)
@@ -61,6 +61,7 @@ class CampaignsManager {
         
         var announcements:[Campaign] = []
         if let countUInt = queryController?.numberOfObjectsInSection(0) {
+            LoggerManager.log("Number Of Messages: \(countUInt)")
             let count = Int(countUInt)
             for index: Int in 0..<count {
                 if let message = queryController?.objectAtIndexPath(NSIndexPath(forRow: index, inSection: 0)) as? LYRMessage {
@@ -70,7 +71,8 @@ class CampaignsManager {
                         switch part.MIMEType {
 //                        case "text/plain":
                         case "application/json":
-                            
+                            LoggerManager.log("Mapping Mime Type")
+
                             if let data = part.data, json = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments) as? [String: AnyObject] {
                                 if let newAnnouncement = Mapper<Campaign>().map(json) where newAnnouncement.messageType != nil{
                                     announcements.append(newAnnouncement)

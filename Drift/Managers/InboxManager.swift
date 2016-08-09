@@ -74,6 +74,26 @@ public class InboxManager {
         }
     }
     
+    
+    func createConversation(message: Message, authorId: Int?, completion:(message: Message?, requestId: Double) -> ()){
+        
+        
+        guard let auth = DriftDataStore.sharedInstance.auth?.accessToken else {
+            LoggerManager.log("No Auth Token for Recording")
+            return
+        }
+        
+        APIManager.createConversation(message.body ?? "", authorId: authorId, authToken: auth) { (result) in
+            switch result{
+            case .Success(let returnedMessage):
+                completion(message: returnedMessage, requestId: message.requestId)
+            case .Failure:
+                print("Unable to create conversation")
+                completion(message: nil, requestId: message.requestId)
+            }
+        }
+    }
+    
     //Create subscriptions for objects
     public func addConversationSubscription(subscription: ConversationSubscription){
         self.conversationSubscriptions.append(subscription)

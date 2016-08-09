@@ -9,6 +9,8 @@
 import UIKit
 import SlackTextViewController
 import QuickLook
+import LayerKit
+import ObjectMapper
 
 class DriftPreviewItem: NSObject, QLPreviewItem{
     var previewItemURL: NSURL
@@ -22,16 +24,28 @@ class DriftPreviewItem: NSObject, QLPreviewItem{
 
 
 class ConversationViewController: SLKTextViewController {
-    var conversationId: Int?{
-        didSet{
-            getMessages()
-        }
+    
+    enum ConversationType {
+        case CreateConversation(authodId: Int?)
+        case ContinueConversation(conversationId: Int)
     }
     
+    var conversationType: ConversationType!
     var sections: [[Message]] = []
     var messages: [Message] = []
     var previewItem: DriftPreviewItem?
     var dateFormatter: DriftDateFormatter = DriftDateFormatter()
+    
+    convenience init(conversationType: ConversationType) {
+        self.init(nibName: "ConversationViewController", bundle: NSBundle(forClass: ConversationViewController.classForCoder()))
+        self.conversationType = conversationType
+    }
+    
+    class func navigationController(conversationType: ConversationType) -> UINavigationController {
+        let vc = ConversationViewController.init(conversationType: conversationType)
+        let navVC = UINavigationController.init(rootViewController: vc)
+        return navVC
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,8 +55,74 @@ class ConversationViewController: SLKTextViewController {
         tableView?.registerNib(UINib.init(nibName: "ConversationMessageTableViewCell", bundle: NSBundle(forClass: ConversationMessageTableViewCell.classForCoder())), forCellReuseIdentifier: "ConversationMessageTableViewCell")
         tableView?.registerNib(UINib.init(nibName: "ConversationImageTableViewCell", bundle: NSBundle(forClass: ConversationImageTableViewCell.classForCoder())), forCellReuseIdentifier: "ConversationImageTableViewCell")
         tableView?.registerNib(UINib.init(nibName: "ConversationAttachmentsTableViewCell", bundle: NSBundle(forClass: ConversationAttachmentsTableViewCell.classForCoder())), forCellReuseIdentifier: "ConversationAttachmentsTableViewCell")
+        
+        if let navVC = navigationController {
+            navVC.navigationBar.barTintColor = DriftDataStore.sharedInstance.generateBackgroundColor()
+            navVC.navigationBar.tintColor = DriftDataStore.sharedInstance.generateForegroundColor()
+            navVC.navigationBar.translucent = false
+            let leftButton = UIBarButtonItem(title: "Close", style: UIBarButtonItemStyle.Done, target: self, action: #selector(ConversationViewController.dismiss))
+            navigationItem.leftBarButtonItem  = leftButton
+            navigationItem.title = "Conversation"
+        }
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ConversationViewController.didOpen), name: UIApplicationWillEnterForegroundNotification, object: nil)
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ConversationViewController.didUpdateMessages(_:)), name: LYRClientObjectsDidChangeNotification, object: nil)
+
+        didOpen()
     }
     
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
+    func didOpen(){
+        switch conversationType! {
+        case .ContinueConversation(let conversationId):
+            getMessages(conversationId)
+        case .CreateConversation(_):
+            ()
+            ///TODO: Show empty State
+        }
+    }
+    
+    func didUpdateMessages(notification : NSNotification ) {
+        print("🤘🤘Did Update Message🤘🤘")
+        if case ConversationType.ContinueConversation(let conversationId) = conversationType!{
+            
+            if let changes = notification.userInfo?[LYRClientObjectChangesUserInfoKey] as? [LYRObjectChange] {
+                for change in changes {
+                    if let message = change.object as? LYRMessage {
+                        if change.type == .Create {
+                            for part in message.parts {
+                                switch part.MIMEType {
+                                //                        case "text/plain":
+                                case "application/json":
+                                    LoggerManager.log("Mapping Mime Type")
+                                    do {
+                                        if let data = part.data, json = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments) as? [String: AnyObject] {
+                                            if let newMessage = Mapper<Message>().map(json) {
+                                                if newMessage.conversationId == conversationId {
+                                                    self.newMessage(newMessage)
+                                                }
+                                            }
+                                        }
+                                    }catch {
+                                        LoggerManager.log("JSON Map Failure")
+
+                                    }
+                                    
+                                default:
+                                    LoggerManager.log("Ignored MimeType")
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
+        }
+    }
     
     func setupSlackTextView(){
         inverted = true
@@ -57,29 +137,29 @@ class ConversationViewController: SLKTextViewController {
     }
     
     func dismiss(){
-        TopController.viewController()?.dismissViewControllerAnimated(true, completion: nil)
+        dismissViewControllerAnimated(true, completion: nil)
     }
     
     override func didPressLeftButton(sender: AnyObject?) {
-        let uploadController = UIAlertController.init(title: nil, message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
+        let uploadController = UIAlertController.init(title: nil, message: nil, preferredStyle: .ActionSheet)
         let imagePicker = UIImagePickerController()
         imagePicker.delegate = self
-        uploadController.addAction(UIAlertAction(title: "Take a Photo", style: UIAlertActionStyle.Default, handler: { (UIAlertAction) in
-            imagePicker.sourceType = UIImagePickerControllerSourceType.Camera
+        uploadController.addAction(UIAlertAction(title: "Take a Photo", style: .Default, handler: { (UIAlertAction) in
+            imagePicker.sourceType = .Camera
             self.presentViewController(imagePicker, animated: true, completion: nil)
         }))
-        uploadController.addAction(UIAlertAction(title: "Choose From Library", style: UIAlertActionStyle.Default, handler: { (UIAlertAction) in
-            imagePicker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
+        uploadController.addAction(UIAlertAction(title: "Choose From Library", style: .Default, handler: { (UIAlertAction) in
+            imagePicker.sourceType = .PhotoLibrary
             self.presentViewController(imagePicker, animated: true, completion: nil)
         }))
-        uploadController.addAction(UIAlertAction(title: "Import File From...", style: UIAlertActionStyle.Default, handler: { (UIAlertAction) in
-            let documentPicker = UIDocumentMenuViewController.init(documentTypes: ["public.data"], inMode: UIDocumentPickerMode.Import)
+        uploadController.addAction(UIAlertAction(title: "Import File From...", style: .Default, handler: { (UIAlertAction) in
+            let documentPicker = UIDocumentMenuViewController.init(documentTypes: ["public.data"], inMode: .Import)
             documentPicker.delegate = self
-            documentPicker.modalPresentationStyle = UIModalPresentationStyle.FormSheet
+            documentPicker.modalPresentationStyle = .FormSheet
             self.presentViewController(documentPicker, animated: true, completion: nil)
         }))
-        uploadController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil))
-        self.presentViewController(uploadController, animated: true, completion: nil)
+        uploadController.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+        presentViewController(uploadController, animated: true, completion: nil)
     }
     
     override func didPressRightButton(sender: AnyObject?) {
@@ -179,15 +259,33 @@ class ConversationViewController: SLKTextViewController {
     }
     
 
-    func getMessages(){
-        APIManager.getMessages(conversationId!, authToken: DriftDataStore.sharedInstance.auth!.accessToken) { (result) in
+    func getMessages(conversationId: Int){
+    
+        APIManager.getMessages(conversationId, authToken: DriftDataStore.sharedInstance.auth!.accessToken) { (result) in
             switch result{
             case .Success(let messages):
-                self.messages = messages
-                self.sections = self.getSections()
-                self.tableView?.reloadData()
+                
+                let sorted = Set(messages.sort({ $0.createdAt.compare($1.createdAt) == .OrderedAscending}))
+                
+                let newMessages = sorted.subtract(self.messages)
+                
+                dispatch_async(dispatch_get_main_queue(), { 
+                   self.didRecieveMessages(Array(newMessages))
+                })
             case .Failure:
-                LoggerManager.log("Unable to get messages for conversationId: \(self.conversationId)")
+                LoggerManager.log("Unable to get messages for conversationId: \(conversationId)")
+            }
+        }
+    }
+    
+    func didRecieveMessages(messages: [Message]){
+        if self.messages.isEmpty{
+            self.messages = messages
+            self.sections = self.getSections()
+            self.tableView?.reloadData()
+        }else{
+            for message in messages {
+                newMessage(message)
             }
         }
     }
@@ -195,7 +293,17 @@ class ConversationViewController: SLKTextViewController {
     func postMessage(messageRequest: Message){
         messageRequest.requestId = NSDate().timeIntervalSince1970
         addMessageToConversation(messageRequest)
-        InboxManager.sharedInstance.postMessage(messageRequest, conversationId: conversationId!) { (message, requestId) in
+        
+        switch conversationType! {
+        case .CreateConversation(let authodId):
+            createConversationWithMessage(messageRequest, authorId: authodId)
+        case .ContinueConversation(let conversationId):
+            postMessageToConversation(conversationId, messageRequest: messageRequest)
+        }
+    }
+    
+    func postMessageToConversation(conversationId: Int, messageRequest: Message) {
+        InboxManager.sharedInstance.postMessage(messageRequest, conversationId: conversationId) { (message, requestId) in
             if let index = self.sections[0].indexOf({ (message1) -> Bool in
                 if message1.requestId == messageRequest.requestId{
                     return true
@@ -203,6 +311,32 @@ class ConversationViewController: SLKTextViewController {
                 return false
             }){
                 if let message = message{
+                    message.sendStatus = .Sent
+                    self.sections[0][index] = message
+                    
+                }else{
+                    let message = Message()
+                    message.authorId = DriftDataStore.sharedInstance.auth?.enduser?.userId
+                    message.body = messageRequest.body
+                    message.requestId = messageRequest.requestId
+                    message.sendStatus = .Failed
+                    self.sections[0][index] = message
+                }
+            }
+        }
+    }
+    
+    func createConversationWithMessage(messageRequest: Message, authorId: Int?) {
+        InboxManager.sharedInstance.createConversation(messageRequest, authorId: authorId) { (message, requestId) in
+            
+            if let index = self.sections[0].indexOf({ (message1) -> Bool in
+                if message1.requestId == messageRequest.requestId{
+                    return true
+                }
+                return false
+            }){
+                if let message = message{
+                    self.conversationType = ConversationType.ContinueConversation(conversationId: message.conversationId)
                     message.sendStatus = .Sent
                     self.sections[0][index] = message
                     
@@ -324,10 +458,10 @@ extension ConversationViewController: UIImagePickerControllerDelegate, UINavigat
         picker.dismissViewControllerAnimated(true, completion: nil)
         let newAttachment = Attachment()
         if let imageRep = UIImageJPEGRepresentation(image, 0.2){
-            newAttachment.data = imageRep
-            newAttachment.conversationId = conversationId!
-            newAttachment.mimeType = "image/jpeg"
-            newAttachment.fileName = "image.jpg"
+//            newAttachment.data = imageRep
+//            newAttachment.conversationId = conversationId!
+//            newAttachment.mimeType = "image/jpeg"
+//            newAttachment.fileName = "image.jpg"
 //            showLoader()
 //            APIManager.postAttachment(newAttachment) { (result) in
 //                self.hideLoader()
