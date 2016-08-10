@@ -30,7 +30,7 @@ public protocol AttachementSelectedDelegate: class{
 class ConversationViewController: SLKTextViewController {
     
     enum ConversationType {
-        case CreateConversation(authodId: Int?)
+        case CreateConversation(authorId: Int?)
         case ContinueConversation(conversationId: Int)
     }
     
@@ -39,7 +39,16 @@ class ConversationViewController: SLKTextViewController {
     var messages: [Message] = []
     var previewItem: DriftPreviewItem?
     var dateFormatter: DriftDateFormatter = DriftDateFormatter()
-    
+    var conversationId: Int?{
+        didSet{
+            dispatch_async(dispatch_get_main_queue(), {
+                self.leftButton.enabled = true
+                self.leftButton.tintColor = DriftDataStore.sharedInstance.generateBackgroundColor()
+                self.leftButton.setImage(UIImage.init(named: "plus-circle", inBundle: NSBundle(forClass: Drift.self), compatibleWithTraitCollection: nil), forState: .Normal)
+            });
+            
+        }
+    }
     convenience init(conversationType: ConversationType) {
         self.init(nibName: "ConversationViewController", bundle: NSBundle(forClass: ConversationViewController.classForCoder()))
         self.conversationType = conversationType
@@ -130,6 +139,7 @@ class ConversationViewController: SLKTextViewController {
     
     func setupSlackTextView(){
         leftButton.tintColor = UIColor.lightGrayColor()
+        leftButton.enabled = false
         leftButton.setImage(UIImage.init(named: "plus-circle", inBundle: NSBundle(forClass: Drift.self), compatibleWithTraitCollection: nil), forState: .Normal)
         inverted = true
         shouldScrollToBottomAfterKeyboardShows = false
@@ -346,7 +356,7 @@ class ConversationViewController: SLKTextViewController {
                     self.conversationType = ConversationType.ContinueConversation(conversationId: message.conversationId)
                     message.sendStatus = .Sent
                     self.sections[0][index] = message
-                    
+                    self.conversationId = message.conversationId
                 }else{
                     let message = Message()
                     message.authorId = DriftDataStore.sharedInstance.auth?.enduser?.userId
@@ -474,10 +484,10 @@ extension ConversationViewController: UIImagePickerControllerDelegate, UINavigat
         let newAttachment = Attachment()
         if let imageRep = UIImageJPEGRepresentation(image, 0.2){
             newAttachment.data = imageRep
-//            newAttachment.conversationId = conversationId
+            newAttachment.conversationId = conversationId!
             newAttachment.mimeType = "image/jpeg"
             newAttachment.fileName = "image.jpg"
-            APIManager.postAttachment(newAttachment) { (result) in
+            APIManager.postAttachment(newAttachment,authToken: DriftDataStore.sharedInstance.auth!.accessToken) { (result) in
                 switch result{
                 case .Success(let attachment):
                     let messageRequest = Message()
