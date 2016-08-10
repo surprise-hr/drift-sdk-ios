@@ -250,15 +250,7 @@ class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
             switch cta.ctaType {
             case .Some(.ChatResponse):
                 if let email = DriftDataStore.sharedInstance.embed?.inboxEmailAddress, topVC = TopController.viewController() where email != "" {
-                    let conversationVC = ConversationViewController(nibName: "ConversationViewController", bundle: NSBundle(forClass: ConversationViewController.classForCoder()))
-                    conversationVC.conversationId = campaign.conversationId
-                    let navVC = UINavigationController.init(rootViewController: conversationVC)
-                    navVC.navigationBar.barTintColor = DriftDataStore.sharedInstance.generateBackgroundColor()
-                    navVC.navigationBar.tintColor = DriftDataStore.sharedInstance.generateForegroundColor()
-                    navVC.navigationBar.translucent = false
-                    let leftButton = UIBarButtonItem(title: "Close", style: UIBarButtonItemStyle.Done, target: conversationVC, action: #selector(ConversationViewController.dismiss))
-                    conversationVC.navigationItem.leftBarButtonItem  = leftButton
-                    conversationVC.navigationItem.title = "Conversation"
+                    let navVC = ConversationViewController.navigationController(ConversationViewController.ConversationType.CreateConversation(authodId: campaign.authorId))
                     topVC.presentViewController(navVC, animated: true, completion: nil)
                 }
             case .Some(.LinkToURL):

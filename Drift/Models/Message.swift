@@ -29,7 +29,7 @@ public enum SendStatus: String{
     case Failed = "FAILED"
 }
 
-public class Message: Mappable, Equatable{
+public class Message: Mappable, Equatable, Hashable{
     var id: Int!
     var uuid: String?
     var inboxId: Int!
@@ -45,6 +45,10 @@ public class Message: Mappable, Equatable{
     var requestId: Double = 0
     var sendStatus: SendStatus!
 
+    public var hashValue: Int {
+        return id
+    }
+    
     required convenience public init?(_ map: Map) {
         if map.JSONDictionary["contentType"] as? String == nil || ContentType(rawValue: map.JSONDictionary["contentType"] as! String) == nil{
             return nil

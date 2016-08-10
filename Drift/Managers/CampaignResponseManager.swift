@@ -27,8 +27,8 @@ class CampaignResponseManager {
     
     class func recordAnnouncementResponse(campaign: Campaign, response: AnnouncementResponse){
         
-//        LoggerManager.log("Recording Announcement Response:\(response) \(campaign.conversationId) ")
-//        
+        LoggerManager.log("Recording Announcement Response:\(response) \(campaign.conversationId) ")
+
 //        guard let auth = DriftDataStore.sharedInstance.auth?.accessToken else {
 //            LoggerManager.log("No Auth Token for Recording")
 //            return
@@ -48,9 +48,9 @@ class CampaignResponseManager {
     }
     
     class func recordNPSResponse(campaign: Campaign, response: NPSResponse){
-//        LoggerManager.log("Recording NPS Response:\(response) \(campaign.conversationId) ")
-//        
-//        
+
+        LoggerManager.log("Recording NPS Response:\(response) \(campaign.conversationId) ")
+        
 //        guard let auth = DriftDataStore.sharedInstance.auth?.accessToken else {
 //            LoggerManager.log("No Auth Token for Recording")
 //            return
