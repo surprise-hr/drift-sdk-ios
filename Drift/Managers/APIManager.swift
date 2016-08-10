@@ -266,7 +266,7 @@ class APIManager {
     class func getAttachmentsMetaData(attachmentIds: [Int], authToken: String, completion: (result: Result<Attachment>) -> ()){
         
         
-        guard let url = URLStore.attachmentsURL(attachmentIds, authToken: authToken) else {
+        guard let url = URLStore.getAttachmentsURL(attachmentIds, authToken: authToken) else {
             LoggerManager.log("Failed in Messages URL Creation")
             return
         }
@@ -284,39 +284,62 @@ class APIManager {
                 LoggerManager.log("Unable to get attachments metadata: \(error)")
             }
         }
-        
     }
     
-//    public class func postAttachment(attachment: Attachment, completion: (result: Result<Attachment>) ->()){
+    class func postAttachment(attachment: Attachment, completion: (result: Result<Attachment>) ->()){
+        let requestURL = URLStore.postAttachmentURL
+        let request = NSMutableURLRequest.init(URL: requestURL)
+        request.HTTPMethod = "POST"
+
+        sharedInstance.session.uploadTaskWithRequest(request, fromData: attachment.data).resume()
+        
+        
+//        let boundary = "XXX"
+//        let requestURL = URLStore.postAttachmentURL
 //        
-//        sharedManager.upload(
-//            .POST,
-//            ConversationRouter.PostAttachment.URLRequest.URLString,
-//            multipartFormData: {multipartFormData in
-//                multipartFormData.appendBodyPart(data: attachment.data, name: "file", fileName:attachment.fileName, mimeType: attachment.mimeType)
-//                multipartFormData.appendBodyPart(data: "\(attachment.conversationId)".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!, name: "conversationId")
-//            },
-//            encodingCompletion: { encodingResult in
-//                switch encodingResult {
-//                case .Success(let upload, _, _):
-//                    
-//                    upload.responseJSON { response in
-//                        switch response.result{
-//                        case .Success(let json):
-//                            if let attachment: Attachment = Mapper<Attachment>().map(json){
-//                                completion(result: .Success(attachment))
-//                                return
-//                            }
-//                            fallthrough
-//                        case .Failure(_):
-//                            completion(result: .Failure)
-//                        }
+//        let request = NSMutableURLRequest.init(URL: requestURL)
+//        request.HTTPMethod = "POST"
+//        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+//        
+//        let multipartBody = NSMutableData()
+//        multipartBody.appendData("--\(boundary)\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+//        multipartBody.appendData("Content-Disposition: form-data; name=\"conversationId\"\r\n\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+//        multipartBody.appendData("\(attachment.conversationId)\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+//        
+//        multipartBody.appendData("--\(boundary)\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+//        multipartBody.appendData("Content-Disposition: form-data; name=\"file\"; filename=\"image.jpg\"\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+//        multipartBody.appendData("Content-Type: \(attachment.mimeType)\r\n\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+//        multipartBody.appendData(attachment.data)
+//        multipartBody.appendData("\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+//        
+//        multipartBody.appendData("--\(boundary)\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+//        request.HTTPBody = multipartBody
+//        print(String(multipartBody))
+//        sharedInstance.session.dataTaskWithRequest(request) { (data, response, error) in
+//            if let response = response as? NSHTTPURLResponse {
+//                LoggerManager.log("API Complete: \(response.statusCode) \(response.URL?.path ?? "")")
+//            }
+//            
+//            let accepted = [200, 201]
+//            
+//            if let response = response as? NSHTTPURLResponse, data = data where accepted.contains(response.statusCode){
+//                do {
+//                    let json = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
+//                    if let attachment: Attachment = Mapper<Attachment>().map(json){
+//                        completion(result: .Success(attachment))
+//                        return
 //                    }
-//                case .Failure(let encodingError):
-//                    print(encodingError)
+//                } catch {
+//                    completion(result: .Failure(DriftError.APIFailure))
 //                }
-//        })
-//    }
+//            }else if let error = error {
+//                completion(result: .Failure(error))
+//            }else{
+//                completion(result: .Failure(DriftError.APIFailure))
+//            }
+//            
+//        }.resume()
+    }
     
     /**
      Responsible for calling a request and parsing its response
@@ -388,6 +411,7 @@ class URLStore{
     static let identifyURL = NSURL(string: "https://event.api.driftt.com/identify")!
     static let layerTokenURL = NSURL(string: "https://customer.api.driftt.com/layer/token")!
     static let tokenURL = NSURL(string: "https://customer.api.driftt.com/oauth/token")!
+    static let postAttachmentURL = NSURL(string: "https://conversation.api.driftt.com/attachments")!
     class func embedURL(embedId: String, refresh: String?) -> NSURL? {
 //        return NSURL(string: "https://customer.api.driftt.com/embeds/\(embedId)")
         return NSURL(string: "https://js.driftt.com/embeds/\(refresh ?? "30000")/\(embedId).js")
@@ -405,7 +429,7 @@ class URLStore{
         return NSURL(string: "https://conversation.api.driftt.com/conversations/\(conversationId)/messages?access_token=\(authToken)")
     }
     
-    class func attachmentsURL(attachmentIds: [Int], authToken: String) -> NSURL? {
+    class func getAttachmentsURL(attachmentIds: [Int], authToken: String) -> NSURL? {
         var params = ""
         for id in attachmentIds{
             params += "&id=\(id)"
@@ -603,4 +627,3 @@ extension Dictionary {
         return queryItems
     }
 }
-

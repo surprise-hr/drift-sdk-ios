@@ -11,6 +11,7 @@ enum DriftError: ErrorType {
     case APIFailure
     case AuthFailure
     case EmbedFailure
+    case DataCreationFailure
 }
 
 

@@ -20,6 +20,10 @@ class DriftPreviewItem: NSObject, QLPreviewItem{
     }
 }
 
+public protocol AttachementSelectedDelegate: class{
+    func attachmentSelected(id: Int, sender: AnyObject)
+}
+
 
 class ConversationViewController: SLKTextViewController {
     var conversationId: Int?{
@@ -45,6 +49,8 @@ class ConversationViewController: SLKTextViewController {
     
     
     func setupSlackTextView(){
+        leftButton.tintColor = UIColor.lightGrayColor()
+        leftButton.setImage(UIImage.init(named: "plus-circle", inBundle: NSBundle(forClass: Drift.self), compatibleWithTraitCollection: nil), forState: .Normal)
         inverted = true
         shouldScrollToBottomAfterKeyboardShows = false
         bounces = true
@@ -62,24 +68,18 @@ class ConversationViewController: SLKTextViewController {
     
     override func didPressLeftButton(sender: AnyObject?) {
         let uploadController = UIAlertController.init(title: nil, message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
-        let imagePicker = UIImagePickerController()
-        imagePicker.delegate = self
-        uploadController.addAction(UIAlertAction(title: "Take a Photo", style: UIAlertActionStyle.Default, handler: { (UIAlertAction) in
-            imagePicker.sourceType = UIImagePickerControllerSourceType.Camera
-            self.presentViewController(imagePicker, animated: true, completion: nil)
-        }))
-        uploadController.addAction(UIAlertAction(title: "Choose From Library", style: UIAlertActionStyle.Default, handler: { (UIAlertAction) in
-            imagePicker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
-            self.presentViewController(imagePicker, animated: true, completion: nil)
-        }))
-        uploadController.addAction(UIAlertAction(title: "Import File From...", style: UIAlertActionStyle.Default, handler: { (UIAlertAction) in
-            let documentPicker = UIDocumentMenuViewController.init(documentTypes: ["public.data"], inMode: UIDocumentPickerMode.Import)
-            documentPicker.delegate = self
-            documentPicker.modalPresentationStyle = UIModalPresentationStyle.FormSheet
-            self.presentViewController(documentPicker, animated: true, completion: nil)
-        }))
-        uploadController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil))
-        self.presentViewController(uploadController, animated: true, completion: nil)
+                let imagePicker = UIImagePickerController()
+                imagePicker.delegate = self
+                uploadController.addAction(UIAlertAction(title: "Take a Photo", style: UIAlertActionStyle.Default, handler: { (UIAlertAction) in
+                    imagePicker.sourceType = UIImagePickerControllerSourceType.Camera
+                    self.presentViewController(imagePicker, animated: true, completion: nil)
+                }))
+                uploadController.addAction(UIAlertAction(title: "Choose From Library", style: UIAlertActionStyle.Default, handler: { (UIAlertAction) in
+                    imagePicker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
+                    self.presentViewController(imagePicker, animated: true, completion: nil)
+                }))
+                uploadController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil))
+                self.presentViewController(uploadController, animated: true, completion: nil)
     }
     
     override func didPressRightButton(sender: AnyObject?) {
@@ -266,39 +266,47 @@ extension ConversationViewController: MessageDelegate{
     }
 }
 
-//extension ConversationViewController: AttachementSelectedDelegate{
-//    func attachmentSelected(id: Int, sender: AnyObject) {
-//        
-////        if sender is MessageImageViewController{
-////            let imageVc = sender as! MessageImageViewController
-////            imageVc.showLoadingView()
-////        }
-//        
-//        AttachmentManager.sharedInstance.getAttachmentInfo(id) { (attachment) in
-//            if let attachment = attachment{
-//                AttachmentManager.sharedInstance.getAttachmentFile(attachment, completion: { (fileUrl) in
-//                    if let fileUrl = fileUrl{
-//                        if sender.classForCoder == MessageImageViewController.classForCoder(){
-//                            self.previewItem = DriftPreviewItem(url:NSURL.fileURLWithPath((fileUrl.absoluteString)), title: attachment.fileName)
-//                            let qlController = QLPreviewController()
-//                            qlController.dataSource = self
-//                            self.presentViewController(qlController, animated: true, completion: nil)
-//                                
-//                        }else{
-//                            var interactionController = UIDocumentInteractionController()
-//                            interactionController.URL = NSURL.fileURLWithPath((fileUrl.absoluteString))
-//                            interactionController.name = attachment.fileName
-//                            interactionController.presentOptionsMenuFromRect(CGRectZero, inView: self.view, animated: true)
-//                        }
-//                        
-//                    }else{
-////                        self.showAlert("Unable to preview file", message: "\(attachment.fileName) cannot be previewed")
-//                    }
-//                })
-//            }
-//        }
-//    }
-//}
+extension ConversationViewController: AttachementSelectedDelegate{
+    func attachmentSelected(id: Int, sender: AnyObject) {
+                
+        AttachmentManager.sharedInstance.getAttachmentInfo(id) { (attachment) in
+            if let attachment = attachment{
+                AttachmentManager.sharedInstance.getAttachmentFile(attachment, completion: { (fileUrl) in
+                    if let fileUrl = fileUrl{
+                        if sender.classForCoder == ConversationImageTableViewCell.classForCoder(){
+                            self.previewItem = DriftPreviewItem(url:NSURL.fileURLWithPath((fileUrl.absoluteString)), title: attachment.fileName)
+                            let qlController = QLPreviewController()
+                            qlController.dataSource = self
+                            self.presentViewController(qlController, animated: true, completion: nil)
+                                
+                        }else{
+                            let interactionController = UIDocumentInteractionController()
+                            interactionController.URL = NSURL.fileURLWithPath((fileUrl.absoluteString))
+                            interactionController.name = attachment.fileName
+                            interactionController.presentOptionsMenuFromRect(CGRectZero, inView: self.view, animated: true)
+                        }
+                        
+                    }else{
+//                        self.showAlert("Unable to preview file", message: "\(attachment.fileName) cannot be previewed")
+                    }
+                })
+            }
+        }
+    }
+}
+
+extension ConversationViewController: QLPreviewControllerDataSource{
+    func numberOfPreviewItemsInPreviewController(controller: QLPreviewController) -> Int {
+        return 1
+    }
+    
+    func previewController(controller: QLPreviewController, previewItemAtIndex index: Int) -> QLPreviewItem{
+        if let previewItem = previewItem{
+            return previewItem
+        }
+        return NSURL()
+    }
+}
 
 extension ConversationViewController: UIDocumentInteractionControllerDelegate{
     func documentInteractionControllerViewControllerForPreview(controller: UIDocumentInteractionController) -> UIViewController {
@@ -328,39 +336,16 @@ extension ConversationViewController: UIImagePickerControllerDelegate, UINavigat
             newAttachment.conversationId = conversationId!
             newAttachment.mimeType = "image/jpeg"
             newAttachment.fileName = "image.jpg"
-//            showLoader()
-//            APIManager.postAttachment(newAttachment) { (result) in
-//                self.hideLoader()
-//                switch result{
-//                case .Success(let attachment):
-//                    let messageRequest = MessageRequest()
-//                    messageRequest.attachments.append(attachment.id)
-//                    self.postMessage(messageRequest)
-//                case .Failure:
-//                    self.showAlert("Failed to upload image", message: "Please try again later")
-//                }
-//            }
+            APIManager.postAttachment(newAttachment) { (result) in
+                switch result{
+                case .Success(let attachment):
+                    let messageRequest = Message()
+                    messageRequest.attachments.append(attachment.id)
+                    self.postMessage(messageRequest)
+                case .Failure:
+                    print("Failed to upload attachment file")
+                }
+            }
         }
     }
 }
-
-extension ConversationViewController: UIDocumentMenuDelegate, UIDocumentPickerDelegate{
-    func documentMenu(documentMenu: UIDocumentMenuViewController, didPickDocumentPicker documentPicker: UIDocumentPickerViewController) {
-        documentPicker.delegate = self
-        presentViewController(documentPicker, animated: true, completion: nil)
-    }
-    
-    func documentPicker(controller: UIDocumentPickerViewController, didPickDocumentAtURL url: NSURL) {
-//        APIManager.postAttachment(url, conversationId: conversationId!) { (result) in
-//            switch result{
-//            case .Success(let attachment):
-//                let messageRequest = MessageRequest()
-//                messageRequest.attachments.append(attachment.id)
-//                self.postMessage(messageRequest)
-//            case .Failure:
-//                print("Failed to upload attachment file")
-//            }
-//        }
-    }
-}
-
