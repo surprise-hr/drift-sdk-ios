@@ -440,8 +440,8 @@ class URLStore{
     static let layerTokenURL = NSURL(string: "https://customer.api.driftt.com/layer/token")!
     static let tokenURL = NSURL(string: "https://customer.api.driftt.com/oauth/token")!
     class func embedURL(embedId: String, refresh: String?) -> NSURL? {
-        return NSURL(string: "https://customer.api.driftt.com/embeds/\(embedId)")
-//        return NSURL(string: "https://js.driftt.com/embeds/\(refresh ?? "30000")/\(embedId).js")
+//        return NSURL(string: "https://customer.api.driftt.com/embeds/\(embedId)")
+        return NSURL(string: "https://js.driftt.com/embeds/\(refresh ?? "30000")/\(embedId).json")
     }
     
     class func campaignUserURL(orgId: Int, authToken: String) -> NSURL? {
