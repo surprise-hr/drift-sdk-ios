@@ -15,6 +15,10 @@ public class InboxManager {
     var conversationSubscriptions: [ConversationSubscription] = []
     var messageSubscriptions: [MessageSubscription] = []
     
+    func hasSubscriptionForConversationId(conversationId: Int) -> Bool {
+        var matchingSub = messageSubscriptions.filter({$0.conversationId == conversationId && $0.delegate != nil})
+        return !matchingSub.isEmpty
+    }
     
     
     func getConversations(endUserId: Int, completion:(conversations: [Conversation]?) -> ()){

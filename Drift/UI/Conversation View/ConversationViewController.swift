@@ -30,7 +30,13 @@ class ConversationViewController: SLKTextViewController {
         case ContinueConversation(conversationId: Int)
     }
     
-    var conversationType: ConversationType!
+    var conversationType: ConversationType! {
+        didSet{
+            if case ConversationType.ContinueConversation(let conversationId) = conversationType!{
+                InboxManager.sharedInstance.addMessageSubscription(MessageSubscription(delegate: self, conversationId: conversationId))
+            }
+        }
+    }
     var sections: [[Message]] = []
     var messages: [Message] = []
     var previewItem: DriftPreviewItem?
@@ -67,8 +73,6 @@ class ConversationViewController: SLKTextViewController {
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ConversationViewController.didOpen), name: UIApplicationWillEnterForegroundNotification, object: nil)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ConversationViewController.didUpdateMessages(_:)), name: LYRClientObjectsDidChangeNotification, object: nil)
-
         didOpen()
     }
     
@@ -83,44 +87,6 @@ class ConversationViewController: SLKTextViewController {
         case .CreateConversation(_):
             ()
             ///TODO: Show empty State
-        }
-    }
-    
-    func didUpdateMessages(notification : NSNotification ) {
-        print("🤘🤘Did Update Message🤘🤘")
-        if case ConversationType.ContinueConversation(let conversationId) = conversationType!{
-            
-            if let changes = notification.userInfo?[LYRClientObjectChangesUserInfoKey] as? [LYRObjectChange] {
-                for change in changes {
-                    if let message = change.object as? LYRMessage {
-                        if change.type == .Create {
-                            for part in message.parts {
-                                switch part.MIMEType {
-                                //                        case "text/plain":
-                                case "application/json":
-                                    LoggerManager.log("Mapping Mime Type")
-                                    do {
-                                        if let data = part.data, json = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments) as? [String: AnyObject] {
-                                            if let newMessage = Mapper<Message>().map(json) {
-                                                if newMessage.conversationId == conversationId {
-                                                    self.newMessage(newMessage)
-                                                }
-                                            }
-                                        }
-                                    }catch {
-                                        LoggerManager.log("JSON Map Failure")
-
-                                    }
-                                    
-                                default:
-                                    LoggerManager.log("Ignored MimeType")
-                                }
-                            }
-
-                        }
-                    }
-                }
-            }
         }
     }
     
@@ -229,7 +195,7 @@ class ConversationViewController: SLKTextViewController {
     }
     
     
-    func getSections() -> [[Message]]{
+    func getSections(messages: [Message]) -> [[Message]]{
         var sections: [[Message]] = []
         var section: [Message] = []
         let messagesReverse: [Message] = messages.reverse()
@@ -265,27 +231,14 @@ class ConversationViewController: SLKTextViewController {
             switch result{
             case .Success(let messages):
                 
-                let sorted = Set(messages.sort({ $0.createdAt.compare($1.createdAt) == .OrderedAscending}))
+                let sorted = messages.sort({ $0.createdAt.compare($1.createdAt) == .OrderedAscending})
                 
-                let newMessages = sorted.subtract(self.messages)
-                
-                dispatch_async(dispatch_get_main_queue(), { 
-                   self.didRecieveMessages(Array(newMessages))
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.sections = self.getSections(sorted)
+                    self.tableView?.reloadData()
                 })
             case .Failure:
                 LoggerManager.log("Unable to get messages for conversationId: \(conversationId)")
-            }
-        }
-    }
-    
-    func didRecieveMessages(messages: [Message]){
-        if self.messages.isEmpty{
-            self.messages = messages
-            self.sections = self.getSections()
-            self.tableView?.reloadData()
-        }else{
-            for message in messages {
-                newMessage(message)
             }
         }
     }
@@ -355,26 +308,25 @@ class ConversationViewController: SLKTextViewController {
 
 extension ConversationViewController: MessageDelegate{
     func messagesDidUpdate(messages: [Message]) {
-        if messages.count > self.messages.count{
-            self.messages = messages
-            tableView?.reloadData()
-        }
+        let sorted = messages.sort({ $0.createdAt.compare($1.createdAt) == .OrderedAscending})
+        self.sections = self.getSections(sorted)
+        self.tableView?.reloadData()
     }
     
     func newMessage(message: Message) {
         if message.authorId != DriftDataStore.sharedInstance.auth?.enduser?.userId{
-            if let index = messages.indexOf(message){
-                if message.attachments.count > 0{
-                    AttachmentManager.sharedInstance.getAttachmentInfo(message.attachments.first!, completion: { (attachment) in
-                        self.messages[index] = message
-                        self.tableView!.reloadRowsAtIndexPaths([NSIndexPath(forRow: index, inSection: 0)], withRowAnimation: .Bottom)
-                    })
-                }else{
-                    messages[index] = message
-                    tableView!.reloadRowsAtIndexPaths([NSIndexPath(forRow: index, inSection: 0)], withRowAnimation: .Bottom)
-                }
+            if let index = checkSectionsForMessages(message){
+//                if message.attachments.count > 0{
+//                    AttachmentManager.sharedInstance.getAttachmentInfo(message.attachments.first!, completion: { (attachment) in
+//                        self.sections[index.section][index.row] = message
+//                        self.tableView!.reloadRowsAtIndexPaths([NSIndexPath(forRow: index.row, inSection: index.section)], withRowAnimation: .Automatic)
+//                    })
+//                }else{
+//                    self.sections[index.section][index.row] = message
+//                    tableView!.reloadRowsAtIndexPaths([NSIndexPath(forRow: index.row, inSection: index.section)], withRowAnimation: .Automatic)
+//                }
             }else{
-                if  NSCalendar.currentCalendar().component(.Day, fromDate: (sections[0].first?.createdAt)!) ==  NSCalendar.currentCalendar().component(.Day, fromDate: NSDate()){
+                if NSCalendar.currentCalendar().component(.Day, fromDate: (sections[0].first?.createdAt)!) ==  NSCalendar.currentCalendar().component(.Day, fromDate: NSDate()){
                     if message.attachments.count > 0{
                         AttachmentManager.sharedInstance.getAttachmentInfo(message.attachments.first!, completion: { (attachment) in
                             self.sections[0].append(message)
@@ -398,6 +350,18 @@ extension ConversationViewController: MessageDelegate{
             }
         }
     }
+    
+    
+    func checkSectionsForMessages(message: Message) -> NSIndexPath? {
+        
+        if let section = sections.indexOf({ $0.contains(message) }) {
+            if let row = sections[section].indexOf(message) {
+                return NSIndexPath(forRow: row, inSection: section)
+            }
+        }
+        return nil
+    }
+    
 }
 
 //extension ConversationViewController: AttachementSelectedDelegate{

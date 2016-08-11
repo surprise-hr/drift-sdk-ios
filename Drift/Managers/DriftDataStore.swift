@@ -80,8 +80,10 @@ class DriftDataStore {
     func removeData(){
         let userDefs = NSUserDefaults.standardUserDefaults()
         userDefs.removeObjectForKey(DriftDataStore.driftAuthCacheString)
+        userDefs.removeObjectForKey(DriftDataStore.driftEmbedCacheString)
         userDefs.synchronize()
         auth = nil
+        embed = nil
     }
     
     

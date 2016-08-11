@@ -11,7 +11,6 @@ import ObjectMapper
 
 public enum ContentType: String{
     case Chat = "CHAT"
-    case ConversationEvent = "ANNOUNCEMENT"
 }
 
 public enum Type: String{
