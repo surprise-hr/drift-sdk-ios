@@ -37,6 +37,7 @@ class ConversationViewController: SLKTextViewController {
     var conversationType: ConversationType! {
         didSet{
             if case ConversationType.ContinueConversation(let conversationId) = conversationType!{
+                self.conversationId = conversationId
                 InboxManager.sharedInstance.addMessageSubscription(MessageSubscription(delegate: self, conversationId: conversationId))
             }
         }
@@ -57,12 +58,19 @@ class ConversationViewController: SLKTextViewController {
     }
     convenience init(conversationType: ConversationType) {
         self.init(nibName: "ConversationViewController", bundle: NSBundle(forClass: ConversationViewController.classForCoder()))
+        setConversationType(conversationType)
+    }
+    
+    func setConversationType(conversationType: ConversationType){
         self.conversationType = conversationType
     }
     
     class func navigationController(conversationType: ConversationType) -> UINavigationController {
         let vc = ConversationViewController.init(conversationType: conversationType)
         let navVC = UINavigationController.init(rootViewController: vc)
+        let leftButton = UIBarButtonItem(title: "Close", style: UIBarButtonItemStyle.Done, target: vc, action: #selector(ConversationViewController.dismiss))
+        vc.navigationItem.leftBarButtonItem  = leftButton
+
         return navVC
     }
     
@@ -78,9 +86,6 @@ class ConversationViewController: SLKTextViewController {
         if let navVC = navigationController {
             navVC.navigationBar.barTintColor = DriftDataStore.sharedInstance.generateBackgroundColor()
             navVC.navigationBar.tintColor = DriftDataStore.sharedInstance.generateForegroundColor()
-            navVC.navigationBar.translucent = false
-            let leftButton = UIBarButtonItem(title: "Close", style: UIBarButtonItemStyle.Done, target: self, action: #selector(ConversationViewController.dismiss))
-            navigationItem.leftBarButtonItem  = leftButton
             navigationItem.title = "Conversation"
         }
         
@@ -155,7 +160,8 @@ class ConversationViewController: SLKTextViewController {
     
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let message = sections[indexPath.section].reverse()[indexPath.row]
+        let message = sections[indexPath.section][indexPath.row]
+        
         let cell: UITableViewCell
         
         if message.attachments.count > 0{
@@ -169,14 +175,6 @@ class ConversationViewController: SLKTextViewController {
         
         cell.transform = tableView.transform
         return cell
-    }
-    
-    override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
-        let message = sections[indexPath.section].reverse()[indexPath.row]
-        if let cell = cell as? ConversationMessageTableViewCell{
-            cell.message = message
-        }
-
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -203,10 +201,10 @@ class ConversationViewController: SLKTextViewController {
     
     func addMessageToConversation(message: Message){
         if sections.count > 0 && NSCalendar.currentCalendar().component(.Day, fromDate: (sections[0].first?.createdAt)!) ==  NSCalendar.currentCalendar().component(.Day, fromDate: NSDate()){
-            self.sections[0].append(message)
+            self.sections[0].insert(message, atIndex: 0)
             tableView!.insertRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 0)], withRowAnimation: .Bottom)
         }else{
-            self.sections.insert([message], atIndex: 0)
+            self.sections.append([message])
             tableView?.insertSections(NSIndexSet.init(index: 0), withRowAnimation: .Bottom)
         }
     }

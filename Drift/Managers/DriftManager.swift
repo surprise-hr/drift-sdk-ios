@@ -50,6 +50,10 @@ class DriftManager: NSObject {
         sharedInstance.debug = debug
     }
     
+    class func showConversations(){
+        PresentationManager.sharedInstance.showConversationList()
+    }
+    
     /**
      Gets Auth for user - Calls Identify if new user
     */

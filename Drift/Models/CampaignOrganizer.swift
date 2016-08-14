@@ -9,7 +9,7 @@
 
 import ObjectMapper
 ///Data Structure for the Drift user who made the campaign
-class CampaignOrganizer: Mappable {
+class CampaignOrganizer: Mappable, Equatable {
     
     var userId: Int?
     var name: String?
@@ -24,5 +24,8 @@ class CampaignOrganizer: Mappable {
         name        <- map["name"]
         avatarURL   <- map["avatarUrl"]
     }
-    
+}
+
+func ==(lhs: CampaignOrganizer, rhs: CampaignOrganizer) -> Bool {
+    return lhs.userId == rhs.userId
 }

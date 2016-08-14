@@ -104,6 +104,13 @@ class PresentationManager: PresentationManagerDelegate {
         }
     }
     
+    func showConversationList(){
+
+        let conversationListController = ConversationListViewController.navigationController()
+        TopController.viewController()?.presentViewController(conversationListController, animated: true, completion: nil)
+        
+    }
+    
     ///Presentation Delegate
     
     func campaignDidFinishWithResponse(view: CampaignView, campaign: Campaign, response: CampaignResponse) {

@@ -53,4 +53,13 @@ public class Drift: NSObject {
         DriftManager.debugMore(debug)
     }
     
+    /**
+
+     This will show a list of Drift conversations for the current user
+     
+     */
+    public class func showConversations() {
+        DriftManager.showConversations()
+    }
+    
 }

@@ -13,16 +13,13 @@ class ConversationListTableViewCell: UITableViewCell {
     @IBOutlet weak var avatarImageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var messageLabel: UILabel!
+    @IBOutlet weak var updatedAtLabel: UILabel!
     
     override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
+        selectionStyle = .None
+        messageLabel.textColor = ColorPalette.GrayColor
+        updatedAtLabel.textColor = ColorPalette.GrayColor
+        avatarImageView.layer.masksToBounds = true
+        avatarImageView.layer.cornerRadius = 3
     }
-
-    override func setSelected(selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
-    
 }

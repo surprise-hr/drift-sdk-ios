@@ -22,6 +22,7 @@ public class Conversation: Mappable, Equatable{
     var inboxId: Int!
     var displayId: Int!
     var endUserId: Int!
+    var assigneeId: Int?
     var status: ConversationStatus!
     var subject: String?
     var preview: String?
@@ -34,12 +35,13 @@ public class Conversation: Mappable, Equatable{
     }
     
     public func mapping(map: Map) {
-        preview     <- map["preview"]
+        assigneeId  <- map["assigneeId"]
         id          <- map["id"]
         inboxId     <- map["inboxId"]
         displayId   <- map["displayId"]
         endUserId   <- map["endUserId"]
         subject     <- map["subject"]
+        preview     <- map["preview"]
         updatedAt   <- (map["updatedAt"], DriftDateTransformer())
         uuid        <- map["uuid"]
         orgId       <- map["orgId"]
