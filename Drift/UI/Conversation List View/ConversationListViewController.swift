@@ -47,6 +47,8 @@ class ConversationListViewController: UIViewController {
         let vc = ConversationListViewController()
         let navVC = UINavigationController.init(rootViewController: vc)
         let leftButton = UIBarButtonItem(title: "Close", style: UIBarButtonItemStyle.Done, target: vc, action: #selector(ConversationListViewController.dismiss))
+        navVC.navigationBar.barTintColor = DriftDataStore.sharedInstance.generateBackgroundColor()
+        navVC.navigationBar.tintColor = DriftDataStore.sharedInstance.generateForegroundColor()
         vc.navigationItem.leftBarButtonItem  = leftButton
         vc.navigationItem.title = "Chat"
         return navVC
