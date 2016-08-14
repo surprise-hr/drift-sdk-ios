@@ -24,7 +24,7 @@ class ConversationMessageTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+        selectionStyle = .None
     }
 
     override func setSelected(selected: Bool, animated: Bool) {
@@ -37,15 +37,18 @@ class ConversationMessageTableViewCell: UITableViewCell {
         if let authorId = message?.authorId{
             getUser(authorId)
         }
+        avatarImageView.image = UIImage.init(named: "placeholderAvatar", inBundle: NSBundle.init(forClass: ConversationListTableViewCell.classForCoder()), compatibleWithTraitCollection: nil)
+        messageTextView.text = ""
+        messageTextView.textContainerInset = UIEdgeInsetsZero
+        messageTextView.text = self.message!.body
         
-        self.messageTextView.text = ""
-        self.avatarImageView.layer.cornerRadius = 3
-        self.avatarImageView.layer.masksToBounds = true
-        self.nameLabel.textColor = DriftDataStore.primaryFontColor
-        self.messageTextView.text = self.message!.body
-        self.messageTextView.textColor = DriftDataStore.secondaryFontColor
-        self.timeLabel.textColor = DriftDataStore.secondaryFontColor
-        self.timeLabel.text = self.dateFormatter.createdAtStringFromDate(self.message!.createdAt)
+        avatarImageView.layer.cornerRadius = 3
+        avatarImageView.layer.masksToBounds = true
+        
+        nameLabel.textColor = DriftDataStore.primaryFontColor
+
+        timeLabel.textColor = DriftDataStore.secondaryFontColor
+        timeLabel.text = self.dateFormatter.createdAtStringFromDate(self.message!.createdAt)
         do {
             let htmlStringData = (self.message!.body ?? "").dataUsingEncoding(NSUTF8StringEncoding)!
             let options: [String: AnyObject] = [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,

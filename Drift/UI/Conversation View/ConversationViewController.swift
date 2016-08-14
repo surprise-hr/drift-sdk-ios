@@ -43,7 +43,6 @@ class ConversationViewController: SLKTextViewController {
         }
     }
     var sections: [[Message]] = []
-    var messages: [Message] = []
     var previewItem: DriftPreviewItem?
     var dateFormatter: DriftDateFormatter = DriftDateFormatter()
     var conversationId: Int?{
@@ -140,12 +139,7 @@ class ConversationViewController: SLKTextViewController {
             imagePicker.sourceType = .PhotoLibrary
             self.presentViewController(imagePicker, animated: true, completion: nil)
         }))
-//        uploadController.addAction(UIAlertAction(title: "Import File From...", style: .Default, handler: { (UIAlertAction) in
-//            let documentPicker = UIDocumentMenuViewController.init(documentTypes: ["public.data"], inMode: .Import)
-//            documentPicker.delegate = self
-//            documentPicker.modalPresentationStyle = .FormSheet
-//            self.presentViewController(documentPicker, animated: true, completion: nil)
-//        }))
+
         uploadController.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
         presentViewController(uploadController, animated: true, completion: nil)
     }
@@ -165,6 +159,7 @@ class ConversationViewController: SLKTextViewController {
         let cell: UITableViewCell
         
         if message.attachments.count > 0{
+            
             cell = tableView.dequeueReusableCellWithIdentifier("ConversationAttachmentsTableViewCell", forIndexPath: indexPath) as! ConversationAttachmentsTableViewCell
         }else{
             cell = tableView.dequeueReusableCellWithIdentifier("ConversationMessageTableViewCell", forIndexPath: indexPath) as! ConversationMessageTableViewCell
@@ -198,22 +193,21 @@ class ConversationViewController: SLKTextViewController {
         return 42
     }
     
-    
     func addMessageToConversation(message: Message){
         if sections.count > 0 && NSCalendar.currentCalendar().component(.Day, fromDate: (sections[0].first?.createdAt)!) ==  NSCalendar.currentCalendar().component(.Day, fromDate: NSDate()){
             self.sections[0].insert(message, atIndex: 0)
             tableView!.insertRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 0)], withRowAnimation: .Bottom)
         }else{
-            self.sections.append([message])
+            self.sections.insert([message], atIndex: 0)
             tableView?.insertSections(NSIndexSet.init(index: 0), withRowAnimation: .Bottom)
         }
     }
     
-    
     func getSections(messages: [Message]) -> [[Message]]{
+        let messagesReverse = messages.sort({ $0.createdAt.compare($1.createdAt) == .OrderedDescending})
+        
         var sections: [[Message]] = []
         var section: [Message] = []
-        let messagesReverse: [Message] = messages.reverse()
         
         for message in messagesReverse{
             if section.count == 0{
@@ -221,25 +215,25 @@ class ConversationViewController: SLKTextViewController {
             }else{
                 let anchorMessage = section[0]
                 if  NSCalendar.currentCalendar().component(.Day, fromDate: message.createdAt) !=  NSCalendar.currentCalendar().component(.Day, fromDate: anchorMessage.createdAt) ||  NSCalendar.currentCalendar().component(.Month, fromDate: message.createdAt) !=  NSCalendar.currentCalendar().component(.Month, fromDate: anchorMessage.createdAt) ||  NSCalendar.currentCalendar().component(.Year, fromDate: message.createdAt) !=  NSCalendar.currentCalendar().component(.Year, fromDate: anchorMessage.createdAt){
-                    sections.insert(section, atIndex: 0)
+                    sections.append(section)
                     section = []
                 }
                 section.append(message)
                 
                 if messages.count-1 == messagesReverse.indexOf(message){
-                    sections.insert(section, atIndex: 0)
+                    sections.append(section)
                 }
             }
         }
         
         if sections.count == 0 && section.count > 0{
-            sections.insert(section, atIndex: 0)
+            sections.append(section)
         }
         
         return sections
     }
-    
 
+    
     func getMessages(conversationId: Int){
     
         APIManager.getMessages(conversationId, authToken: DriftDataStore.sharedInstance.auth!.accessToken) { (result) in
@@ -269,6 +263,7 @@ class ConversationViewController: SLKTextViewController {
             postMessageToConversation(conversationId, messageRequest: messageRequest)
         }
     }
+    
     
     func postMessageToConversation(conversationId: Int, messageRequest: Message) {
         InboxManager.sharedInstance.postMessage(messageRequest, conversationId: conversationId) { (message, requestId) in
@@ -316,6 +311,9 @@ class ConversationViewController: SLKTextViewController {
                     message.sendStatus = .Failed
                     self.sections[0][index] = message
                 }
+                
+                self.tableView!.reloadRowsAtIndexPaths([NSIndexPath(forRow:0, inSection: 0)], withRowAnimation: .None)
+                self.tableView?.scrollToRowAtIndexPath(NSIndexPath(forRow:0, inSection: 0), atScrollPosition: .Bottom, animated: true)
             }
         }
     }
@@ -331,29 +329,29 @@ extension ConversationViewController: MessageDelegate{
     func newMessage(message: Message) {
         if message.authorId != DriftDataStore.sharedInstance.auth?.enduser?.userId{
             if let index = checkSectionsForMessages(message){
-//                if message.attachments.count > 0{
-//                    AttachmentManager.sharedInstance.getAttachmentInfo(message.attachments.first!, completion: { (attachment) in
-//                        self.sections[index.section][index.row] = message
-//                        self.tableView!.reloadRowsAtIndexPaths([NSIndexPath(forRow: index.row, inSection: index.section)], withRowAnimation: .Automatic)
-//                    })
-//                }else{
-//                    self.sections[index.section][index.row] = message
-//                    tableView!.reloadRowsAtIndexPaths([NSIndexPath(forRow: index.row, inSection: index.section)], withRowAnimation: .Automatic)
-//                }
+                if message.attachments.count > 0{
+                    AttachmentManager.sharedInstance.getAttachmentInfo((message.attachments.first)!, completion: { (attachment) in
+                        self.sections[index.section][index.row] = message
+                        self.tableView!.reloadRowsAtIndexPaths([index], withRowAnimation: .Bottom)
+                    })
+                }else{
+                    sections[index.section][index.row] = message
+                    tableView!.reloadRowsAtIndexPaths([index], withRowAnimation: .Bottom)
+                }
             }else{
                 if NSCalendar.currentCalendar().component(.Day, fromDate: (sections[0].first?.createdAt)!) ==  NSCalendar.currentCalendar().component(.Day, fromDate: NSDate()){
                     if message.attachments.count > 0{
-                        AttachmentManager.sharedInstance.getAttachmentInfo(message.attachments.first!, completion: { (attachment) in
-                            self.sections[0].append(message)
+                        AttachmentManager.sharedInstance.getAttachmentInfo((message.attachments.first)!, completion: { (attachment) in
+                            self.sections[0].insert(message, atIndex: 0)
                             self.tableView!.insertRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 0)], withRowAnimation: .Bottom)
                         })
                     }else{
-                        self.sections[0].append(message)
+                        self.sections[0].insert(message, atIndex: 0)
                         tableView!.insertRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 0)], withRowAnimation: .Bottom)
                     }
                 }else{
                     if message.attachments.count > 0{
-                        AttachmentManager.sharedInstance.getAttachmentInfo(message.attachments.first!, completion: { (attachment) in
+                        AttachmentManager.sharedInstance.getAttachmentInfo((message.attachments.first)!, completion: { (attachment) in
                             self.sections.insert([message], atIndex: 0)
                             self.tableView?.insertSections(NSIndexSet.init(index: 0), withRowAnimation: .Bottom)
                         })
@@ -365,7 +363,6 @@ extension ConversationViewController: MessageDelegate{
             }
         }
     }
-    
     
     func checkSectionsForMessages(message: Message) -> NSIndexPath? {
         
@@ -400,7 +397,8 @@ extension ConversationViewController: AttachementSelectedDelegate{
                         }
                         
                     }else{
-//                        self.showAlert("Unable to preview file", message: "\(attachment.fileName) cannot be previewed")
+                        let alert = UIAlertController.init(title: "Unable to preview file", message: "This file cannot be previewed", preferredStyle: UIAlertControllerStyle.Alert)
+                        self.showViewController(alert, sender: self)
                     }
                 })
             }

@@ -14,7 +14,7 @@ public enum ContentType: String{
 }
 
 public enum Type: String{
-    case Chat = "EMAIL"
+    case Chat = "CHAT"
 }
 
 public enum AuthorType: String{

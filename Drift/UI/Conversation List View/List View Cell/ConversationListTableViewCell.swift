@@ -16,6 +16,7 @@ class ConversationListTableViewCell: UITableViewCell {
     @IBOutlet weak var updatedAtLabel: UILabel!
     
     override func awakeFromNib() {
+        super.awakeFromNib()
         selectionStyle = .None
         messageLabel.textColor = ColorPalette.GrayColor
         updatedAtLabel.textColor = ColorPalette.GrayColor
