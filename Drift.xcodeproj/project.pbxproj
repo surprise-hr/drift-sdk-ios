@@ -74,6 +74,8 @@
 		A853871B1D4A8EAE00C1D3C1 /* ConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A85387191D4A8EAE00C1D3C1 /* ConversationViewController.swift */; };
 		A853871C1D4A8EAE00C1D3C1 /* ConversationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A853871A1D4A8EAE00C1D3C1 /* ConversationViewController.xib */; };
 		A86A47251D50D53F008C59C0 /* DriftDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A86A47241D50D53F008C59C0 /* DriftDateFormatter.swift */; };
+		A86C30C91D6120F0008DDE8D /* AttachmentCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A86C30C71D6120F0008DDE8D /* AttachmentCollectionViewCell.xib */; };
+		A86C30CA1D6120F0008DDE8D /* AttachmentCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A86C30C81D6120F0008DDE8D /* AttachmentCollectionViewCell.swift */; };
 		A8B0887E1D4F51DC00FFA469 /* ConversationMessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B0887C1D4F51DC00FFA469 /* ConversationMessageTableViewCell.swift */; };
 		A8B0887F1D4F51DC00FFA469 /* ConversationMessageTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A8B0887D1D4F51DC00FFA469 /* ConversationMessageTableViewCell.xib */; };
 		A8B088831D4F549400FFA469 /* ConversationImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B088811D4F549400FFA469 /* ConversationImageTableViewCell.swift */; };
@@ -183,6 +185,8 @@
 		A85387191D4A8EAE00C1D3C1 /* ConversationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConversationViewController.swift; path = "Drift/UI/Conversation View/ConversationViewController.swift"; sourceTree = SOURCE_ROOT; };
 		A853871A1D4A8EAE00C1D3C1 /* ConversationViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ConversationViewController.xib; path = "Drift/UI/Conversation View/ConversationViewController.xib"; sourceTree = SOURCE_ROOT; };
 		A86A47241D50D53F008C59C0 /* DriftDateFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DriftDateFormatter.swift; path = Drift/Helpers/DriftDateFormatter.swift; sourceTree = SOURCE_ROOT; };
+		A86C30C71D6120F0008DDE8D /* AttachmentCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AttachmentCollectionViewCell.xib; path = "Drift/UI/Conversation View/Conversation Cells/Attachment Cell/AttachmentCollectionViewCell.xib"; sourceTree = SOURCE_ROOT; };
+		A86C30C81D6120F0008DDE8D /* AttachmentCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AttachmentCollectionViewCell.swift; path = "Drift/UI/Conversation View/Conversation Cells/Attachment Cell/AttachmentCollectionViewCell.swift"; sourceTree = SOURCE_ROOT; };
 		A8B0887C1D4F51DC00FFA469 /* ConversationMessageTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConversationMessageTableViewCell.swift; path = "Drift/UI/Conversation View/Conversation Cells/ConversationMessageTableViewCell.swift"; sourceTree = SOURCE_ROOT; };
 		A8B0887D1D4F51DC00FFA469 /* ConversationMessageTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ConversationMessageTableViewCell.xib; path = "Drift/UI/Conversation View/Conversation Cells/ConversationMessageTableViewCell.xib"; sourceTree = SOURCE_ROOT; };
 		A8B088811D4F549400FFA469 /* ConversationImageTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConversationImageTableViewCell.swift; path = "Drift/UI/Conversation View/Conversation Cells/ConversationImageTableViewCell.swift"; sourceTree = SOURCE_ROOT; };
@@ -432,9 +436,19 @@
 			name = "Conversation View";
 			sourceTree = "<group>";
 		};
+		A86C30C61D61209F008DDE8D /* Attachment Cell */ = {
+			isa = PBXGroup;
+			children = (
+				A86C30C71D6120F0008DDE8D /* AttachmentCollectionViewCell.xib */,
+				A86C30C81D6120F0008DDE8D /* AttachmentCollectionViewCell.swift */,
+			);
+			path = "Attachment Cell";
+			sourceTree = "<group>";
+		};
 		A8B088801D4F51E300FFA469 /* Conversation Cells */ = {
 			isa = PBXGroup;
 			children = (
+				A86C30C61D61209F008DDE8D /* Attachment Cell */,
 				A8B0887C1D4F51DC00FFA469 /* ConversationMessageTableViewCell.swift */,
 				A8B0887D1D4F51DC00FFA469 /* ConversationMessageTableViewCell.xib */,
 				A8B088811D4F549400FFA469 /* ConversationImageTableViewCell.swift */,
@@ -569,6 +583,7 @@
 				2CF43EA71C7E056F008E6748 /* DriftImages.xcassets in Resources */,
 				A8B088881D4F588E00FFA469 /* ConversationAttachmentsTableViewCell.xib in Resources */,
 				A8B0887F1D4F51DC00FFA469 /* ConversationMessageTableViewCell.xib in Resources */,
+				A86C30C91D6120F0008DDE8D /* AttachmentCollectionViewCell.xib in Resources */,
 				630E89651C57B99000195062 /* AnnouncementView.xib in Resources */,
 				63359F9F1C774C31007321DA /* AnnouncementExpandedView.xib in Resources */,
 				A85387171D4A4F5100C1D3C1 /* ConversationListViewController.xib in Resources */,
@@ -737,6 +752,7 @@
 				A80A64441D465E4800A41A41 /* InboxManager.swift in Sources */,
 				6302051A1C52AC5100C02F5E /* DriftManager.swift in Sources */,
 				63F95DBF1C5B8676003BCEE0 /* Auth.swift in Sources */,
+				A86C30CA1D6120F0008DDE8D /* AttachmentCollectionViewCell.swift in Sources */,
 				A80A644C1D466B3600A41A41 /* InboxSubscription.swift in Sources */,
 				6329CAC51C5A91310059C678 /* DriftDataStore.swift in Sources */,
 				6362426A1C7FBCB400632F0E /* NPSCompleteView.swift in Sources */,

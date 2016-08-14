@@ -161,6 +161,9 @@ class ConversationViewController: SLKTextViewController {
         if message.attachments.count > 0{
             
             cell = tableView.dequeueReusableCellWithIdentifier("ConversationAttachmentsTableViewCell", forIndexPath: indexPath) as! ConversationAttachmentsTableViewCell
+            if let cell = cell as? ConversationAttachmentsTableViewCell{
+                cell.message = message
+            }
         }else{
             cell = tableView.dequeueReusableCellWithIdentifier("ConversationMessageTableViewCell", forIndexPath: indexPath) as! ConversationMessageTableViewCell
             if let cell = cell as? ConversationMessageTableViewCell{

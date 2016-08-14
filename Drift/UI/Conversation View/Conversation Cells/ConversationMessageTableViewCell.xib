@@ -22,14 +22,14 @@
                             <constraint firstAttribute="height" constant="55" id="tXD-wq-ksc"/>
                         </constraints>
                     </imageView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="12.23pm" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="liw-9q-PX3">
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" misplaced="YES" text="12.23pm" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="liw-9q-PX3">
                         <rect key="frame" x="264" y="8" width="48" height="17"/>
                         <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="12"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Brian McDonald" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mum-og-EM8">
-                        <rect key="frame" x="71" y="8" width="191" height="20"/>
+                        <rect key="frame" x="71" y="8" width="189" height="20"/>
                         <fontDescription key="fontDescription" name="Avenir-Black" family="Avenir" pointSize="14"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
@@ -50,12 +50,12 @@
                     <constraint firstAttribute="bottomMargin" secondItem="qcY-TY-s4u" secondAttribute="bottom" id="Cd6-Eb-bN1"/>
                     <constraint firstItem="qcY-TY-s4u" firstAttribute="top" secondItem="Mum-og-EM8" secondAttribute="bottom" constant="8" id="HIp-61-Xqr"/>
                     <constraint firstAttribute="trailingMargin" secondItem="qcY-TY-s4u" secondAttribute="trailing" id="IGn-cK-yjx"/>
-                    <constraint firstAttribute="trailingMargin" secondItem="liw-9q-PX3" secondAttribute="trailing" id="JnK-RV-EJa"/>
                     <constraint firstAttribute="leadingMargin" secondItem="JKm-AG-qZ4" secondAttribute="leading" id="Sxk-wZ-szB"/>
                     <constraint firstItem="qcY-TY-s4u" firstAttribute="leading" secondItem="JKm-AG-qZ4" secondAttribute="trailing" constant="5" id="UP7-O6-3gx"/>
-                    <constraint firstItem="liw-9q-PX3" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" id="Uas-vG-aeY"/>
                     <constraint firstAttribute="topMargin" secondItem="JKm-AG-qZ4" secondAttribute="top" id="V5j-GB-yKz"/>
                     <constraint firstAttribute="topMargin" secondItem="Mum-og-EM8" secondAttribute="top" id="Z3j-yv-ifA"/>
+                    <constraint firstItem="liw-9q-PX3" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="bxc-AI-iKq"/>
+                    <constraint firstAttribute="trailing" secondItem="liw-9q-PX3" secondAttribute="trailing" constant="10" id="egr-4Y-zjy"/>
                     <constraint firstItem="Mum-og-EM8" firstAttribute="leading" secondItem="JKm-AG-qZ4" secondAttribute="trailing" constant="8" id="iSc-RD-tXK"/>
                 </constraints>
             </tableViewCellContentView>
