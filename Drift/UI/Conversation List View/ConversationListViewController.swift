@@ -11,6 +11,8 @@ import UIKit
 class ConversationListViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var loadingConversationsLabel: UILabel!
     
     var conversations: [Conversation] = []
     var users: [CampaignOrganizer] = []
@@ -18,6 +20,8 @@ class ConversationListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        activityIndicator.startAnimating()
+        tableView.tableFooterView = UIView(frame: CGRectZero)
         tableView.delegate = self
         tableView.dataSource = self
         tableView.rowHeight = UITableViewAutomaticDimension
@@ -26,6 +30,11 @@ class ConversationListViewController: UIViewController {
         InboxManager.sharedInstance.addConversationSubscription(ConversationSubscription(delegate: self))
         
         APIManager.getConversations(DriftDataStore.sharedInstance.auth!.enduser!.userId!, authToken: DriftDataStore.sharedInstance.auth!.accessToken) { (result) in
+            dispatch_async(dispatch_get_main_queue(), {
+                self.activityIndicator.hidden = true
+                self.loadingConversationsLabel.hidden = true
+                self.activityIndicator.stopAnimating()
+            })
             switch result{
             case .Success(let conversations):
                 self.conversations = conversations
@@ -109,9 +118,9 @@ extension ConversationListViewController: UITableViewDelegate, UITableViewDataSo
         return conversations.count
     }
     
-    func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        return nil
-    }
+//    func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+//        return nil
+//    }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let conversation = conversations[indexPath.row]

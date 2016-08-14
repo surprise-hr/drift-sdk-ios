@@ -7,6 +7,8 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ConversationListViewController" customModule="Drift" customModuleProvider="target">
             <connections>
+                <outlet property="activityIndicator" destination="Ygh-E0-YZg" id="ZFV-Fs-IDg"/>
+                <outlet property="loadingConversationsLabel" destination="Fhf-PN-WDK" id="1av-Ua-PWq"/>
                 <outlet property="tableView" destination="oQd-Ej-oou" id="DkZ-8h-MYo"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -20,10 +22,27 @@
                     <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 </tableView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading Conversations" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fhf-PN-WDK">
+                    <rect key="frame" x="210" y="259" width="179" height="21"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="179" id="t9c-w8-0ZB"/>
+                        <constraint firstAttribute="height" constant="21" id="ug9-Jm-Sqa"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="17"/>
+                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Ygh-E0-YZg">
+                    <rect key="frame" x="290" y="290" width="20" height="20"/>
+                </activityIndicatorView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="oQd-Ej-oou" secondAttribute="trailing" id="3Io-bU-2wN"/>
+                <constraint firstItem="Ygh-E0-YZg" firstAttribute="centerX" secondItem="oQd-Ej-oou" secondAttribute="centerX" id="MhK-U2-7ml"/>
+                <constraint firstItem="Ygh-E0-YZg" firstAttribute="top" secondItem="Fhf-PN-WDK" secondAttribute="bottom" constant="10" id="YGv-cW-WgG"/>
+                <constraint firstItem="Fhf-PN-WDK" firstAttribute="centerX" secondItem="oQd-Ej-oou" secondAttribute="centerX" id="a6a-jU-gdp"/>
+                <constraint firstItem="Ygh-E0-YZg" firstAttribute="centerY" secondItem="oQd-Ej-oou" secondAttribute="centerY" id="hSJ-cs-IIc"/>
                 <constraint firstItem="oQd-Ej-oou" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="hUx-If-tB3"/>
                 <constraint firstAttribute="bottom" secondItem="oQd-Ej-oou" secondAttribute="bottom" id="qZa-Nn-V4N"/>
                 <constraint firstItem="oQd-Ej-oou" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="vsA-lm-gPF"/>
