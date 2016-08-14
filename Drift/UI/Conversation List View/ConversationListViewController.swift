@@ -18,7 +18,6 @@ class ConversationListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         tableView.delegate = self
         tableView.dataSource = self
         tableView.rowHeight = UITableViewAutomaticDimension
@@ -50,7 +49,7 @@ class ConversationListViewController: UIViewController {
         navVC.navigationBar.barTintColor = DriftDataStore.sharedInstance.generateBackgroundColor()
         navVC.navigationBar.tintColor = DriftDataStore.sharedInstance.generateForegroundColor()
         vc.navigationItem.leftBarButtonItem  = leftButton
-        vc.navigationItem.title = "Chat"
+        vc.navigationItem.title = "Conversations"
         return navVC
     }
     
@@ -108,6 +107,10 @@ extension ConversationListViewController: UITableViewDelegate, UITableViewDataSo
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return conversations.count
+    }
+    
+    func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        return nil
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {

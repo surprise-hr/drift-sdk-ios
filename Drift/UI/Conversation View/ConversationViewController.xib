@@ -7,7 +7,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ConversationViewController" customModule="Drift" customModuleProvider="target"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <viewController title="Chat" nibName="ConversationViewController" id="oKY-md-Pjp" customClass="ConversationViewController" customModule="Drift" customModuleProvider="target">
+        <viewController title="Conversations" nibName="ConversationViewController" id="oKY-md-Pjp" customClass="ConversationViewController" customModule="Drift" customModuleProvider="target">
             <layoutGuides>
                 <viewControllerLayoutGuide type="top" id="ErL-71-0ay"/>
                 <viewControllerLayoutGuide type="bottom" id="gqc-Zd-Vaw"/>
