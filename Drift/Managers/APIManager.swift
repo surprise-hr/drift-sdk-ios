@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Gloss
+import ObjectMapper
 
 class APIManager {
     
@@ -36,6 +36,8 @@ class APIManager {
             completion(mapResponse(result))
         }
     }
+    
+    
     
     class func getLayerAccessToken(nonce: String, userId: String, completion: (Result<String>) -> ()){
         
@@ -68,13 +70,14 @@ class APIManager {
     }
     
     
-    class func campaignOrganizerForId(userId: Int, orgId: Int, authToken:String, completion: (Result<[CampaignOrganizer]>) -> ()) {
+    class func getUser(userId: Int, orgId: Int, authToken:String, completion: (Result<[CampaignOrganizer]>) -> ()) {
         
-        guard let url = URLStore.campaignUserURL(orgId) else {
-            LoggerManager.log("Failure in Embed URL creation")
+        guard let url = URLStore.campaignUserURL(orgId, authToken: DriftDataStore.sharedInstance.auth!.accessToken) else {
+            LoggerManager.log("Failure in Campaign Organizer URL creation")
             return
         }
         
+        print(url)
         let params: [String: AnyObject] =
         [   "avatar_w": 102,
             "avatar_h": 102,
@@ -87,6 +90,18 @@ class APIManager {
             completion(mapResponse(result))
         }
         
+    }
+    
+    class func getEndUser(endUserId: Int, authToken:String, completion: (Result<User>) -> ()){
+        
+        guard let url = URLStore.usersURL(endUserId, authToken: authToken) else {
+            LoggerManager.log("Failure in User URL creation")
+            return
+        }
+        
+        makeRequest(Request(url: url).setMethod(.GET)) { (result) in
+            completion(mapResponse(result))
+        }
     }
     
     class func postIdentify(orgId: Int, userId: String, email: String, attributes: [String: AnyObject]?, completion: (Result<User>) -> ()) {
@@ -108,11 +123,11 @@ class APIManager {
     }
     
     
-    class func recordAnnouncment(conversationId: Int, authToken: String, response: AnnouncmentResponse) {
+    class func recordAnnouncement(conversationId: Int, authToken: String, response: AnnouncementResponse) {
         
         
-        guard let url = URLStore.conversationURL(conversationId, authToken: authToken) else {
-            LoggerManager.log("Failed in Conversation URL Creation")
+        guard let url = URLStore.messagesURL(conversationId, authToken: authToken) else {
+            LoggerManager.log("Failed in Messages URL Creation")
             return
         }
         
@@ -128,7 +143,7 @@ class APIManager {
             case .Success(let json):
                 LoggerManager.log("Record Annouincment Success: \(json)")
             case .Failure(let error):
-                LoggerManager.log("Record Announcment Failure: \(error)")
+                LoggerManager.log("Record Announcement Failure: \(error)")
             }
         }
     }
@@ -137,8 +152,8 @@ class APIManager {
     class func recordNPS(conversationId: Int, authToken: String, response: NPSResponse){
         
         
-        guard let url = URLStore.conversationURL(conversationId, authToken: authToken) else {
-            LoggerManager.log("Failed in Conversation URL Creation")
+        guard let url = URLStore.messagesURL(conversationId, authToken: authToken) else {
+            LoggerManager.log("Failed in Messages URL Creation")
             return
         }
         
@@ -173,6 +188,187 @@ class APIManager {
         }
     }
     
+    
+    class func getConversations(endUserId: Int, authToken: String, completion: (result: Result<[Conversation]>) -> ()){
+        
+        
+        guard let url = URLStore.conversationsURL(endUserId, authToken: authToken) else {
+            LoggerManager.log("Failed in Conversations URL Creation")
+            return
+        }
+        
+        let request = Request(url: url).setMethod(.GET)
+        
+        makeRequest(request) { (result) -> () in
+            
+            switch result {
+            case .Success:
+                let conversations: Result<[Conversation]> = mapResponse(result)
+                completion(result: conversations)
+            case .Failure(let error):
+                completion(result: .Failure(DriftError.APIFailure))
+                LoggerManager.log("Unable to get conversations for user: \(error)")
+            }
+        }
+    }
+    
+   
+    class func getMessages(conversationId: Int, authToken: String, completion: (result: Result<[Message]>) -> ()){
+        
+        
+        guard let url = URLStore.messagesURL(conversationId, authToken: authToken) else {
+            LoggerManager.log("Failed in Messages URL Creation")
+            return
+        }
+        
+        let request = Request(url: url).setMethod(.GET)
+        
+        makeRequest(request) { (result) -> () in
+            
+            switch result {
+            case .Success:
+                let messages: Result<[Message]> = mapResponse(result)
+                completion(result: messages)
+            case .Failure(let error):
+                completion(result: .Failure(DriftError.APIFailure))
+                LoggerManager.log("Unable to get messages for conversation: \(error)")
+            }
+        }
+    }
+    
+    
+    class func postMessage(conversationId: Int, message: Message, authToken: String, completion: (result: Result<Message>) -> ()){
+        
+        
+        guard let url = URLStore.messagesURL(conversationId, authToken: authToken) else {
+            LoggerManager.log("Failed in Messages URL Creation")
+            return
+        }
+        
+        let json = message.toJSON()
+        
+        let request = Request(url: url).setData(.JSON(json: json)).setMethod(.POST)
+        
+        makeRequest(request) { (result) -> () in
+            
+            switch result {
+            case .Success:
+                let messages: Result<Message> = mapResponse(result)
+                completion(result: messages)
+            case .Failure(let error):
+                completion(result: .Failure(DriftError.APIFailure))
+                LoggerManager.log("Unable to get messages for conversation: \(error)")
+            }
+        }
+
+    }
+    
+    class func createConversation(body: String, authorId:Int?, authToken: String, completion: (result: Result<Message>) -> ()){
+        
+        
+        guard let url = URLStore.createConversationURL(authToken) else {
+            LoggerManager.log("Failed in Create Conversation URL Creation")
+            return
+        }
+        
+        var json: [String : AnyObject] = ["body":body]
+        
+//        if let authorId = authorId {
+//            json["to"] = ["id":authorId]
+//        }
+        
+        let request = Request(url: url).setData(.JSON(json: json)).setMethod(.POST)
+        
+        makeRequest(request) { (result) -> () in
+            
+            switch result {
+            case .Success:
+                let messages: Result<Message> = mapResponse(result)
+                completion(result: messages)
+            case .Failure(let error):
+                completion(result: .Failure(DriftError.APIFailure))
+                LoggerManager.log("Unable to get messages for conversation: \(error)")
+            }
+        }
+        
+    }
+    
+    
+    class func getAttachmentsMetaData(attachmentIds: [Int], authToken: String, completion: (result: Result<Attachment>) -> ()){
+        
+        
+        guard let url = URLStore.getAttachmentsURL(attachmentIds, authToken: authToken) else {
+            LoggerManager.log("Failed in Messages URL Creation")
+            return
+        }
+        
+        let request = Request(url: url).setMethod(.GET)
+        
+        makeRequest(request) { (result) -> () in
+            
+            switch result {
+            case .Success:
+                let attachments: Result<Attachment> = mapResponse(result)
+                completion(result: attachments)
+            case .Failure(let error):
+                completion(result: .Failure(DriftError.APIFailure))
+                LoggerManager.log("Unable to get attachments metadata: \(error)")
+            }
+        }
+    }
+    
+    class func postAttachment(attachment: Attachment, authToken: String, completion: (result: Result<Attachment>) ->()){
+
+        let boundary = "Boundary-\(NSUUID().UUIDString)"
+        let requestURL = URLStore.postAttachmentURL(authToken)
+        
+        let request = NSMutableURLRequest.init(URL: requestURL!)
+        
+        request.HTTPMethod = "POST"
+        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+        
+        let multipartBody = NSMutableData()
+        multipartBody.appendData("--\(boundary)\r\n".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!)
+        multipartBody.appendData("Content-Disposition: form-data; name=\"conversationId\"\r\n\r\n".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!)
+        multipartBody.appendData("\(attachment.conversationId)\r\n".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!)
+        
+        multipartBody.appendData("--\(boundary)\r\n".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!)
+        multipartBody.appendData("Content-Disposition: form-data; name=\"file\"; filename=\"image.jpg\"\r\n".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!)
+        multipartBody.appendData("Content-Type: \(attachment.mimeType)\r\n\r\n".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!)
+        multipartBody.appendData(attachment.data)
+        multipartBody.appendData("\r\n".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!)
+        
+        multipartBody.appendData("--\(boundary)--\r\n".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!)
+        request.HTTPBody = multipartBody
+        sharedInstance.session.dataTaskWithRequest(request) { (data, response, error) in
+            if let response = response as? NSHTTPURLResponse {
+                LoggerManager.log("API Complete: \(response.statusCode) \(response.URL?.path ?? "")")
+            }
+            print(error?.localizedDescription)
+            let accepted = [200, 201]
+            let responseString = String.init(data: data!, encoding: NSUTF8StringEncoding)
+            print(responseString)
+            if let response = response as? NSHTTPURLResponse, data = data where accepted.contains(response.statusCode){
+                do {
+                    let json = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
+                    if let attachment: Attachment = Mapper<Attachment>().map(json){
+                        completion(result: .Success(attachment))
+                        return
+                    }
+                } catch {
+                    print(request.HTTPBody)
+                    print(response.statusCode)
+                    completion(result: .Failure(DriftError.APIFailure))
+                }
+            }else if let error = error {
+                completion(result: .Failure(error))
+            }else{
+                completion(result: .Failure(DriftError.APIFailure))
+            }
+            
+        }.resume()
+    }
+    
     /**
      Responsible for calling a request and parsing its response
      
@@ -204,13 +400,13 @@ class APIManager {
             }.resume()
     }
     
-    //Maps response to result T using Gloss JSON parsing
-    private class func mapResponse<T: Decodable>(result: Result<AnyObject>) -> Result<T> {
+    //Maps response to result T using ObjectMapper JSON parsing
+    private class func mapResponse<T: Mappable>(result: Result<AnyObject>) -> Result<T> {
         
         switch result {
         case .Success(let res):
             if let json = res as? [String : AnyObject] {
-                let response = T(json:json)     ///If initialisation is done in if let this can result in getting an object back when nil is returned - This is a bug in swift
+                let response = Mapper<T>().map(json)     ///If initialisation is done in if let this can result in getting an object back when nil is returned - This is a bug in swift
                 if let response = response {
                     return .Success(response)
                 }
@@ -221,14 +417,15 @@ class APIManager {
         }
     }
     
-    //Maps response to result [T] using Gloss JSON parsing
-    private class func mapResponse<T: Decodable>(result: Result<AnyObject>) -> Result<[T]> {
+    //Maps response to result [T] using ObjectMapper JSON parsing
+    private class func mapResponse<T: Mappable>(result: Result<AnyObject>) -> Result<[T]> {
         
         switch result {
         case .Success(let res):
             if let json = res as? [[String: AnyObject]] {
-                let response = [T].fromJSONArray(json)
-                return .Success(response)
+                if let response: [T] = Mapper<T>().mapArray(json){
+                    return .Success(response)
+                }
             }
             fallthrough
         default:
@@ -244,14 +441,41 @@ class URLStore{
     static let tokenURL = NSURL(string: "https://customer.api.driftt.com/oauth/token")!
     class func embedURL(embedId: String, refresh: String?) -> NSURL? {
 //        return NSURL(string: "https://customer.api.driftt.com/embeds/\(embedId)")
-        return NSURL(string: "https://js.driftt.com/embeds/\(refresh ?? "30000")/\(embedId).js")
+        return NSURL(string: "https://js.driftt.com/embeds/\(refresh ?? "30000")/\(embedId).json")
     }
-    class func conversationURL(conversationId: Int, authToken: String) -> NSURL? {
+    
+    class func campaignUserURL(orgId: Int, authToken: String) -> NSURL? {
+        return NSURL(string: "https://customer.api.driftt.com/organizations/\(orgId)/users?access_token=\(authToken)")
+    }
+        
+    class func conversationsURL(endUserId: Int, authToken: String) -> NSURL? {
+        return NSURL(string: "https://conversation.api.driftt.com/conversations/end_users/\(endUserId)?access_token=\(authToken)")
+    }
+    
+    class func messagesURL(conversationId: Int, authToken: String) -> NSURL? {
         return NSURL(string: "https://conversation.api.driftt.com/conversations/\(conversationId)/messages?access_token=\(authToken)")
     }
     
-    class func campaignUserURL(orgId: Int) -> NSURL? {
-        return NSURL(string: "https://customer.api.driftt.com/organizations/\(orgId)/users")
+    class func createConversationURL(authToken: String) -> NSURL? {
+        return NSURL(string: "https://conversation.api.drift.com/messages?access_token=\(authToken)")
+    }
+
+    class func postAttachmentURL(authToken: String) -> NSURL? {
+        return NSURL(string: "https://conversation.api.driftt.com/attachments?access_token=\(authToken)")
+    }
+    
+    class func getAttachmentsURL(attachmentIds: [Int], authToken: String) -> NSURL? {
+        var params = ""
+        for id in attachmentIds{
+            params += "&id=\(id)"
+        }
+        params += "&img_auto=compress"
+
+        return NSURL(string: "https://conversation.api.driftt.com/attachments?access_token=\(authToken)\(params)")
+    }
+    
+    class func usersURL(userId: Int, authToken: String) -> NSURL? {
+        return NSURL(string: "https://customer.api.driftt.com/end_users/\(userId)?access_token=\(authToken)")
     }
 }
 
@@ -415,7 +639,7 @@ func escape(string: String) -> String {
         while index != string.endIndex {
             let startIndex = index
             let endIndex = index.advancedBy(batchSize, limit: string.endIndex)
-            let range = Range(start: startIndex, end: endIndex)
+            let range = startIndex..<endIndex
             
             let substring = string.substringWithRange(range)
             
@@ -438,4 +662,3 @@ extension Dictionary {
         return queryItems
     }
 }
-

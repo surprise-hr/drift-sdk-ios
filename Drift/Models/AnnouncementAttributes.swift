@@ -1,5 +1,5 @@
 //
-//  NPSAttributes.swift
+//  AnnouncementAttributes.swift
 //  Driftt
 //
 //  Created by Eoin O'Connell on 22/01/2016.
@@ -7,11 +7,11 @@
 //
 
 import ObjectMapper
-///Attributes used for NPS
-class NPSAttributes: Mappable {
+
+class AnnouncementAttributes: Mappable {
     
     var cta: CTA?
-    var followUpQuestion: String?
+    var title: String?
     var campaignId: Int?
     
     required convenience init?(_ map: Map) {
@@ -19,8 +19,9 @@ class NPSAttributes: Mappable {
     }
     
     func mapping(map: Map) {
-        cta                 <- map["cta"]
-        followUpQuestion    <- map["followUpMessage"]
-        campaignId          <- map["campaignId"]
+        cta         <- map["cta"]
+        title       <- map["title"]
+        campaignId  <- map["campaignId"]
     }
+    
 }

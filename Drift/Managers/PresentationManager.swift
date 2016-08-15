@@ -48,7 +48,7 @@ class PresentationManager: PresentationManagerDelegate {
                 switch type {
                     
                 case .Announcement:
-                    self.showAnnouncmentCampaign(firstCampaign, otherCampaigns: nextCampaigns)
+                    self.showAnnouncementCampaign(firstCampaign, otherCampaigns: nextCampaigns)
                 case .NPS:
                     self.showNPSCampaign(firstCampaign, otherCampaigns: nextCampaigns)
                 case .NPSResponse:
@@ -58,28 +58,28 @@ class PresentationManager: PresentationManagerDelegate {
         }
     }
     
-    func showAnnouncmentCampaign(campaign: Campaign, otherCampaigns:[Campaign]) {
-        if let announcmentView = AnnouncmentView.fromNib() as? AnnouncmentView where currentShownView == nil {
+    func showAnnouncementCampaign(campaign: Campaign, otherCampaigns:[Campaign]) {
+        if let announcementView = AnnouncementView.fromNib() as? AnnouncementView where currentShownView == nil {
             
             if let window = UIApplication.sharedApplication().keyWindow {
-                currentShownView = announcmentView
-                announcmentView.otherCampaigns = otherCampaigns
-                announcmentView.campaign = campaign
-                announcmentView.delegate = self
-                announcmentView.showOnWindow(window)
+                currentShownView = announcementView
+                announcementView.otherCampaigns = otherCampaigns
+                announcementView.campaign = campaign
+                announcementView.delegate = self
+                announcementView.showOnWindow(window)
                                 
             }
         }
     }
     
-    func showExpandedAnnouncment(campaign: Campaign) {
+    func showExpandedAnnouncement(campaign: Campaign) {
     
-        if let announcmentView = AnnouncmentExpandedView.fromNib() as? AnnouncmentExpandedView, window = UIApplication.sharedApplication().keyWindow {
+        if let announcementView = AnnouncementExpandedView.fromNib() as? AnnouncementExpandedView, window = UIApplication.sharedApplication().keyWindow {
             
-            currentShownView = announcmentView
-            announcmentView.campaign = campaign
-            announcmentView.delegate = self
-            announcmentView.showOnWindow(window)
+            currentShownView = announcementView
+            announcementView.campaign = campaign
+            announcementView.delegate = self
+            announcementView.showOnWindow(window)
             
         }
     }
@@ -104,17 +104,24 @@ class PresentationManager: PresentationManagerDelegate {
         }
     }
     
+    func showConversationList(){
+
+        let conversationListController = ConversationListViewController.navigationController()
+        TopController.viewController()?.presentViewController(conversationListController, animated: true, completion: nil)
+        
+    }
+    
     ///Presentation Delegate
     
     func campaignDidFinishWithResponse(view: CampaignView, campaign: Campaign, response: CampaignResponse) {
         view.hideFromWindow()
         currentShownView = nil
         switch response {
-        case .Announcment(let announcmentResponse):
-            if announcmentResponse == .Opened {
-                self.showExpandedAnnouncment(campaign)
+        case .Announcement(let announcementResponse):
+            if announcementResponse == .Opened {
+                self.showExpandedAnnouncement(campaign)
             }
-            CampaignResponseManager.recordAnnouncmentResponse(campaign, response: announcmentResponse)
+            CampaignResponseManager.recordAnnouncementResponse(campaign, response: announcementResponse)
         case .NPS(let npsResponse):
             CampaignResponseManager.recordNPSResponse(campaign, response: npsResponse)
         }

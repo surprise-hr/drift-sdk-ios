@@ -41,8 +41,7 @@ class LayerManager: NSObject, LYRClientDelegate {
         
         let url = NSURL(string: "layer:///apps/staging/\(appId)")!
 
-        sharedInstance.layerClient = LYRClient(appID: url)
-        sharedInstance.layerClient?.delegate = sharedInstance
+        sharedInstance.layerClient = LYRClient(appID: url, delegate: sharedInstance, options: nil)
         sharedInstance.userId = userId
         sharedInstance.completion = completion
         if let connected = sharedInstance.layerClient?.isConnected where connected {
