@@ -16,10 +16,10 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="placeholderAvatar" translatesAutoresizingMaskIntoConstraints="NO" id="JKm-AG-qZ4">
-                        <rect key="frame" x="8" y="8" width="55" height="55"/>
+                        <rect key="frame" x="8" y="8" width="35" height="35"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="55" id="Fxq-fB-upM"/>
-                            <constraint firstAttribute="height" constant="55" id="tXD-wq-ksc"/>
+                            <constraint firstAttribute="width" constant="35" id="Fxq-fB-upM"/>
+                            <constraint firstAttribute="height" constant="35" id="tXD-wq-ksc"/>
                         </constraints>
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="12.23pm" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="liw-9q-PX3">
@@ -29,13 +29,13 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Brian McDonald" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mum-og-EM8">
-                        <rect key="frame" x="71" y="8" width="189" height="20"/>
+                        <rect key="frame" x="53" y="8" width="207" height="20"/>
                         <fontDescription key="fontDescription" name="Avenir-Black" family="Avenir" pointSize="14"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" verticalCompressionResistancePriority="749" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="qcY-TY-s4u">
-                        <rect key="frame" x="68" y="36" width="244" height="67"/>
+                        <rect key="frame" x="50" y="36" width="262" height="67"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="28" id="GEK-Tp-LXh"/>
@@ -51,12 +51,12 @@
                     <constraint firstItem="qcY-TY-s4u" firstAttribute="top" secondItem="Mum-og-EM8" secondAttribute="bottom" constant="8" id="HIp-61-Xqr"/>
                     <constraint firstAttribute="trailingMargin" secondItem="qcY-TY-s4u" secondAttribute="trailing" id="IGn-cK-yjx"/>
                     <constraint firstAttribute="leadingMargin" secondItem="JKm-AG-qZ4" secondAttribute="leading" id="Sxk-wZ-szB"/>
-                    <constraint firstItem="qcY-TY-s4u" firstAttribute="leading" secondItem="JKm-AG-qZ4" secondAttribute="trailing" constant="5" id="UP7-O6-3gx"/>
+                    <constraint firstItem="qcY-TY-s4u" firstAttribute="leading" secondItem="JKm-AG-qZ4" secondAttribute="trailing" constant="7" id="UP7-O6-3gx"/>
                     <constraint firstAttribute="topMargin" secondItem="JKm-AG-qZ4" secondAttribute="top" id="V5j-GB-yKz"/>
                     <constraint firstAttribute="topMargin" secondItem="Mum-og-EM8" secondAttribute="top" id="Z3j-yv-ifA"/>
                     <constraint firstItem="liw-9q-PX3" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="bxc-AI-iKq"/>
                     <constraint firstAttribute="trailing" secondItem="liw-9q-PX3" secondAttribute="trailing" constant="10" id="egr-4Y-zjy"/>
-                    <constraint firstItem="Mum-og-EM8" firstAttribute="leading" secondItem="JKm-AG-qZ4" secondAttribute="trailing" constant="8" id="iSc-RD-tXK"/>
+                    <constraint firstItem="Mum-og-EM8" firstAttribute="leading" secondItem="JKm-AG-qZ4" secondAttribute="trailing" constant="10" id="iSc-RD-tXK"/>
                 </constraints>
             </tableViewCellContentView>
             <connections>

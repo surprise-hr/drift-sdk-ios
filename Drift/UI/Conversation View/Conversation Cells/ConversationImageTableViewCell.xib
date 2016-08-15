@@ -12,11 +12,11 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="330"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
-                <rect key="frame" x="0.0" y="0.0" width="320" height="330"/>
+                <rect key="frame" x="0.0" y="0.0" width="320" height="329.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="Hhy-xF-DNb">
-                        <rect key="frame" x="68" y="37" width="243" height="143"/>
+                        <rect key="frame" x="50" y="37" width="261" height="143"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                         <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="15"/>
@@ -29,16 +29,16 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Brian McDonald" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vr0-3T-alj">
-                        <rect key="frame" x="71" y="10" width="189" height="20"/>
+                        <rect key="frame" x="53" y="10" width="207" height="20"/>
                         <fontDescription key="fontDescription" name="Avenir-Black" family="Avenir" pointSize="14"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="geO-TV-QvD">
-                        <rect key="frame" x="8" y="8" width="55" height="55"/>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="placeholderAvatar" translatesAutoresizingMaskIntoConstraints="NO" id="geO-TV-QvD">
+                        <rect key="frame" x="8" y="8" width="35" height="35"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="55" id="FWg-qe-PaH"/>
-                            <constraint firstAttribute="width" constant="55" id="nDM-pX-L0U"/>
+                            <constraint firstAttribute="height" constant="35" id="FWg-qe-PaH"/>
+                            <constraint firstAttribute="width" constant="35" id="nDM-pX-L0U"/>
                         </constraints>
                     </imageView>
                     <imageView contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="driftIcon" translatesAutoresizingMaskIntoConstraints="NO" id="8dS-YH-WXU">
@@ -54,7 +54,7 @@
                     <constraint firstAttribute="leadingMargin" secondItem="geO-TV-QvD" secondAttribute="leading" id="7Yb-qd-Ac7"/>
                     <constraint firstItem="Tbd-s3-hyg" firstAttribute="leading" secondItem="vr0-3T-alj" secondAttribute="trailing" constant="2" id="Ata-SV-PBf"/>
                     <constraint firstItem="Hhy-xF-DNb" firstAttribute="top" secondItem="vr0-3T-alj" secondAttribute="bottom" constant="7" id="HWy-lW-KTB"/>
-                    <constraint firstItem="Hhy-xF-DNb" firstAttribute="leading" secondItem="geO-TV-QvD" secondAttribute="trailing" constant="5" id="MQU-mZ-Oll"/>
+                    <constraint firstItem="Hhy-xF-DNb" firstAttribute="leading" secondItem="geO-TV-QvD" secondAttribute="trailing" constant="7" id="MQU-mZ-Oll"/>
                     <constraint firstAttribute="bottomMargin" secondItem="8dS-YH-WXU" secondAttribute="bottom" constant="5.5" id="TRT-fc-krw"/>
                     <constraint firstAttribute="trailingMargin" secondItem="8dS-YH-WXU" secondAttribute="trailing" constant="1" id="WSw-s1-Mce"/>
                     <constraint firstItem="Tbd-s3-hyg" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="ZqQ-cl-dWX"/>
@@ -63,7 +63,7 @@
                     <constraint firstAttribute="trailingMargin" secondItem="Hhy-xF-DNb" secondAttribute="trailing" constant="1" id="nb2-Jy-qbr"/>
                     <constraint firstItem="vr0-3T-alj" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="o4i-YS-R6f"/>
                     <constraint firstAttribute="topMargin" secondItem="geO-TV-QvD" secondAttribute="top" id="pib-4C-lRr"/>
-                    <constraint firstItem="vr0-3T-alj" firstAttribute="leading" secondItem="geO-TV-QvD" secondAttribute="trailing" constant="8" id="zWc-dD-Z6F"/>
+                    <constraint firstItem="vr0-3T-alj" firstAttribute="leading" secondItem="geO-TV-QvD" secondAttribute="trailing" constant="10" id="zWc-dD-Z6F"/>
                 </constraints>
             </tableViewCellContentView>
             <connections>
@@ -78,5 +78,6 @@
     </objects>
     <resources>
         <image name="driftIcon" width="22" height="22"/>
+        <image name="placeholderAvatar" width="60" height="60"/>
     </resources>
 </document>
