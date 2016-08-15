@@ -16,7 +16,7 @@ public class InboxManager {
     var messageSubscriptions: [MessageSubscription] = []
     
     func hasSubscriptionForConversationId(conversationId: Int) -> Bool {
-        var matchingSub = messageSubscriptions.filter({$0.conversationId == conversationId && $0.delegate != nil})
+        let matchingSub = messageSubscriptions.filter({$0.conversationId == conversationId && $0.delegate != nil})
         return !matchingSub.isEmpty
     }
     

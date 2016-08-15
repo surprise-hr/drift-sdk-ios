@@ -15,6 +15,7 @@ class ConversationImageTableViewCell: UITableViewCell {
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var messageTextView: UITextView!
     @IBOutlet weak var attachmentImageView: UIImageView!
+    @IBOutlet weak var imageViewActivityIndicator: UIActivityIndicatorView!
     
     var dateFormatter: DriftDateFormatter = DriftDateFormatter()
     var message: Message? {
@@ -55,7 +56,7 @@ class ConversationImageTableViewCell: UITableViewCell {
         avatarImageView.layer.cornerRadius = 3
         
         attachmentImageView.layer.masksToBounds = true
-        attachmentImageView.contentMode = .ScaleAspectFill
+        attachmentImageView.contentMode = .Center
         attachmentImageView.layer.cornerRadius = 3
         
         nameLabel.textColor = DriftDataStore.primaryFontColor
@@ -77,7 +78,9 @@ class ConversationImageTableViewCell: UITableViewCell {
     func displayAttachment(){
         if let attachment = attachment{
             if let previewString = attachment.publicPreviewURL, imageURL = NSURL(string: previewString){
-                attachmentImageView!.af_setImageWithURL(imageURL)
+                attachmentImageView!.af_setImageWithURL(imageURL, placeholderImage: nil, filter: nil, progress: nil, progressQueue: dispatch_get_main_queue(), imageTransition: .CrossDissolve(0.5), runImageTransitionIfCached: true, completion: { (response) in
+                    self.attachmentImageView.contentMode = .ScaleAspectFill
+                })
             }
         }
     }
