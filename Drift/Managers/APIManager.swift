@@ -293,11 +293,35 @@ class APIManager {
         
     }
     
+    class func downloadAttachmentFile(attachment: Attachment, authToken: String, completion: (result: Result<NSURL>) -> ()){
+        guard let url = URLStore.downloadAttachmentURL(attachment.id, authToken: authToken) else {
+            LoggerManager.log("Failed in Download Attachment URL Creation")
+            return
+        }
+        
+        sharedInstance.session.dataTaskWithURL(url) { (data, response, error) in
+            if let response = response as? NSHTTPURLResponse {
+                LoggerManager.log("API Complete: \(response.statusCode) \(response.URL?.path ?? "")")
+            }
+            
+            if let data = data{
+                let fileURL = DriftManager.sharedInstance.directoryURL.URLByAppendingPathComponent(attachment.fileName)
+                do {
+                    try data.writeToURL(fileURL, options: .AtomicWrite)
+                    completion(result: .Success(fileURL))
+                } catch {
+                    completion(result: .Failure(DriftError.DataCreationFailure))
+                }
+            }else{
+                completion(result: .Failure(DriftError.APIFailure))
+            }
+        }.resume()
+    }
     
     class func getAttachmentsMetaData(attachmentIds: [Int], authToken: String, completion: (result: Result<[Attachment]>) -> ()){
         
         guard let url = URLStore.getAttachmentsURL(attachmentIds, authToken: authToken) else {
-            LoggerManager.log("Failed in Messages URL Creation")
+            LoggerManager.log("Failed in Get Attachment Metadata URL Creation")
             return
         }
         
@@ -461,6 +485,10 @@ class URLStore{
 
     class func postAttachmentURL(authToken: String) -> NSURL? {
         return NSURL(string: "https://conversation.api.driftt.com/attachments?access_token=\(authToken)")
+    }
+    
+    class func downloadAttachmentURL(attachmentId: Int, authToken: String) -> NSURL? {
+        return NSURL(string: "https://conversation.api.driftt.com/attachments/\(attachmentId)/data?access_token=\(authToken)")
     }
     
     class func getAttachmentsURL(attachmentIds: [Int], authToken: String) -> NSURL? {

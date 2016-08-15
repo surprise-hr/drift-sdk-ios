@@ -32,19 +32,4 @@ public class AttachmentManager{
         }
     }
     
-    public func getAttachmentInfo(id: Int, completion:(Attachment?) -> ()){
-
-//        APIManager.getAttachmentsMetaData(id, authToken:)
-//        APIManager.getAttachment(id) { (result) in
-//            switch result{
-//            case .Success(let attachment):
-//                
-//                completion(attachment)
-//            case .Failure:
-//                print("Unable to get attachment for id: \(id)")
-//                completion(nil)
-//            }
-//        }
-        
-    }
 }

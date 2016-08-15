@@ -15,8 +15,13 @@ class ConversationImageTableViewCell: UITableViewCell {
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var messageTextView: UITextView!
     @IBOutlet weak var attachmentImageView: UIImageView!
-    @IBOutlet weak var imageViewActivityIndicator: UIActivityIndicatorView!
     
+    weak var delegate: AttachementSelectedDelegate?{
+        didSet{
+            let gestureRecognizer = UITapGestureRecognizer.init(target:self, action: #selector(ConversationImageTableViewCell.imagePressed))
+            attachmentImageView.addGestureRecognizer(gestureRecognizer)
+        }
+    }
     var dateFormatter: DriftDateFormatter = DriftDateFormatter()
     var message: Message? {
         didSet{
@@ -41,6 +46,11 @@ class ConversationImageTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
+    func imagePressed(){
+        if let attachment = attachment{
+            delegate?.attachmentSelected(attachment, sender: self)
+        }
+    }
     
     func displayMessage(){
         if let authorId = message?.authorId{

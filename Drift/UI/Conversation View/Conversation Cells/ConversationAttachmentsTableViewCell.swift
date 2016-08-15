@@ -100,21 +100,21 @@ class ConversationAttachmentsTableViewCell: UITableViewCell {
     
     
     func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
-        if let cell = cell as? AttachmentCollectionViewCell{
-            AttachmentManager.sharedInstance.getAttachmentInfo((message?.attachments[indexPath.row])!, completion: { (attachment) in
-                if let attachment = attachment{
-                    let fileName: NSString = attachment.fileName
-                    let fileExtension = fileName.pathExtension
-                    cell.fileNameLabel.text = "\(fileName)"
-                    cell.fileExtensionLabel.text = "\(fileExtension.uppercaseString)"
+       // if let cell = cell as? AttachmentCollectionViewCell{
+            //AttachmentManager.sharedInstance.getAttachmentInfo((message?.attachments[indexPath.row])!, completion: { (attachment) in
+            //    if let attachment = attachment{
+            //        let fileName: NSString = attachment.fileName
+            //        let fileExtension = fileName.pathExtension
+            //        cell.fileNameLabel.text = "\(fileName)"
+             //       cell.fileExtensionLabel.text = "\(fileExtension.uppercaseString)"
                     
-                    let formatter = NSByteCountFormatter()
-                    formatter.stringFromByteCount(Int64(attachment.size))
-                    formatter.allowsNonnumericFormatting = false
-                    cell.sizeLabel.text = formatter.stringFromByteCount(Int64(attachment.size))
-                }
-            })
-        }
+               //     let formatter = NSByteCountFormatter()
+                 //   formatter.stringFromByteCount(Int64(attachment.size))
+                   // formatter.allowsNonnumericFormatting = false
+                   // cell.sizeLabel.text = formatter.stringFromByteCount(Int64(attachment.size))
+               // }
+           // })
+    //    }
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
@@ -129,7 +129,7 @@ class ConversationAttachmentsTableViewCell: UITableViewCell {
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         if delegate != nil{
-            delegate?.attachmentSelected((message?.attachments[indexPath.row])!, sender: self)
+//            delegate?.attachmentSelected((message?.attachments[indexPath.row])!, sender: self)
         }
     }
     

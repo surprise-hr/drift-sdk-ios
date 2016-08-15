@@ -23,9 +23,8 @@ class DriftPreviewItem: NSObject, QLPreviewItem{
 }
 
 public protocol AttachementSelectedDelegate: class{
-    func attachmentSelected(id: Int, sender: AnyObject)
+    func attachmentSelected(attachment: Attachment, sender: AnyObject)
 }
-
 
 class ConversationViewController: SLKTextViewController {
     
@@ -174,6 +173,7 @@ class ConversationViewController: SLKTextViewController {
                     if fileExtension == "jpg" || fileExtension == "png" || fileExtension == "gif"{
                         if let cell = cell as? ConversationImageTableViewCell{
                             dispatch_async(dispatch_get_main_queue(), {
+                                cell.delegate = self
                                 cell.message = message
                                 cell.attachment = attachments.first
                             })
@@ -357,10 +357,10 @@ extension ConversationViewController: MessageDelegate{
         if message.authorId != DriftDataStore.sharedInstance.auth?.enduser?.userId{
             if let index = checkSectionsForMessages(message){
                 if message.attachments.count > 0{
-                    AttachmentManager.sharedInstance.getAttachmentInfo((message.attachments.first)!, completion: { (attachment) in
-                        self.sections[index.section][index.row] = message
-                        self.tableView!.reloadRowsAtIndexPaths([index], withRowAnimation: .Bottom)
-                    })
+//                    AttachmentManager.sharedInstance.getAttachmentInfo((message.attachments.first)!, completion: { (attachment) in
+//                        self.sections[index.section][index.row] = message
+//                        self.tableView!.reloadRowsAtIndexPaths([index], withRowAnimation: .Bottom)
+//                    })
                 }else{
                     sections[index.section][index.row] = message
                     tableView!.reloadRowsAtIndexPaths([index], withRowAnimation: .Bottom)
@@ -368,20 +368,20 @@ extension ConversationViewController: MessageDelegate{
             }else{
                 if NSCalendar.currentCalendar().component(.Day, fromDate: (sections[0].first?.createdAt)!) ==  NSCalendar.currentCalendar().component(.Day, fromDate: NSDate()){
                     if message.attachments.count > 0{
-                        AttachmentManager.sharedInstance.getAttachmentInfo((message.attachments.first)!, completion: { (attachment) in
-                            self.sections[0].insert(message, atIndex: 0)
-                            self.tableView!.insertRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 0)], withRowAnimation: .Bottom)
-                        })
+//                        AttachmentManager.sharedInstance.getAttachmentInfo((message.attachments.first)!, completion: { (attachment) in
+//                            self.sections[0].insert(message, atIndex: 0)
+//                            self.tableView!.insertRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 0)], withRowAnimation: .Bottom)
+//                        })
                     }else{
                         self.sections[0].insert(message, atIndex: 0)
                         tableView!.insertRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 0)], withRowAnimation: .Bottom)
                     }
                 }else{
                     if message.attachments.count > 0{
-                        AttachmentManager.sharedInstance.getAttachmentInfo((message.attachments.first)!, completion: { (attachment) in
-                            self.sections.insert([message], atIndex: 0)
-                            self.tableView?.insertSections(NSIndexSet.init(index: 0), withRowAnimation: .Bottom)
-                        })
+//                        AttachmentManager.sharedInstance.getAttachmentInfo((message.attachments.first)!, completion: { (attachment) in
+//                            self.sections.insert([message], atIndex: 0)
+//                            self.tableView?.insertSections(NSIndexSet.init(index: 0), withRowAnimation: .Bottom)
+//                        })
                     }else{
                         self.sections.insert([message], atIndex: 0)
                         tableView?.insertSections(NSIndexSet.init(index: 0), withRowAnimation: .Bottom)
@@ -404,30 +404,28 @@ extension ConversationViewController: MessageDelegate{
 }
 
 extension ConversationViewController: AttachementSelectedDelegate{
-    func attachmentSelected(id: Int, sender: AnyObject) {
-                
-        AttachmentManager.sharedInstance.getAttachmentInfo(id) { (attachment) in
-            if let attachment = attachment{
-                AttachmentManager.sharedInstance.getAttachmentFile(attachment, completion: { (fileUrl) in
-                    if let fileUrl = fileUrl{
-                        if sender.classForCoder == ConversationImageTableViewCell.classForCoder(){
-                            self.previewItem = DriftPreviewItem(url:NSURL.fileURLWithPath((fileUrl.absoluteString)), title: attachment.fileName)
-                            let qlController = QLPreviewController()
-                            qlController.dataSource = self
-                            self.presentViewController(qlController, animated: true, completion: nil)
-                                
-                        }else{
-                            let interactionController = UIDocumentInteractionController()
-                            interactionController.URL = NSURL.fileURLWithPath((fileUrl.absoluteString))
-                            interactionController.name = attachment.fileName
-                            interactionController.presentOptionsMenuFromRect(CGRectZero, inView: self.view, animated: true)
-                        }
-                        
-                    }else{
-                        let alert = UIAlertController.init(title: "Unable to preview file", message: "This file cannot be previewed", preferredStyle: UIAlertControllerStyle.Alert)
-                        self.showViewController(alert, sender: self)
-                    }
-                })
+    func attachmentSelected(attachment: Attachment, sender: AnyObject) {
+        APIManager.downloadAttachmentFile(attachment, authToken: (DriftDataStore.sharedInstance.auth?.accessToken)!) { (result) in
+            switch result{
+            case .Success(let tempFileURL):
+
+                if sender.classForCoder == ConversationImageTableViewCell.classForCoder(){
+                    print(tempFileURL)
+                    self.previewItem = DriftPreviewItem(url: tempFileURL, title: attachment.fileName)
+                    let qlController = QLPreviewController()
+                    qlController.dataSource = self
+                    self.presentViewController(qlController, animated: true, completion: nil)
+                }else{
+                    let interactionController = UIDocumentInteractionController()
+                    interactionController.URL = tempFileURL
+                    interactionController.name = attachment.fileName
+                    interactionController.presentOptionsMenuFromRect(CGRectZero, inView: self.view, animated: true)
+                }
+
+            case .Failure:
+                ()
+                let alert = UIAlertController.init(title: "Unable to preview file", message: "This file cannot be previewed", preferredStyle: UIAlertControllerStyle.Alert)
+                self.presentViewController(alert, animated: true, completion: nil)
             }
         }
     }
