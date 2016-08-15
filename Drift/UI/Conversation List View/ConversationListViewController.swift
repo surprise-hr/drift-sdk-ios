@@ -56,7 +56,7 @@ class ConversationListViewController: UIViewController {
         let vc = ConversationListViewController()
         let navVC = UINavigationController.init(rootViewController: vc)
         let leftButton = UIBarButtonItem(title: "Close", style: UIBarButtonItemStyle.Done, target: vc, action: #selector(ConversationListViewController.dismiss))
-        let rightButton = UIBarButtonItem.init(image:  UIImage.init(named: "plus-circle", inBundle: NSBundle.init(forClass: ConversationListViewController.classForCoder()), compatibleWithTraitCollection: nil), style: UIBarButtonItemStyle.Plain, target: vc, action: #selector(ConversationListViewController.startNewConversation))
+        let rightButton = UIBarButtonItem.init(image:  UIImage.init(named: "composeIcon", inBundle: NSBundle.init(forClass: ConversationListViewController.classForCoder()), compatibleWithTraitCollection: nil), style: UIBarButtonItemStyle.Plain, target: vc, action: #selector(ConversationListViewController.startNewConversation))
         navVC.navigationBar.barTintColor = DriftDataStore.sharedInstance.generateBackgroundColor()
         navVC.navigationBar.tintColor = DriftDataStore.sharedInstance.generateForegroundColor()
         vc.navigationItem.leftBarButtonItem  = leftButton

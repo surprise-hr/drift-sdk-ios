@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ConversationAttachmentsTableViewCell: UITableViewCell {
+class ConversationAttachmentsTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
     @IBOutlet weak var avatarImageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
@@ -17,18 +17,22 @@ class ConversationAttachmentsTableViewCell: UITableViewCell {
     @IBOutlet weak var attachmentsCollectionView: UICollectionView!
     
     var dateFormatter: DriftDateFormatter = DriftDateFormatter()
+    var attachments: [Attachment] = []
     var message: Message? {
         didSet{
             displayMessage()
+            getAttachmentsMetaData()
         }
     }
     weak var delegate: AttachementSelectedDelegate?
-
     
     override func awakeFromNib() {
         super.awakeFromNib()
         selectionStyle = .None
         attachmentsCollectionView.registerNib(UINib.init(nibName: "AttachmentCollectionViewCell", bundle: NSBundle(forClass: AttachmentCollectionViewCell.classForCoder())), forCellWithReuseIdentifier: "AttachmentCollectionViewCell")
+        attachmentsCollectionView.dataSource = self
+        attachmentsCollectionView.delegate = self
+        attachmentsCollectionView.backgroundColor = UIColor.whiteColor()
     }
 
     override func setSelected(selected: Bool, animated: Bool) {
@@ -71,10 +75,11 @@ class ConversationAttachmentsTableViewCell: UITableViewCell {
         if let authorType = message!.authorType where authorType == .User{
             APIManager.getUser(message!.authorId, orgId: DriftDataStore.sharedInstance.embed!.orgId, authToken: DriftDataStore.sharedInstance.auth!.accessToken, completion: { (result) -> () in
                 switch result {
-                    
                 case .Success(let users):
                     if let avatar = users.first?.avatarURL {
-                        self.avatarImageView.af_setImageWithURL(NSURL.init(string: avatar)!)
+                        dispatch_async(dispatch_get_main_queue(), {
+                            self.avatarImageView.af_setImageWithURL(NSURL.init(string: avatar)!)
+                        })
                     }
                     
                     if let creatorName =  users.first?.name {
@@ -87,7 +92,9 @@ class ConversationAttachmentsTableViewCell: UITableViewCell {
         }else{
             if let endUser = DriftDataStore.sharedInstance.auth?.enduser{
                 if let avatar = endUser.avatarURL {
-                    self.avatarImageView.af_setImageWithURL(NSURL.init(string: avatar)!)
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self.avatarImageView.af_setImageWithURL(NSURL.init(string: avatar)!)
+                    })
                 }
                 
                 if let creatorName = endUser.name {
@@ -98,23 +105,36 @@ class ConversationAttachmentsTableViewCell: UITableViewCell {
         }
     }
     
+    func getAttachmentsMetaData(){
+        if let message = message{
+            APIManager.getAttachmentsMetaData(message.attachments, authToken: (DriftDataStore.sharedInstance.auth?.accessToken)!, completion: { (result) in
+                switch result{
+                case .Success(let attachments):
+                    self.attachments = attachments
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self.attachmentsCollectionView.reloadData()
+                    })
+                case .Failure(let error):
+                    LoggerManager.log("Unable to get attachments: \(error)")
+                }
+            })
+        }
+    }
+    
     
     func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
-       // if let cell = cell as? AttachmentCollectionViewCell{
-            //AttachmentManager.sharedInstance.getAttachmentInfo((message?.attachments[indexPath.row])!, completion: { (attachment) in
-            //    if let attachment = attachment{
-            //        let fileName: NSString = attachment.fileName
-            //        let fileExtension = fileName.pathExtension
-            //        cell.fileNameLabel.text = "\(fileName)"
-             //       cell.fileExtensionLabel.text = "\(fileExtension.uppercaseString)"
-                    
-               //     let formatter = NSByteCountFormatter()
-                 //   formatter.stringFromByteCount(Int64(attachment.size))
-                   // formatter.allowsNonnumericFormatting = false
-                   // cell.sizeLabel.text = formatter.stringFromByteCount(Int64(attachment.size))
-               // }
-           // })
-    //    }
+        if let cell = cell as? AttachmentCollectionViewCell {
+            let attachment = self.attachments[indexPath.row]
+            let fileName: NSString = attachment.fileName
+            let fileExtension = fileName.pathExtension
+            cell.fileNameLabel.text = "\(fileName)"
+            cell.fileExtensionLabel.text = "\(fileExtension.uppercaseString)"
+            
+            let formatter = NSByteCountFormatter()
+            formatter.stringFromByteCount(Int64(attachment.size))
+            formatter.allowsNonnumericFormatting = false
+            cell.sizeLabel.text = formatter.stringFromByteCount(Int64(attachment.size))
+        }
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
@@ -124,12 +144,12 @@ class ConversationAttachmentsTableViewCell: UITableViewCell {
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return message!.attachments.count
+        return attachments.count
     }
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         if delegate != nil{
-//            delegate?.attachmentSelected((message?.attachments[indexPath.row])!, sender: self)
+            delegate?.attachmentSelected(attachments[indexPath.row], sender: self)
         }
     }
     
