@@ -63,7 +63,6 @@
 		A80A644C1D466B3600A41A41 /* InboxSubscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = A80A644B1D466B3600A41A41 /* InboxSubscription.swift */; };
 		A80A644E1D466B5E00A41A41 /* ConversationSubscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = A80A644D1D466B5E00A41A41 /* ConversationSubscription.swift */; };
 		A80A64501D466B7C00A41A41 /* MessageSubscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = A80A644F1D466B7C00A41A41 /* MessageSubscription.swift */; };
-		A82CCE0C1D4B6F4A0043D3C2 /* AttachmentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A82CCE0B1D4B6F4A0043D3C2 /* AttachmentManager.swift */; };
 		A82CCE0E1D4B731A0043D3C2 /* Attachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = A82CCE0D1D4B731A0043D3C2 /* Attachment.swift */; };
 		A82CF5681D42585D00D570FF /* ObjectMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A82CF5671D42585D00D570FF /* ObjectMapper.framework */; };
 		A83E41671D50D20800B4EA35 /* MessageTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A83E41651D50D20800B4EA35 /* MessageTableHeaderView.xib */; };
@@ -173,7 +172,6 @@
 		A80A644B1D466B3600A41A41 /* InboxSubscription.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InboxSubscription.swift; path = Drift/Models/InboxSubscription.swift; sourceTree = SOURCE_ROOT; };
 		A80A644D1D466B5E00A41A41 /* ConversationSubscription.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConversationSubscription.swift; path = Drift/Models/ConversationSubscription.swift; sourceTree = SOURCE_ROOT; };
 		A80A644F1D466B7C00A41A41 /* MessageSubscription.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MessageSubscription.swift; path = Drift/Models/MessageSubscription.swift; sourceTree = SOURCE_ROOT; };
-		A82CCE0B1D4B6F4A0043D3C2 /* AttachmentManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AttachmentManager.swift; path = Drift/Managers/AttachmentManager.swift; sourceTree = SOURCE_ROOT; };
 		A82CCE0D1D4B731A0043D3C2 /* Attachment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Attachment.swift; path = Drift/Models/Attachment.swift; sourceTree = SOURCE_ROOT; };
 		A82CF5671D42585D00D570FF /* ObjectMapper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ObjectMapper.framework; path = "../../../../Library/Developer/Xcode/DerivedData/Drift-fazaqbkkelkzfnbpeedxtxrmdjjs/Build/Products/Debug-iphonesimulator/ObjectMapper/ObjectMapper.framework"; sourceTree = "<group>"; };
 		A83E41651D50D20800B4EA35 /* MessageTableHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MessageTableHeaderView.xib; path = "Drift/UI/Conversation View/MessageTableHeaderView.xib"; sourceTree = SOURCE_ROOT; };
@@ -375,7 +373,6 @@
 			isa = PBXGroup;
 			children = (
 				63356A431C529C6C0064F652 /* APIManager.swift */,
-				A82CCE0B1D4B6F4A0043D3C2 /* AttachmentManager.swift */,
 				63356A441C529C6C0064F652 /* LayerManager.swift */,
 				630205171C52A24E00C02F5E /* CampaignsManager.swift */,
 				630205191C52AC5100C02F5E /* DriftManager.swift */,
@@ -722,7 +719,6 @@
 				633920D01C62514F00C3A3C2 /* CampaignResponseManager.swift in Sources */,
 				A853871B1D4A8EAE00C1D3C1 /* ConversationViewController.swift in Sources */,
 				A85387161D4A4F5100C1D3C1 /* ConversationListViewController.swift in Sources */,
-				A82CCE0C1D4B6F4A0043D3C2 /* AttachmentManager.swift in Sources */,
 				A80A64461D46655900A41A41 /* Inbox.swift in Sources */,
 				63359F9D1C774C22007321DA /* AnnouncementExpandedView.swift in Sources */,
 				630205181C52A24E00C02F5E /* CampaignsManager.swift in Sources */,
