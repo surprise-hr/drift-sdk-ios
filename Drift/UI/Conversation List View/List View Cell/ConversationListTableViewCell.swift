@@ -21,6 +21,7 @@ class ConversationListTableViewCell: UITableViewCell {
         messageLabel.textColor = ColorPalette.GrayColor
         updatedAtLabel.textColor = ColorPalette.GrayColor
         avatarImageView.layer.masksToBounds = true
+        avatarImageView.contentMode = .ScaleAspectFill
         avatarImageView.layer.cornerRadius = 3
     }
 }

@@ -46,8 +46,9 @@ class ConversationAttachmentsTableViewCell: UITableViewCell {
         messageTextView.textContainerInset = UIEdgeInsetsZero
         messageTextView.text = self.message!.body
         
-        avatarImageView.layer.cornerRadius = 3
         avatarImageView.layer.masksToBounds = true
+        avatarImageView.contentMode = .ScaleAspectFill
+        avatarImageView.layer.cornerRadius = 3
         
         nameLabel.textColor = DriftDataStore.primaryFontColor
         
@@ -73,7 +74,7 @@ class ConversationAttachmentsTableViewCell: UITableViewCell {
                     
                 case .Success(let users):
                     if let avatar = users.first?.avatarURL {
-                        self.avatarImageView.downloadedFrom(NSURL.init(string: avatar)!, contentMode: .ScaleAspectFill)
+                        self.avatarImageView.af_setImageWithURL(NSURL.init(string: avatar)!)
                     }
                     
                     if let creatorName =  users.first?.name {
@@ -86,7 +87,7 @@ class ConversationAttachmentsTableViewCell: UITableViewCell {
         }else{
             if let endUser = DriftDataStore.sharedInstance.auth?.enduser{
                 if let avatar = endUser.avatarURL {
-                    self.avatarImageView.downloadedFrom(NSURL.init(string:avatar)!, contentMode: .ScaleAspectFill)
+                    self.avatarImageView.af_setImageWithURL(NSURL.init(string: avatar)!)
                 }
                 
                 if let creatorName = endUser.name {

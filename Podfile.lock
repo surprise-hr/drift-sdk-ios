@@ -1,18 +1,24 @@
 PODS:
+  - Alamofire (3.4.1)
+  - AlamofireImage (2.4.1):
+    - Alamofire (~> 3.3)
   - LayerKit (0.22.0)
-  - ObjectMapper (1.3.0)
-  - SlackTextViewController (1.9.3)
+  - ObjectMapper (1.4.0)
+  - SlackTextViewController (1.9.4)
 
 DEPENDENCIES:
+  - AlamofireImage (~> 2.0)
   - LayerKit (~> 0.17)
   - ObjectMapper (~> 1.2)
   - SlackTextViewController (~> 1.9.3)
 
 SPEC CHECKSUMS:
+  Alamofire: 01a82e2f6c0f860ade35534c8dd88be61bdef40c
+  AlamofireImage: 3ccf3347d9ea24580dc11fb892770a0be6a29826
   LayerKit: dc3f45305bd0d520e5a586247d93c6e03b803ccd
-  ObjectMapper: 4eb08a726e9791a93b2632049951b56a7c17e471
-  SlackTextViewController: bd2a34c188d4f7dec93cf42388f38551263fac82
+  ObjectMapper: a07ad0462c5adf014adc0f89ef04c29b626e855e
+  SlackTextViewController: d490f354dba963bc469a6b9ce3213978eaed67a5
 
-PODFILE CHECKSUM: cc742c9756a1d443affdc7fe6769143d3c90a4fd
+PODFILE CHECKSUM: 8c327aecc1c059e73518cedb5bdcdad1348c4a1c
 
 COCOAPODS: 1.0.1

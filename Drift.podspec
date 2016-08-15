@@ -16,5 +16,5 @@ Pod::Spec.new do |spec|
   spec.dependency 'LayerKit', '~> 0.17'
   spec.dependency 'ObjectMapper', '~> 1.2'
   spec.dependency 'SlackTextViewController', '~> 1.9.3'
-
+  spec.dependency 'AlamofireImage', '~> 2.0'
 end

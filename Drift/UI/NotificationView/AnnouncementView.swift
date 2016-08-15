@@ -35,6 +35,7 @@ class AnnouncementView: CampaignView {
         super.awakeFromNib()
         userImageView.clipsToBounds = true
         userImageView.layer.cornerRadius = 4
+        userImageView.contentMode = .ScaleAspectFill
         containerView.clipsToBounds = true
         containerView.layer.cornerRadius = 5
         notificationContainer.hidden = true
@@ -75,7 +76,7 @@ class AnnouncementView: CampaignView {
                     
                 case .Success(let users):
                     if let avatar = users.first?.avatarURL {
-                        self.userImageView.downloadedFrom(NSURL.init(string:avatar)!, contentMode: .ScaleAspectFill)
+                        self.userImageView.af_setImageWithURL(NSURL.init(string:avatar)!)
                     }
                 case .Failure(let error):
                     LoggerManager.didRecieveError(error)

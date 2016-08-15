@@ -110,6 +110,7 @@ class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
         
         campaignCreatorImageView.clipsToBounds = true
         campaignCreatorImageView.layer.cornerRadius = 3
+        campaignCreatorImageView.contentMode = .ScaleAspectFill
         
         scrollView.delegate = self
         scrollView.scrollIndicatorInsets = UIEdgeInsets(top: 30, left: 0, bottom: 0, right: 0)
@@ -227,7 +228,7 @@ class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
                 switch result {
                 case .Success(let users):
                     if let avatar = users.first?.avatarURL {
-                        self.campaignCreatorImageView.downloadedFrom(NSURL.init(string:avatar)!, contentMode: .ScaleAspectFill)
+                        self.campaignCreatorImageView.af_setImageWithURL(NSURL.init(string:avatar)!)
                     }
                     if let creatorName = users.first?.name {
                         self.campaignCreatorNameLabel.text = creatorName
