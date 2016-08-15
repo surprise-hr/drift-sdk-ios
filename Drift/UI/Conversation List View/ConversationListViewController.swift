@@ -89,7 +89,9 @@ extension ConversationListViewController: UITableViewDelegate, UITableViewDataSo
             if let index = users.indexOf({$0.userId == assigneeId}){
                 let user = users[index]
                 if let avatar = user.avatarURL {
-                    cell.avatarImageView.af_setImageWithURL(NSURL.init(string:avatar)!)
+                    dispatch_async(dispatch_get_main_queue(), {
+                        cell.avatarImageView.af_setImageWithURL(NSURL.init(string:avatar)!)
+                    })
                 }
                 if let creatorName = user.name {
                     cell.nameLabel.text = creatorName
@@ -100,7 +102,9 @@ extension ConversationListViewController: UITableViewDelegate, UITableViewDataSo
                     case .Success(let users):
                         self.users.appendContentsOf(users)
                         if let avatar = users.first?.avatarURL {
-                            cell.avatarImageView.af_setImageWithURL(NSURL.init(string:avatar)!)
+                            dispatch_async(dispatch_get_main_queue(), {
+                                cell.avatarImageView.af_setImageWithURL(NSURL.init(string:avatar)!)
+                            })
                         }
                         if let creatorName = users.first?.name {
                             dispatch_async(dispatch_get_main_queue(), {
@@ -113,7 +117,6 @@ extension ConversationListViewController: UITableViewDelegate, UITableViewDataSo
                 })
             }
         }else{
-            cell.avatarImageView.image = UIImage.init(named: "placeholderAvatar", inBundle: NSBundle.init(forClass: ConversationListTableViewCell.classForCoder()), compatibleWithTraitCollection: nil)
             cell.nameLabel.text = "You"
         }
         

@@ -156,17 +156,41 @@ class ConversationViewController: SLKTextViewController {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let message = sections[indexPath.section][indexPath.row]
         
-        let cell: UITableViewCell
-        
-        if message.attachments.count > 0{
-            
-            cell = tableView.dequeueReusableCellWithIdentifier("ConversationAttachmentsTableViewCell", forIndexPath: indexPath) as! ConversationAttachmentsTableViewCell
-            if let cell = cell as? ConversationAttachmentsTableViewCell{
-                cell.message = message
-            }
-        }else{
+        var cell: UITableViewCell
+
+        switch message.attachments.count{
+        case 0:
             cell = tableView.dequeueReusableCellWithIdentifier("ConversationMessageTableViewCell", forIndexPath: indexPath) as! ConversationMessageTableViewCell
             if let cell = cell as? ConversationMessageTableViewCell{
+                cell.message = message
+            }
+        case 1:
+            cell = tableView.dequeueReusableCellWithIdentifier("ConversationImageTableViewCell", forIndexPath: indexPath) as! ConversationImageTableViewCell
+            APIManager.getAttachmentsMetaData([message.attachments.first!], authToken: (DriftDataStore.sharedInstance.auth?.accessToken)!, completion: { (result) in
+                switch result{
+                case .Success(let attachments):
+                    let fileName: NSString = attachments.first!.fileName
+                    let fileExtension = fileName.pathExtension
+                    if fileExtension == "jpg" || fileExtension == "png" || fileExtension == "gif"{
+                        if let cell = cell as? ConversationImageTableViewCell{
+                            dispatch_async(dispatch_get_main_queue(), {
+                                cell.message = message
+                                cell.attachment = attachments.first
+                            })
+                        }
+                    }else{
+                        cell = tableView.dequeueReusableCellWithIdentifier("ConversationAttachmentsTableViewCell", forIndexPath: indexPath) as! ConversationAttachmentsTableViewCell
+                        if let cell = cell as? ConversationAttachmentsTableViewCell{
+                            cell.message = message
+                        }
+                    }
+                case .Failure:
+                    print("Failed to get attachment metadata")
+                }
+            })
+        default:
+            cell = tableView.dequeueReusableCellWithIdentifier("ConversationAttachmentsTableViewCell", forIndexPath: indexPath) as! ConversationAttachmentsTableViewCell
+            if let cell = cell as? ConversationAttachmentsTableViewCell{
                 cell.message = message
             }
         }

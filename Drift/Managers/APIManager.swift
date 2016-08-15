@@ -294,8 +294,7 @@ class APIManager {
     }
     
     
-    class func getAttachmentsMetaData(attachmentIds: [Int], authToken: String, completion: (result: Result<Attachment>) -> ()){
-        
+    class func getAttachmentsMetaData(attachmentIds: [Int], authToken: String, completion: (result: Result<[Attachment]>) -> ()){
         
         guard let url = URLStore.getAttachmentsURL(attachmentIds, authToken: authToken) else {
             LoggerManager.log("Failed in Messages URL Creation")
@@ -308,7 +307,7 @@ class APIManager {
             
             switch result {
             case .Success:
-                let attachments: Result<Attachment> = mapResponse(result)
+                let attachments: Result<[Attachment]> = mapResponse(result)
                 completion(result: attachments)
             case .Failure(let error):
                 completion(result: .Failure(DriftError.APIFailure))
