@@ -56,15 +56,22 @@ class ConversationListViewController: UIViewController {
         let vc = ConversationListViewController()
         let navVC = UINavigationController.init(rootViewController: vc)
         let leftButton = UIBarButtonItem(title: "Close", style: UIBarButtonItemStyle.Done, target: vc, action: #selector(ConversationListViewController.dismiss))
+        let rightButton = UIBarButtonItem.init(image:  UIImage.init(named: "plus-circle", inBundle: NSBundle.init(forClass: ConversationListViewController.classForCoder()), compatibleWithTraitCollection: nil), style: UIBarButtonItemStyle.Plain, target: vc, action: #selector(ConversationListViewController.startNewConversation))
         navVC.navigationBar.barTintColor = DriftDataStore.sharedInstance.generateBackgroundColor()
         navVC.navigationBar.tintColor = DriftDataStore.sharedInstance.generateForegroundColor()
         vc.navigationItem.leftBarButtonItem  = leftButton
+        vc.navigationItem.rightBarButtonItem = rightButton
         vc.navigationItem.title = "Conversations"
         return navVC
     }
     
     func dismiss(){
         dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func startNewConversation(){
+        let conversationViewController = ConversationViewController(conversationType: ConversationViewController.ConversationType.CreateConversation(authorId: DriftDataStore.sharedInstance.auth!.enduser!.userId!))
+        self.navigationController?.showViewController(conversationViewController, sender: self)
     }
     
     @IBAction func closeButtonPressed(sender: AnyObject) {
