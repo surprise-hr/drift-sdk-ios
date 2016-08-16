@@ -58,6 +58,10 @@ class PresentationManager: PresentationManagerDelegate {
         }
     }
     
+    func didRecieveNewMessages(messages: [(conversationId: Int, messages: [Message])]) {
+        
+    }
+    
     func showAnnouncementCampaign(campaign: Campaign, otherCampaigns:[Campaign]) {
         if let announcementView = AnnouncementView.fromNib() as? AnnouncementView where currentShownView == nil {
             

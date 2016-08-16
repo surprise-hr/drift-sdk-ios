@@ -23,7 +23,7 @@ class CampaignsManager {
             let conversationController = try LayerManager.sharedInstance.layerClient?.queryControllerWithQuery(convo)
             try conversationController?.execute()
             var announcements:[Campaign] = []
-            var messages:[Int: [Message]] = [:]
+            var messages:[(conversationId: Int, messages:[Message])] = []
             if let countUInt = conversationController?.numberOfObjectsInSection(0) {
                 let count = Int(countUInt)
                 for index: Int in 0..<count {
@@ -33,25 +33,35 @@ class CampaignsManager {
                         let newData = try getCampaignsAndMessagesFor(conversation)
                         announcements = announcements + newData.announcments
                         if !newData.messages.isEmpty {
-                            messages[newData.messages.first!.conversationId] = newData.messages
+                            messages.append((conversationId: newData.messages.first!.conversationId, messages: newData.messages))
                         }
                     }
                 }
             }
             
-            let filtered = filtercampaigns(announcements)
-            PresentationManager.sharedInstance.didRecieveCampaigns(filtered.nps + filtered.announcements)
-            
-            
-            for conversationId in messages.keys {
-                if InboxManager.sharedInstance.hasSubscriptionForConversationId(conversationId) {
-                    for message in messages[conversationId]! {
+            var messagesToShow:[(conversationId: Int, messages:[Message])] = []
+            var messagesSyncedToVC = false
+            for messageTouple in messages {
+                if InboxManager.sharedInstance.hasSubscriptionForConversationId(messageTouple.conversationId) {
+                    for message in messageTouple.messages {
                         InboxManager.sharedInstance.messageDidUpdate(message)
                     }
+                    messagesSyncedToVC = true
                 }else {
                     //Tell presentation controller we have new messages?
+                    messagesToShow.append((conversationId: messageTouple.conversationId, messages: messageTouple.messages))
                 }
             }
+            
+            if !messagesSyncedToVC {
+                if messagesToShow.isEmpty {
+                    let filtered = filtercampaigns(announcements)
+                    PresentationManager.sharedInstance.didRecieveCampaigns(filtered.nps + filtered.announcements)
+                }else{
+                    PresentationManager.sharedInstance.didRecieveNewMessages(messagesToShow)
+                }
+            }
+            
             
         } catch {
             LoggerManager.log("Error in checking conversations")

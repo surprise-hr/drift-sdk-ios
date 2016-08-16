@@ -375,18 +375,26 @@ class APIManager {
                 do {
                     let json = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
                     if let attachment: Attachment = Mapper<Attachment>().map(json){
-                        completion(result: .Success(attachment))
+                        dispatch_async(dispatch_get_main_queue(), { 
+                            completion(result: .Success(attachment))
+                        })
                         return
                     }
                 } catch {
                     print(request.HTTPBody)
                     print(response.statusCode)
-                    completion(result: .Failure(DriftError.APIFailure))
+                    dispatch_async(dispatch_get_main_queue(), {
+                        completion(result: .Failure(DriftError.APIFailure))
+                    })
                 }
             }else if let error = error {
-                completion(result: .Failure(error))
+                dispatch_async(dispatch_get_main_queue(), {
+                    completion(result: .Failure(error))
+                })
             }else{
-                completion(result: .Failure(DriftError.APIFailure))
+                dispatch_async(dispatch_get_main_queue(), {
+                    completion(result: .Failure(DriftError.APIFailure))
+                })
             }
             
         }.resume()
@@ -410,14 +418,22 @@ class APIManager {
             if let response = response as? NSHTTPURLResponse, data = data where accepted.contains(response.statusCode){
                 do {
                     let json = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
-                    completion(.Success(json))
+                    dispatch_async(dispatch_get_main_queue(), { 
+                        completion(.Success(json))
+                    })
                 } catch {
-                    completion(.Failure(DriftError.APIFailure))
+                    dispatch_async(dispatch_get_main_queue(), {
+                        completion(.Failure(DriftError.APIFailure))
+                    })
                 }
             }else if let error = error {
-                completion(.Failure(error))
+                dispatch_async(dispatch_get_main_queue(), {
+                    completion(.Failure(error))
+                })
             }else{
-                completion(.Failure(DriftError.APIFailure))
+                dispatch_async(dispatch_get_main_queue(), {
+                    completion(.Failure(DriftError.APIFailure))
+                })
             }
             
             }.resume()
