@@ -63,7 +63,17 @@ class NewMessageView: CampaignView {
 
             titleLabel.text = "New Message"
             
-            infoLabel.text = latestMessage.body ?? ""
+            do {
+                let htmlStringData = (latestMessage.body ?? "").dataUsingEncoding(NSUTF8StringEncoding)!
+                let options: [String: AnyObject] = [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,
+                                                    NSCharacterEncodingDocumentAttribute: NSUTF8StringEncoding
+                ]
+                let attributedHTMLString = try NSMutableAttributedString(data: htmlStringData, options: options, documentAttributes: nil)
+                infoLabel.text = attributedHTMLString.string
+            } catch {
+                infoLabel.text = latestMessage.body ?? ""
+            }
+
             
             
         }else{
@@ -82,21 +92,6 @@ class NewMessageView: CampaignView {
             
         }
         
-//        if let announcement = campaign.announcementAttributes {
-//            titleLabel.text = announcement.title ?? ""
-//            
-//            do {
-//                let htmlStringData = (campaign.bodyText ?? "").dataUsingEncoding(NSUTF8StringEncoding)!
-//                let options: [String: AnyObject] = [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,
-//                    NSCharacterEncodingDocumentAttribute: NSUTF8StringEncoding
-//                    ]
-//                let attributedHTMLString = try NSMutableAttributedString(data: htmlStringData, options: options, documentAttributes: nil)
-//                infoLabel.text = attributedHTMLString.string
-//            } catch {
-//                infoLabel.text = campaign.bodyText ?? ""
-//            }
-//        }
-//
 //        if let organizerId = campaign.authorId {
 //            
 //            APIManager.getUser(organizerId, orgId: DriftDataStore.sharedInstance.embed!.orgId, authToken: DriftDataStore.sharedInstance.auth!.accessToken, completion: { (result) -> () in

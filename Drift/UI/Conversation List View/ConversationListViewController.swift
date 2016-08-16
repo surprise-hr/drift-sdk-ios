@@ -31,17 +31,13 @@ class ConversationListViewController: UIViewController {
         InboxManager.sharedInstance.addConversationSubscription(ConversationSubscription(delegate: self))
         
         APIManager.getConversations(DriftDataStore.sharedInstance.auth!.enduser!.userId!, authToken: DriftDataStore.sharedInstance.auth!.accessToken) { (result) in
-            dispatch_async(dispatch_get_main_queue(), {
-                self.activityIndicator.hidden = true
-                self.loadingConversationsLabel.hidden = true
-                self.activityIndicator.stopAnimating()
-            })
+            self.activityIndicator.hidden = true
+            self.loadingConversationsLabel.hidden = true
+            self.activityIndicator.stopAnimating()
             switch result{
             case .Success(let conversations):
                 self.conversations = conversations
-                dispatch_async(dispatch_get_main_queue(), {
-                    self.tableView.reloadData()
-                })
+                self.tableView.reloadData()
             case .Failure(let error):
                 LoggerManager.log("Unable to get conversations for endUser:  \(DriftDataStore.sharedInstance.auth!.enduser!.userId!): \(error)")
             }
@@ -89,9 +85,7 @@ extension ConversationListViewController: UITableViewDelegate, UITableViewDataSo
             if let index = users.indexOf({$0.userId == assigneeId}){
                 let user = users[index]
                 if let avatar = user.avatarURL {
-                    dispatch_async(dispatch_get_main_queue(), {
-                        cell.avatarImageView.af_setImageWithURL(NSURL.init(string:avatar)!)
-                    })
+                    cell.avatarImageView.af_setImageWithURL(NSURL.init(string:avatar)!)
                 }
                 if let creatorName = user.name {
                     cell.nameLabel.text = creatorName
@@ -102,14 +96,10 @@ extension ConversationListViewController: UITableViewDelegate, UITableViewDataSo
                     case .Success(let users):
                         self.users.appendContentsOf(users)
                         if let avatar = users.first?.avatarURL {
-                            dispatch_async(dispatch_get_main_queue(), {
                                 cell.avatarImageView.af_setImageWithURL(NSURL.init(string:avatar)!)
-                            })
                         }
                         if let creatorName = users.first?.name {
-                            dispatch_async(dispatch_get_main_queue(), {
-                                cell.nameLabel.text = creatorName
-                            })
+                            cell.nameLabel.text = creatorName
                         }
                     case .Failure(_):
                         ()
