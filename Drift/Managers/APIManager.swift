@@ -410,6 +410,7 @@ class APIManager {
             if let response = response as? NSHTTPURLResponse, data = data where accepted.contains(response.statusCode){
                 do {
                     let json = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
+                    print(json)
                     completion(.Success(json))
                 } catch {
                     completion(.Failure(DriftError.APIFailure))
