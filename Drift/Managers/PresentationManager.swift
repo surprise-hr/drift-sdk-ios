@@ -11,7 +11,7 @@ import UIKit
 protocol PresentationManagerDelegate:class {
     
     func campaignDidFinishWithResponse(view: CampaignView, campaign: Campaign, response: CampaignResponse)
-    
+    func messageViewDidFinish(view: CampaignView)
 }
 
 
@@ -59,6 +59,23 @@ class PresentationManager: PresentationManagerDelegate {
     }
     
     func didRecieveNewMessages(messages: [(conversationId: Int, messages: [Message])]) {
+        
+        if let newMessageView = NewMessageView.fromNib() as? NewMessageView where currentShownView == nil {
+            
+            if let window = UIApplication.sharedApplication().keyWindow {
+                currentShownView = newMessageView
+                
+                let currentConversation = messages.first!
+                let otherConversations = messages.filter({ $0.conversationId != currentConversation.conversationId })
+                newMessageView.otherConversations = otherConversations                
+                newMessageView.conversation = currentConversation
+                newMessageView.delegate = self
+                newMessageView.showOnWindow(window)
+                
+            }
+        }
+
+        
         
     }
     
@@ -115,6 +132,20 @@ class PresentationManager: PresentationManagerDelegate {
         
     }
     
+    func showConversationVC(conversationId: Int) {
+        if let topVC = TopController.viewController()  {
+            let navVC = ConversationViewController.navigationController(ConversationViewController.ConversationType.ContinueConversation(conversationId: conversationId))
+            topVC.presentViewController(navVC, animated: true, completion: nil)
+        }
+    }
+    
+    func showNewConversationVC(authorId: Int?) {
+        if let topVC = TopController.viewController()  {
+            let navVC = ConversationViewController.navigationController(ConversationViewController.ConversationType.CreateConversation(authorId: authorId))
+            topVC.presentViewController(navVC, animated: true, completion: nil)
+        }
+    }
+    
     ///Presentation Delegate
     
     func campaignDidFinishWithResponse(view: CampaignView, campaign: Campaign, response: CampaignResponse) {
@@ -131,7 +162,10 @@ class PresentationManager: PresentationManagerDelegate {
         }
     }
     
-    
+    func messageViewDidFinish(view: CampaignView) {
+        view.hideFromWindow()
+        currentShownView = nil
+    }
 }
 
 
