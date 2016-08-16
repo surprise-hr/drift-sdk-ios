@@ -24,7 +24,7 @@ struct Embed: Mappable {
     var organizationName: String?
     
     var inboxEmailAddress: String?
-    var refreshRate: String?
+    var refreshRate: Int?
     
     init?(_ map: Map) {
         //These fields are required, without them we fail to init the object

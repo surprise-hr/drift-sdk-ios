@@ -56,7 +56,7 @@ class APIManager {
         }
     }
     
-    class func getEmbeds(embedId: String, refreshRate: String?, completion: (Result<Embed>) -> ()){
+    class func getEmbeds(embedId: String, refreshRate: Int?, completion: (Result<Embed>) -> ()){
         
         guard let url = URLStore.embedURL(embedId, refresh: refreshRate) else {
             LoggerManager.log("Failure in Embed URL creation")
@@ -462,9 +462,11 @@ class URLStore{
     static let identifyURL = NSURL(string: "https://event.api.driftt.com/identify")!
     static let layerTokenURL = NSURL(string: "https://customer.api.driftt.com/layer/token")!
     static let tokenURL = NSURL(string: "https://customer.api.driftt.com/oauth/token")!
-    class func embedURL(embedId: String, refresh: String?) -> NSURL? {
-//        return NSURL(string: "https://customer.api.driftt.com/embeds/\(embedId)")
-        return NSURL(string: "https://js.driftt.com/embeds/\(refresh ?? "30000")/\(embedId).json")
+    class func embedURL(embedId: String, refresh: Int?) -> NSURL? {
+
+        let refreshString = Int(NSDate().timeIntervalSince1970 % Double((refresh ?? 30000)))
+        
+        return NSURL(string: "https://js.driftt.com/embeds/\(refreshString)/\(embedId).json")
     }
     
     class func campaignUserURL(orgId: Int, authToken: String) -> NSURL? {
