@@ -50,7 +50,7 @@ struct Embed: Mappable {
         redirectUri         <- map["configuration.redirectUri"]
         backgroundColor     <- map["configuration.theme.backgroundColor"]
         foregroundColor     <- map["configuration.theme.foregroundColor"]
-        welcomeMessage      <- map["configuration.theme.foregroundColor"]
+        welcomeMessage      <- map["configuration.theme.welcomeMessage"]
         organizationName    <- map["configuration.organizationName"]
         inboxEmailAddress   <- map["configuration.inboxEmailAddress"]
         refreshRate         <- map["configuration.refreshRate"]
