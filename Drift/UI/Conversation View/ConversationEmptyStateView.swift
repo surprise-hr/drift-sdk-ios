@@ -9,17 +9,14 @@
 import UIKit
 
 class ConversationEmptyStateView: UIView {
-
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        self.messageLabel.clipsToBounds = true
+        self.messageLabel.layer.cornerRadius = 3.0
+    }
+    
     @IBOutlet weak var startAConversationLabel: UILabel!
     @IBOutlet weak var organizationLabel: UILabel!
     @IBOutlet weak var messageLabel: UILabel!
     
-    /*
-    // Only override drawRect: if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func drawRect(rect: CGRect) {
-        // Drawing code
-    }
-    */
-
 }
