@@ -8,8 +8,8 @@
 
 import ObjectMapper
 
-public class InboxManager {
-    public static let sharedInstance: InboxManager = InboxManager()
+class InboxManager {
+    static let sharedInstance: InboxManager = InboxManager()
     let pageSize = 30
     
     var conversationSubscriptions: [ConversationSubscription] = []
@@ -99,11 +99,11 @@ public class InboxManager {
     }
     
     //Create subscriptions for objects
-    public func addConversationSubscription(subscription: ConversationSubscription){
+    func addConversationSubscription(subscription: ConversationSubscription){
         self.conversationSubscriptions.append(subscription)
     }
     
-    public func addMessageSubscription(subscription: MessageSubscription){
+    func addMessageSubscription(subscription: MessageSubscription){
         self.messageSubscriptions.append(subscription)
     }
 

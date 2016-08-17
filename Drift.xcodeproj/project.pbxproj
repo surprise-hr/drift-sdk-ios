@@ -17,6 +17,7 @@
 		6306B51E1C5F91150003F9D3 /* NPSResponseAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6306B51D1C5F91150003F9D3 /* NPSResponseAttributes.swift */; };
 		6306F4211D6379CC00722D15 /* NewMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6306F41F1D6379CC00722D15 /* NewMessageView.swift */; };
 		6306F4221D6379CC00722D15 /* NewMessageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6306F4201D6379CC00722D15 /* NewMessageView.xib */; };
+		6306F42E1D63E68800722D15 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6306F42D1D63E68800722D15 /* UserManager.swift */; };
 		630E89621C57944400195062 /* PresentationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630E89611C57944400195062 /* PresentationManager.swift */; };
 		630E89651C57B99000195062 /* AnnouncementView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 630E89641C57B99000195062 /* AnnouncementView.xib */; };
 		630E89671C57B9AC00195062 /* AnnouncementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630E89661C57B9AC00195062 /* AnnouncementView.swift */; };
@@ -122,6 +123,7 @@
 		6306B51D1C5F91150003F9D3 /* NPSResponseAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NPSResponseAttributes.swift; path = Drift/Models/NPSResponseAttributes.swift; sourceTree = SOURCE_ROOT; };
 		6306F41F1D6379CC00722D15 /* NewMessageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NewMessageView.swift; path = "Drift/UI/New Message View/NewMessageView.swift"; sourceTree = SOURCE_ROOT; };
 		6306F4201D6379CC00722D15 /* NewMessageView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = NewMessageView.xib; path = "Drift/UI/New Message View/NewMessageView.xib"; sourceTree = SOURCE_ROOT; };
+		6306F42D1D63E68800722D15 /* UserManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserManager.swift; path = Drift/Managers/UserManager.swift; sourceTree = SOURCE_ROOT; };
 		630E89611C57944400195062 /* PresentationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PresentationManager.swift; path = Drift/Managers/PresentationManager.swift; sourceTree = SOURCE_ROOT; };
 		630E89641C57B99000195062 /* AnnouncementView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AnnouncementView.xib; path = Drift/UI/NotificationView/AnnouncementView.xib; sourceTree = SOURCE_ROOT; };
 		630E89661C57B9AC00195062 /* AnnouncementView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AnnouncementView.swift; path = Drift/UI/NotificationView/AnnouncementView.swift; sourceTree = SOURCE_ROOT; };
@@ -395,6 +397,7 @@
 				633920CF1C62514F00C3A3C2 /* CampaignResponseManager.swift */,
 				63BBABB31C7C9D850014768A /* ErrorManager.swift */,
 				A80A64431D465E4800A41A41 /* InboxManager.swift */,
+				6306F42D1D63E68800722D15 /* UserManager.swift */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -762,6 +765,7 @@
 				63F95DBF1C5B8676003BCEE0 /* Auth.swift in Sources */,
 				A86C30CA1D6120F0008DDE8D /* AttachmentCollectionViewCell.swift in Sources */,
 				A80A644C1D466B3600A41A41 /* InboxSubscription.swift in Sources */,
+				6306F42E1D63E68800722D15 /* UserManager.swift in Sources */,
 				6329CAC51C5A91310059C678 /* DriftDataStore.swift in Sources */,
 				6362426A1C7FBCB400632F0E /* NPSCompleteView.swift in Sources */,
 				6329CAC31C59336E0059C678 /* NPSCommentView.swift in Sources */,
