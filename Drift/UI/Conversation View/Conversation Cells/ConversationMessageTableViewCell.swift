@@ -35,9 +35,7 @@ class ConversationMessageTableViewCell: UITableViewCell {
     }
     
     func displayMessage() {
-        if let authorId = message?.authorId{
-            getUser(authorId)
-        }
+
         avatarImageView.image = UIImage.init(named: "placeholderAvatar", inBundle: NSBundle.init(forClass: ConversationListTableViewCell.classForCoder()), compatibleWithTraitCollection: nil)
         messageTextView.text = ""
         messageTextView.textContainerInset = UIEdgeInsetsZero
@@ -45,6 +43,10 @@ class ConversationMessageTableViewCell: UITableViewCell {
         
         avatarImageView.layer.cornerRadius = 3
         avatarImageView.layer.masksToBounds = true
+        
+        if let authorId = message?.authorId{
+            getUser(authorId)
+        }
         
         nameLabel.textColor = DriftDataStore.primaryFontColor
 
@@ -63,21 +65,20 @@ class ConversationMessageTableViewCell: UITableViewCell {
     }
     
     func getUser(userId: Int){
-        if let authorType = message!.authorType where authorType == .User{
-            APIManager.getUser(message!.authorId, orgId: DriftDataStore.sharedInstance.embed!.orgId, authToken: DriftDataStore.sharedInstance.auth!.accessToken, completion: { (result) -> () in
-                switch result {
+        if let authorType = message?.authorType where authorType == .User{
+            
+            UserManager.sharedInstance.userMetaDataForUserId(userId, completion: { (user) in
+                
+                if let user = user {
                     
-                case .Success(let users):
-                    if let avatar = users.first?.avatarURL, url = NSURL(string: avatar) {
+                    if let avatar = user.avatarURL, url = NSURL(string: avatar) {
                         self.avatarImageView.af_setImageWithURL(url)
                     }
                     
-                    if let creatorName =  users.first?.name {
+                    if let creatorName =  user.name {
                         self.nameLabel.text = creatorName
                     }
-                case .Failure(let error):
-                    LoggerManager.didRecieveError(error)
-                }
+                }  
             })
         }else{
             if let endUser = DriftDataStore.sharedInstance.auth?.enduser{

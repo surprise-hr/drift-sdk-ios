@@ -31,8 +31,7 @@ class UserManager {
             if let completionArr = completionDict[userId] {
                 completionDict[userId] = completionArr + [completion]
             }else{
-               
-                
+                completionDict[userId] = [completion]
                 APIManager.getUser(userId, orgId: DriftDataStore.sharedInstance.embed!.orgId, authToken: DriftDataStore.sharedInstance.auth!.accessToken, completion: { (result) -> () in
                   
                     switch result {
@@ -57,5 +56,6 @@ class UserManager {
                 completion(user: user)
             }
         }
+        completionDict[userId] = nil
     }
 }

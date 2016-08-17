@@ -54,7 +54,7 @@ class NewMessageView: CampaignView {
         dismissButton.setTitleColor(foreground, forState: .Normal)
         openButton.setTitleColor(foreground, forState: .Normal)
         
-        
+        var userId: Int?
         if otherConversations.isEmpty {
             //Setup for latest message in convo
             notificationContainer.hidden = true
@@ -74,7 +74,8 @@ class NewMessageView: CampaignView {
                 infoLabel.text = latestMessage.body ?? ""
             }
 
-            
+
+            userId = latestMessage.authorId
             
         }else{
             //Setup for new messages 
@@ -89,24 +90,19 @@ class NewMessageView: CampaignView {
             titleLabel.text = "New Messages"
             infoLabel.text = "Click below to open"
             
-            
+            userImageView.hidden = true
         }
         
-//        if let organizerId = campaign.authorId {
-//            
-//            APIManager.getUser(organizerId, orgId: DriftDataStore.sharedInstance.embed!.orgId, authToken: DriftDataStore.sharedInstance.auth!.accessToken, completion: { (result) -> () in
-//                switch result {
-//                    
-//                case .Success(let users):
-//                    if let avatar = users.first?.avatarURL {
-//                        self.userImageView.af_setImageWithURL(NSURL.init(string:avatar)!)
-//                    }
-//                case .Failure(let error):
-//                    LoggerManager.didRecieveError(error)
-//                }
-//            })
-//        }
-        
+        if let userId = userId {            
+            UserManager.sharedInstance.userMetaDataForUserId(userId, completion: { (user) in
+                if let user = user {
+                    if let avatar = user.avatarURL, url = NSURL(string: avatar) {
+                        self.userImageView.af_setImageWithURL(url)
+                    }
+                    self.titleLabel.text = user.name ?? "New Message"
+                }
+            })
+        }
     }
     
     override func showOnWindow(window: UIWindow) {
