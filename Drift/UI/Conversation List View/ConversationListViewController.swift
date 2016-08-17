@@ -14,6 +14,9 @@ class ConversationListViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var loadingConversationsLabel: UILabel!
+   
+    @IBOutlet weak var emptyStateView: UIView!
+    @IBOutlet weak var emptyStateButton: UIButton!
     
     var conversations: [Conversation] = []
     var users: [CampaignOrganizer] = []
@@ -21,6 +24,7 @@ class ConversationListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupEmptyState()
         activityIndicator.startAnimating()
         tableView.tableFooterView = UIView(frame: CGRectZero)
         tableView.delegate = self
@@ -38,6 +42,9 @@ class ConversationListViewController: UIViewController {
             case .Success(let conversations):
                 self.conversations = conversations
                 self.tableView.reloadData()
+                if conversations.count == 0{
+                    self.emptyStateView.hidden = false
+                }
             case .Failure(let error):
                 LoggerManager.log("Unable to get conversations for endUser:  \(DriftDataStore.sharedInstance.auth!.enduser!.userId!): \(error)")
             }
@@ -65,9 +72,20 @@ class ConversationListViewController: UIViewController {
         dismissViewControllerAnimated(true, completion: nil)
     }
     
-    func startNewConversation(){
+    func startNewConversation() {
         let conversationViewController = ConversationViewController(conversationType: ConversationViewController.ConversationType.CreateConversation(authorId: DriftDataStore.sharedInstance.auth!.enduser!.userId!))
         self.navigationController?.showViewController(conversationViewController, sender: self)
+    }
+    
+    func setupEmptyState() {
+        emptyStateButton.clipsToBounds = true
+        emptyStateButton.layer.cornerRadius = 3.0
+        emptyStateButton.backgroundColor = DriftDataStore.sharedInstance.generateBackgroundColor()
+        emptyStateButton.setTitleColor(DriftDataStore.sharedInstance.generateForegroundColor(), forState: .Normal)
+    }
+    
+    @IBAction func emptyStateButtonPressed(sender: AnyObject) {
+        startNewConversation()
     }
     
     @IBAction func closeButtonPressed(sender: AnyObject) {
@@ -116,12 +134,13 @@ extension ConversationListViewController: UITableViewDelegate, UITableViewDataSo
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if conversations.count > 0 {
+            dispatch_async(dispatch_get_main_queue(), {
+                self.emptyStateView.hidden = true
+            })
+        }
         return conversations.count
     }
-    
-//    func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-//        return nil
-//    }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let conversation = conversations[indexPath.row]

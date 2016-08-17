@@ -41,6 +41,7 @@ class ConversationViewController: SLKTextViewController {
             }
         }
     }
+    let emptyState = ConversationEmptyStateView.fromNib() as! ConversationEmptyStateView
     var sections: [[Message]] = []
     var previewItem: DriftPreviewItem?
     var dateFormatter: DriftDateFormatter = DriftDateFormatter()
@@ -99,8 +100,20 @@ class ConversationViewController: SLKTextViewController {
             self.conversationId = conversationId
             getMessages(conversationId)
         case .CreateConversation(_):
-            ()
-            ///TODO: Show empty State
+            if let organizationName = DriftDataStore.sharedInstance.embed?.organizationName {
+                emptyState.organizationLabel.text = organizationName
+            }
+        
+            emptyState.messageLabel.backgroundColor = DriftDataStore.sharedInstance.generateBackgroundColor()
+            emptyState.messageLabel.textColor = DriftDataStore.sharedInstance.generateForegroundColor()
+
+            if let welcomeMessage = DriftDataStore.sharedInstance.embed?.welcomeMessage {
+                emptyState.messageLabel.text = welcomeMessage
+            }
+            
+            emptyState.center.x = view.center.x
+            emptyState.center.y = view.center.y-100
+            view.addSubview(emptyState)
         }
     }
     
@@ -209,6 +222,9 @@ class ConversationViewController: SLKTextViewController {
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if sections[section].count > 0{
+            emptyState.hidden = true
+        }
         return sections[section].count
     }
 

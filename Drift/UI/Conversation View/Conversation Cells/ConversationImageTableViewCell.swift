@@ -66,7 +66,7 @@ class ConversationImageTableViewCell: UITableViewCell {
         avatarImageView.layer.cornerRadius = 3
         
         attachmentImageView.layer.masksToBounds = true
-        attachmentImageView.contentMode = .Center
+        attachmentImageView.contentMode = .ScaleAspectFill
         attachmentImageView.layer.cornerRadius = 3
         
         nameLabel.textColor = DriftDataStore.primaryFontColor
@@ -88,9 +88,7 @@ class ConversationImageTableViewCell: UITableViewCell {
     func displayAttachment(){
         if let attachment = attachment{
             if let previewString = attachment.publicPreviewURL, imageURL = NSURL(string: previewString){
-                attachmentImageView!.af_setImageWithURL(imageURL, placeholderImage: nil, filter: nil, progress: nil, progressQueue: dispatch_get_main_queue(), imageTransition: .CrossDissolve(0.5), runImageTransitionIfCached: true, completion: { (response) in
-                    self.attachmentImageView.contentMode = .ScaleAspectFill
-                })
+                attachmentImageView!.af_setImageWithURL(imageURL, placeholderImage: nil, filter: nil, progress: nil, progressQueue: dispatch_get_main_queue(), imageTransition: .CrossDissolve(0.5), runImageTransitionIfCached: true, completion:nil)
             }
         }
     }
