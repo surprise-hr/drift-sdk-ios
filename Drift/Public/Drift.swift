@@ -51,7 +51,7 @@ public class Drift: NSObject {
      
     */
     public class func debugMode(debug:Bool) {
-        DriftManager.debugMore(debug)
+        DriftManager.debugMode(debug)
     }
     
     /**

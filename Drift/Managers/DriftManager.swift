@@ -56,7 +56,7 @@ class DriftManager: NSObject {
         }
     }
     
-    class func debugMore(debug:Bool){
+    class func debugMode(debug:Bool){
         sharedInstance.debug = debug
     }
     
