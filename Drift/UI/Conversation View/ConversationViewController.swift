@@ -46,11 +46,9 @@ class ConversationViewController: SLKTextViewController {
     var dateFormatter: DriftDateFormatter = DriftDateFormatter()
     var conversationId: Int?{
         didSet{
-            dispatch_async(dispatch_get_main_queue(), {
-                self.leftButton.enabled = true
-                self.leftButton.tintColor = DriftDataStore.sharedInstance.generateBackgroundColor()
-                self.leftButton.setImage(UIImage.init(named: "plus-circle", inBundle: NSBundle(forClass: Drift.self), compatibleWithTraitCollection: nil), forState: .Normal)
-            })
+            self.leftButton.enabled = true
+            self.leftButton.tintColor = DriftDataStore.sharedInstance.generateBackgroundColor()
+            self.leftButton.setImage(UIImage.init(named: "plus-circle", inBundle: NSBundle(forClass: Drift.self), compatibleWithTraitCollection: nil), forState: .Normal)
         }
     }
     convenience init(conversationType: ConversationType) {
@@ -98,6 +96,7 @@ class ConversationViewController: SLKTextViewController {
     func didOpen(){
         switch conversationType! {
         case .ContinueConversation(let conversationId):
+            self.conversationId = conversationId
             getMessages(conversationId)
         case .CreateConversation(_):
             ()
@@ -121,12 +120,21 @@ class ConversationViewController: SLKTextViewController {
     }
     
     func dismiss(){
+        resignFirstResponder()
         dismissViewControllerAnimated(true, completion: nil)
     }
     
     override func didPressLeftButton(sender: AnyObject?) {
 
         let uploadController = UIAlertController.init(title: nil, message: nil, preferredStyle: .ActionSheet)
+       
+        if UIDevice.currentDevice().userInterfaceIdiom == UIUserInterfaceIdiom.Pad {
+            uploadController.modalPresentationStyle = .Popover
+            let popover = uploadController.popoverPresentationController
+            popover?.sourceView = self.leftButton
+            popover?.sourceRect = self.leftButton.bounds
+        }
+        
         let imagePicker = UIImagePickerController()
         imagePicker.delegate = self
         uploadController.addAction(UIAlertAction(title: "Take a Photo", style: .Default, handler: { (UIAlertAction) in
