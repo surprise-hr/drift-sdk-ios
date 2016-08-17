@@ -355,6 +355,9 @@ extension ConversationViewController: MessageDelegate{
     }
     
     func newMessage(message: Message) {
+        if let uuid = message.uuid{
+            CampaignsManager.markConversationAsRead(uuid)
+        }
         if message.authorId != DriftDataStore.sharedInstance.auth?.enduser?.userId{
             if let index = checkSectionsForMessages(message){
                     sections[index.section][index.row] = message
