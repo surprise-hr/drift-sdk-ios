@@ -92,8 +92,7 @@ class CampaignsManager {
             LoggerManager.log("Number Of Messages: \(countUInt)")
             let count = Int(countUInt)
             for index: Int in 0..<count {
-                if let message = queryController?.objectAtIndexPath(NSIndexPath(forRow: index, inSection: 0)) as? LYRMessage {
-                    
+                if let message = queryController?.objectAtIndexPath(NSIndexPath(forRow: index, inSection: 0)) as? LYRMessage where message.isUnread {
                     
                     for part in message.parts {
                         switch part.MIMEType {

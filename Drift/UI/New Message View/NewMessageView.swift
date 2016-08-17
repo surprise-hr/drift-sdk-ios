@@ -152,11 +152,13 @@ class NewMessageView: CampaignView {
     }
     
     @IBAction func skipPressed(sender: AnyObject) {
+        markAllAsRead()
         delegate?.messageViewDidFinish(self)
     }
     
     @IBAction func readPressed(sender: AnyObject) {
         delegate?.messageViewDidFinish(self)
+        markAllAsRead()
         if otherConversations.isEmpty {
             PresentationManager.sharedInstance.showConversationVC(conversation.conversationId)
         }else{
@@ -164,6 +166,15 @@ class NewMessageView: CampaignView {
         }
     }
     
-        
-
+    
+    func markAllAsRead(){
+        for conv in otherConversations {
+            if let msgUUID = conv.messages.first?.uuid {
+                CampaignsManager.markConversationAsRead(msgUUID)
+            }
+        }
+        if let msgUUID = conversation.messages.first?.uuid {
+            CampaignsManager.markConversationAsRead(msgUUID)
+        }
+    }
 }
