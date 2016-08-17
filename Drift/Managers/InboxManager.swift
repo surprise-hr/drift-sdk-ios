@@ -34,7 +34,7 @@ class InboxManager {
             case .Success(let conversations):
                 completion(conversations: conversations)
             case .Failure:
-                print("Unable to retreive conversations for endUserId: \(endUserId)")
+                LoggerManager.log("Unable to retreive conversations for endUserId: \(endUserId)")
                 completion(conversations: nil)
             }
         }
@@ -53,7 +53,7 @@ class InboxManager {
             case .Success(let messages):
                 completion(messages: messages)
             case .Failure:
-                print("Unable to retreive messages for conversationId: \(conversationId)")
+                LoggerManager.log("Unable to retreive messages for conversationId: \(conversationId)")
                 completion(messages: nil)
             }
         }
@@ -72,7 +72,7 @@ class InboxManager {
             case .Success(let returnedMessage):
                 completion(message: returnedMessage, requestId: message.requestId)
             case .Failure:
-                print("Unable to post message for conversationId: \(conversationId)")
+                LoggerManager.log("Unable to post message for conversationId: \(conversationId)")
                 completion(message: nil, requestId: message.requestId)
             }
         }
@@ -92,7 +92,7 @@ class InboxManager {
             case .Success(let returnedMessage):
                 completion(message: returnedMessage, requestId: message.requestId)
             case .Failure:
-                print("Unable to create conversation")
+                LoggerManager.log("Unable to create conversation")
                 completion(message: nil, requestId: message.requestId)
             }
         }

@@ -77,7 +77,6 @@ class APIManager {
             return
         }
         
-        print(url)
         let params: [String: AnyObject] =
         [   "avatar_w": 102,
             "avatar_h": 102,
@@ -271,11 +270,7 @@ class APIManager {
             return
         }
         
-        var json: [String : AnyObject] = ["body":body]
-        
-//        if let authorId = authorId {
-//            json["to"] = ["id":authorId]
-//        }
+        let json: [String : AnyObject] = ["body":body]
         
         let request = Request(url: url).setData(.JSON(json: json)).setMethod(.POST)
         
@@ -367,10 +362,9 @@ class APIManager {
             if let response = response as? NSHTTPURLResponse {
                 LoggerManager.log("API Complete: \(response.statusCode) \(response.URL?.path ?? "")")
             }
-            print(error?.localizedDescription)
+            
             let accepted = [200, 201]
-            let responseString = String.init(data: data!, encoding: NSUTF8StringEncoding)
-            print(responseString)
+            
             if let response = response as? NSHTTPURLResponse, data = data where accepted.contains(response.statusCode){
                 do {
                     let json = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)

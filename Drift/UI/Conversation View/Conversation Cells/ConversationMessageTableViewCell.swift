@@ -27,22 +27,16 @@ class ConversationMessageTableViewCell: UITableViewCell {
         super.awakeFromNib()
         selectionStyle = .None
     }
-
-    override func setSelected(selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
     
     func displayMessage() {
 
         avatarImageView.image = UIImage.init(named: "placeholderAvatar", inBundle: NSBundle.init(forClass: ConversationListTableViewCell.classForCoder()), compatibleWithTraitCollection: nil)
+        avatarImageView.layer.cornerRadius = 3
+        avatarImageView.layer.masksToBounds = true
+        
         messageTextView.text = ""
         messageTextView.textContainerInset = UIEdgeInsetsZero
         messageTextView.text = self.message!.body
-        
-        avatarImageView.layer.cornerRadius = 3
-        avatarImageView.layer.masksToBounds = true
         
         if let authorId = message?.authorId{
             getUser(authorId)
@@ -52,11 +46,11 @@ class ConversationMessageTableViewCell: UITableViewCell {
 
         timeLabel.textColor = DriftDataStore.secondaryFontColor
         timeLabel.text = self.dateFormatter.createdAtStringFromDate(self.message!.createdAt)
+        
         do {
             let htmlStringData = (self.message!.body ?? "").dataUsingEncoding(NSUTF8StringEncoding)!
             let options: [String: AnyObject] = [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,
-                                                NSCharacterEncodingDocumentAttribute: NSUTF8StringEncoding
-            ]
+                                                NSCharacterEncodingDocumentAttribute: NSUTF8StringEncoding]
             let attributedHTMLString = try NSMutableAttributedString(data: htmlStringData, options: options, documentAttributes: nil)
             self.messageTextView.text = attributedHTMLString.string
         } catch {
@@ -64,13 +58,12 @@ class ConversationMessageTableViewCell: UITableViewCell {
         }
     }
     
-    func getUser(userId: Int){
-        if let authorType = message?.authorType where authorType == .User{
-            
+    func getUser(userId: Int) {
+        
+        if let authorType = message?.authorType where authorType == .User {
             UserManager.sharedInstance.userMetaDataForUserId(userId, completion: { (user) in
                 
                 if let user = user {
-                    
                     if let avatar = user.avatarURL, url = NSURL(string: avatar) {
                         self.avatarImageView.af_setImageWithURL(url)
                     }
@@ -78,10 +71,11 @@ class ConversationMessageTableViewCell: UITableViewCell {
                     if let creatorName =  user.name {
                         self.nameLabel.text = creatorName
                     }
-                }  
+                }
             })
-        }else{
-            if let endUser = DriftDataStore.sharedInstance.auth?.enduser{
+            
+        }else {
+            if let endUser = DriftDataStore.sharedInstance.auth?.enduser {
                 if let avatar = endUser.avatarURL {
                     self.avatarImageView.af_setImageWithURL(NSURL.init(string: avatar)!)
                 }
@@ -89,7 +83,6 @@ class ConversationMessageTableViewCell: UITableViewCell {
                 if let creatorName = endUser.name {
                     self.nameLabel.text = creatorName
                 }
-
             }
         }
     }

@@ -35,35 +35,33 @@ class ConversationImageTableViewCell: UITableViewCell {
         }
     }
     
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         selectionStyle = .None
     }
-
-    override func setSelected(selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
     
-    func imagePressed(){
+    
+    func imagePressed() {
         if let attachment = attachment{
             delegate?.attachmentSelected(attachment, sender: self)
         }
     }
     
     func displayMessage(){
+        
         if let authorId = message?.authorId{
             getUser(authorId)
         }
-        avatarImageView.image = UIImage.init(named: "placeholderAvatar", inBundle: NSBundle.init(forClass: ConversationListTableViewCell.classForCoder()), compatibleWithTraitCollection: nil)
-        messageTextView.text = ""
-        messageTextView.textContainerInset = UIEdgeInsetsZero
-        messageTextView.text = self.message!.body
         
+        avatarImageView.image = UIImage.init(named: "placeholderAvatar", inBundle: NSBundle.init(forClass: ConversationListTableViewCell.classForCoder()), compatibleWithTraitCollection: nil)
         avatarImageView.layer.masksToBounds = true
         avatarImageView.contentMode = .ScaleAspectFill
         avatarImageView.layer.cornerRadius = 3
+        
+        messageTextView.text = ""
+        messageTextView.textContainerInset = UIEdgeInsetsZero
+        messageTextView.text = self.message!.body
         
         attachmentImageView.layer.masksToBounds = true
         attachmentImageView.contentMode = .ScaleAspectFill
@@ -76,8 +74,7 @@ class ConversationImageTableViewCell: UITableViewCell {
         do {
             let htmlStringData = (self.message!.body ?? "").dataUsingEncoding(NSUTF8StringEncoding)!
             let options: [String: AnyObject] = [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,
-                                                NSCharacterEncodingDocumentAttribute: NSUTF8StringEncoding
-            ]
+                                                NSCharacterEncodingDocumentAttribute: NSUTF8StringEncoding]
             let attributedHTMLString = try NSMutableAttributedString(data: htmlStringData, options: options, documentAttributes: nil)
             self.messageTextView.text = attributedHTMLString.string
         } catch {
@@ -85,7 +82,8 @@ class ConversationImageTableViewCell: UITableViewCell {
         }
     }
     
-    func displayAttachment(){
+    
+    func displayAttachment() {
         if let attachment = attachment{
             if let previewString = attachment.publicPreviewURL, imageURL = NSURL(string: previewString){
                 attachmentImageView!.af_setImageWithURL(imageURL, placeholderImage: nil, filter: nil, progress: nil, progressQueue: dispatch_get_main_queue(), imageTransition: .CrossDissolve(0.5), runImageTransitionIfCached: true, completion:nil)
@@ -93,37 +91,31 @@ class ConversationImageTableViewCell: UITableViewCell {
         }
     }
     
-    func getUser(userId: Int){
-        if let authorType = message!.authorType where authorType == .User{
-            APIManager.getUser(message!.authorId, orgId: DriftDataStore.sharedInstance.embed!.orgId, authToken: DriftDataStore.sharedInstance.auth!.accessToken, completion: { (result) -> () in
-                switch result {
-                    
-                case .Success(let users):
-                    if let avatar = users.first?.avatarURL {
-                        dispatch_async(dispatch_get_main_queue(), {
-                            self.avatarImageView.af_setImageWithURL(NSURL.init(string: avatar)!)
-                        })
+    
+    func getUser(userId: Int) {
+        if let authorType = message?.authorType where authorType == .User {
+            UserManager.sharedInstance.userMetaDataForUserId(userId, completion: { (user) in
+                
+                if let user = user {
+                    if let avatar = user.avatarURL, url = NSURL(string: avatar) {
+                        self.avatarImageView.af_setImageWithURL(url)
                     }
                     
-                    if let creatorName =  users.first?.name {
+                    if let creatorName =  user.name {
                         self.nameLabel.text = creatorName
                     }
-                case .Failure(let error):
-                    LoggerManager.didRecieveError(error)
                 }
             })
-        }else{
-            if let endUser = DriftDataStore.sharedInstance.auth?.enduser{
+            
+        }else {
+            if let endUser = DriftDataStore.sharedInstance.auth?.enduser {
                 if let avatar = endUser.avatarURL {
-                    dispatch_async(dispatch_get_main_queue(), {
-                        self.avatarImageView.af_setImageWithURL(NSURL.init(string: avatar)!)
-                    })
+                    self.avatarImageView.af_setImageWithURL(NSURL.init(string: avatar)!)
                 }
                 
                 if let creatorName = endUser.name {
                     self.nameLabel.text = creatorName
                 }
-                
             }
         }
     }
