@@ -41,6 +41,7 @@ class PresentationManager: PresentationManagerDelegate {
             nextCampaigns = Array(sortedCampaigns.dropFirst())
         }
         
+
         dispatch_async(dispatch_get_main_queue()) { () -> Void in
          
             if let firstCampaign = sortedCampaigns.first, type = firstCampaign.messageType  {
@@ -60,7 +61,7 @@ class PresentationManager: PresentationManagerDelegate {
     
     func didRecieveNewMessages(messages: [(conversationId: Int, messages: [Message])]) {
         
-        if let newMessageView = NewMessageView.fromNib() as? NewMessageView where currentShownView == nil {
+        if let newMessageView = NewMessageView.fromNib() as? NewMessageView where currentShownView == nil && !conversationIsPresenting() {
             
             if let window = UIApplication.sharedApplication().keyWindow {
                 currentShownView = newMessageView
@@ -80,7 +81,7 @@ class PresentationManager: PresentationManagerDelegate {
     }
     
     func showAnnouncementCampaign(campaign: Campaign, otherCampaigns:[Campaign]) {
-        if let announcementView = AnnouncementView.fromNib() as? AnnouncementView where currentShownView == nil {
+        if let announcementView = AnnouncementView.fromNib() as? AnnouncementView where currentShownView == nil && !conversationIsPresenting() {
             
             if let window = UIApplication.sharedApplication().keyWindow {
                 currentShownView = announcementView
@@ -95,7 +96,7 @@ class PresentationManager: PresentationManagerDelegate {
     
     func showExpandedAnnouncement(campaign: Campaign) {
     
-        if let announcementView = AnnouncementExpandedView.fromNib() as? AnnouncementExpandedView, window = UIApplication.sharedApplication().keyWindow {
+        if let announcementView = AnnouncementExpandedView.fromNib() as? AnnouncementExpandedView, window = UIApplication.sharedApplication().keyWindow where !conversationIsPresenting() {
             
             currentShownView = announcementView
             announcementView.campaign = campaign
@@ -109,7 +110,7 @@ class PresentationManager: PresentationManagerDelegate {
     func showNPSCampaign(campaign: Campaign, otherCampaigns: [Campaign]) {
      
      
-        if let npsContainer = NPSContainerView.fromNib() as? NPSContainerView, npsView = NPSView.fromNib() as? NPSView where currentShownView == nil {
+        if let npsContainer = NPSContainerView.fromNib() as? NPSContainerView, npsView = NPSView.fromNib() as? NPSView where currentShownView == nil && !conversationIsPresenting(){
             
             if let window = UIApplication.sharedApplication().keyWindow {
                 currentShownView = npsContainer
@@ -123,6 +124,13 @@ class PresentationManager: PresentationManagerDelegate {
         }else{
             LoggerManager.log("Error Loading Nib")
         }
+    }
+    
+    func conversationIsPresenting() -> Bool{
+        if let topVC = TopController.viewController() where topVC.classForCoder == ConversationListViewController.classForCoder() || topVC.classForCoder == ConversationViewController.classForCoder(){
+            return true
+        }
+        return false
     }
     
     func showConversationList(){
