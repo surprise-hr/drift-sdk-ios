@@ -447,6 +447,7 @@ extension ConversationViewController: AttachementSelectedDelegate {
                 }
             case .Failure:
                 let alert = UIAlertController.init(title: "Unable to preview file", message: "This file cannot be previewed", preferredStyle: UIAlertControllerStyle.Alert)
+                alert.addAction(UIAlertAction.init(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
                 self.presentViewController(alert, animated: true, completion: nil)
                 LoggerManager.log("Unable to preview file with mimeType: \(attachment.mimeType)")
             }
@@ -507,6 +508,7 @@ extension ConversationViewController: UIImagePickerControllerDelegate, UINavigat
                     self.postMessage(messageRequest)
                 case .Failure:
                     let alert = UIAlertController.init(title: "Unable to upload file", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
+                    alert.addAction(UIAlertAction.init(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
                     self.presentViewController(alert, animated: true, completion: nil)
                     LoggerManager.log("Unable to upload file with mimeType: \(newAttachment.mimeType)")
 

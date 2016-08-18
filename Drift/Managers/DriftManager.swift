@@ -33,7 +33,7 @@ class DriftManager: NSObject {
         do {
             try NSFileManager.defaultManager().createDirectoryAtURL(sharedInstance.directoryURL, withIntermediateDirectories: true, attributes: nil)
         } catch {
-            ()
+            sharedInstance.directoryURL = NSURL(fileURLWithPath: NSTemporaryDirectory())
         }
     }
     
