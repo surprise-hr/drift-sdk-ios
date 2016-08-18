@@ -11,7 +11,7 @@ import UIKit
 protocol PresentationManagerDelegate:class {
     
     func campaignDidFinishWithResponse(view: CampaignView, campaign: Campaign, response: CampaignResponse)
-    
+    func messageViewDidFinish(view: CampaignView)
 }
 
 
@@ -41,6 +41,7 @@ class PresentationManager: PresentationManagerDelegate {
             nextCampaigns = Array(sortedCampaigns.dropFirst())
         }
         
+
         dispatch_async(dispatch_get_main_queue()) { () -> Void in
          
             if let firstCampaign = sortedCampaigns.first, type = firstCampaign.messageType  {
@@ -58,8 +59,29 @@ class PresentationManager: PresentationManagerDelegate {
         }
     }
     
+    func didRecieveNewMessages(messages: [(conversationId: Int, messages: [Message])]) {
+        
+        if let newMessageView = NewMessageView.fromNib() as? NewMessageView where currentShownView == nil && !conversationIsPresenting() {
+            
+            if let window = UIApplication.sharedApplication().keyWindow {
+                currentShownView = newMessageView
+                
+                let currentConversation = messages.first!
+                let otherConversations = messages.filter({ $0.conversationId != currentConversation.conversationId })
+                newMessageView.otherConversations = otherConversations                
+                newMessageView.conversation = currentConversation
+                newMessageView.delegate = self
+                newMessageView.showOnWindow(window)
+                
+            }
+        }
+
+        
+        
+    }
+    
     func showAnnouncementCampaign(campaign: Campaign, otherCampaigns:[Campaign]) {
-        if let announcementView = AnnouncementView.fromNib() as? AnnouncementView where currentShownView == nil {
+        if let announcementView = AnnouncementView.fromNib() as? AnnouncementView where currentShownView == nil && !conversationIsPresenting() {
             
             if let window = UIApplication.sharedApplication().keyWindow {
                 currentShownView = announcementView
@@ -74,7 +96,7 @@ class PresentationManager: PresentationManagerDelegate {
     
     func showExpandedAnnouncement(campaign: Campaign) {
     
-        if let announcementView = AnnouncementExpandedView.fromNib() as? AnnouncementExpandedView, window = UIApplication.sharedApplication().keyWindow {
+        if let announcementView = AnnouncementExpandedView.fromNib() as? AnnouncementExpandedView, window = UIApplication.sharedApplication().keyWindow where !conversationIsPresenting() {
             
             currentShownView = announcementView
             announcementView.campaign = campaign
@@ -88,7 +110,7 @@ class PresentationManager: PresentationManagerDelegate {
     func showNPSCampaign(campaign: Campaign, otherCampaigns: [Campaign]) {
      
      
-        if let npsContainer = NPSContainerView.fromNib() as? NPSContainerView, npsView = NPSView.fromNib() as? NPSView where currentShownView == nil {
+        if let npsContainer = NPSContainerView.fromNib() as? NPSContainerView, npsView = NPSView.fromNib() as? NPSView where currentShownView == nil && !conversationIsPresenting(){
             
             if let window = UIApplication.sharedApplication().keyWindow {
                 currentShownView = npsContainer
@@ -104,11 +126,32 @@ class PresentationManager: PresentationManagerDelegate {
         }
     }
     
+    func conversationIsPresenting() -> Bool{
+        if let topVC = TopController.viewController() where topVC.classForCoder == ConversationListViewController.classForCoder() || topVC.classForCoder == ConversationViewController.classForCoder(){
+            return true
+        }
+        return false
+    }
+    
     func showConversationList(){
 
         let conversationListController = ConversationListViewController.navigationController()
         TopController.viewController()?.presentViewController(conversationListController, animated: true, completion: nil)
         
+    }
+    
+    func showConversationVC(conversationId: Int) {
+        if let topVC = TopController.viewController()  {
+            let navVC = ConversationViewController.navigationController(ConversationViewController.ConversationType.ContinueConversation(conversationId: conversationId))
+            topVC.presentViewController(navVC, animated: true, completion: nil)
+        }
+    }
+    
+    func showNewConversationVC(authorId: Int?) {
+        if let topVC = TopController.viewController()  {
+            let navVC = ConversationViewController.navigationController(ConversationViewController.ConversationType.CreateConversation(authorId: authorId))
+            topVC.presentViewController(navVC, animated: true, completion: nil)
+        }
     }
     
     ///Presentation Delegate
@@ -127,7 +170,10 @@ class PresentationManager: PresentationManagerDelegate {
         }
     }
     
-    
+    func messageViewDidFinish(view: CampaignView) {
+        view.hideFromWindow()
+        currentShownView = nil
+    }
 }
 
 

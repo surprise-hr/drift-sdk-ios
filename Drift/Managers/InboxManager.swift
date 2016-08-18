@@ -8,15 +8,15 @@
 
 import ObjectMapper
 
-public class InboxManager {
-    public static let sharedInstance: InboxManager = InboxManager()
+class InboxManager {
+    static let sharedInstance: InboxManager = InboxManager()
     let pageSize = 30
     
     var conversationSubscriptions: [ConversationSubscription] = []
     var messageSubscriptions: [MessageSubscription] = []
     
     func hasSubscriptionForConversationId(conversationId: Int) -> Bool {
-        var matchingSub = messageSubscriptions.filter({$0.conversationId == conversationId && $0.delegate != nil})
+        let matchingSub = messageSubscriptions.filter({$0.conversationId == conversationId && $0.delegate != nil})
         return !matchingSub.isEmpty
     }
     
@@ -34,7 +34,7 @@ public class InboxManager {
             case .Success(let conversations):
                 completion(conversations: conversations)
             case .Failure:
-                print("Unable to retreive conversations for endUserId: \(endUserId)")
+                LoggerManager.log("Unable to retreive conversations for endUserId: \(endUserId)")
                 completion(conversations: nil)
             }
         }
@@ -53,7 +53,7 @@ public class InboxManager {
             case .Success(let messages):
                 completion(messages: messages)
             case .Failure:
-                print("Unable to retreive messages for conversationId: \(conversationId)")
+                LoggerManager.log("Unable to retreive messages for conversationId: \(conversationId)")
                 completion(messages: nil)
             }
         }
@@ -72,7 +72,7 @@ public class InboxManager {
             case .Success(let returnedMessage):
                 completion(message: returnedMessage, requestId: message.requestId)
             case .Failure:
-                print("Unable to post message for conversationId: \(conversationId)")
+                LoggerManager.log("Unable to post message for conversationId: \(conversationId)")
                 completion(message: nil, requestId: message.requestId)
             }
         }
@@ -92,18 +92,18 @@ public class InboxManager {
             case .Success(let returnedMessage):
                 completion(message: returnedMessage, requestId: message.requestId)
             case .Failure:
-                print("Unable to create conversation")
+                LoggerManager.log("Unable to create conversation")
                 completion(message: nil, requestId: message.requestId)
             }
         }
     }
     
     //Create subscriptions for objects
-    public func addConversationSubscription(subscription: ConversationSubscription){
+    func addConversationSubscription(subscription: ConversationSubscription){
         self.conversationSubscriptions.append(subscription)
     }
     
-    public func addMessageSubscription(subscription: MessageSubscription){
+    func addMessageSubscription(subscription: MessageSubscription){
         self.messageSubscriptions.append(subscription)
     }
 

@@ -56,7 +56,7 @@ class APIManager {
         }
     }
     
-    class func getEmbeds(embedId: String, refreshRate: String?, completion: (Result<Embed>) -> ()){
+    class func getEmbeds(embedId: String, refreshRate: Int?, completion: (Result<Embed>) -> ()){
         
         guard let url = URLStore.embedURL(embedId, refresh: refreshRate) else {
             LoggerManager.log("Failure in Embed URL creation")
@@ -77,7 +77,6 @@ class APIManager {
             return
         }
         
-        print(url)
         let params: [String: AnyObject] =
         [   "avatar_w": 102,
             "avatar_h": 102,
@@ -271,11 +270,7 @@ class APIManager {
             return
         }
         
-        var json: [String : AnyObject] = ["body":body]
-        
-//        if let authorId = authorId {
-//            json["to"] = ["id":authorId]
-//        }
+        let json: [String : AnyObject] = ["body":body]
         
         let request = Request(url: url).setData(.JSON(json: json)).setMethod(.POST)
         
@@ -293,12 +288,35 @@ class APIManager {
         
     }
     
-    
-    class func getAttachmentsMetaData(attachmentIds: [Int], authToken: String, completion: (result: Result<Attachment>) -> ()){
+    class func downloadAttachmentFile(attachment: Attachment, authToken: String, completion: (result: Result<NSURL>) -> ()){
+        guard let url = URLStore.downloadAttachmentURL(attachment.id, authToken: authToken) else {
+            LoggerManager.log("Failed in Download Attachment URL Creation")
+            return
+        }
         
+        sharedInstance.session.dataTaskWithURL(url) { (data, response, error) in
+            if let response = response as? NSHTTPURLResponse {
+                LoggerManager.log("API Complete: \(response.statusCode) \(response.URL?.path ?? "")")
+            }
+            
+            if let data = data{
+                let fileURL = DriftManager.sharedInstance.directoryURL.URLByAppendingPathComponent(attachment.fileName)
+                do {
+                    try data.writeToURL(fileURL, options: .AtomicWrite)
+                    completion(result: .Success(fileURL))
+                } catch {
+                    completion(result: .Failure(DriftError.DataCreationFailure))
+                }
+            }else{
+                completion(result: .Failure(DriftError.APIFailure))
+            }
+        }.resume()
+    }
+    
+    class func getAttachmentsMetaData(attachmentIds: [Int], authToken: String, completion: (result: Result<[Attachment]>) -> ()){
         
         guard let url = URLStore.getAttachmentsURL(attachmentIds, authToken: authToken) else {
-            LoggerManager.log("Failed in Messages URL Creation")
+            LoggerManager.log("Failed in Get Attachment Metadata URL Creation")
             return
         }
         
@@ -308,7 +326,7 @@ class APIManager {
             
             switch result {
             case .Success:
-                let attachments: Result<Attachment> = mapResponse(result)
+                let attachments: Result<[Attachment]> = mapResponse(result)
                 completion(result: attachments)
             case .Failure(let error):
                 completion(result: .Failure(DriftError.APIFailure))
@@ -344,26 +362,33 @@ class APIManager {
             if let response = response as? NSHTTPURLResponse {
                 LoggerManager.log("API Complete: \(response.statusCode) \(response.URL?.path ?? "")")
             }
-            print(error?.localizedDescription)
+            
             let accepted = [200, 201]
-            let responseString = String.init(data: data!, encoding: NSUTF8StringEncoding)
-            print(responseString)
+            
             if let response = response as? NSHTTPURLResponse, data = data where accepted.contains(response.statusCode){
                 do {
                     let json = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
                     if let attachment: Attachment = Mapper<Attachment>().map(json){
-                        completion(result: .Success(attachment))
+                        dispatch_async(dispatch_get_main_queue(), { 
+                            completion(result: .Success(attachment))
+                        })
                         return
                     }
                 } catch {
                     print(request.HTTPBody)
                     print(response.statusCode)
-                    completion(result: .Failure(DriftError.APIFailure))
+                    dispatch_async(dispatch_get_main_queue(), {
+                        completion(result: .Failure(DriftError.APIFailure))
+                    })
                 }
             }else if let error = error {
-                completion(result: .Failure(error))
+                dispatch_async(dispatch_get_main_queue(), {
+                    completion(result: .Failure(error))
+                })
             }else{
-                completion(result: .Failure(DriftError.APIFailure))
+                dispatch_async(dispatch_get_main_queue(), {
+                    completion(result: .Failure(DriftError.APIFailure))
+                })
             }
             
         }.resume()
@@ -387,14 +412,22 @@ class APIManager {
             if let response = response as? NSHTTPURLResponse, data = data where accepted.contains(response.statusCode){
                 do {
                     let json = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
-                    completion(.Success(json))
+                    dispatch_async(dispatch_get_main_queue(), { 
+                        completion(.Success(json))
+                    })
                 } catch {
-                    completion(.Failure(DriftError.APIFailure))
+                    dispatch_async(dispatch_get_main_queue(), {
+                        completion(.Failure(DriftError.APIFailure))
+                    })
                 }
             }else if let error = error {
-                completion(.Failure(error))
+                dispatch_async(dispatch_get_main_queue(), {
+                    completion(.Failure(error))
+                })
             }else{
-                completion(.Failure(DriftError.APIFailure))
+                dispatch_async(dispatch_get_main_queue(), {
+                    completion(.Failure(DriftError.APIFailure))
+                })
             }
             
             }.resume()
@@ -439,9 +472,11 @@ class URLStore{
     static let identifyURL = NSURL(string: "https://event.api.driftt.com/identify")!
     static let layerTokenURL = NSURL(string: "https://customer.api.driftt.com/layer/token")!
     static let tokenURL = NSURL(string: "https://customer.api.driftt.com/oauth/token")!
-    class func embedURL(embedId: String, refresh: String?) -> NSURL? {
-//        return NSURL(string: "https://customer.api.driftt.com/embeds/\(embedId)")
-        return NSURL(string: "https://js.driftt.com/embeds/\(refresh ?? "30000")/\(embedId).json")
+    class func embedURL(embedId: String, refresh: Int?) -> NSURL? {
+
+        let refreshString = Int(NSDate().timeIntervalSince1970 % Double((refresh ?? 30000)))
+        
+        return NSURL(string: "https://js.driftt.com/embeds/\(refreshString)/\(embedId).json")
     }
     
     class func campaignUserURL(orgId: Int, authToken: String) -> NSURL? {
@@ -462,6 +497,10 @@ class URLStore{
 
     class func postAttachmentURL(authToken: String) -> NSURL? {
         return NSURL(string: "https://conversation.api.driftt.com/attachments?access_token=\(authToken)")
+    }
+    
+    class func downloadAttachmentURL(attachmentId: Int, authToken: String) -> NSURL? {
+        return NSURL(string: "https://conversation.api.driftt.com/attachments/\(attachmentId)/data?access_token=\(authToken)")
     }
     
     class func getAttachmentsURL(attachmentIds: [Int], authToken: String) -> NSURL? {

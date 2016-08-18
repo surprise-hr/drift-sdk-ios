@@ -20,6 +20,7 @@ public class Drift: NSObject {
     */
     public class func setup(embedId: String) {
         DriftManager.retrieveDataFromEmbeds(embedId)
+        DriftManager.createTemporaryDirectory()
     }
     
     /**
@@ -50,7 +51,7 @@ public class Drift: NSObject {
      
     */
     public class func debugMode(debug:Bool) {
-        DriftManager.debugMore(debug)
+        DriftManager.debugMode(debug)
     }
     
     /**

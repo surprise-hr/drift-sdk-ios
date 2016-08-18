@@ -20,11 +20,12 @@ struct Embed: Mappable {
     
     var backgroundColor: String?
     var foregroundColor: String?
+    var welcomeMessage: String?
     
     var organizationName: String?
     
     var inboxEmailAddress: String?
-    var refreshRate: String?
+    var refreshRate: Int?
     
     init?(_ map: Map) {
         //These fields are required, without them we fail to init the object
@@ -49,6 +50,7 @@ struct Embed: Mappable {
         redirectUri         <- map["configuration.redirectUri"]
         backgroundColor     <- map["configuration.theme.backgroundColor"]
         foregroundColor     <- map["configuration.theme.foregroundColor"]
+        welcomeMessage      <- map["configuration.theme.welcomeMessage"]
         organizationName    <- map["configuration.organizationName"]
         inboxEmailAddress   <- map["configuration.inboxEmailAddress"]
         refreshRate         <- map["configuration.refreshRate"]

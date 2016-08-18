@@ -250,10 +250,7 @@ class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
             
             switch cta.ctaType {
             case .Some(.ChatResponse):
-                if let email = DriftDataStore.sharedInstance.embed?.inboxEmailAddress, topVC = TopController.viewController() where email != "" {
-                    let navVC = ConversationViewController.navigationController(ConversationViewController.ConversationType.CreateConversation(authorId: campaign.authorId))
-                    topVC.presentViewController(navVC, animated: true, completion: nil)
-                }
+                PresentationManager.sharedInstance.showNewConversationVC(campaign.authorId)
             case .Some(.LinkToURL):
                 if let url = cta.urlLink {
                     presentURL(url)
