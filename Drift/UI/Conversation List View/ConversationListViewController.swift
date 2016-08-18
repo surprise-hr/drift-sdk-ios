@@ -30,7 +30,7 @@ class ConversationListViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.rowHeight = UITableViewAutomaticDimension
-        tableView.estimatedRowHeight = 80
+        tableView.estimatedRowHeight = 90
         tableView.registerNib(UINib(nibName: "ConversationListTableViewCell", bundle:  NSBundle(forClass: ConversationListTableViewCell.classForCoder())), forCellReuseIdentifier: "ConversationListTableViewCell")
         InboxManager.sharedInstance.addConversationSubscription(ConversationSubscription(delegate: self))
         
