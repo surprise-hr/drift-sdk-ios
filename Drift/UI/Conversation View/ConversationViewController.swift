@@ -318,6 +318,7 @@ class ConversationViewController: SLKTextViewController {
             sections.append(section)
         }
         
+        //Append an empty section to ensure we have a header on the top section
         sections.append([])
         
         return sections
