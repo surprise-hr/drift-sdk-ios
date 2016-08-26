@@ -139,7 +139,7 @@ class ConversationViewController: SLKTextViewController {
     
     
     override class func tableViewStyleForCoder(decoder: NSCoder) -> UITableViewStyle {
-        return .Plain
+        return .Grouped
     }
     
     
@@ -250,17 +250,34 @@ class ConversationViewController: SLKTextViewController {
     }
     
     
-    override func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+    override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        
         let headerView: MessageTableHeaderView =  MessageTableHeaderView.fromNib("MessageTableHeaderView") as! MessageTableHeaderView
-        let message = sections[section][0]
-        headerView.headerLabel.text = dateFormatter.headerStringFromDate(message.createdAt)
+        
+        //This handles the fact we need to have a header on the last (top when inverted) section.
+        if section == 0{
+            return nil
+        }else if sections[section-1].count == 0 {
+            headerView.headerLabel.text = "Today"
+        }else {
+            let message = sections[section-1][0]
+            headerView.headerLabel.text = dateFormatter.headerStringFromDate(message.createdAt)
+        }
+        
         headerView.transform = tableView.transform
         return headerView
     }
     
+    override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if section == 0{
+            return CGFloat.min
+        }else{
+            return 42
+        }
+    }
     
     override func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 42
+        return CGFloat.min
     }
     
     func addMessageToConversation(message: Message){
@@ -300,6 +317,9 @@ class ConversationViewController: SLKTextViewController {
         if sections.count == 0 && section.count > 0{
             sections.append(section)
         }
+        
+        //Append an empty section to ensure we have a header on the top section
+        sections.append([])
         
         return sections
     }
