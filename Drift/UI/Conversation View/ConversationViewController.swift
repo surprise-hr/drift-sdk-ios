@@ -341,6 +341,7 @@ class ConversationViewController: SLKTextViewController {
     
     func postMessage(messageRequest: Message){
         messageRequest.requestId = NSDate().timeIntervalSince1970
+        messageRequest.type = Type.Chat
         addMessageToConversation(messageRequest)
         
         switch conversationType! {

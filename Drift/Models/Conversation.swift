@@ -27,6 +27,7 @@ public class Conversation: Mappable, Equatable{
     var subject: String?
     var preview: String?
     var updatedAt = NSDate()
+    var type: String!
     
     var messages: [Message]!
     
@@ -45,6 +46,7 @@ public class Conversation: Mappable, Equatable{
         updatedAt   <- (map["updatedAt"], DriftDateTransformer())
         uuid        <- map["uuid"]
         orgId       <- map["orgId"]
+        type        <- map["type"]
     }
 
 }
