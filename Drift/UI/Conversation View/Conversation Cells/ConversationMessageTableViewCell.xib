@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -23,14 +23,8 @@
                         </constraints>
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="12.23pm" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="liw-9q-PX3">
-                        <rect key="frame" x="262" y="10" width="48" height="17"/>
+                        <rect key="frame" x="160.5" y="10" width="48" height="17"/>
                         <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="12"/>
-                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                        <nil key="highlightedColor"/>
-                    </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Brian McDonald" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mum-og-EM8">
-                        <rect key="frame" x="53" y="8" width="207" height="20"/>
-                        <fontDescription key="fontDescription" name="Avenir-Black" family="Avenir" pointSize="14"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
@@ -44,6 +38,12 @@
                         <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="15"/>
                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                     </textView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Brian McDonald" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mum-og-EM8">
+                        <rect key="frame" x="53" y="8" width="105.5" height="20"/>
+                        <fontDescription key="fontDescription" name="Avenir-Black" family="Avenir" pointSize="14"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
                 <constraints>
                     <constraint firstItem="liw-9q-PX3" firstAttribute="leading" secondItem="Mum-og-EM8" secondAttribute="trailing" constant="2" id="1cG-hm-ktw"/>
@@ -55,7 +55,7 @@
                     <constraint firstAttribute="topMargin" secondItem="JKm-AG-qZ4" secondAttribute="top" id="V5j-GB-yKz"/>
                     <constraint firstAttribute="topMargin" secondItem="Mum-og-EM8" secondAttribute="top" id="Z3j-yv-ifA"/>
                     <constraint firstItem="liw-9q-PX3" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="bxc-AI-iKq"/>
-                    <constraint firstAttribute="trailing" secondItem="liw-9q-PX3" secondAttribute="trailing" constant="10" id="egr-4Y-zjy"/>
+                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="liw-9q-PX3" secondAttribute="trailing" constant="15" id="egr-4Y-zjy"/>
                     <constraint firstItem="Mum-og-EM8" firstAttribute="leading" secondItem="JKm-AG-qZ4" secondAttribute="trailing" constant="10" id="iSc-RD-tXK"/>
                 </constraints>
             </tableViewCellContentView>
