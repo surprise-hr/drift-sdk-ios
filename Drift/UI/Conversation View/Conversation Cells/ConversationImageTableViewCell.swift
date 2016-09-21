@@ -49,15 +49,15 @@ class ConversationImageTableViewCell: UITableViewCell {
     }
     
     func displayMessage(){
-        
-        if let authorId = message?.authorId{
-            getUser(authorId)
-        }
-        
+    
         avatarImageView.image = UIImage.init(named: "placeholderAvatar", inBundle: NSBundle.init(forClass: ConversationListTableViewCell.classForCoder()), compatibleWithTraitCollection: nil)
         avatarImageView.layer.masksToBounds = true
         avatarImageView.contentMode = .ScaleAspectFill
         avatarImageView.layer.cornerRadius = 3
+    
+        if let authorId = message?.authorId{
+            getUser(authorId)
+        }
         
         messageTextView.text = ""
         messageTextView.textContainerInset = UIEdgeInsetsZero
