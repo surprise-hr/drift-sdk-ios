@@ -33,7 +33,9 @@ class ConversationListViewController: UIViewController {
         tableView.estimatedRowHeight = 90
         tableView.registerNib(UINib(nibName: "ConversationListTableViewCell", bundle:  NSBundle(forClass: ConversationListTableViewCell.classForCoder())), forCellReuseIdentifier: "ConversationListTableViewCell")
         InboxManager.sharedInstance.addConversationSubscription(ConversationSubscription(delegate: self))
-        
+    }
+    
+    override func viewWillAppear(animated: Bool) {
         APIManager.getConversations(DriftDataStore.sharedInstance.auth!.enduser!.userId!, authToken: DriftDataStore.sharedInstance.auth!.accessToken) { (result) in
             self.activityIndicator.hidden = true
             self.loadingConversationsLabel.hidden = true
@@ -50,7 +52,6 @@ class ConversationListViewController: UIViewController {
             }
         }
     }
-    
     
     convenience init() {
         self.init(nibName: "ConversationListViewController", bundle: NSBundle(forClass: ConversationListViewController.classForCoder()))
@@ -103,8 +104,9 @@ extension ConversationListViewController: UITableViewDelegate, UITableViewDataSo
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("ConversationListTableViewCell") as! ConversationListTableViewCell
+        cell.avatarImageView.image = UIImage.init(named: "placeholderAvatar", inBundle:  NSBundle(forClass: ConversationListViewController.classForCoder()), compatibleWithTraitCollection: nil)
         let conversation = conversations[indexPath.row]
-        
+
         if let assigneeId = conversation.assigneeId where assigneeId != 0{
             UserManager.sharedInstance.userMetaDataForUserId(assigneeId, completion: { (user) in
             
@@ -120,6 +122,11 @@ extension ConversationListViewController: UITableViewDelegate, UITableViewDataSo
             
         }else{
             cell.nameLabel.text = "You"
+            if let endUser = DriftDataStore.sharedInstance.auth?.enduser {
+                if let avatar = endUser.avatarURL {
+                    cell.avatarImageView.af_setImageWithURL(NSURL.init(string: avatar)!)
+                }
+            }
         }
         
         if let string = conversation.preview{
