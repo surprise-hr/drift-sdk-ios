@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -12,7 +12,7 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="261"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
-                <rect key="frame" x="0.0" y="0.0" width="320" height="260.5"/>
+                <rect key="frame" x="0.0" y="0.0" width="320" height="261"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="placeholderAvatar" translatesAutoresizingMaskIntoConstraints="NO" id="1U5-s9-75N">
@@ -23,7 +23,7 @@
                         </constraints>
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Brian McDonald" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ov7-Za-P0N">
-                        <rect key="frame" x="53" y="10" width="124" height="20"/>
+                        <rect key="frame" x="53" y="10" width="105.5" height="20"/>
                         <fontDescription key="fontDescription" name="Avenir-Black" family="Avenir" pointSize="14"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
@@ -40,12 +40,6 @@
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                     </collectionView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="12.23pm" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Aki-56-5NW">
-                        <rect key="frame" x="260" y="10" width="48" height="17"/>
-                        <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="12"/>
-                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                        <nil key="highlightedColor"/>
-                    </label>
                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" verticalCompressionResistancePriority="749" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="Xcw-yu-miI">
                         <rect key="frame" x="50" y="32" width="261" height="148"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -53,33 +47,29 @@
                         <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="14"/>
                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                     </textView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="12.23pm" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Aki-56-5NW">
+                        <rect key="frame" x="161" y="10" width="48" height="17"/>
+                        <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="12"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="trailingMargin" secondItem="Xcw-yu-miI" secondAttribute="trailing" constant="1" id="0M0-YH-uIm"/>
                     <constraint firstItem="Ov7-Za-P0N" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="1bj-gK-Odb"/>
                     <constraint firstItem="Aki-56-5NW" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="47y-jE-4Wk"/>
                     <constraint firstAttribute="bottomMargin" secondItem="Kcp-4B-quy" secondAttribute="bottom" constant="5" id="8E5-Ob-mpf"/>
-                    <constraint firstAttribute="trailing" secondItem="Aki-56-5NW" secondAttribute="trailing" constant="12" id="Gar-Sl-yDK"/>
-                    <constraint firstItem="1U5-s9-75N" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="8" id="Oma-gf-Jc6"/>
-                    <constraint firstItem="Aki-56-5NW" firstAttribute="trailing" secondItem="Kcp-4B-quy" secondAttribute="trailing" constant="81.5" id="XxX-L5-SfS"/>
-                    <constraint firstItem="Aki-56-5NW" firstAttribute="leading" secondItem="Ov7-Za-P0N" secondAttribute="trailing" constant="83.5" id="alV-u4-iOO"/>
-                    <constraint firstItem="Aki-56-5NW" firstAttribute="baseline" secondItem="Ov7-Za-P0N" secondAttribute="baseline" constant="-2" id="azX-zU-lY7"/>
+                    <constraint firstItem="1U5-s9-75N" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="8" id="AZb-i5-WqN"/>
+                    <constraint firstItem="1U5-s9-75N" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="Abb-qU-E9C"/>
+                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Aki-56-5NW" secondAttribute="trailing" constant="15" id="Gar-Sl-yDK"/>
+                    <constraint firstItem="Aki-56-5NW" firstAttribute="leading" secondItem="Ov7-Za-P0N" secondAttribute="trailing" constant="2" id="alV-u4-iOO"/>
                     <constraint firstItem="Kcp-4B-quy" firstAttribute="top" secondItem="Xcw-yu-miI" secondAttribute="bottom" constant="8" symbolic="YES" id="b2W-fx-UXa"/>
                     <constraint firstItem="Kcp-4B-quy" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="42" id="f6E-0B-UgC"/>
                     <constraint firstAttribute="trailing" secondItem="Kcp-4B-quy" secondAttribute="trailing" constant="12" id="oEl-uc-YPh"/>
-                    <constraint firstItem="Aki-56-5NW" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" id="pI0-nt-H1X"/>
                     <constraint firstItem="Xcw-yu-miI" firstAttribute="leading" secondItem="1U5-s9-75N" secondAttribute="trailing" constant="7" id="rtg-NE-O18"/>
                     <constraint firstItem="Ov7-Za-P0N" firstAttribute="leading" secondItem="1U5-s9-75N" secondAttribute="trailing" constant="10" id="rxD-WO-AOg"/>
-                    <constraint firstItem="Aki-56-5NW" firstAttribute="top" secondItem="1U5-s9-75N" secondAttribute="top" id="yqX-Ri-iKj"/>
                     <constraint firstItem="Xcw-yu-miI" firstAttribute="top" secondItem="Ov7-Za-P0N" secondAttribute="bottom" constant="2" id="yyF-Bn-Dj5"/>
                 </constraints>
-                <variation key="default">
-                    <mask key="constraints">
-                        <exclude reference="XxX-L5-SfS"/>
-                        <exclude reference="azX-zU-lY7"/>
-                        <exclude reference="pI0-nt-H1X"/>
-                    </mask>
-                </variation>
             </tableViewCellContentView>
             <connections>
                 <outlet property="attachmentsCollectionView" destination="Kcp-4B-quy" id="KsU-SY-VcH"/>
