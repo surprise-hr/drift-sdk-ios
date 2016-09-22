@@ -60,11 +60,10 @@ class ConversationViewController: SLKTextViewController {
     }
     
     convenience init(conversationType: ConversationType) {
-        self.init(nibName: "ConversationViewController", bundle: NSBundle(forClass: ConversationViewController.classForCoder()))
+        self.init(tableViewStyle: UITableViewStyle.Grouped)
         setConversationType(conversationType)
     }
-    
-    
+
     class func navigationController(conversationType: ConversationType) -> UINavigationController {
         let vc = ConversationViewController.init(conversationType: conversationType)
         let navVC = UINavigationController.init(rootViewController: vc)
@@ -127,6 +126,7 @@ class ConversationViewController: SLKTextViewController {
     
     
     func setupSlackTextView() {
+        tableView?.backgroundColor = UIColor.whiteColor()
         leftButton.tintColor = UIColor.lightGrayColor()
         leftButton.enabled = false
         leftButton.setImage(UIImage.init(named: "plus-circle", inBundle: NSBundle(forClass: Drift.self), compatibleWithTraitCollection: nil), forState: .Normal)
@@ -135,11 +135,6 @@ class ConversationViewController: SLKTextViewController {
         bounces = true
         tableView?.separatorStyle = .None
         textView.placeholder = "Message"
-    }
-    
-    
-    override class func tableViewStyleForCoder(decoder: NSCoder) -> UITableViewStyle {
-        return .Grouped
     }
     
     
