@@ -19,11 +19,11 @@ class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
     
     struct ConstraintChanges {
         
-        private let topConstraint: (reg: CGFloat, compact: CGFloat) = (120, 10)
-        private let bottomConstraint: (reg: CGFloat, compact: CGFloat) = (120, 10)
+        fileprivate let topConstraint: (reg: CGFloat, compact: CGFloat) = (120, 10)
+        fileprivate let bottomConstraint: (reg: CGFloat, compact: CGFloat) = (120, 10)
         
         var bottomConstant: CGFloat {
-            if traitCollection.verticalSizeClass == .Compact {
+            if traitCollection.verticalSizeClass == .compact {
                 return bottomConstraint.compact
             }else{
                 return bottomConstraint.reg
@@ -31,7 +31,7 @@ class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
         }
         
         var topConstant: CGFloat {
-            if traitCollection.verticalSizeClass == .Compact {
+            if traitCollection.verticalSizeClass == .compact {
                 return topConstraint.compact
             }else{
                 return topConstraint.reg
@@ -74,7 +74,7 @@ class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
             let background = DriftDataStore.sharedInstance.generateBackgroundColor()
             let foreground = DriftDataStore.sharedInstance.generateForegroundColor()
             ctaButton.backgroundColor = background
-            ctaButton.setTitleColor(foreground, forState: .Normal)
+            ctaButton.setTitleColor(foreground, for: UIControlState())
         }
     }
     @IBOutlet weak var ctaHeightConstraint: NSLayoutConstraint!
@@ -83,23 +83,23 @@ class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
     @IBOutlet weak var containerBottomConstraint: NSLayoutConstraint!
     
     
-    override func showOnWindow(window: UIWindow) {
+    override func showOnWindow(_ window: UIWindow) {
         window.addSubview(self)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(AnnouncementExpandedView.didRotate), name: UIApplicationDidChangeStatusBarOrientationNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(AnnouncementExpandedView.didRotate), name: NSNotification.Name.UIApplicationDidChangeStatusBarOrientation, object: nil)
         
         translatesAutoresizingMaskIntoConstraints = false
         
-        let leading = NSLayoutConstraint(item: self, attribute: .Leading, relatedBy: .Equal, toItem: window, attribute: .Leading, multiplier: 1.0, constant: 0)
+        let leading = NSLayoutConstraint(item: self, attribute: .leading, relatedBy: .equal, toItem: window, attribute: .leading, multiplier: 1.0, constant: 0)
         window.addConstraint(leading)
-        let trailing = NSLayoutConstraint(item: self, attribute: .Trailing, relatedBy: .Equal, toItem: window, attribute: .Trailing, multiplier: 1.0, constant: 0)
+        let trailing = NSLayoutConstraint(item: self, attribute: .trailing, relatedBy: .equal, toItem: window, attribute: .trailing, multiplier: 1.0, constant: 0)
         window.addConstraint(trailing)
         
-        window.addConstraint(NSLayoutConstraint(item: self, attribute: .Bottom, relatedBy: .Equal, toItem: window, attribute: .Bottom, multiplier: 1.0, constant: 0.0))
+        window.addConstraint(NSLayoutConstraint(item: self, attribute: .bottom, relatedBy: .equal, toItem: window, attribute: .bottom, multiplier: 1.0, constant: 0.0))
         
-        window.addConstraint(NSLayoutConstraint(item: self, attribute: .Top, relatedBy: .Equal, toItem: window, attribute: .Top, multiplier: 1.0, constant: 0))
+        window.addConstraint(NSLayoutConstraint(item: self, attribute: .top, relatedBy: .equal, toItem: window, attribute: .top, multiplier: 1.0, constant: 0))
 
-        containerView.transform = CGAffineTransformMakeScale(0.00001, 0.00001)
+        containerView.transform = CGAffineTransform(scaleX: 0.00001, y: 0.00001)
         window.layoutIfNeeded()
         
         campaignCreatorNameLabel.textColor = ColorPalette.GrayColor
@@ -110,7 +110,7 @@ class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
         
         campaignCreatorImageView.clipsToBounds = true
         campaignCreatorImageView.layer.cornerRadius = 3
-        campaignCreatorImageView.contentMode = .ScaleAspectFill
+        campaignCreatorImageView.contentMode = .scaleAspectFill
         
         scrollView.delegate = self
         scrollView.scrollIndicatorInsets = UIEdgeInsets(top: 30, left: 0, bottom: 0, right: 0)
@@ -119,20 +119,20 @@ class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
         
         if scrollView.contentSize.height > scrollView.frame.size.height{
             gradient.colors = [
-                UIColor.whiteColor().CGColor,
-                UIColor.whiteColor().CGColor,
-                UIColor.whiteColor().CGColor,
-                UIColor.clearColor().CGColor
+                UIColor.white.cgColor,
+                UIColor.white.cgColor,
+                UIColor.white.cgColor,
+                UIColor.clear.cgColor
             ]
-            scrollView.scrollEnabled = true
+            scrollView.isScrollEnabled = true
         }else{
             gradient.colors = [
-                UIColor.whiteColor().CGColor,
-                UIColor.whiteColor().CGColor,
-                UIColor.whiteColor().CGColor,
-                UIColor.whiteColor().CGColor
+                UIColor.white.cgColor,
+                UIColor.white.cgColor,
+                UIColor.white.cgColor,
+                UIColor.white.cgColor
             ]
-            scrollView.scrollEnabled = false
+            scrollView.isScrollEnabled = false
         }
         
         gradient.locations = [0, 0.2, 0.8, 1.0]
@@ -142,49 +142,49 @@ class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
         
         
         window.setNeedsUpdateConstraints()
-        UIView.animateWithDuration(0.4, delay: 0.5, usingSpringWithDamping: 0.8, initialSpringVelocity: 1, options: UIViewAnimationOptions.CurveEaseIn, animations: { () -> Void in
+        UIView.animate(withDuration: 0.4, delay: 0.5, usingSpringWithDamping: 0.8, initialSpringVelocity: 1, options: UIViewAnimationOptions.curveEaseIn, animations: { () -> Void in
             window.layoutIfNeeded()
-            self.containerView.transform = CGAffineTransformMakeScale(1, 1)
+            self.containerView.transform = CGAffineTransform(scaleX: 1, y: 1)
             self.backgroundColor = UIColor(white: 0, alpha: 0.5)
         }, completion: nil)
     }
     
     deinit{
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
 
     func didRotate(){
         let constants = ConstraintChanges(traits: traitCollection)
         containerTopConstraint.constant = constants.topConstant
         containerBottomConstraint.constant = constants.bottomConstant
-        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC)))
-        dispatch_after(delayTime, dispatch_get_main_queue()) {
+        let delayTime = DispatchTime.now() + Double(Int64(0.1 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+        DispatchQueue.main.asyncAfter(deadline: delayTime) {
             self.gradient.frame = CGRect(x: 0, y: 0, width: self.scrollViewContainer.frame.width, height: self.scrollViewContainer.frame.height)
         }
     }
     
-    func scrollViewDidScroll(scrollView: UIScrollView) {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
         
         if scrollView.contentOffset.y >= scrollView.contentSize.height - scrollView.frame.size.height{
             gradient.colors = [
-                UIColor.clearColor().CGColor,
-                UIColor.whiteColor().CGColor,
-                UIColor.whiteColor().CGColor,
-                UIColor.whiteColor().CGColor
+                UIColor.clear.cgColor,
+                UIColor.white.cgColor,
+                UIColor.white.cgColor,
+                UIColor.white.cgColor
             ]
         }else if scrollView.contentOffset.y > 0{
             gradient.colors = [
-                UIColor.clearColor().CGColor,
-                UIColor.whiteColor().CGColor,
-                UIColor.whiteColor().CGColor,
-                UIColor.clearColor().CGColor
+                UIColor.clear.cgColor,
+                UIColor.white.cgColor,
+                UIColor.white.cgColor,
+                UIColor.clear.cgColor
             ]
         }else if scrollView.contentOffset.y <= 0{
             gradient.colors = [
-                UIColor.whiteColor().CGColor,
-                UIColor.whiteColor().CGColor,
-                UIColor.whiteColor().CGColor,
-                UIColor.clearColor().CGColor
+                UIColor.white.cgColor,
+                UIColor.white.cgColor,
+                UIColor.white.cgColor,
+                UIColor.clear.cgColor
             ]
         }
     }
@@ -193,12 +193,12 @@ class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
         
         if let cta = campaign.announcementAttributes?.cta {
             if let copy = cta.copy {
-                ctaButton.setTitle(copy, forState: .Normal)
+                ctaButton.setTitle(copy, for: UIControlState())
             }else{
-                ctaButton.setTitle("Find Out More", forState: .Normal)
+                ctaButton.setTitle("Find Out More", for: UIControlState())
             }
         }else{
-            ctaButton.hidden = true
+            ctaButton.isHidden = true
             ctaHeightConstraint.constant = 0
             containerView.setNeedsLayout()
             containerView.layoutIfNeeded()
@@ -208,9 +208,9 @@ class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
             announcementTitleLabel.text = announcement.title ?? ""
             
             do {
-                let htmlStringData = (campaign.bodyText ?? "").dataUsingEncoding(NSUTF8StringEncoding)!
-                let options: [String: AnyObject] = [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,
-                    NSCharacterEncodingDocumentAttribute: NSUTF8StringEncoding
+                let htmlStringData = (campaign.bodyText ?? "").data(using: String.Encoding.utf8)!
+                let options: [String: AnyObject] = [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType as AnyObject,
+                    NSCharacterEncodingDocumentAttribute: String.Encoding.utf8 as AnyObject
                 ]
                 let attributedHTMLString = try NSMutableAttributedString(data: htmlStringData, options: options, documentAttributes: nil)
                 announcementInfoTextView.text = attributedHTMLString.string
@@ -226,14 +226,14 @@ class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
             
             APIManager.getUser(organizerId, orgId: DriftDataStore.sharedInstance.embed!.orgId, authToken: DriftDataStore.sharedInstance.auth!.accessToken, completion: { (result) -> () in
                 switch result {
-                case .Success(let users):
+                case .success(let users):
                     if let avatar = users.first?.avatarURL {
-                        self.campaignCreatorImageView.af_setImageWithURL(NSURL.init(string:avatar)!)
+                        self.campaignCreatorImageView.af_setImage(withURL: URL.init(string:avatar)!)
                     }
                     if let creatorName = users.first?.name {
                         self.campaignCreatorNameLabel.text = creatorName
                     }
-                case .Failure(_):
+                case .failure(_):
                     ()
                 }
             })
@@ -243,17 +243,17 @@ class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
         layoutIfNeeded()
     }
     
-    @IBAction func ctaButtonPressed(sender: AnyObject) {
-        delegate?.campaignDidFinishWithResponse(self, campaign: campaign, response: .Announcement(.Clicked))
+    @IBAction func ctaButtonPressed(_ sender: AnyObject) {
+        delegate?.campaignDidFinishWithResponse(self, campaign: campaign, response: .announcement(.Clicked))
         
         if let cta = campaign?.announcementAttributes?.cta {
             
             switch cta.ctaType {
-            case .Some(.ChatResponse):
+            case .some(.ChatResponse):
                 PresentationManager.sharedInstance.showNewConversationVC(campaign.authorId)
-            case .Some(.LinkToURL):
+            case .some(.LinkToURL):
                 if let url = cta.urlLink {
-                    presentURL(url)
+                    presentURL(url as URL)
                 }
             default:
                 LoggerManager.log("No CTA")
@@ -265,33 +265,33 @@ class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
         }
     }
     
-    func presentURL(url: NSURL) {
+    func presentURL(_ url: URL) {
         
         if #available(iOS 9.0, *) {
-            if let topVC = TopController.viewController() where ["http", "https"].contains(url.scheme.lowercaseString) {
-                let safari = SFSafariViewController(URL: url)
-                topVC.presentViewController(safari, animated: true, completion: nil)
+            if let topVC = TopController.viewController(), let scheme = url.scheme?.lowercased(), ["http", "https"].contains(scheme) {
+                let safari = SFSafariViewController(url: url)
+                topVC.present(safari, animated: true, completion: nil)
                 return
             }
         }else{
-            UIApplication.sharedApplication().openURL(url)
+            UIApplication.shared.openURL(url)
         }
     }
 
     
-    @IBAction func pressedClose(sender: AnyObject) {
-        delegate?.campaignDidFinishWithResponse(self, campaign: campaign, response: .Announcement(.Dismissed))
+    @IBAction func pressedClose(_ sender: AnyObject) {
+        delegate?.campaignDidFinishWithResponse(self, campaign: campaign, response: .announcement(.Dismissed))
     }
     
     override func hideFromWindow() {
-        UIView.animateWithDuration(0.4, animations: { () -> Void in
-            self.containerView.transform = CGAffineTransformMakeScale(0.0001, 0.0001)
-            self.backgroundColor = UIColor.clearColor()
-        }) { (success) -> Void in
+        UIView.animate(withDuration: 0.4, animations: { () -> Void in
+            self.containerView.transform = CGAffineTransform(scaleX: 0.0001, y: 0.0001)
+            self.backgroundColor = UIColor.clear
+        }, completion: { (success) -> Void in
             self.alpha = 0
             if success {
                 self.removeFromSuperview()
             }
-        }
+        }) 
     }
 }

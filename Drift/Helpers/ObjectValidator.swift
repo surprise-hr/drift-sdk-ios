@@ -27,10 +27,10 @@ extension Map{
         }
     }
     
-    private func dummyObject<T>() -> T{
-        let pointer = UnsafeMutablePointer<T>.alloc(0)
-        pointer.dealloc(0)
-        return pointer.memory
+    fileprivate func dummyObject<T>() -> T{
+        let pointer = UnsafeMutablePointer<T>.allocate(capacity: 0)
+        pointer.deallocate(capacity: 0)
+        return pointer.pointee
     }
     
     public var isValidNotEmpty: Bool{

@@ -7,14 +7,14 @@
 //
 
 enum CampaignResponse{
-    case NPS(NPSResponse)
-    case Announcement(AnnouncementResponse)
+    case nps(NPSResponse)
+    case announcement(AnnouncementResponse)
 }
 
 enum NPSResponse {
-    case Dismissed
-    case Numeric(Int)
-    case TextAndNumeric(Int, String)
+    case dismissed
+    case numeric(Int)
+    case textAndNumeric(Int, String)
 }
 
 enum AnnouncementResponse: String {
@@ -25,7 +25,7 @@ enum AnnouncementResponse: String {
 
 class CampaignResponseManager {
     
-    class func recordAnnouncementResponse(campaign: Campaign, response: AnnouncementResponse){
+    class func recordAnnouncementResponse(_ campaign: Campaign, response: AnnouncementResponse){
         
         LoggerManager.log("Recording Announcement Response:\(response) \(campaign.conversationId) ")
 
@@ -38,7 +38,7 @@ class CampaignResponseManager {
             LoggerManager.log("No Conversation Id in campaign")
             return
         }
-        if let uuid = campaign.uuid where !DriftManager.sharedInstance.debug{
+        if let uuid = campaign.uuid , !DriftManager.sharedInstance.debug{
             CampaignsManager.markConversationAsRead(uuid)
         }
         
@@ -47,7 +47,7 @@ class CampaignResponseManager {
         }
     }
     
-    class func recordNPSResponse(campaign: Campaign, response: NPSResponse){
+    class func recordNPSResponse(_ campaign: Campaign, response: NPSResponse){
 
         LoggerManager.log("Recording NPS Response:\(response) \(campaign.conversationId) ")
         
@@ -61,7 +61,7 @@ class CampaignResponseManager {
             return
         }
         
-        if let uuid = campaign.uuid where !DriftManager.sharedInstance.debug{
+        if let uuid = campaign.uuid , !DriftManager.sharedInstance.debug{
             CampaignsManager.markConversationAsRead(uuid)
         }
         

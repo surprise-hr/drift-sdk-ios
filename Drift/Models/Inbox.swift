@@ -13,7 +13,7 @@ public enum InboxStatus: String{
     case Closed = "CLOSED"
 }
 
-public class Inbox: Mappable {
+open class Inbox: Mappable {
     
     var id: Int!
     var status: InboxStatus!
@@ -22,14 +22,14 @@ public class Inbox: Mappable {
     var forwardAddress: String?
     var openConversationCount: Int!
     var closedConversationCount: Int!
-    var createdAt: NSDate = NSDate()
+    var createdAt: Date = Date()
     var conversations: [Conversation]!
     
-    public required convenience init?(_ map: Map) {
+    public required convenience init?(map: Map) {
         self.init()
     }
     
-    public func mapping(map: Map) {
+    open func mapping(map: Map) {
         id                      <- map["id"]
         status                  <- map["status"]
         name                    <- map["name"]

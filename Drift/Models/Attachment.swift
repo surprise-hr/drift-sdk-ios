@@ -8,16 +8,16 @@
 
 import ObjectMapper
 
-public class Attachment: Mappable{
+open class Attachment: Mappable{
     var id = 0
     var fileName = ""
     var size = 0
-    var data = NSData()
+    var data = Data()
     var mimeType = ""
     var conversationId = 0
     var publicPreviewURL: String?
     
-    public func mapping(map: Map) {
+    open func mapping(map: Map) {
         id          <- map["id"]
         fileName    <- map["fileName"]
         size        <- map["size"]
@@ -27,7 +27,7 @@ public class Attachment: Mappable{
         publicPreviewURL <- map["publicPreviewUrl"]
     }
     
-    required convenience public init?(_ map: Map) {
+    required convenience public init?(map: Map) {
         self.init()
     }
 }

@@ -35,11 +35,11 @@ class AnnouncementView: CampaignView {
         super.awakeFromNib()
         userImageView.clipsToBounds = true
         userImageView.layer.cornerRadius = 4
-        userImageView.contentMode = .ScaleAspectFill
+        userImageView.contentMode = .scaleAspectFill
         containerView.clipsToBounds = true
         containerView.layer.cornerRadius = 5
-        notificationContainer.hidden = true
-        shadowView.layer.shadowColor = UIColor.blackColor().CGColor
+        notificationContainer.isHidden = true
+        shadowView.layer.shadowColor = UIColor.black.cgColor
         shadowView.layer.shadowOffset = CGSize(width: 0, height: 2)
         shadowView.layer.shadowOpacity = 0.2
         shadowView.layer.shadowRadius = 2
@@ -51,16 +51,16 @@ class AnnouncementView: CampaignView {
         let foreground = DriftDataStore.sharedInstance.generateForegroundColor()
 
         bottomButtonColourView.backgroundColor = background
-        dismissButton.setTitleColor(foreground, forState: .Normal)
-        openButton.setTitleColor(foreground, forState: .Normal)
+        dismissButton.setTitleColor(foreground, for: UIControlState())
+        openButton.setTitleColor(foreground, for: UIControlState())
         
         if let announcement = campaign.announcementAttributes {
             titleLabel.text = announcement.title ?? ""
             
             do {
-                let htmlStringData = (campaign.bodyText ?? "").dataUsingEncoding(NSUTF8StringEncoding)!
-                let options: [String: AnyObject] = [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,
-                    NSCharacterEncodingDocumentAttribute: NSUTF8StringEncoding
+                let htmlStringData = (campaign.bodyText ?? "").data(using: String.Encoding.utf8)!
+                let options: [String: AnyObject] = [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType as AnyObject,
+                    NSCharacterEncodingDocumentAttribute: String.Encoding.utf8 as AnyObject
                     ]
                 let attributedHTMLString = try NSMutableAttributedString(data: htmlStringData, options: options, documentAttributes: nil)
                 infoLabel.text = attributedHTMLString.string
@@ -74,11 +74,11 @@ class AnnouncementView: CampaignView {
             APIManager.getUser(organizerId, orgId: DriftDataStore.sharedInstance.embed!.orgId, authToken: DriftDataStore.sharedInstance.auth!.accessToken, completion: { (result) -> () in
                 switch result {
                     
-                case .Success(let users):
+                case .success(let users):
                     if let avatar = users.first?.avatarURL {
-                        self.userImageView.af_setImageWithURL(NSURL.init(string:avatar)!)
+                        self.userImageView.af_setImage(withURL: URL.init(string:avatar)!)
                     }
-                case .Failure(let error):
+                case .failure(let error):
                     LoggerManager.didRecieveError(error)
                 }
             })
@@ -90,20 +90,20 @@ class AnnouncementView: CampaignView {
             notificationCountlabel.clipsToBounds = true
             notificationContainer.layer.cornerRadius = notificationContainer.frame.size.width / 2
             notificationContainer.clipsToBounds = true
-            notificationContainer.hidden = false
+            notificationContainer.isHidden = false
         }else{
-            notificationContainer.hidden = true
+            notificationContainer.isHidden = true
         }
     }
     
-    override func showOnWindow(window: UIWindow) {
+    override func showOnWindow(_ window: UIWindow) {
         window.addSubview(self)
         
         translatesAutoresizingMaskIntoConstraints = false
         
-        let leading = NSLayoutConstraint(item: self, attribute: .Leading, relatedBy: .Equal, toItem: window, attribute: .Leading, multiplier: 1.0, constant: window.frame.size.width)
+        let leading = NSLayoutConstraint(item: self, attribute: .leading, relatedBy: .equal, toItem: window, attribute: .leading, multiplier: 1.0, constant: window.frame.size.width)
         window.addConstraint(leading)
-        let trailing = NSLayoutConstraint(item: self, attribute: .Trailing, relatedBy: .Equal, toItem: window, attribute: .Trailing, multiplier: 1.0, constant: window.frame.size.width)
+        let trailing = NSLayoutConstraint(item: self, attribute: .trailing, relatedBy: .equal, toItem: window, attribute: .trailing, multiplier: 1.0, constant: window.frame.size.width)
         window.addConstraint(trailing)
         
         var bottomConstant: CGFloat = -15.0
@@ -111,18 +111,18 @@ class AnnouncementView: CampaignView {
             bottomConstant = -65.0
         }
         
-        bottomConstraint = NSLayoutConstraint(item: self, attribute: .Bottom, relatedBy: .Equal, toItem: window, attribute: .Bottom, multiplier: 1.0, constant: bottomConstant)
+        bottomConstraint = NSLayoutConstraint(item: self, attribute: .bottom, relatedBy: .equal, toItem: window, attribute: .bottom, multiplier: 1.0, constant: bottomConstant)
         
         window.addConstraint(bottomConstraint)
         
-        self.addConstraint(NSLayoutConstraint(item: self, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 110.0))
+        self.addConstraint(NSLayoutConstraint(item: self, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 110.0))
         window.layoutIfNeeded()
         leading.constant = 0
         trailing.constant = 0
         window.setNeedsUpdateConstraints()
         
         
-        UIView.animateWithDuration(0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 1, options: UIViewAnimationOptions.CurveEaseOut, animations: { () -> Void in
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 1, options: UIViewAnimationOptions.curveEaseOut, animations: { () -> Void in
             window.layoutIfNeeded()
         }, completion:nil)
     }
@@ -133,19 +133,19 @@ class AnnouncementView: CampaignView {
 
         bottomConstraint.constant = 130
         setNeedsLayout()
-        UIView.animateWithDuration(0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 1, options: UIViewAnimationOptions.CurveEaseIn, animations: { () -> Void in
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 1, options: UIViewAnimationOptions.curveEaseIn, animations: { () -> Void in
             self.backgroundColor = UIColor(white: 1, alpha: 0.5)
             self.layoutIfNeeded()
         }, completion: nil)
 
     }
     
-    @IBAction func skipPressed(sender: AnyObject) {
-        delegate?.campaignDidFinishWithResponse(self, campaign: campaign, response: .Announcement(.Dismissed))
+    @IBAction func skipPressed(_ sender: AnyObject) {
+        delegate?.campaignDidFinishWithResponse(self, campaign: campaign, response: .announcement(.Dismissed))
     }
     
-    @IBAction func readPressed(sender: AnyObject) {
-        delegate?.campaignDidFinishWithResponse(self, campaign: campaign, response: .Announcement(.Opened))
+    @IBAction func readPressed(_ sender: AnyObject) {
+        delegate?.campaignDidFinishWithResponse(self, campaign: campaign, response: .announcement(.Opened))
     }
     
         

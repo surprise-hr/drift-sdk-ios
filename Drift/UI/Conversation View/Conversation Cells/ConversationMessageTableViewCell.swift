@@ -25,17 +25,17 @@ class ConversationMessageTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        selectionStyle = .None
+        selectionStyle = .none
     }
     
     func displayMessage() {
 
-        avatarImageView.image = UIImage.init(named: "placeholderAvatar", inBundle: NSBundle.init(forClass: ConversationListTableViewCell.classForCoder()), compatibleWithTraitCollection: nil)
+        avatarImageView.image = UIImage.init(named: "placeholderAvatar", in: Bundle.init(for: ConversationListTableViewCell.classForCoder()), compatibleWith: nil)
         avatarImageView.layer.cornerRadius = 3
         avatarImageView.layer.masksToBounds = true
         
         messageTextView.text = ""
-        messageTextView.textContainerInset = UIEdgeInsetsZero
+        messageTextView.textContainerInset = UIEdgeInsets.zero
         messageTextView.text = self.message!.body
         
         if let authorId = message?.authorId{
@@ -48,9 +48,9 @@ class ConversationMessageTableViewCell: UITableViewCell {
         timeLabel.text = self.dateFormatter.createdAtStringFromDate(self.message!.createdAt)
         
         do {
-            let htmlStringData = (self.message!.body ?? "").dataUsingEncoding(NSUTF8StringEncoding)!
-            let options: [String: AnyObject] = [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,
-                                                NSCharacterEncodingDocumentAttribute: NSUTF8StringEncoding]
+            let htmlStringData = (self.message!.body ?? "").data(using: String.Encoding.utf8)!
+            let options: [String: AnyObject] = [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType as AnyObject,
+                                                NSCharacterEncodingDocumentAttribute: String.Encoding.utf8 as AnyObject]
             let attributedHTMLString = try NSMutableAttributedString(data: htmlStringData, options: options, documentAttributes: nil)
             self.messageTextView.text = attributedHTMLString.string
         } catch {
@@ -58,14 +58,14 @@ class ConversationMessageTableViewCell: UITableViewCell {
         }
     }
     
-    func getUser(userId: Int) {
+    func getUser(_ userId: Int) {
         
-        if let authorType = message?.authorType where authorType == .User {
+        if let authorType = message?.authorType , authorType == .User {
             UserManager.sharedInstance.userMetaDataForUserId(userId, completion: { (user) in
                 
                 if let user = user {
-                    if let avatar = user.avatarURL, url = NSURL(string: avatar) {
-                        self.avatarImageView.af_setImageWithURL(url)
+                    if let avatar = user.avatarURL, let url = URL(string: avatar) {
+                        self.avatarImageView.af_setImage(withURL: url)
                     }
                     
                     if let creatorName =  user.name {
@@ -77,7 +77,7 @@ class ConversationMessageTableViewCell: UITableViewCell {
         }else {
             if let endUser = DriftDataStore.sharedInstance.auth?.enduser {
                 if let avatar = endUser.avatarURL {
-                    self.avatarImageView.af_setImageWithURL(NSURL.init(string: avatar)!)
+                    self.avatarImageView.af_setImage(withURL: URL.init(string: avatar)!)
                 }
                 
                 if let creatorName = endUser.name {

@@ -15,7 +15,7 @@ class CampaignOrganizer: Mappable, Equatable {
     var name: String?
     var avatarURL: String?
     
-    required convenience init?(_ map: Map) {
+    required convenience init?(map: Map) {
         self.init()
     }
    

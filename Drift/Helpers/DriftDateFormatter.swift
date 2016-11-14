@@ -7,32 +7,32 @@
 //
 
 
-public class DriftDateFormatter: NSDateFormatter {
+open class DriftDateFormatter: DateFormatter {
     
-    public func createdAtStringFromDate(date: NSDate) -> String{
+    open func createdAtStringFromDate(_ date: Date) -> String{
         dateFormat = "HH:mm"
-        timeStyle = .ShortStyle
-        return stringFromDate(date)
+        timeStyle = .short
+        return string(from: date)
     }
     
-    public func updatedAtStringFromDate(date: NSDate) -> String{
-        let now = NSDate()
-        if NSCalendar.currentCalendar().component(.Day, fromDate: date) != NSCalendar.currentCalendar().component(.Day, fromDate: now){
-            dateStyle = .ShortStyle
+    open func updatedAtStringFromDate(_ date: Date) -> String{
+        let now = Date()
+        if (Calendar.current as NSCalendar).component(.day, from: date) != (Calendar.current as NSCalendar).component(.day, from: now){
+            dateStyle = .short
         }else{
             dateFormat = "H:mm a"
         }
-        return stringFromDate(date)
+        return string(from: date)
     }
     
-    public func headerStringFromDate(date: NSDate) -> String{
-        let now = NSDate()
-        if NSCalendar.currentCalendar().component(.Day, fromDate: date) != NSCalendar.currentCalendar().component(.Day, fromDate: now){
+    open func headerStringFromDate(_ date: Date) -> String{
+        let now = Date()
+        if (Calendar.current as NSCalendar).component(.day, from: date) != (Calendar.current as NSCalendar).component(.day, from: now){
             dateFormat = "MMMM d"
         }else{
             return "Today"
         }
-        return stringFromDate(date)
+        return string(from: date)
     }
     
 }

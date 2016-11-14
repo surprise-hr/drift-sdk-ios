@@ -21,9 +21,9 @@ class CTA: Mappable {
     
     var copy: String?
     var ctaType: CTAType?
-    var urlLink: NSURL?
+    var urlLink: URL?
 
-    required convenience init?(_ map: Map) {
+    required convenience init?(map: Map) {
         self.init()
     }
     

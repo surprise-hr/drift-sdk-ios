@@ -19,15 +19,15 @@ class CampaignsManager {
         LoggerManager.log("Checking for campaigns")
         do {
             let convo = LYRQuery(queryableClass: LYRConversation.self)
-            convo.predicate = LYRPredicate(property: "hasUnreadMessages", predicateOperator: LYRPredicateOperator.IsEqualTo, value: true)
-            let conversationController = try LayerManager.sharedInstance.layerClient?.queryControllerWithQuery(convo)
+            convo.predicate = LYRPredicate(property: "hasUnreadMessages", predicateOperator: LYRPredicateOperator.isEqualTo, value: true)
+            let conversationController = try LayerManager.sharedInstance.layerClient?.queryController(with: convo)
             try conversationController?.execute()
             var announcements:[Campaign] = []
             var messages:[(conversationId: Int, messages:[Message])] = []
-            if let countUInt = conversationController?.numberOfObjectsInSection(0) {
+            if let countUInt = conversationController?.numberOfObjects(inSection: 0) {
                 let count = Int(countUInt)
                 for index: Int in 0..<count {
-                    if let conversation = conversationController?.objectAtIndexPath(NSIndexPath(forRow: index, inSection: 0)) as? LYRConversation {
+                    if let conversation = conversationController?.object(at: IndexPath(row: index, section: 0)) as? LYRConversation {
                         LoggerManager.log("Conversation hasunread: \(conversation.hasUnreadMessages)")
                         LoggerManager.log("Conversation Id: \(conversation.identifier)")
                         let newData = try getCampaignsAndMessagesFor(conversation)
@@ -77,33 +77,33 @@ class CampaignsManager {
         - parameter conversation: Layer Conversation to traverse for campaigns
         - returns: All campaigns in a conversation - These are not SDK dependant - Should be parsed later for non presentable campaigns
      */
-    class func getCampaignsAndMessagesFor(conversation: LYRConversation) throws -> (announcments: [Campaign], messages: [Message]) {
+    class func getCampaignsAndMessagesFor(_ conversation: LYRConversation) throws -> (announcments: [Campaign], messages: [Message]) {
                 
         let messagesQuery:LYRQuery = LYRQuery(queryableClass: LYRMessage.self)
-        messagesQuery.predicate = LYRPredicate(property: "conversation", predicateOperator: LYRPredicateOperator.IsEqualTo, value: conversation)
+        messagesQuery.predicate = LYRPredicate(property: "conversation", predicateOperator: LYRPredicateOperator.isEqualTo, value: conversation)
         messagesQuery.sortDescriptors = [NSSortDescriptor(key:"position", ascending:true)]
-        let queryController = try LayerManager.sharedInstance.layerClient?.queryControllerWithQuery(messagesQuery)
+        let queryController = try LayerManager.sharedInstance.layerClient?.queryController(with: messagesQuery)
         try queryController?.execute()
         
         var announcements:[Campaign] = []
         var messages:[Message] = []
 
-        if let countUInt = queryController?.numberOfObjectsInSection(0) {
+        if let countUInt = queryController?.numberOfObjects(inSection: 0) {
             LoggerManager.log("Number Of Messages: \(countUInt)")
             let count = Int(countUInt)
             for index: Int in 0..<count {
-                if let message = queryController?.objectAtIndexPath(NSIndexPath(forRow: index, inSection: 0)) as? LYRMessage where message.isUnread {
+                if let message = queryController?.object(at: IndexPath(row: index, section: 0)) as? LYRMessage , message.isUnread {
                     
                     for part in message.parts {
-                        switch part.MIMEType {
+                        switch part.mimeType {
 //                        case "text/plain":
                         case "application/json":
                             LoggerManager.log("Mapping Mime Type")
 
-                            if let data = part.data, json = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments) as? [String: AnyObject] {
-                                if let newAnnouncement = Mapper<Campaign>().map(json) {
+                            if let data = part.data, let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: AnyObject] {
+                                if let newAnnouncement = Mapper<Campaign>().map(JSON: json) {
                                     announcements.append(newAnnouncement)
-                                }else if let newMessage = Mapper<Message>().map(json) {
+                                }else if let newMessage = Mapper<Message>().map(JSON: json) {
                                     messages.append(newMessage)
                                 }
                             }
@@ -124,7 +124,7 @@ class CampaignsManager {
         - parameter campaign: Array of non filtered campaigns
         - returns: Tuple of NPS and Announcement Type Campaigns that are presentable in SDK
     */
-    class func filtercampaigns(campaigns: [Campaign]) -> (nps: [Campaign], announcements: [Campaign]){
+    class func filtercampaigns(_ campaigns: [Campaign]) -> (nps: [Campaign], announcements: [Campaign]){
         
         ///GET NPS or NPS_RESPONSE
         
@@ -138,14 +138,14 @@ class CampaignsManager {
             
             switch campaign.messageType {
                 
-            case .Some(.NPS):
+            case .some(.NPS):
                 nps.append(campaign)
-            case .Some(.NPSResponse):
+            case .some(.NPSResponse):
                 npsResponse.append(campaign)
-            case .Some(.Announcement):
+            case .some(.Announcement):
                 //Only show chat response announcements if we have an email
-                if let ctaType = campaign.announcementAttributes?.cta?.ctaType where ctaType == .ChatResponse{
-                    if let email = DriftDataStore.sharedInstance.embed?.inboxEmailAddress where email != ""{
+                if let ctaType = campaign.announcementAttributes?.cta?.ctaType , ctaType == .ChatResponse{
+                    if let email = DriftDataStore.sharedInstance.embed?.inboxEmailAddress , email != ""{
                         announcements.append(campaign)
                     }else{
                         LoggerManager.log("Did remove chat announcement as we dont have an email")
@@ -177,21 +177,21 @@ class CampaignsManager {
     
      - parameter messageId:
      */
-    class func markConversationAsRead(messageId: String) {
-        guard let messageId = NSURL(string: "layer:///messages/\(messageId)") else{
+    class func markConversationAsRead(_ messageId: String) {
+        guard let messageId = URL(string: "layer:///messages/\(messageId)") else{
             return
         }
         
         do {
             let messagesQuery:LYRQuery = LYRQuery(queryableClass: LYRMessage.self)
 
-            messagesQuery.predicate = LYRPredicate(property: "identifier", predicateOperator: LYRPredicateOperator.IsEqualTo, value: messageId)
-            let queryController = try LayerManager.sharedInstance.layerClient?.queryControllerWithQuery(messagesQuery)
+            messagesQuery.predicate = LYRPredicate(property: "identifier", predicateOperator: LYRPredicateOperator.isEqualTo, value: messageId)
+            let queryController = try LayerManager.sharedInstance.layerClient?.queryController(with: messagesQuery)
             try queryController?.execute()
-            if let countUInt = queryController?.numberOfObjectsInSection(0) {
+            if let countUInt = queryController?.numberOfObjects(inSection: 0) {
                 let count = Int(countUInt)
                 for index: Int in 0..<count {
-                    if let message = queryController?.objectAtIndexPath(NSIndexPath(forRow: index, inSection: 0)) as? LYRMessage {
+                    if let message = queryController?.object(at: IndexPath(row: index, section: 0)) as? LYRMessage {
                         LoggerManager.log("Marking as Read: \(messageId)")
                         try message.markAsRead()
                     }

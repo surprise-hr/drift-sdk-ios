@@ -38,7 +38,7 @@ class ConversationImageTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        selectionStyle = .None
+        selectionStyle = .none
     }
     
     
@@ -50,9 +50,9 @@ class ConversationImageTableViewCell: UITableViewCell {
     
     func displayMessage(){
     
-        avatarImageView.image = UIImage.init(named: "placeholderAvatar", inBundle: NSBundle.init(forClass: ConversationListTableViewCell.classForCoder()), compatibleWithTraitCollection: nil)
+        avatarImageView.image = UIImage.init(named: "placeholderAvatar", in: Bundle.init(for: ConversationListTableViewCell.classForCoder()), compatibleWith: nil)
         avatarImageView.layer.masksToBounds = true
-        avatarImageView.contentMode = .ScaleAspectFill
+        avatarImageView.contentMode = .scaleAspectFill
         avatarImageView.layer.cornerRadius = 3
     
         if let authorId = message?.authorId{
@@ -60,11 +60,11 @@ class ConversationImageTableViewCell: UITableViewCell {
         }
         
         messageTextView.text = ""
-        messageTextView.textContainerInset = UIEdgeInsetsZero
+        messageTextView.textContainerInset = UIEdgeInsets.zero
         messageTextView.text = self.message!.body
         
         attachmentImageView.layer.masksToBounds = true
-        attachmentImageView.contentMode = .ScaleAspectFill
+        attachmentImageView.contentMode = .scaleAspectFill
         attachmentImageView.layer.cornerRadius = 3
         
         nameLabel.textColor = DriftDataStore.primaryFontColor
@@ -72,9 +72,9 @@ class ConversationImageTableViewCell: UITableViewCell {
         timeLabel.textColor = DriftDataStore.secondaryFontColor
         timeLabel.text = self.dateFormatter.createdAtStringFromDate(self.message!.createdAt)
         do {
-            let htmlStringData = (self.message!.body ?? "").dataUsingEncoding(NSUTF8StringEncoding)!
-            let options: [String: AnyObject] = [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,
-                                                NSCharacterEncodingDocumentAttribute: NSUTF8StringEncoding]
+            let htmlStringData = (self.message!.body ?? "").data(using: String.Encoding.utf8)!
+            let options: [String: AnyObject] = [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType as AnyObject,
+                                                NSCharacterEncodingDocumentAttribute: String.Encoding.utf8 as AnyObject]
             let attributedHTMLString = try NSMutableAttributedString(data: htmlStringData, options: options, documentAttributes: nil)
             self.messageTextView.text = attributedHTMLString.string
         } catch {
@@ -85,20 +85,20 @@ class ConversationImageTableViewCell: UITableViewCell {
     
     func displayAttachment() {
         if let attachment = attachment{
-            if let previewString = attachment.publicPreviewURL, imageURL = NSURL(string: previewString){
-                attachmentImageView!.af_setImageWithURL(imageURL, placeholderImage: nil, filter: nil, progress: nil, progressQueue: dispatch_get_main_queue(), imageTransition: .CrossDissolve(0.5), runImageTransitionIfCached: true, completion:nil)
+            if let previewString = attachment.publicPreviewURL, let imageURL = URL(string: previewString){
+                attachmentImageView!.af_setImage(withURL: imageURL, placeholderImage: nil, filter: nil, progress: nil, progressQueue: DispatchQueue.main, imageTransition: .crossDissolve(0.5), runImageTransitionIfCached: true, completion:nil)
             }
         }
     }
     
     
-    func getUser(userId: Int) {
-        if let authorType = message?.authorType where authorType == .User {
+    func getUser(_ userId: Int) {
+        if let authorType = message?.authorType , authorType == .User {
             UserManager.sharedInstance.userMetaDataForUserId(userId, completion: { (user) in
                 
                 if let user = user {
-                    if let avatar = user.avatarURL, url = NSURL(string: avatar) {
-                        self.avatarImageView.af_setImageWithURL(url)
+                    if let avatar = user.avatarURL, let url = URL(string: avatar) {
+                        self.avatarImageView.af_setImage(withURL: url)
                     }
                     
                     if let creatorName =  user.name {
@@ -110,7 +110,7 @@ class ConversationImageTableViewCell: UITableViewCell {
         }else {
             if let endUser = DriftDataStore.sharedInstance.auth?.enduser {
                 if let avatar = endUser.avatarURL {
-                    self.avatarImageView.af_setImageWithURL(NSURL.init(string: avatar)!)
+                    self.avatarImageView.af_setImage(withURL: URL.init(string: avatar)!)
                 }
                 
                 if let creatorName = endUser.name {

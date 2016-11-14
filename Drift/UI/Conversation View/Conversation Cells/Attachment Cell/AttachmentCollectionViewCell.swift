@@ -19,7 +19,7 @@ class AttachmentCollectionViewCell: UICollectionViewCell {
         super.awakeFromNib()
         backgroundColor = ColorPalette.attachmentBackgroundColor
         
-        fileNameLabel.textColor = UIColor.blackColor()
-        sizeLabel.textColor = UIColor.grayColor()
+        fileNameLabel.textColor = UIColor.black
+        sizeLabel.textColor = UIColor.gray
     }
 }

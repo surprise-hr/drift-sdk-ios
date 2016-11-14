@@ -14,7 +14,7 @@ class UserManager {
     
     
     
-    var completionDict: [Int: [((user: CampaignOrganizer?) -> ())]] = [:]
+    var completionDict: [Int: [((_ user: CampaignOrganizer?) -> ())]] = [:]
     
     var userCache: [Int: (CampaignOrganizer)] = [:]
 
@@ -22,10 +22,10 @@ class UserManager {
 
     
     
-    func userMetaDataForUserId(userId: Int, completion: (user: CampaignOrganizer?) -> ()) {
+    func userMetaDataForUserId(_ userId: Int, completion: @escaping (_ user: CampaignOrganizer?) -> ()) {
         
         if let user = userCache[userId] {
-            completion(user: user)
+            completion(user)
         }else{
             
             if let completionArr = completionDict[userId] {
@@ -35,14 +35,14 @@ class UserManager {
                 APIManager.getUser(userId, orgId: DriftDataStore.sharedInstance.embed!.orgId, authToken: DriftDataStore.sharedInstance.auth!.accessToken, completion: { (result) -> () in
                   
                     switch result {
-                    case .Success(let users):
+                    case .success(let users):
                         
                         for user in users {
                             self.userCache[user.userId ?? userId] = user
                             self.executeCompletions(userId, user: user)
                         }
                         
-                    case .Failure(_):
+                    case .failure(_):
                         self.executeCompletions(userId, user: nil)
                     }
                 })
@@ -50,10 +50,10 @@ class UserManager {
         }
     }
     
-    func executeCompletions(userId: Int, user : CampaignOrganizer?) {
+    func executeCompletions(_ userId: Int, user : CampaignOrganizer?) {
         if let completions = self.completionDict[userId] {
             for completion in completions {
-                completion(user: user)
+                completion(user)
             }
         }
         completionDict[userId] = nil

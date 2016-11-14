@@ -25,7 +25,7 @@ class Campaign: Mappable {
     var id: Int?
     var uuid: String?
     var messageType: MessageType!
-    var createdAt: NSDate?
+    var createdAt: Date?
     var bodyText: String?
     var authorId: Int?
     var conversationId: Int?
@@ -34,10 +34,10 @@ class Campaign: Mappable {
     var announcementAttributes: AnnouncementAttributes?
     var npsResponseAttributes: NPSResponseAttributes? 
     
-    required convenience init?(_ map: Map) {
+    required convenience init?(map: Map) {
         
-        if map.JSONDictionary["type"] as? String == nil || MessageType(rawValue: map.JSONDictionary["type"] as! String) == nil{
-            LoggerManager.log(map.JSONDictionary["type"] as? String ?? "")
+        if map.JSON["type"] as? String == nil || MessageType(rawValue: map.JSON["type"] as! String) == nil{
+            LoggerManager.log(map.JSON["type"] as? String ?? "")
             return nil
         }
         

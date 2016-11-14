@@ -17,10 +17,10 @@ class MessageTableHeaderView: UIView {
     override func awakeFromNib() {
         super.awakeFromNib()
         headerLabel.textColor = DriftDataStore.secondaryFontColor
-        backgroundColor = UIColor.whiteColor()
+        backgroundColor = UIColor.white
         
         grad.frame = bottomFade.bounds
-        grad.colors = [UIColor.clearColor().CGColor, UIColor.blackColor().colorWithAlphaComponent(0.02).CGColor]
+        grad.colors = [UIColor.clear.cgColor, UIColor.black.withAlphaComponent(0.02).cgColor]
         bottomFade.layer.addSublayer(grad)
     }
 
