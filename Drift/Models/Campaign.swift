@@ -16,8 +16,8 @@ class Campaign: Mappable {
         - NPS Response: Response to an NPS Campaign - Don't show NPS is conversation contains NPS Response
      */
     enum MessageType: String {
-        case Announcement = "ANNOUNCEMENT"
-        case NPS = "NPS_QUESTION"
+        case Announcement = "ANNOUNCEMENT_ONE_TIME"
+        case NPS = "NPS_ONE_TIME"
         case NPSResponse = "NPS_RESPONSE"
     }
     

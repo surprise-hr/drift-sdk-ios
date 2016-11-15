@@ -440,7 +440,7 @@ class APIManager {
         
         switch result {
         case .success(let res):
-            if let json = res as? [String : AnyObject] {
+            if let json = res as? [String : Any] {
                 let response = Mapper<T>().map(JSON: json)     ///If initialisation is done in if let this can result in getting an object back when nil is returned - This is a bug in swift
                 if let response = response {
                     return .success(response)
@@ -471,26 +471,26 @@ class APIManager {
 
 class URLStore{
     
-    static let identifyURL = URL(string: "https://event.api.driftt.com/identify")!
-    static let layerTokenURL = URL(string: "https://customer.api.driftt.com/layer/token")!
-    static let tokenURL = URL(string: "https://customer.api.driftt.com/oauth/token")!
+    static let identifyURL = URL(string: "https://event.api.drift.com/identify")!
+    static let layerTokenURL = URL(string: "https://customer.api.drift.com/layer/token")!
+    static let tokenURL = URL(string: "https://customer.api.drift.com/oauth/token")!
     class func embedURL(_ embedId: String, refresh: Int?) -> URL? {
 
         let refreshString = Int(Date().timeIntervalSince1970.truncatingRemainder(dividingBy: Double((refresh ?? 30000))))
         
-        return URL(string: "https://js.driftt.com/embeds/\(refreshString)/\(embedId).json")
+        return URL(string: "https://js.drift.com/embeds/\(refreshString)/\(embedId).json")
     }
     
     class func campaignUserURL(_ orgId: Int, authToken: String) -> URL? {
-        return URL(string: "https://customer.api.driftt.com/organizations/\(orgId)/users?access_token=\(authToken)")
+        return URL(string: "https://customer.api.drift.com/organizations/\(orgId)/users?access_token=\(authToken)")
     }
         
     class func conversationsURL(_ endUserId: Int, authToken: String) -> URL? {
-        return URL(string: "https://conversation.api.driftt.com/conversations/end_users/\(endUserId)?access_token=\(authToken)")
+        return URL(string: "https://conversation.api.drift.com/conversations/end_users/\(endUserId)?access_token=\(authToken)")
     }
     
     class func messagesURL(_ conversationId: Int, authToken: String) -> URL? {
-        return URL(string: "https://conversation.api.driftt.com/conversations/\(conversationId)/messages?access_token=\(authToken)")
+        return URL(string: "https://conversation.api.drift.com/conversations/\(conversationId)/messages?access_token=\(authToken)")
     }
     
     class func createConversationURL(_ authToken: String) -> URL? {
@@ -498,11 +498,11 @@ class URLStore{
     }
 
     class func postAttachmentURL(_ authToken: String) -> URL? {
-        return URL(string: "https://conversation.api.driftt.com/attachments?access_token=\(authToken)")
+        return URL(string: "https://conversation.api.drift.com/attachments?access_token=\(authToken)")
     }
     
     class func downloadAttachmentURL(_ attachmentId: Int, authToken: String) -> URL? {
-        return URL(string: "https://conversation.api.driftt.com/attachments/\(attachmentId)/data?access_token=\(authToken)")
+        return URL(string: "https://conversation.api.drift.com/attachments/\(attachmentId)/data?access_token=\(authToken)")
     }
     
     class func getAttachmentsURL(_ attachmentIds: [Int], authToken: String) -> URL? {
@@ -512,11 +512,11 @@ class URLStore{
         }
         params += "&img_auto=compress"
 
-        return URL(string: "https://conversation.api.driftt.com/attachments?access_token=\(authToken)\(params)")
+        return URL(string: "https://conversation.api.drift.com/attachments?access_token=\(authToken)\(params)")
     }
     
     class func usersURL(_ userId: Int, authToken: String) -> URL? {
-        return URL(string: "https://customer.api.driftt.com/end_users/\(userId)?access_token=\(authToken)")
+        return URL(string: "https://customer.api.drift.com/end_users/\(userId)?access_token=\(authToken)")
     }
 }
 
