@@ -73,7 +73,7 @@ class DriftManager: NSObject {
         
         guard let orgId = DriftDataStore.sharedInstance.embed?.orgId else {
             LoggerManager.log("No Embed, not registering user - Waiting for Embeds to complete")
-            DriftManager.sharedInstance.registerInfo = (userId,email, attrs)
+            DriftManager.sharedInstance.registerInfo = (userId, email, attrs)
             return
         }
         
@@ -180,7 +180,7 @@ class DriftManager: NSObject {
                 DriftDataStore.sharedInstance.setEmbed(embed)
                 completion(true)
             case .failure(let error):
-                print(error)
+                LoggerManager.log(error.localizedDescription)
                 completion(false)
             }
         }

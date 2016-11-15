@@ -12,8 +12,8 @@ import ObjectMapper
 ///Datastore for caching Embed and Auth object between app opens
 class DriftDataStore {
 
-    static let driftAuthCacheString = "DriftAuthDataJSONCache"
-    static let driftEmbedCacheString = "DriftEmbedJSONCache"
+    static let driftAuthCacheString = "DriftSDKAuthDataJSONCache"
+    static let driftEmbedCacheString = "DriftSDKEmbedJSONCache"
     
     fileprivate (set) var auth: Auth?
     fileprivate (set) var embed: Embed?

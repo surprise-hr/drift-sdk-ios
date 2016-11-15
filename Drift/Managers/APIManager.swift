@@ -22,14 +22,14 @@ class APIManager {
 
     class func getAuth(_ email: String, userId: String, redirectURL: String, orgId: Int, clientId: String, completion: @escaping (Result<Auth>) -> ()) {
         
-        let params: [String : AnyObject] = [
+        let params: [String : Any] = [
             
-            "email": email as AnyObject,
-            "org_id": orgId as AnyObject,
-            "user_id": userId as AnyObject,
-            "grant_type": "sdk" as AnyObject,
-            "redirect_uri":redirectURL as AnyObject,
-            "client_id": clientId as AnyObject
+            "email": email ,
+            "org_id": orgId,
+            "user_id": userId,
+            "grant_type": "sdk",
+            "redirect_uri":redirectURL,
+            "client_id": clientId
         ]
         
         makeRequest(Request(url: URLStore.tokenURL).setMethod(.POST).setData(.form(json: params))) { (result) in
@@ -41,11 +41,11 @@ class APIManager {
     
     class func getLayerAccessToken(_ nonce: String, userId: String, completion: @escaping (Result<String>) -> ()){
         
-        makeRequest(Request(url: URLStore.layerTokenURL).setMethod(.POST).setData(.json(json: ["nonce": nonce as AnyObject, "userId": userId as AnyObject]))) { (result) in
+        makeRequest(Request(url: URLStore.layerTokenURL).setMethod(.POST).setData(.json(json: ["nonce": nonce, "userId": userId]))) { (result) in
             
             switch result {
-            case .success(let json):
-                if let token = json["identityToken"] as? String {
+            case .success(let response):
+                if let json = response as? [String: Any], let token = json["identityToken"] as? String {
                     completion(.success(token))
                     return
                 }
@@ -77,12 +77,12 @@ class APIManager {
             return
         }
         
-        let params: [String: AnyObject] =
-        [   "avatar_w": 102 as AnyObject,
-            "avatar_h": 102 as AnyObject,
-            "avatar_fit": "1" as AnyObject,
-            "access_token": authToken as AnyObject,
-            "userId": userId as AnyObject
+        let params: [String: Any] =
+        [   "avatar_w": 102,
+            "avatar_h": 102,
+            "avatar_fit": "1",
+            "access_token": authToken,
+            "userId": userId
         ]
         
         makeRequest(Request(url: url).setMethod(.GET).setData(.url(params: params))) { (result) -> () in
@@ -103,17 +103,17 @@ class APIManager {
         }
     }
     
-    class func postIdentify(_ orgId: Int, userId: String, email: String, attributes: [String: AnyObject]?, completion: @escaping (Result<User>) -> ()) {
+    class func postIdentify(_ orgId: Int, userId: String, email: String, attributes: [String: Any]?, completion: @escaping (Result<User>) -> ()) {
         
-        var params: [String: AnyObject] = [
-            "orgId": orgId as AnyObject,
-            "userId": userId as AnyObject,
-            "attributes": ["email": email] as AnyObject
+        var params: [String: Any] = [
+            "orgId": orgId,
+            "userId": userId,
+            "attributes": ["email": email]
         ]
         
         if var attributes = attributes {
-            attributes["email"] = email as AnyObject?
-            params["attributes"] = attributes as AnyObject?
+            attributes["email"] = email
+            params["attributes"] = attributes
         }
         
         makeRequest(Request(url: URLStore.identifyURL).setMethod(.POST).setData(.json(json: params))) { (result) -> () in
@@ -130,9 +130,9 @@ class APIManager {
             return
         }
         
-        let json: [String: AnyObject] = [
-            "type": "CONVERSATION_EVENT" as AnyObject,
-            "conversationEvent": ["type": response.rawValue] as AnyObject
+        let json: [String: Any] = [
+            "type": "CONVERSATION_EVENT",
+            "conversationEvent": ["type": response.rawValue]
         ]
     
         let request = Request(url: url).setData(.json(json: json)).setMethod(.POST)
@@ -158,21 +158,21 @@ class APIManager {
         }
         
         
-        var attributes: [String: AnyObject] = [:]
+        var attributes: [String: Any] = [:]
         
         
         switch response{
         case .dismissed:
-            attributes = ["dismissed":true as AnyObject]
+            attributes = ["dismissed":true]
         case .numeric(let numeric):
-            attributes = ["numericResponse":numeric as AnyObject]
+            attributes = ["numericResponse":numeric]
         case .textAndNumeric(let numeric, let text):
-            attributes = ["numericResponse":numeric as AnyObject, "textResponse": text as AnyObject]
+            attributes = ["numericResponse":numeric, "textResponse": text]
         }
         
-        let json: [String: AnyObject] = [
-            "type": "NPS_RESPONSE" as AnyObject,
-            "attributes": attributes as AnyObject
+        let json: [String: Any] = [
+            "type": "NPS_RESPONSE",
+            "attributes": attributes
         ]
         
         let request = Request(url: url).setData(.json(json: json)).setMethod(.POST)
@@ -247,7 +247,7 @@ class APIManager {
         
         let json = message.toJSON()
         
-        let request = Request(url: url).setData(.json(json: json as [String : AnyObject])).setMethod(.POST)
+        let request = Request(url: url).setData(.json(json: json)).setMethod(.POST)
         
         makeRequest(request) { (result) -> () in
             
@@ -271,7 +271,7 @@ class APIManager {
             return
         }
         
-        let json: [String : AnyObject] = ["body":body as AnyObject]
+        let json: [String : Any] = ["body":body]
         
         let request = Request(url: url).setData(.json(json: json)).setMethod(.POST)
         
@@ -402,7 +402,7 @@ class APIManager {
      - parameter request: The request object to make the call
      - parameter completion: Completion Block called with result Object - AnyObject or nil
     */
-    fileprivate class func makeRequest(_ request: Request, completion: @escaping (Result<AnyObject>) -> ()) {
+    fileprivate class func makeRequest(_ request: Request, completion: @escaping (Result<Any>) -> ()) {
         
         sharedInstance.session.dataTask(with: request.getRequest(), completionHandler: { (data, response, error) -> Void in
             if let response = response as? HTTPURLResponse {
@@ -415,7 +415,7 @@ class APIManager {
                 do {
                     let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
                     DispatchQueue.main.async(execute: { 
-                        completion(.success(json as AnyObject))
+                        completion(.success(json))
                     })
                 } catch {
                     DispatchQueue.main.async(execute: {
@@ -436,7 +436,7 @@ class APIManager {
     }
     
     //Maps response to result T using ObjectMapper JSON parsing
-    fileprivate class func mapResponse<T: Mappable>(_ result: Result<AnyObject>) -> Result<T> {
+    fileprivate class func mapResponse<T: Mappable>(_ result: Result<Any>) -> Result<T> {
         
         switch result {
         case .success(let res):
@@ -453,11 +453,11 @@ class APIManager {
     }
     
     //Maps response to result [T] using ObjectMapper JSON parsing
-    fileprivate class func mapResponse<T: Mappable>(_ result: Result<AnyObject>) -> Result<[T]> {
+    fileprivate class func mapResponse<T: Mappable>(_ result: Result<Any>) -> Result<[T]> {
         
         switch result {
         case .success(let res):
-            if let json = res as? [[String: AnyObject]] {
+            if let json = res as? [[String: Any]] {
                 if let response: [T] = Mapper<T>().mapArray(JSONArray: json){
                     return .success(response)
                 }
@@ -547,9 +547,9 @@ class Request {
     }
     
     enum DataType {
-        case url(params: [String: AnyObject])
-        case json(json: [String: AnyObject])
-        case form(json: [String: AnyObject])
+        case url(params: [String: Any])
+        case json(json: [String: Any])
+        case form(json: [String: Any])
 
         
         func appendToRequest(_ request:NSMutableURLRequest) -> NSMutableURLRequest {
@@ -582,7 +582,7 @@ class Request {
                 
                 request.addValue(HeaderValue.FormURLEncoded.rawValue, forHTTPHeaderField: HeaderField.ContentType.rawValue)
 
-                func query(_ parameters: [String: AnyObject]) -> String {
+                func query(_ parameters: [String: Any]) -> String {
                     var components: [(String, String)] = []
                     
                     for key in parameters.keys.sorted(by: <) {
@@ -644,14 +644,14 @@ class Request {
  
  - returns: The percent-escaped, URL encoded query string components.
  */
-func queryComponents(_ key: String, _ value: AnyObject) -> [(String, String)] {
+func queryComponents(_ key: String, _ value: Any) -> [(String, String)] {
     var components: [(String, String)] = []
     
-    if let dictionary = value as? [String: AnyObject] {
+    if let dictionary = value as? [String: Any] {
         for (nestedKey, value) in dictionary {
             components += queryComponents("\(key)[\(nestedKey)]", value)
         }
-    } else if let array = value as? [AnyObject] {
+    } else if let array = value as? [Any] {
         for value in array {
             components += queryComponents("\(key)[]", value)
         }

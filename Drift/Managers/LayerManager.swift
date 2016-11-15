@@ -159,7 +159,6 @@ class LayerManager: NSObject, LYRClientDelegate {
     
     func layerClient(_ client: LYRClient, didFailOperationWithError error: Error) {
         LoggerManager.log("Sync Failed: \(error.localizedDescription)")
-
     }
 
 }
