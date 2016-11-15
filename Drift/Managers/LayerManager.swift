@@ -14,7 +14,7 @@ class LayerManager: NSObject, LYRClientDelegate {
     
     static var sharedInstance: LayerManager = LayerManager()
     var layerClient: LYRClient?
-    var userId: Int!
+    var userId: Int = -1
     
     ///Completion block passed along auth functions
     var completion: ((_ success: Bool) -> ())?
@@ -32,6 +32,10 @@ class LayerManager: NSObject, LYRClientDelegate {
     class func initialize(_ appId: String, userId: Int, completion: @escaping (_ success: Bool) -> ()) {
         
         if sharedInstance.layerClient != nil {
+            
+            if (sharedInstance.layerClient!.isConnecting){
+                return
+            }
             
             sharedInstance.userId = userId
             sharedInstance.completion = completion
