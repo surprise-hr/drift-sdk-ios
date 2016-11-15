@@ -89,6 +89,7 @@
 		A8F589A31D478F0A0043DB8D /* ConversationListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F589A11D478F0A0043DB8D /* ConversationListTableViewCell.swift */; };
 		A8F589A41D478F0A0043DB8D /* ConversationListTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A8F589A21D478F0A0043DB8D /* ConversationListTableViewCell.xib */; };
 		B24E7E355476327343D34A70 /* Pods_Drift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 827DB2871F99163085B5B96C /* Pods_Drift.framework */; };
+		DE4BB2DAEE68729ECCFBF587 /* Pods_Drift_SDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D067B1B1C2147D16643E68C /* Pods_Drift_SDK.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -115,6 +116,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0C22BE29447B902070F10D55 /* Pods-Drift-SDK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Drift-SDK.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Drift-SDK/Pods-Drift-SDK.debug.xcconfig"; sourceTree = "<group>"; };
+		0F7B8686E6ADBA835CE5CB39 /* Pods-Drift-SDK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Drift-SDK.release.xcconfig"; path = "Pods/Target Support Files/Pods-Drift-SDK/Pods-Drift-SDK.release.xcconfig"; sourceTree = "<group>"; };
 		2CF43EA21C7E045F008E6748 /* ColorPalette.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ColorPalette.swift; path = Drift/UI/ColorPalette.swift; sourceTree = SOURCE_ROOT; };
 		2CF43EA61C7E056F008E6748 /* DriftImages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = DriftImages.xcassets; path = Drift/UI/DriftImages.xcassets; sourceTree = SOURCE_ROOT; };
 		376DB1A9D502953CD6D8325F /* Pods_DriftTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DriftTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -169,6 +172,7 @@
 		63F8581F1C63B22E00872B0D /* CampaignOrganizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CampaignOrganizer.swift; path = Drift/Models/CampaignOrganizer.swift; sourceTree = SOURCE_ROOT; };
 		63F95DBE1C5B8676003BCEE0 /* Auth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Auth.swift; path = Drift/Models/Auth.swift; sourceTree = SOURCE_ROOT; };
 		6CA1C57137B58327E8ED453E /* Pods-Drift.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Drift.release.xcconfig"; path = "Pods/Target Support Files/Pods-Drift/Pods-Drift.release.xcconfig"; sourceTree = "<group>"; };
+		7D067B1B1C2147D16643E68C /* Pods_Drift_SDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Drift_SDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		827DB2871F99163085B5B96C /* Pods_Drift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Drift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E01BE3EE4C4FBBC0B0CF127 /* Pods-DriftTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DriftTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DriftTests/Pods-DriftTests.debug.xcconfig"; sourceTree = "<group>"; };
 		A80A643D1D464CDE00A41A41 /* ObjectValidator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ObjectValidator.swift; path = Drift/Helpers/ObjectValidator.swift; sourceTree = SOURCE_ROOT; };
@@ -214,6 +218,7 @@
 				63356A541C52A0D20064F652 /* UIKit.framework in Frameworks */,
 				63C257391C9A00AE003C4C81 /* LayerKit.framework in Frameworks */,
 				B24E7E355476327343D34A70 /* Pods_Drift.framework in Frameworks */,
+				DE4BB2DAEE68729ECCFBF587 /* Pods_Drift_SDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -424,6 +429,7 @@
 				63356A531C52A0D20064F652 /* UIKit.framework */,
 				827DB2871F99163085B5B96C /* Pods_Drift.framework */,
 				376DB1A9D502953CD6D8325F /* Pods_DriftTests.framework */,
+				7D067B1B1C2147D16643E68C /* Pods_Drift_SDK.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -493,6 +499,8 @@
 				6CA1C57137B58327E8ED453E /* Pods-Drift.release.xcconfig */,
 				8E01BE3EE4C4FBBC0B0CF127 /* Pods-DriftTests.debug.xcconfig */,
 				B830EE3166A8EBB93E22850F /* Pods-DriftTests.release.xcconfig */,
+				0C22BE29447B902070F10D55 /* Pods-Drift-SDK.debug.xcconfig */,
+				0F7B8686E6ADBA835CE5CB39 /* Pods-Drift-SDK.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -511,9 +519,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		634950D31C511A410097C474 /* Drift */ = {
+		634950D31C511A410097C474 /* Drift-SDK */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 634950E81C511A410097C474 /* Build configuration list for PBXNativeTarget "Drift" */;
+			buildConfigurationList = 634950E81C511A410097C474 /* Build configuration list for PBXNativeTarget "Drift-SDK" */;
 			buildPhases = (
 				A99DC3508C7DE9FC0A16003C /* [CP] Check Pods Manifest.lock */,
 				634950CF1C511A410097C474 /* Sources */,
@@ -528,7 +536,7 @@
 			);
 			dependencies = (
 			);
-			name = Drift;
+			name = "Drift-SDK";
 			productName = Driftt;
 			productReference = 634950D41C511A410097C474 /* Drift.framework */;
 			productType = "com.apple.product-type.framework";
@@ -587,7 +595,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				634950D31C511A410097C474 /* Drift */,
+				634950D31C511A410097C474 /* Drift-SDK */,
 				634950DD1C511A410097C474 /* DriftTests */,
 			);
 		};
@@ -716,7 +724,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Drift/Pods-Drift-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Drift-SDK/Pods-Drift-SDK-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		F4796389BBF7812A125D4B21 /* [CP] Check Pods Manifest.lock */ = {
@@ -812,7 +820,7 @@
 /* Begin PBXTargetDependency section */
 		634950E11C511A410097C474 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 634950D31C511A410097C474 /* Drift */;
+			target = 634950D31C511A410097C474 /* Drift-SDK */;
 			targetProxy = 634950E01C511A410097C474 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -914,7 +922,7 @@
 		};
 		634950E91C511A410097C474 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D05CA385937F3836AC8E1B8A /* Pods-Drift.debug.xcconfig */;
+			baseConfigurationReference = 0C22BE29447B902070F10D55 /* Pods-Drift-SDK.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
@@ -932,7 +940,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.drift.Drift;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.drift.Drift-SDK";
 				PRODUCT_NAME = Drift;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -942,7 +950,7 @@
 		};
 		634950EA1C511A410097C474 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6CA1C57137B58327E8ED453E /* Pods-Drift.release.xcconfig */;
+			baseConfigurationReference = 0F7B8686E6ADBA835CE5CB39 /* Pods-Drift-SDK.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
@@ -960,7 +968,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.drift.Drift;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.drift.Drift-SDK";
 				PRODUCT_NAME = Drift;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 3.0;
@@ -1015,7 +1023,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		634950E81C511A410097C474 /* Build configuration list for PBXNativeTarget "Drift" */ = {
+		634950E81C511A410097C474 /* Build configuration list for PBXNativeTarget "Drift-SDK" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				634950E91C511A410097C474 /* Debug */,

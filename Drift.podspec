@@ -1,5 +1,5 @@
 Pod::Spec.new do |spec|
-  spec.name = "Drift"
+  spec.name = "Drift-SDK"
   spec.version = "0.0.3"
   spec.summary = "Drift Framework for customer communication"
   spec.homepage = "https://github.com/Driftt/drift-sdk-ios"
@@ -7,7 +7,7 @@ Pod::Spec.new do |spec|
   spec.authors = { "Eoin O'Connell" => 'eoin@8bytes.ie' }
   spec.social_media_url = "http://twitter.com/drift"
 
-  spec.platform = :ios, "8.0"
+  spec.platform = :ios, "9.0"
   spec.requires_arc = true
   spec.source = { git: "https://github.com/Driftt/drift-sdk-ios.git", tag: "#{spec.version}", submodules: false }
   spec.source_files = "Drift/**/*.{h,swift}"

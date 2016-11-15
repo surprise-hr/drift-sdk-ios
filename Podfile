@@ -1,7 +1,7 @@
 platform :ios, '9.0'
 use_frameworks!
 
-target 'Drift' do
+target 'Drift-SDK' do
     pod 'ObjectMapper', '~> 2.0'
     pod 'LayerKit', '~> 0.17'
     pod 'SlackTextViewController', '~> 1.9.3'
