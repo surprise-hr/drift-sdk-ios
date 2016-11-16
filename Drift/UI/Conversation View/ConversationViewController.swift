@@ -158,7 +158,7 @@ class ConversationViewController: SLKTextViewController {
     
     
     override func didPressLeftButton(_ sender: Any?) {
-
+        dismissKeyboard(true)
         let uploadController = UIAlertController.init(title: nil, message: nil, preferredStyle: .actionSheet)
        
         if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad {
