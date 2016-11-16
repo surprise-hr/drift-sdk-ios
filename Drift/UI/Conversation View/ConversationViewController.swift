@@ -467,11 +467,15 @@ extension ConversationViewController: AttachementSelectedDelegate {
             switch result{
             case .success(let tempFileURL):
 
-                if sender.classForCoder == ConversationImageTableViewCell.classForCoder(){
-                    self.previewItem = DriftPreviewItem(url: tempFileURL, title: attachment.fileName)
-                    let qlController = QLPreviewController()
-                    qlController.dataSource = self
-                    self.present(qlController, animated: true, completion: nil)
+                if let imageCell = sender as? ConversationImageTableViewCell{
+                    DispatchQueue.main.async {
+                        self.previewItem = DriftPreviewItem(url: tempFileURL, title: attachment.fileName)
+                        let qlController = QLPreviewController()
+                        qlController.dataSource = self
+                        self.present(qlController, animated: true, completion: {
+                            imageCell.activityIndicator.stopAnimating()
+                        })
+                    }
                 }else{
                     let interactionController = UIDocumentInteractionController()
                     interactionController.url = tempFileURL

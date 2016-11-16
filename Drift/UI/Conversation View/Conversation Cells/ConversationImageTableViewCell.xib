@@ -52,6 +52,9 @@
                             <constraint firstAttribute="height" constant="128" id="Psf-9A-7al"/>
                         </constraints>
                     </imageView>
+                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="1wS-PH-fyI">
+                        <rect key="frame" x="174" y="234" width="37" height="37"/>
+                    </activityIndicatorView>
                 </subviews>
                 <constraints>
                     <constraint firstItem="8dS-YH-WXU" firstAttribute="top" secondItem="Hhy-xF-DNb" secondAttribute="bottom" constant="8" id="1aD-Yz-gUf"/>
@@ -60,10 +63,12 @@
                     <constraint firstItem="Tbd-s3-hyg" firstAttribute="leading" secondItem="vr0-3T-alj" secondAttribute="trailing" constant="8" id="Ata-SV-PBf"/>
                     <constraint firstItem="vr0-3T-alj" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" id="DFS-gT-ppG"/>
                     <constraint firstItem="Hhy-xF-DNb" firstAttribute="top" secondItem="vr0-3T-alj" secondAttribute="bottom" id="HWy-lW-KTB"/>
+                    <constraint firstItem="1wS-PH-fyI" firstAttribute="centerY" secondItem="8dS-YH-WXU" secondAttribute="centerY" id="MBD-HK-JPo"/>
                     <constraint firstItem="Hhy-xF-DNb" firstAttribute="leading" secondItem="geO-TV-QvD" secondAttribute="trailing" constant="10" id="MQU-mZ-Oll"/>
                     <constraint firstAttribute="bottomMargin" secondItem="8dS-YH-WXU" secondAttribute="bottom" constant="5.5" id="TRT-fc-krw"/>
                     <constraint firstAttribute="trailingMargin" secondItem="8dS-YH-WXU" secondAttribute="trailing" constant="1" id="WSw-s1-Mce"/>
                     <constraint firstItem="Tbd-s3-hyg" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="ZqQ-cl-dWX"/>
+                    <constraint firstItem="1wS-PH-fyI" firstAttribute="centerX" secondItem="8dS-YH-WXU" secondAttribute="centerX" id="b3e-74-COD"/>
                     <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Tbd-s3-hyg" secondAttribute="trailing" constant="15" id="dnR-PG-e4i"/>
                     <constraint firstItem="8dS-YH-WXU" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="65" id="hH8-9g-Bxt"/>
                     <constraint firstAttribute="trailingMargin" secondItem="Hhy-xF-DNb" secondAttribute="trailing" id="nb2-Jy-qbr"/>
@@ -71,6 +76,7 @@
                 </constraints>
             </tableViewCellContentView>
             <connections>
+                <outlet property="activityIndicator" destination="1wS-PH-fyI" id="HYB-rx-b57"/>
                 <outlet property="attachmentImageView" destination="8dS-YH-WXU" id="MAH-Pp-PcA"/>
                 <outlet property="avatarImageView" destination="geO-TV-QvD" id="9vt-QL-wux"/>
                 <outlet property="messageTextView" destination="Hhy-xF-DNb" id="c42-oz-OVu"/>

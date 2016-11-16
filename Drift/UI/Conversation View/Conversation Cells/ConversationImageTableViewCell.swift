@@ -15,6 +15,7 @@ class ConversationImageTableViewCell: UITableViewCell {
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var messageTextView: UITextView!
     @IBOutlet weak var attachmentImageView: UIImageView!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     weak var delegate: AttachementSelectedDelegate?{
         didSet{
@@ -44,6 +45,7 @@ class ConversationImageTableViewCell: UITableViewCell {
     
     func imagePressed() {
         if let attachment = attachment{
+            activityIndicator.startAnimating()
             delegate?.attachmentSelected(attachment, sender: self)
         }
     }
