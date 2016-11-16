@@ -70,7 +70,7 @@ class ConversationListViewController: UIViewController {
         navVC.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: DriftDataStore.sharedInstance.generateForegroundColor()]
         navVC.navigationBar.barTintColor = DriftDataStore.sharedInstance.generateBackgroundColor()
         navVC.navigationBar.tintColor = DriftDataStore.sharedInstance.generateForegroundColor()
-        navVC.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: DriftDataStore.sharedInstance.generateForegroundColor(), NSFontAttributeName: UIFont.init(name: "AvenirNext-Regular", size: 16)!]
+        navVC.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: DriftDataStore.sharedInstance.generateForegroundColor(), NSFontAttributeName: UIFont.init(name: "AvenirNext-Medium", size: 16)!]
 
         vc.navigationItem.leftBarButtonItem  = leftButton
         vc.navigationItem.rightBarButtonItem = rightButton

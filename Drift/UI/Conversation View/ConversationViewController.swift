@@ -88,7 +88,7 @@ class ConversationViewController: SLKTextViewController {
         if let navVC = navigationController {
             navVC.navigationBar.barTintColor = DriftDataStore.sharedInstance.generateBackgroundColor()
             navVC.navigationBar.tintColor = DriftDataStore.sharedInstance.generateForegroundColor()
-            navVC.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: DriftDataStore.sharedInstance.generateForegroundColor(), NSFontAttributeName: UIFont.init(name: "AvenirNext-Regular", size: 16)!]
+            navVC.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: DriftDataStore.sharedInstance.generateForegroundColor(), NSFontAttributeName: UIFont.init(name: "AvenirNext-Medium", size: 16)!]
             navigationItem.title = "Conversation"
         }
         
