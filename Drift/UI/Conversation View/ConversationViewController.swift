@@ -68,6 +68,7 @@ class ConversationViewController: SLKTextViewController {
         let vc = ConversationViewController.init(conversationType: conversationType)
         let navVC = UINavigationController.init(rootViewController: vc)
         let leftButton = UIBarButtonItem(title: "Close", style: UIBarButtonItemStyle.done, target: vc, action: #selector(ConversationViewController.dismissVC))
+        leftButton.setTitleTextAttributes([NSForegroundColorAttributeName: DriftDataStore.sharedInstance.generateForegroundColor()], for: .normal)
         vc.navigationItem.leftBarButtonItem  = leftButton
 
         return navVC
@@ -128,6 +129,7 @@ class ConversationViewController: SLKTextViewController {
     func setupSlackTextView() {
         tableView?.backgroundColor = UIColor.white
         leftButton.tintColor = UIColor.lightGray
+        textInputbar.barTintColor = UIColor.white
         leftButton.isEnabled = false
         leftButton.setImage(UIImage.init(named: "plus-circle", in: Bundle(for: Drift.self), compatibleWith: nil), for: UIControlState())
         isInverted = true
