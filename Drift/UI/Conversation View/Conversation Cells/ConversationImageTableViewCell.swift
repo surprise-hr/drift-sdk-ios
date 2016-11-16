@@ -60,6 +60,7 @@ class ConversationImageTableViewCell: UITableViewCell {
         }
         
         messageTextView.text = ""
+        messageTextView.textContainer.lineFragmentPadding = 0
         messageTextView.textContainerInset = UIEdgeInsets.zero
         messageTextView.text = self.message!.body
         

@@ -35,9 +35,10 @@ class ConversationMessageTableViewCell: UITableViewCell {
         avatarImageView.layer.masksToBounds = true
         
         messageTextView.text = ""
+        messageTextView.textContainer.lineFragmentPadding = 0
         messageTextView.textContainerInset = UIEdgeInsets.zero
         messageTextView.text = self.message!.body
-        
+
         if let authorId = message?.authorId{
             getUser(authorId)
         }
