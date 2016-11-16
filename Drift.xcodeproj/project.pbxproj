@@ -83,6 +83,7 @@
 		A8B088841D4F549400FFA469 /* ConversationImageTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A8B088821D4F549400FFA469 /* ConversationImageTableViewCell.xib */; };
 		A8B088871D4F588E00FFA469 /* ConversationAttachmentsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B088851D4F588E00FFA469 /* ConversationAttachmentsTableViewCell.swift */; };
 		A8B088881D4F588E00FFA469 /* ConversationAttachmentsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A8B088861D4F588E00FFA469 /* ConversationAttachmentsTableViewCell.xib */; };
+		A8BC1BAD1DDCB0DE0049968E /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8BC1BAC1DDCB0DE0049968E /* GradientView.swift */; };
 		A8C6ADED1D632CD10024CFDC /* ConversationEmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C6ADEC1D632CD10024CFDC /* ConversationEmptyStateView.swift */; };
 		A8C6ADEF1D632CED0024CFDC /* ConversationEmptyStateView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A8C6ADEE1D632CED0024CFDC /* ConversationEmptyStateView.xib */; };
 		A8DBDD281D4259BF00E827CF /* ObjectMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A82CF5671D42585D00D570FF /* ObjectMapper.framework */; };
@@ -201,6 +202,7 @@
 		A8B088821D4F549400FFA469 /* ConversationImageTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ConversationImageTableViewCell.xib; path = "Drift/UI/Conversation View/Conversation Cells/ConversationImageTableViewCell.xib"; sourceTree = SOURCE_ROOT; };
 		A8B088851D4F588E00FFA469 /* ConversationAttachmentsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConversationAttachmentsTableViewCell.swift; path = "Drift/UI/Conversation View/Conversation Cells/ConversationAttachmentsTableViewCell.swift"; sourceTree = SOURCE_ROOT; };
 		A8B088861D4F588E00FFA469 /* ConversationAttachmentsTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ConversationAttachmentsTableViewCell.xib; path = "Drift/UI/Conversation View/Conversation Cells/ConversationAttachmentsTableViewCell.xib"; sourceTree = SOURCE_ROOT; };
+		A8BC1BAC1DDCB0DE0049968E /* GradientView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GradientView.swift; path = Drift/Helpers/GradientView.swift; sourceTree = SOURCE_ROOT; };
 		A8C6ADEC1D632CD10024CFDC /* ConversationEmptyStateView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConversationEmptyStateView.swift; path = "Drift/UI/Conversation View/ConversationEmptyStateView.swift"; sourceTree = SOURCE_ROOT; };
 		A8C6ADEE1D632CED0024CFDC /* ConversationEmptyStateView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ConversationEmptyStateView.xib; path = "Drift/UI/Conversation View/ConversationEmptyStateView.xib"; sourceTree = SOURCE_ROOT; };
 		A8F589A11D478F0A0043DB8D /* ConversationListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConversationListTableViewCell.swift; path = "Drift/UI/Conversation List View/List View Cell/ConversationListTableViewCell.swift"; sourceTree = SOURCE_ROOT; };
@@ -329,6 +331,7 @@
 		633920D11C6268EE00C3A3C2 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				A8BC1BAC1DDCB0DE0049968E /* GradientView.swift */,
 				63BBABB51C7CD6210014768A /* ColorHelper.swift */,
 				638730991C7E85EF00105867 /* TopController.swift */,
 				A80A643D1D464CDE00A41A41 /* ObjectValidator.swift */,
@@ -765,6 +768,7 @@
 				630E89671C57B9AC00195062 /* AnnouncementView.swift in Sources */,
 				A8B088871D4F588E00FFA469 /* ConversationAttachmentsTableViewCell.swift in Sources */,
 				A8F589A31D478F0A0043DB8D /* ConversationListTableViewCell.swift in Sources */,
+				A8BC1BAD1DDCB0DE0049968E /* GradientView.swift in Sources */,
 				A80A64481D4665E500A41A41 /* Conversation.swift in Sources */,
 				63356A451C529C6C0064F652 /* APIManager.swift in Sources */,
 				63356A421C529C610064F652 /* Drift.swift in Sources */,

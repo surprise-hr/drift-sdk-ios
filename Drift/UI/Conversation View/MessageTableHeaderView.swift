@@ -10,18 +10,18 @@ import UIKit
 
 class MessageTableHeaderView: UIView {
     
+    @IBOutlet weak var barView: GradientView!
     @IBOutlet weak var headerLabel: UILabel!
-    @IBOutlet weak var bottomFade: UIView!
-    let grad = CAGradientLayer()
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        headerLabel.textColor = DriftDataStore.secondaryFontColor
+        headerLabel.textColor = ColorPalette.navyDark
         backgroundColor = UIColor.white
-        
-        grad.frame = bottomFade.bounds
-        grad.colors = [UIColor.clear.cgColor, UIColor.black.withAlphaComponent(0.02).cgColor]
-        bottomFade.layer.addSublayer(grad)
-    }
 
+        barView.colors = [UIColor.white, ColorPalette.navyMedium, ColorPalette.navyMedium, UIColor.white]
+
+        barView.locations = [0, 0.3, 0.7, 1.0]
+        barView.direction = .horizontal
+
+    }
 }
