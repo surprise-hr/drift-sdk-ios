@@ -124,6 +124,10 @@ class ConversationViewController: SLKTextViewController {
             emptyState.center.x = view.center.x
             emptyState.center.y = view.center.y - UIScreen.main.bounds.height/4
             view.addSubview(emptyState)
+            DispatchQueue.main.asyncAfter(
+                deadline: DispatchTime.now() + Double(Int64(1.0 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: {
+                    self.presentKeyboard(true)
+            })
         }
     }
     
@@ -148,7 +152,7 @@ class ConversationViewController: SLKTextViewController {
     
     
     func dismissVC() {
-        resignFirstResponder()
+        dismissKeyboard(true)
         self.dismiss(animated: true, completion: nil)
     }
     
