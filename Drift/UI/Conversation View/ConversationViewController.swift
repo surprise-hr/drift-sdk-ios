@@ -247,7 +247,11 @@ class ConversationViewController: SLKTextViewController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if sections[section].count > 0{
-            emptyState.isHidden = true
+            UIView.animate(withDuration: 0.4, animations: {
+                self.emptyState.alpha = 0.0
+            }, completion: { (_) in
+                self.emptyState.isHidden = true
+            })
         }
         return sections[section].count
     }
