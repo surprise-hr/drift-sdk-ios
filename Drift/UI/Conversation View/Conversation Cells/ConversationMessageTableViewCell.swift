@@ -49,9 +49,7 @@ class ConversationMessageTableViewCell: UITableViewCell {
         
         do {
             let htmlStringData = (self.message!.body ?? "").data(using: String.Encoding.utf8)!
-            let options: [String: AnyObject] = [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType as AnyObject,
-                                                NSCharacterEncodingDocumentAttribute: String.Encoding.utf8 as AnyObject]
-            let attributedHTMLString = try NSMutableAttributedString(data: htmlStringData, options: options, documentAttributes: nil)
+            let attributedHTMLString = try NSMutableAttributedString(data: htmlStringData, options: [NSDocumentTypeDocumentAttribute : NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute: String.Encoding.utf8.rawValue], documentAttributes: nil)
             self.messageTextView.text = attributedHTMLString.string
         } catch {
             self.messageTextView.text = ""

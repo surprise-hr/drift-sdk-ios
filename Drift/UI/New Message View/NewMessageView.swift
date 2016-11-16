@@ -65,15 +65,11 @@ class NewMessageView: CampaignView {
             
             do {
                 let htmlStringData = (latestMessage.body ?? "").data(using: String.Encoding.utf8)!
-                let options: [String: AnyObject] = [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType as AnyObject,
-                                                    NSCharacterEncodingDocumentAttribute: String.Encoding.utf8 as AnyObject
-                ]
-                let attributedHTMLString = try NSMutableAttributedString(data: htmlStringData, options: options, documentAttributes: nil)
+                let attributedHTMLString = try NSMutableAttributedString(data: htmlStringData, options: [NSDocumentTypeDocumentAttribute : NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute: String.Encoding.utf8.rawValue], documentAttributes: nil)
                 infoLabel.text = attributedHTMLString.string
             } catch {
                 infoLabel.text = latestMessage.body ?? ""
             }
-
 
             userId = latestMessage.authorId
             
