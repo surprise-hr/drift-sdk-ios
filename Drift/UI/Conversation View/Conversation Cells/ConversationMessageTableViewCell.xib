@@ -26,7 +26,7 @@
                         </constraints>
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="12.23pm" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="liw-9q-PX3">
-                        <rect key="frame" x="161" y="10" width="48" height="17"/>
+                        <rect key="frame" x="167" y="10" width="48" height="17"/>
                         <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="12"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <nil key="highlightedColor"/>
@@ -49,7 +49,7 @@
                     </label>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="liw-9q-PX3" firstAttribute="leading" secondItem="Mum-og-EM8" secondAttribute="trailing" constant="2" id="1cG-hm-ktw"/>
+                    <constraint firstItem="liw-9q-PX3" firstAttribute="leading" secondItem="Mum-og-EM8" secondAttribute="trailing" constant="8" id="1cG-hm-ktw"/>
                     <constraint firstAttribute="bottomMargin" secondItem="qcY-TY-s4u" secondAttribute="bottom" id="Cd6-Eb-bN1"/>
                     <constraint firstItem="qcY-TY-s4u" firstAttribute="top" secondItem="Mum-og-EM8" secondAttribute="bottom" id="HIp-61-Xqr"/>
                     <constraint firstAttribute="trailingMargin" secondItem="qcY-TY-s4u" secondAttribute="trailing" id="IGn-cK-yjx"/>
