@@ -49,9 +49,10 @@ class ConversationViewController: SLKTextViewController {
 
     var conversationId: Int?{
         didSet{
-            self.leftButton.isEnabled = true
-            self.leftButton.tintColor = DriftDataStore.sharedInstance.generateBackgroundColor()
-            self.leftButton.setImage(UIImage.init(named: "plus-circle", in: Bundle(for: Drift.self), compatibleWith: nil), for: UIControlState())
+            leftButton.isEnabled = true
+            leftButton.tintColor = DriftDataStore.sharedInstance.generateBackgroundColor()
+            leftButton.setImage(UIImage.init(named: "plus-circle", in: Bundle(for: Drift.self), compatibleWith: nil), for: UIControlState())
+            textView.placeholder = "Message"
         }
     }
     
@@ -137,7 +138,12 @@ class ConversationViewController: SLKTextViewController {
         shouldScrollToBottomAfterKeyboardShows = false
         bounces = true
         tableView?.separatorStyle = .none
-        textView.placeholder = "Message"
+        
+        if let organizationName = DriftDataStore.sharedInstance.embed?.organizationName {
+            textView.placeholder = "Message \(organizationName)"
+        }else{
+            textView.placeholder = "Message"
+        }
     }
     
     

@@ -26,7 +26,7 @@
                         </constraints>
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Brian McDonald" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ov7-Za-P0N">
-                        <rect key="frame" x="53" y="10" width="106" height="20"/>
+                        <rect key="frame" x="53" y="8" width="106" height="20"/>
                         <fontDescription key="fontDescription" name="Avenir-Black" family="Avenir" pointSize="14"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <nil key="highlightedColor"/>
@@ -44,7 +44,7 @@
                         </collectionViewFlowLayout>
                     </collectionView>
                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" verticalCompressionResistancePriority="749" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="Xcw-yu-miI">
-                        <rect key="frame" x="53" y="30" width="259" height="149"/>
+                        <rect key="frame" x="53" y="28" width="259" height="151"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                         <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="14"/>
@@ -59,16 +59,16 @@
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="trailingMargin" secondItem="Xcw-yu-miI" secondAttribute="trailing" id="0M0-YH-uIm"/>
-                    <constraint firstItem="Ov7-Za-P0N" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="1bj-gK-Odb"/>
                     <constraint firstItem="Aki-56-5NW" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="47y-jE-4Wk"/>
                     <constraint firstAttribute="bottomMargin" secondItem="Kcp-4B-quy" secondAttribute="bottom" constant="5" id="8E5-Ob-mpf"/>
                     <constraint firstItem="1U5-s9-75N" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="8" id="AZb-i5-WqN"/>
-                    <constraint firstItem="1U5-s9-75N" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="Abb-qU-E9C"/>
+                    <constraint firstItem="Ov7-Za-P0N" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" id="CT8-w6-tmO"/>
                     <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Aki-56-5NW" secondAttribute="trailing" constant="15" id="Gar-Sl-yDK"/>
                     <constraint firstItem="Aki-56-5NW" firstAttribute="leading" secondItem="Ov7-Za-P0N" secondAttribute="trailing" constant="8" id="alV-u4-iOO"/>
                     <constraint firstItem="Kcp-4B-quy" firstAttribute="top" secondItem="Xcw-yu-miI" secondAttribute="bottom" constant="8" symbolic="YES" id="b2W-fx-UXa"/>
                     <constraint firstItem="Kcp-4B-quy" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="45" id="f6E-0B-UgC"/>
                     <constraint firstAttribute="trailing" secondItem="Kcp-4B-quy" secondAttribute="trailing" constant="10" id="oEl-uc-YPh"/>
+                    <constraint firstItem="1U5-s9-75N" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="2" id="op4-Sv-t9o"/>
                     <constraint firstItem="Xcw-yu-miI" firstAttribute="leading" secondItem="1U5-s9-75N" secondAttribute="trailing" constant="10" id="rtg-NE-O18"/>
                     <constraint firstItem="Ov7-Za-P0N" firstAttribute="leading" secondItem="1U5-s9-75N" secondAttribute="trailing" constant="10" id="rxD-WO-AOg"/>
                     <constraint firstItem="Xcw-yu-miI" firstAttribute="top" secondItem="Ov7-Za-P0N" secondAttribute="bottom" id="yyF-Bn-Dj5"/>
