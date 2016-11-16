@@ -67,8 +67,9 @@ class ConversationViewController: SLKTextViewController {
     class func navigationController(_ conversationType: ConversationType) -> UINavigationController {
         let vc = ConversationViewController.init(conversationType: conversationType)
         let navVC = UINavigationController.init(rootViewController: vc)
-        let leftButton = UIBarButtonItem(title: "Close", style: UIBarButtonItemStyle.done, target: vc, action: #selector(ConversationViewController.dismissVC))
-        leftButton.setTitleTextAttributes([NSForegroundColorAttributeName: DriftDataStore.sharedInstance.generateForegroundColor(), NSFontAttributeName: UIFont.init(name: "AvenirNext-Regular", size: 16)!], for: .normal)
+        
+        let leftButton = UIBarButtonItem.init(image: UIImage.init(named: "closeIcon", in: Bundle.init(for: ConversationViewController.classForCoder()), compatibleWith: nil), style: UIBarButtonItemStyle.plain, target:vc, action: #selector(ConversationViewController.dismissVC))
+        leftButton.tintColor = DriftDataStore.sharedInstance.generateForegroundColor()
         vc.navigationItem.leftBarButtonItem  = leftButton
 
         return navVC

@@ -61,12 +61,15 @@ class ConversationListViewController: UIViewController {
     class func navigationController() -> UINavigationController {
         let vc = ConversationListViewController()
         let navVC = UINavigationController.init(rootViewController: vc)
-        let leftButton = UIBarButtonItem(title: "Close", style: UIBarButtonItemStyle.done, target: vc, action: #selector(ConversationListViewController.dismissVC))
+        let leftButton = UIBarButtonItem.init(image: UIImage.init(named: "closeIcon", in: Bundle.init(for: ConversationListViewController.classForCoder()), compatibleWith: nil), style: UIBarButtonItemStyle.plain, target:vc, action: #selector(ConversationListViewController.dismissVC))
+        leftButton.tintColor = DriftDataStore.sharedInstance.generateForegroundColor()
+
         let rightButton = UIBarButtonItem.init(image:  UIImage.init(named: "composeIcon", in: Bundle.init(for: ConversationListViewController.classForCoder()), compatibleWith: nil), style: UIBarButtonItemStyle.plain, target: vc, action: #selector(ConversationListViewController.startNewConversation))
         navVC.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: DriftDataStore.sharedInstance.generateForegroundColor()]
         navVC.navigationBar.barTintColor = DriftDataStore.sharedInstance.generateBackgroundColor()
         navVC.navigationBar.tintColor = DriftDataStore.sharedInstance.generateForegroundColor()
-        
+        navVC.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: DriftDataStore.sharedInstance.generateForegroundColor(), NSFontAttributeName: UIFont.init(name: "AvenirNext-Regular", size: 16)!]
+
         vc.navigationItem.leftBarButtonItem  = leftButton
         vc.navigationItem.rightBarButtonItem = rightButton
         vc.navigationItem.title = "Conversations"
