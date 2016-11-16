@@ -37,6 +37,8 @@ class ConversationViewController: SLKTextViewController {
     var sections: [[Message]] = []
     var previewItem: DriftPreviewItem?
     var dateFormatter: DriftDateFormatter = DriftDateFormatter()
+    lazy var qlController = QLPreviewController()
+
     
     var conversationType: ConversationType! {
         didSet{
@@ -470,9 +472,8 @@ extension ConversationViewController: AttachementSelectedDelegate {
                 if let imageCell = sender as? ConversationImageTableViewCell{
                     DispatchQueue.main.async {
                         self.previewItem = DriftPreviewItem(url: tempFileURL, title: attachment.fileName)
-                        let qlController = QLPreviewController()
-                        qlController.dataSource = self
-                        self.present(qlController, animated: true, completion: {
+                        self.qlController.dataSource = self
+                        self.present(self.qlController, animated: true, completion: {
                             imageCell.activityIndicator.stopAnimating()
                         })
                     }
