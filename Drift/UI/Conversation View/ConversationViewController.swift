@@ -263,6 +263,28 @@ class ConversationViewController: SLKTextViewController {
         return sections.count
     }
     
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let message = self.sections[indexPath.section][indexPath.row]
+        if message.sendStatus == .Failed{
+            let alert = UIAlertController(title:nil, message: nil, preferredStyle: .actionSheet)
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            alert.addAction(UIAlertAction(title:"Retry Send", style: .default, handler: { (_) -> Void in
+                let messageRequest = Message()
+                messageRequest.body = message.body!
+                messageRequest.requestId = message.requestId
+                messageRequest.sendStatus = .Pending
+                messageRequest.type = message.type
+                self.tableView!.reloadRows(at: [indexPath as IndexPath], with: .none)
+                self.postMessage(messageRequest)
+            }))
+            alert.addAction(UIAlertAction(title:"Delete Message", style: .destructive, handler: { (_) -> Void in
+                self.sections[indexPath.section].remove(at: self.sections[0].count-indexPath.row-1)
+                self.tableView!.deleteRows(at: [indexPath as IndexPath], with: .none)
+            }))
+            
+            present(alert, animated: true, completion: nil)
+        }
+    }
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
@@ -295,12 +317,21 @@ class ConversationViewController: SLKTextViewController {
     }
     
     func addMessageToConversation(_ message: Message){
-        if sections.count > 0 && (Calendar.current as NSCalendar).component(.day, from: (sections[0].first?.createdAt)! as Date) ==  (Calendar.current as NSCalendar).component(.day, from: Date()){
-            self.sections[0].insert(message, at: 0)
-            tableView!.insertRows(at: [IndexPath(row: 0, section: 0)], with: .bottom)
+        if let _ = self.sections[0].index(where: { (message1) -> Bool in
+            if message1.requestId == message.requestId{
+                return true
+            }
+            return false
+        }){
+            //We've already added this message, it may have failed to send
         }else{
-            self.sections.insert([message], at: 0)
-            tableView?.insertSections(IndexSet.init(integer: 0), with: .bottom)
+            if sections.count > 0 && (Calendar.current as NSCalendar).component(.day, from: (sections[0].first?.createdAt)! as Date) ==  (Calendar.current as NSCalendar).component(.day, from: Date()){
+                self.sections[0].insert(message, at: 0)
+                tableView!.insertRows(at: [IndexPath(row: 0, section: 0)], with: .bottom)
+            }else{
+                self.sections.insert([message], at: 0)
+                tableView?.insertSections(IndexSet.init(integer: 0), with: .bottom)
+            }
         }
     }
     
@@ -354,7 +385,9 @@ class ConversationViewController: SLKTextViewController {
     
     
     func postMessage(_ messageRequest: Message){
-        messageRequest.requestId = Date().timeIntervalSince1970
+        if messageRequest.requestId == 0{
+            messageRequest.requestId = Date().timeIntervalSince1970
+        }
         messageRequest.type = Type.Chat
         addMessageToConversation(messageRequest)
         
@@ -387,6 +420,9 @@ class ConversationViewController: SLKTextViewController {
                     message.sendStatus = .Failed
                     self.sections[0][index] = message
                 }
+                
+                self.tableView!.reloadRows(at: [IndexPath(row:index, section: 0)], with: .none)
+                self.tableView?.scrollToRow(at: IndexPath(row:0, section: 0), at: .bottom, animated: true)
             }
         }
     }

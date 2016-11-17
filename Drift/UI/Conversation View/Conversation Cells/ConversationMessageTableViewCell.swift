@@ -43,10 +43,30 @@ class ConversationMessageTableViewCell: UITableViewCell {
             getUser(authorId)
         }
         
-        nameLabel.textColor = DriftDataStore.primaryFontColor
-
-        timeLabel.textColor = DriftDataStore.secondaryFontColor
-        timeLabel.text = self.dateFormatter.createdAtStringFromDate(self.message!.createdAt)
+        if let sendStatus = message?.sendStatus, let createdAt = message?.createdAt{
+            switch sendStatus{
+            case .Sent:
+                let formatter = DateFormatter()
+                formatter.dateFormat = "hh:mm a"
+                avatarImageView.alpha = 1.0
+                nameLabel.textColor = UIColor.black
+                timeLabel.textColor = ColorPalette.navyDark
+                timeLabel.text = formatter.string(from: createdAt)
+            case .Pending:
+                timeLabel.text = "Sending..."
+                timeLabel.textColor = ColorPalette.navyDark
+                avatarImageView.alpha = 0.7
+                nameLabel.textColor = ColorPalette.navyDark
+                messageTextView.textColor = ColorPalette.navyDark
+            case .Failed:
+                nameLabel.textColor = ColorPalette.navyMedium
+                timeLabel.text = "Failed to send"
+                timeLabel.textColor = ColorPalette.navyMedium
+                avatarImageView.alpha = 0.7
+                nameLabel.textColor = ColorPalette.navyDark
+                messageTextView.textColor = ColorPalette.navyDark
+            }
+        }        
         
         do {
             let htmlStringData = (self.message!.body ?? "").data(using: String.Encoding.utf8)!
