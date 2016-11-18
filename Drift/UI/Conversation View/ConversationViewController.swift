@@ -83,7 +83,6 @@ class ConversationViewController: SLKTextViewController {
         setupSlackTextView()
         
         tableView?.rowHeight = UITableViewAutomaticDimension
-        tableView?.estimatedRowHeight = 65
         tableView?.register(UINib.init(nibName: "ConversationMessageTableViewCell", bundle: Bundle(for: ConversationMessageTableViewCell.classForCoder())), forCellReuseIdentifier: "ConversationMessageTableViewCell")
         tableView?.register(UINib.init(nibName: "ConversationImageTableViewCell", bundle: Bundle(for: ConversationImageTableViewCell.classForCoder())), forCellReuseIdentifier: "ConversationImageTableViewCell")
         tableView?.register(UINib.init(nibName: "ConversationAttachmentsTableViewCell", bundle: Bundle(for: ConversationAttachmentsTableViewCell.classForCoder())), forCellReuseIdentifier: "ConversationAttachmentsTableViewCell")
@@ -207,39 +206,20 @@ class ConversationViewController: SLKTextViewController {
             if let cell = cell as? ConversationMessageTableViewCell{
                 cell.message = message
             }
-            
-        case 1:
-            cell = tableView.dequeueReusableCell(withIdentifier: "ConversationImageTableViewCell", for: indexPath) as! ConversationImageTableViewCell
-            APIManager.getAttachmentsMetaData([message.attachments.first!], authToken: (DriftDataStore.sharedInstance.auth?.accessToken)!, completion: { (result) in
+        default:
+            cell = tableView.dequeueReusableCell(withIdentifier: "ConversationAttachmentsTableViewCell", for: indexPath) as! ConversationAttachmentsTableViewCell
+            APIManager.getAttachmentsMetaData(message.attachments, authToken: (DriftDataStore.sharedInstance.auth?.accessToken)!, completion: { (result) in
                 switch result{
                 case .success(let attachments):
-                    let fileName: NSString = attachments.first!.fileName as NSString
-                    let fileExtension = fileName.pathExtension
-                    if fileExtension == "jpg" || fileExtension == "png" || fileExtension == "gif"{
-                        if let cell = cell as? ConversationImageTableViewCell{
-                            cell.delegate = self
-                            cell.message = message
-                            cell.attachment = attachments.first
-                        }
-                    }else{
-                        cell = tableView.dequeueReusableCell(withIdentifier: "ConversationAttachmentsTableViewCell", for: indexPath) as! ConversationAttachmentsTableViewCell
-                        if let cell = cell as? ConversationAttachmentsTableViewCell{
-                            cell.delegate = self
-                            cell.message = message
-                        }
+                    if let cell = cell as? ConversationAttachmentsTableViewCell{
+                        cell.delegate = self
+                        cell.attachments = attachments
+                        cell.message = message
                     }
-                    
                 case .failure:
                     LoggerManager.log("Failed to get attachment metadata for id: \(message.attachments.first)")
                 }
             })
-            
-        default:
-            cell = tableView.dequeueReusableCell(withIdentifier: "ConversationAttachmentsTableViewCell", for: indexPath) as! ConversationAttachmentsTableViewCell
-            if let cell = cell as? ConversationAttachmentsTableViewCell{
-                cell.delegate = self
-                cell.message = message
-            }
         }
         
         cell.transform = tableView.transform
@@ -314,6 +294,17 @@ class ConversationViewController: SLKTextViewController {
     
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return CGFloat.leastNormalMagnitude
+    }
+    
+    override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        let message = sections[indexPath.section][indexPath.row]
+        
+        
+        if message.attachments.count > 0 {
+            return 300
+        }else{
+            return 150
+        }
     }
     
     func addMessageToConversation(_ message: Message){

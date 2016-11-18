@@ -15,13 +15,14 @@ class ConversationAttachmentsTableViewCell: UITableViewCell, UICollectionViewDel
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var messageTextView: UITextView!
     @IBOutlet weak var attachmentsCollectionView: UICollectionView!
+    @IBOutlet weak var attachmentImageView: UIImageView!
     
     var dateFormatter: DriftDateFormatter = DriftDateFormatter()
     var attachments: [Attachment] = []
     var message: Message? {
         didSet{
             displayMessage()
-            getAttachmentsMetaData()
+            displayAttachments()
         }
     }
     weak var delegate: AttachementSelectedDelegate?
@@ -96,23 +97,29 @@ class ConversationAttachmentsTableViewCell: UITableViewCell, UICollectionViewDel
         }
     }
     
-    
-    func getAttachmentsMetaData() {
-        if let message = message{
-            APIManager.getAttachmentsMetaData(message.attachments, authToken: (DriftDataStore.sharedInstance.auth?.accessToken)!, completion: { (result) in
-                switch result{
-                    
-                case .success(let attachments):
-                    self.attachments = attachments
-                    self.attachmentsCollectionView.reloadData()
-                    
-                case .failure(let error):
-                    LoggerManager.log("Unable to get attachments: \(error)")
+    func displayAttachments() {
+        if attachments.count == 1{
+            let fileName: NSString = attachments.first!.fileName as NSString
+            let fileExtension = fileName.pathExtension
+            if fileExtension == "jpg" || fileExtension == "png" || fileExtension == "gif"{
+                if let previewString = attachments.first?.publicPreviewURL, let imageURL = URL(string: previewString){
+                    self.attachmentsCollectionView.isHidden = true
+                    attachmentImageView!.af_setImage(withURL: imageURL, placeholderImage: nil, filter: nil, progress: nil, progressQueue: DispatchQueue.main, imageTransition: .crossDissolve(0.5), runImageTransitionIfCached: true, completion:nil)
                 }
-            })
+            }else{
+                self.attachmentImageView.isHidden = true
+                self.attachmentsCollectionView.isHidden = false
+                self.attachmentsCollectionView.reloadData()
+
+            }
+
+        }else{
+            self.attachmentImageView.isHidden = true
+            self.attachmentsCollectionView.isHidden = false
+            self.attachmentsCollectionView.reloadData()
         }
+        
     }
-    
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if let cell = cell as? AttachmentCollectionViewCell {

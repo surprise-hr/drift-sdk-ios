@@ -42,7 +42,7 @@ open class Message: Mappable, Equatable, Hashable{
     
     var conversationId: Int!
     var requestId: Double = 0
-    var sendStatus: SendStatus!
+    var sendStatus: SendStatus = SendStatus.Sent
 
     open var hashValue: Int {
         return id
