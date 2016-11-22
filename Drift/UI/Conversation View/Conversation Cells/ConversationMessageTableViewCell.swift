@@ -46,12 +46,10 @@ class ConversationMessageTableViewCell: UITableViewCell {
         if let sendStatus = message?.sendStatus, let createdAt = message?.createdAt{
             switch sendStatus{
             case .Sent:
-                let formatter = DateFormatter()
-                formatter.dateFormat = "hh:mm a"
                 avatarImageView.alpha = 1.0
                 nameLabel.textColor = UIColor.black
                 timeLabel.textColor = ColorPalette.navyDark
-                timeLabel.text = formatter.string(from: createdAt)
+                timeLabel.text = self.dateFormatter.createdAtStringFromDate(createdAt)
             case .Pending:
                 timeLabel.text = "Sending..."
                 timeLabel.textColor = ColorPalette.navyDark

@@ -56,7 +56,7 @@ class ConversationAttachmentsTableViewCell: UITableViewCell, UICollectionViewDel
         messageTextView.textContainer.lineFragmentPadding = 0
         messageTextView.textContainerInset = UIEdgeInsets.zero
         
-        nameLabel.textColor = DriftDataStore.primaryFontColor
+        nameLabel.textColor = ColorPalette.darkPrimaryColor
         
         timeLabel.textColor = ColorPalette.navyDark
         timeLabel.text = self.dateFormatter.createdAtStringFromDate(self.message!.createdAt)
