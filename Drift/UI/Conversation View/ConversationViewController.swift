@@ -83,8 +83,8 @@ class ConversationViewController: SLKTextViewController {
         setupSlackTextView()
         
         tableView?.rowHeight = UITableViewAutomaticDimension
+        tableView?.estimatedRowHeight = 60
         tableView?.register(UINib.init(nibName: "ConversationMessageTableViewCell", bundle: Bundle(for: ConversationMessageTableViewCell.classForCoder())), forCellReuseIdentifier: "ConversationMessageTableViewCell")
-        tableView?.register(UINib.init(nibName: "ConversationImageTableViewCell", bundle: Bundle(for: ConversationImageTableViewCell.classForCoder())), forCellReuseIdentifier: "ConversationImageTableViewCell")
         tableView?.register(UINib.init(nibName: "ConversationAttachmentsTableViewCell", bundle: Bundle(for: ConversationAttachmentsTableViewCell.classForCoder())), forCellReuseIdentifier: "ConversationAttachmentsTableViewCell")
         
         if let navVC = navigationController {
@@ -221,7 +221,6 @@ class ConversationViewController: SLKTextViewController {
                 }
             })
         }
-        
         cell.transform = tableView.transform
         return cell
     }
@@ -296,19 +295,9 @@ class ConversationViewController: SLKTextViewController {
         return CGFloat.leastNormalMagnitude
     }
     
-    override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        let message = sections[indexPath.section][indexPath.row]
-        
-        
-        if message.attachments.count > 0 {
-            return 300
-        }else{
-            return 150
-        }
-    }
     
     func addMessageToConversation(_ message: Message){
-        if let _ = self.sections[0].index(where: { (message1) -> Bool in
+        if sections.count > 0, let _ = self.sections[0].index(where: { (message1) -> Bool in
             if message1.requestId == message.requestId{
                 return true
             }
