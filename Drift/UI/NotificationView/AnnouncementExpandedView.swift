@@ -102,8 +102,8 @@ class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
         containerView.transform = CGAffineTransform(scaleX: 0.00001, y: 0.00001)
         window.layoutIfNeeded()
         
-        campaignCreatorNameLabel.textColor = ColorPalette.GrayColor
-        campaignCreatorCompanyLabel.textColor = ColorPalette.GrayColor
+        campaignCreatorNameLabel.textColor = ColorPalette.grayColor
+        campaignCreatorCompanyLabel.textColor = ColorPalette.grayColor
         
         containerView.clipsToBounds = true
         containerView.layer.cornerRadius = 4
@@ -138,7 +138,7 @@ class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
         gradient.locations = [0, 0.2, 0.8, 1.0]
         scrollViewContainer.layer.mask = gradient
         
-        closeButton.tintColor = ColorPalette.GrayColor
+        closeButton.tintColor = ColorPalette.grayColor
         
         
         window.setNeedsUpdateConstraints()
