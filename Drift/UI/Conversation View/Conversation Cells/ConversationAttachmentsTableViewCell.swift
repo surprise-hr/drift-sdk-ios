@@ -48,14 +48,17 @@ class ConversationAttachmentsTableViewCell: UITableViewCell, UICollectionViewDel
             getUser(authorId)
         }
         
+        attachmentImageView.layer.masksToBounds = true
+        attachmentImageView.contentMode = .scaleAspectFill
+        attachmentImageView.layer.cornerRadius = 3
+        
         messageTextView.text = ""
         messageTextView.textContainer.lineFragmentPadding = 0
         messageTextView.textContainerInset = UIEdgeInsets.zero
-        messageTextView.text = self.message!.body
         
         nameLabel.textColor = DriftDataStore.primaryFontColor
         
-        timeLabel.textColor = DriftDataStore.secondaryFontColor
+        timeLabel.textColor = ColorPalette.navyDark
         timeLabel.text = self.dateFormatter.createdAtStringFromDate(self.message!.createdAt)
         
         do {
@@ -102,6 +105,8 @@ class ConversationAttachmentsTableViewCell: UITableViewCell, UICollectionViewDel
             let fileName: NSString = attachments.first!.fileName as NSString
             let fileExtension = fileName.pathExtension
             if fileExtension == "jpg" || fileExtension == "png" || fileExtension == "gif"{
+                let gestureRecognizer = UITapGestureRecognizer.init(target:self, action: #selector(ConversationAttachmentsTableViewCell.imagePressed))
+                attachmentImageView.addGestureRecognizer(gestureRecognizer)
                 if let previewString = attachments.first?.publicPreviewURL, let imageURL = URL(string: previewString){
                     self.attachmentsCollectionView.isHidden = true
                     attachmentImageView!.af_setImage(withURL: imageURL, placeholderImage: nil, filter: nil, progress: nil, progressQueue: DispatchQueue.main, imageTransition: .crossDissolve(0.5), runImageTransitionIfCached: true, completion:nil)
@@ -110,9 +115,7 @@ class ConversationAttachmentsTableViewCell: UITableViewCell, UICollectionViewDel
                 self.attachmentImageView.isHidden = true
                 self.attachmentsCollectionView.isHidden = false
                 self.attachmentsCollectionView.reloadData()
-
             }
-
         }else{
             self.attachmentImageView.isHidden = true
             self.attachmentsCollectionView.isHidden = false
@@ -146,6 +149,13 @@ class ConversationAttachmentsTableViewCell: UITableViewCell, UICollectionViewDel
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return attachments.count
+    }
+    
+    
+    func imagePressed(){
+        if let attachment = attachments.first{
+            delegate?.attachmentSelected(attachment, sender: self)
+        }
     }
     
     

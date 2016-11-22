@@ -35,22 +35,9 @@ class ConversationListViewController: UIViewController {
         InboxManager.sharedInstance.addConversationSubscription(ConversationSubscription(delegate: self))
     }
     
+    
     override func viewWillAppear(_ animated: Bool) {
-        APIManager.getConversations(DriftDataStore.sharedInstance.auth!.enduser!.userId!, authToken: DriftDataStore.sharedInstance.auth!.accessToken) { (result) in
-            self.activityIndicator.isHidden = true
-            self.loadingConversationsLabel.isHidden = true
-            self.activityIndicator.stopAnimating()
-            switch result{
-            case .success(let conversations):
-                self.conversations = conversations
-                self.tableView.reloadData()
-                if conversations.count == 0{
-                    self.emptyStateView.isHidden = false
-                }
-            case .failure(let error):
-                LoggerManager.log("Unable to get conversations for endUser:  \(DriftDataStore.sharedInstance.auth!.enduser!.userId!): \(error)")
-            }
-        }
+        getConversations()
     }
     
     convenience init() {
@@ -81,13 +68,31 @@ class ConversationListViewController: UIViewController {
     
     
     func dismissVC() {
-        self.dismiss(animated: true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
     
     
+    func getConversations() {
+        APIManager.getConversations(DriftDataStore.sharedInstance.auth!.enduser!.userId!, authToken: DriftDataStore.sharedInstance.auth!.accessToken) { (result) in
+            self.activityIndicator.isHidden = true
+            self.loadingConversationsLabel.isHidden = true
+            self.activityIndicator.stopAnimating()
+            switch result{
+            case .success(let conversations):
+                self.conversations = conversations
+                self.tableView.reloadData()
+                if conversations.count == 0{
+                    self.emptyStateView.isHidden = false
+                }
+            case .failure(let error):
+                LoggerManager.log("Unable to get conversations for endUser:  \(DriftDataStore.sharedInstance.auth!.enduser!.userId!): \(error)")
+            }
+        }
+    }
+    
     func startNewConversation() {
         let conversationViewController = ConversationViewController(conversationType: ConversationViewController.ConversationType.createConversation(authorId: DriftDataStore.sharedInstance.auth!.enduser!.userId!))
-        self.navigationController?.show(conversationViewController, sender: self)
+        navigationController?.show(conversationViewController, sender: self)
     }
     
     

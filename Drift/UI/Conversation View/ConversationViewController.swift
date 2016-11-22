@@ -82,8 +82,6 @@ class ConversationViewController: SLKTextViewController {
         super.viewDidLoad()
         setupSlackTextView()
         
-        tableView?.rowHeight = UITableViewAutomaticDimension
-        tableView?.estimatedRowHeight = 60
         tableView?.register(UINib.init(nibName: "ConversationMessageTableViewCell", bundle: Bundle(for: ConversationMessageTableViewCell.classForCoder())), forCellReuseIdentifier: "ConversationMessageTableViewCell")
         tableView?.register(UINib.init(nibName: "ConversationAttachmentsTableViewCell", bundle: Bundle(for: ConversationAttachmentsTableViewCell.classForCoder())), forCellReuseIdentifier: "ConversationAttachmentsTableViewCell")
         
@@ -114,7 +112,7 @@ class ConversationViewController: SLKTextViewController {
             if let organizationName = DriftDataStore.sharedInstance.embed?.organizationName {
                 emptyState.organizationLabel.text = organizationName
             }
-        
+            
             emptyState.messageLabel.backgroundColor = DriftDataStore.sharedInstance.generateBackgroundColor()
             emptyState.messageLabel.textColor = DriftDataStore.sharedInstance.generateForegroundColor()
 
@@ -135,6 +133,7 @@ class ConversationViewController: SLKTextViewController {
     
     func setupSlackTextView() {
         tableView?.backgroundColor = UIColor.white
+        tableView?.contentInset = UIEdgeInsets.init()
         leftButton.tintColor = UIColor.lightGray
         textInputbar.barTintColor = UIColor.white
         leftButton.isEnabled = false
@@ -196,7 +195,7 @@ class ConversationViewController: SLKTextViewController {
     
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let message = sections[(indexPath as NSIndexPath).section][(indexPath as NSIndexPath).row]
+        let message = sections[indexPath.section][indexPath.row]
         
         var cell: UITableViewCell
 
@@ -221,7 +220,9 @@ class ConversationViewController: SLKTextViewController {
                 }
             })
         }
+        
         cell.transform = tableView.transform
+        
         return cell
     }
     
@@ -241,6 +242,7 @@ class ConversationViewController: SLKTextViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
         return sections.count
     }
+    
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let message = self.sections[indexPath.section][indexPath.row]
@@ -265,13 +267,14 @@ class ConversationViewController: SLKTextViewController {
         }
     }
     
+    
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
         let headerView: MessageTableHeaderView =  MessageTableHeaderView.fromNib("MessageTableHeaderView") as! MessageTableHeaderView
         
         //This handles the fact we need to have a header on the last (top when inverted) section.
         if section == 0{
-            return nil
+            return headerView
         }else if sections[section-1].count == 0 {
             headerView.headerLabel.text = "Today"
         }else {
@@ -283,6 +286,23 @@ class ConversationViewController: SLKTextViewController {
         return headerView
     }
     
+    
+    override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        let message = sections[indexPath.section][indexPath.row]
+        
+        if message.attachments.count > 0 {
+            return 150
+        }else{
+            return 70
+        }
+    }
+    
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
+    }
+    
+    
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if section == 0{
             return CGFloat.leastNormalMagnitude
@@ -290,6 +310,7 @@ class ConversationViewController: SLKTextViewController {
             return 42
         }
     }
+    
     
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return CGFloat.leastNormalMagnitude
@@ -484,14 +505,13 @@ extension ConversationViewController: AttachementSelectedDelegate {
         APIManager.downloadAttachmentFile(attachment, authToken: (DriftDataStore.sharedInstance.auth?.accessToken)!) { (result) in
             switch result{
             case .success(let tempFileURL):
-
-                if let imageCell = sender as? ConversationImageTableViewCell{
+                let fileName: NSString = attachment.fileName as NSString
+                let fileExtension = fileName.pathExtension
+                if fileExtension == "jpg" || fileExtension == "png" || fileExtension == "gif"{
                     DispatchQueue.main.async {
                         self.previewItem = DriftPreviewItem(url: tempFileURL, title: attachment.fileName)
                         self.qlController.dataSource = self
-                        self.present(self.qlController, animated: true, completion: {
-                            imageCell.activityIndicator.stopAnimating()
-                        })
+                        self.present(self.qlController, animated: true, completion:nil)
                     }
                 }else{
                     let interactionController = UIDocumentInteractionController()

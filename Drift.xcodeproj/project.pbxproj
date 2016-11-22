@@ -73,10 +73,10 @@
 		A85387161D4A4F5100C1D3C1 /* ConversationListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A85387141D4A4F5100C1D3C1 /* ConversationListViewController.swift */; };
 		A85387171D4A4F5100C1D3C1 /* ConversationListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A85387151D4A4F5100C1D3C1 /* ConversationListViewController.xib */; };
 		A853871B1D4A8EAE00C1D3C1 /* ConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A85387191D4A8EAE00C1D3C1 /* ConversationViewController.swift */; };
-		A853871C1D4A8EAE00C1D3C1 /* ConversationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A853871A1D4A8EAE00C1D3C1 /* ConversationViewController.xib */; };
 		A86A47251D50D53F008C59C0 /* DriftDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A86A47241D50D53F008C59C0 /* DriftDateFormatter.swift */; };
 		A86C30C91D6120F0008DDE8D /* AttachmentCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A86C30C71D6120F0008DDE8D /* AttachmentCollectionViewCell.xib */; };
 		A86C30CA1D6120F0008DDE8D /* AttachmentCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A86C30C81D6120F0008DDE8D /* AttachmentCollectionViewCell.swift */; };
+		A887170D1DE49CCE0072E4BB /* ConversationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A887170C1DE49CCE0072E4BB /* ConversationViewController.xib */; };
 		A8B0887E1D4F51DC00FFA469 /* ConversationMessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B0887C1D4F51DC00FFA469 /* ConversationMessageTableViewCell.swift */; };
 		A8B0887F1D4F51DC00FFA469 /* ConversationMessageTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A8B0887D1D4F51DC00FFA469 /* ConversationMessageTableViewCell.xib */; };
 		A8B088831D4F549400FFA469 /* ConversationImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B088811D4F549400FFA469 /* ConversationImageTableViewCell.swift */; };
@@ -192,10 +192,10 @@
 		A85387141D4A4F5100C1D3C1 /* ConversationListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConversationListViewController.swift; path = "Drift/UI/Conversation List View/ConversationListViewController.swift"; sourceTree = SOURCE_ROOT; };
 		A85387151D4A4F5100C1D3C1 /* ConversationListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ConversationListViewController.xib; path = "Drift/UI/Conversation List View/ConversationListViewController.xib"; sourceTree = SOURCE_ROOT; };
 		A85387191D4A8EAE00C1D3C1 /* ConversationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConversationViewController.swift; path = "Drift/UI/Conversation View/ConversationViewController.swift"; sourceTree = SOURCE_ROOT; };
-		A853871A1D4A8EAE00C1D3C1 /* ConversationViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ConversationViewController.xib; path = "Drift/UI/Conversation View/ConversationViewController.xib"; sourceTree = SOURCE_ROOT; };
 		A86A47241D50D53F008C59C0 /* DriftDateFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DriftDateFormatter.swift; path = Drift/Helpers/DriftDateFormatter.swift; sourceTree = SOURCE_ROOT; };
 		A86C30C71D6120F0008DDE8D /* AttachmentCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AttachmentCollectionViewCell.xib; path = "Drift/UI/Conversation View/Conversation Cells/Attachment Cell/AttachmentCollectionViewCell.xib"; sourceTree = SOURCE_ROOT; };
 		A86C30C81D6120F0008DDE8D /* AttachmentCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AttachmentCollectionViewCell.swift; path = "Drift/UI/Conversation View/Conversation Cells/Attachment Cell/AttachmentCollectionViewCell.swift"; sourceTree = SOURCE_ROOT; };
+		A887170C1DE49CCE0072E4BB /* ConversationViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ConversationViewController.xib; path = "Drift/UI/Conversation View/ConversationViewController.xib"; sourceTree = SOURCE_ROOT; };
 		A8B0887C1D4F51DC00FFA469 /* ConversationMessageTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConversationMessageTableViewCell.swift; path = "Drift/UI/Conversation View/Conversation Cells/ConversationMessageTableViewCell.swift"; sourceTree = SOURCE_ROOT; };
 		A8B0887D1D4F51DC00FFA469 /* ConversationMessageTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ConversationMessageTableViewCell.xib; path = "Drift/UI/Conversation View/Conversation Cells/ConversationMessageTableViewCell.xib"; sourceTree = SOURCE_ROOT; };
 		A8B088811D4F549400FFA469 /* ConversationImageTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConversationImageTableViewCell.swift; path = "Drift/UI/Conversation View/Conversation Cells/ConversationImageTableViewCell.swift"; sourceTree = SOURCE_ROOT; };
@@ -453,7 +453,7 @@
 			children = (
 				A8B088801D4F51E300FFA469 /* Conversation Cells */,
 				A85387191D4A8EAE00C1D3C1 /* ConversationViewController.swift */,
-				A853871A1D4A8EAE00C1D3C1 /* ConversationViewController.xib */,
+				A887170C1DE49CCE0072E4BB /* ConversationViewController.xib */,
 				A83E41661D50D20800B4EA35 /* MessageTableHeaderView.swift */,
 				A83E41651D50D20800B4EA35 /* MessageTableHeaderView.xib */,
 				A8C6ADEC1D632CD10024CFDC /* ConversationEmptyStateView.swift */,
@@ -612,13 +612,13 @@
 				630E896F1C57E64C00195062 /* NPSView.xib in Resources */,
 				2CF43EA71C7E056F008E6748 /* DriftImages.xcassets in Resources */,
 				A8B088881D4F588E00FFA469 /* ConversationAttachmentsTableViewCell.xib in Resources */,
+				A887170D1DE49CCE0072E4BB /* ConversationViewController.xib in Resources */,
 				A8B0887F1D4F51DC00FFA469 /* ConversationMessageTableViewCell.xib in Resources */,
 				A86C30C91D6120F0008DDE8D /* AttachmentCollectionViewCell.xib in Resources */,
 				A8C6ADEF1D632CED0024CFDC /* ConversationEmptyStateView.xib in Resources */,
 				630E89651C57B99000195062 /* AnnouncementView.xib in Resources */,
 				63359F9F1C774C31007321DA /* AnnouncementExpandedView.xib in Resources */,
 				A85387171D4A4F5100C1D3C1 /* ConversationListViewController.xib in Resources */,
-				A853871C1D4A8EAE00C1D3C1 /* ConversationViewController.xib in Resources */,
 				A83E41671D50D20800B4EA35 /* MessageTableHeaderView.xib in Resources */,
 				6362426C1C7FBCC300632F0E /* NPSCompleteView.xib in Resources */,
 				A8B088841D4F549400FFA469 /* ConversationImageTableViewCell.xib in Resources */,
