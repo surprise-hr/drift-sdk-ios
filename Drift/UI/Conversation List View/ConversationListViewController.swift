@@ -31,6 +31,8 @@ class ConversationListViewController: UIViewController {
         tableView.dataSource = self
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 90
+        tableView.separatorColor = UIColor(white: 0, alpha: 0.05)
+        tableView.separatorInset = .zero
         tableView.register(UINib(nibName: "ConversationListTableViewCell", bundle:  Bundle(for: ConversationListTableViewCell.classForCoder())), forCellReuseIdentifier: "ConversationListTableViewCell")
         InboxManager.sharedInstance.addConversationSubscription(ConversationSubscription(delegate: self))
     }
