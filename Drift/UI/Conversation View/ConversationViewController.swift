@@ -11,6 +11,7 @@ import SlackTextViewController
 import QuickLook
 import LayerKit
 import ObjectMapper
+import SVProgressHUD
 
 class DriftPreviewItem: NSObject, QLPreviewItem{
     var previewItemURL: URL?
@@ -274,7 +275,8 @@ class ConversationViewController: SLKTextViewController {
         
         //This handles the fact we need to have a header on the last (top when inverted) section.
         if section == 0{
-            return headerView
+            
+            return nil
         }else if sections[section-1].count == 0 {
             headerView.headerLabel.text = "Today"
         }else {
@@ -310,7 +312,6 @@ class ConversationViewController: SLKTextViewController {
             return 42
         }
     }
-    
     
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return CGFloat.leastNormalMagnitude
@@ -372,7 +373,9 @@ class ConversationViewController: SLKTextViewController {
 
     
     func getMessages(_ conversationId: Int){
+        SVProgressHUD.show()
         APIManager.getMessages(conversationId, authToken: DriftDataStore.sharedInstance.auth!.accessToken) { (result) in
+            SVProgressHUD.dismiss()
             switch result{
             case .success(let messages):
                 let sorted = messages.sorted(by: { $0.createdAt.compare($1.createdAt as Date) == .orderedAscending})

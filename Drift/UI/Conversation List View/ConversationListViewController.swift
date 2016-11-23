@@ -8,12 +8,11 @@
 
 import UIKit
 import AlamofireImage
+import SVProgressHUD
 
 class ConversationListViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-    @IBOutlet weak var loadingConversationsLabel: UILabel!
    
     @IBOutlet weak var emptyStateView: UIView!
     @IBOutlet weak var emptyStateButton: UIButton!
@@ -21,11 +20,11 @@ class ConversationListViewController: UIViewController {
     var conversations: [Conversation] = []
     var users: [CampaignOrganizer] = []
     var dateFormatter = DriftDateFormatter()
-    
+    var refreshControl: UIRefreshControl!
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupEmptyState()
-        activityIndicator.startAnimating()
         tableView.tableFooterView = UIView(frame: CGRect.zero)
         tableView.delegate = self
         tableView.dataSource = self
@@ -35,6 +34,14 @@ class ConversationListViewController: UIViewController {
         tableView.separatorInset = .zero
         tableView.register(UINib(nibName: "ConversationListTableViewCell", bundle:  Bundle(for: ConversationListTableViewCell.classForCoder())), forCellReuseIdentifier: "ConversationListTableViewCell")
         InboxManager.sharedInstance.addConversationSubscription(ConversationSubscription(delegate: self))
+        
+        let tvc = UITableViewController.init()
+        tvc.tableView = tableView
+        
+        refreshControl = UIRefreshControl()
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        refreshControl.addTarget(self, action: #selector(ConversationListViewController.getConversations), for: .valueChanged)
+        tvc.refreshControl = refreshControl
     }
     
     
@@ -75,10 +82,10 @@ class ConversationListViewController: UIViewController {
     
     
     func getConversations() {
+        SVProgressHUD.show()
         APIManager.getConversations(DriftDataStore.sharedInstance.auth!.enduser!.userId!, authToken: DriftDataStore.sharedInstance.auth!.accessToken) { (result) in
-            self.activityIndicator.isHidden = true
-            self.loadingConversationsLabel.isHidden = true
-            self.activityIndicator.stopAnimating()
+            self.refreshControl.endRefreshing()
+            SVProgressHUD.dismiss()
             switch result{
             case .success(let conversations):
                 self.conversations = conversations

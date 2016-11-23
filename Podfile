@@ -6,6 +6,7 @@ target 'Drift-SDK' do
     pod 'LayerKit', '~> 0.17'
     pod 'SlackTextViewController', '~> 1.9.3'
     pod 'AlamofireImage', '~> 3.0'
+    pod 'SVProgressHUD', '~> 1.1'
 end
 
 target 'DriftTests' do
