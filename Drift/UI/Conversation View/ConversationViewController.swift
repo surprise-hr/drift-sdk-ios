@@ -95,9 +95,13 @@ class ConversationViewController: SLKTextViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(ConversationViewController.didOpen), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
         
-        didOpen()
+//        didOpen()
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        didOpen()
+    }
     
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -119,11 +123,20 @@ class ConversationViewController: SLKTextViewController {
 
             if let welcomeMessage = DriftDataStore.sharedInstance.embed?.welcomeMessage {
                 emptyState.messageLabel.text = welcomeMessage
-            }
+            }            
             
-            emptyState.center.x = view.center.x
-            emptyState.center.y = view.center.y - UIScreen.main.bounds.height/4
-            view.addSubview(emptyState)
+            if let tableView = tableView{
+                emptyState.translatesAutoresizingMaskIntoConstraints = false
+                view.addSubview(emptyState)
+                edgesForExtendedLayout = []
+                let leadingConstraint = NSLayoutConstraint(item: emptyState, attribute: NSLayoutAttribute.leading, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.leading, multiplier: 1, constant: 0)
+                let trailingConstraint = NSLayoutConstraint(item: emptyState, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.trailing, multiplier: 1, constant: 0)
+                let topConstraint = NSLayoutConstraint(item: emptyState, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.top, multiplier: 1, constant: 0)
+                let heightConstraint = NSLayoutConstraint(item: emptyState, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1, constant: 100)
+                
+                view.addConstraints([leadingConstraint, trailingConstraint, topConstraint])
+            }
+
             DispatchQueue.main.asyncAfter(
                 deadline: DispatchTime.now() + Double(Int64(1.0 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: {
                     self.presentKeyboard(true)
