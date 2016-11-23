@@ -505,7 +505,11 @@ extension ConversationViewController: MessageDelegate {
 extension ConversationViewController: AttachementSelectedDelegate {
     
     func attachmentSelected(_ attachment: Attachment, sender: AnyObject) {
+        SVProgressHUD.show()
         APIManager.downloadAttachmentFile(attachment, authToken: (DriftDataStore.sharedInstance.auth?.accessToken)!) { (result) in
+            DispatchQueue.main.async {
+                SVProgressHUD.dismiss()
+            }
             switch result{
             case .success(let tempFileURL):
                 let fileName: NSString = attachment.fileName as NSString
