@@ -95,11 +95,6 @@ class ConversationViewController: SLKTextViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(ConversationViewController.didOpen), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
         
-//        didOpen()
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
         didOpen()
     }
     
