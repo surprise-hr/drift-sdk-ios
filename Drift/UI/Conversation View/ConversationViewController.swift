@@ -123,7 +123,7 @@ class ConversationViewController: SLKTextViewController {
 
             if let welcomeMessage = DriftDataStore.sharedInstance.embed?.welcomeMessage {
                 emptyState.messageLabel.text = welcomeMessage
-            }            
+            }
             
             if let tableView = tableView{
                 emptyState.translatesAutoresizingMaskIntoConstraints = false
@@ -132,11 +132,18 @@ class ConversationViewController: SLKTextViewController {
                 let leadingConstraint = NSLayoutConstraint(item: emptyState, attribute: NSLayoutAttribute.leading, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.leading, multiplier: 1, constant: 0)
                 let trailingConstraint = NSLayoutConstraint(item: emptyState, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.trailing, multiplier: 1, constant: 0)
                 let topConstraint = NSLayoutConstraint(item: emptyState, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.top, multiplier: 1, constant: 0)
-                let heightConstraint = NSLayoutConstraint(item: emptyState, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1, constant: 100)
                 
                 view.addConstraints([leadingConstraint, trailingConstraint, topConstraint])
+                
+                var label = UILabel(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 30))
+                label.textAlignment = .center
+                label.text = "We're ⚡️ by Drift"
+                label.font = UIFont(name: "Avenir-Book", size: 14)
+                label.textColor = ColorPalette.grayColor
+                label.transform = tableView.transform
+                tableView.tableFooterView = label
             }
-
+            
             DispatchQueue.main.asyncAfter(
                 deadline: DispatchTime.now() + Double(Int64(1.0 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: {
                     self.presentKeyboard(true)
@@ -324,10 +331,6 @@ class ConversationViewController: SLKTextViewController {
         }else{
             return 42
         }
-    }
-    
-    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return CGFloat.leastNormalMagnitude
     }
     
     

@@ -46,6 +46,9 @@ class ConversationListViewController: UIViewController {
     
     
     override func viewWillAppear(_ animated: Bool) {
+        if conversations.count == 0{
+            SVProgressHUD.show()
+        }
         getConversations()
     }
     
@@ -82,7 +85,6 @@ class ConversationListViewController: UIViewController {
     
     
     func getConversations() {
-        SVProgressHUD.show()
         APIManager.getConversations(DriftDataStore.sharedInstance.auth!.enduser!.userId!, authToken: DriftDataStore.sharedInstance.auth!.accessToken) { (result) in
             self.refreshControl.endRefreshing()
             SVProgressHUD.dismiss()
