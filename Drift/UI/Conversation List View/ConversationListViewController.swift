@@ -46,6 +46,7 @@ class ConversationListViewController: UIViewController {
     
     
     override func viewWillAppear(_ animated: Bool) {
+        title = "Conversations"
         if conversations.count == 0{
             SVProgressHUD.show()
         }
@@ -73,7 +74,6 @@ class ConversationListViewController: UIViewController {
 
         vc.navigationItem.leftBarButtonItem  = leftButton
         vc.navigationItem.rightBarButtonItem = rightButton
-        vc.navigationItem.title = "Conversations"
         
         return navVC
     }
@@ -173,6 +173,8 @@ extension ConversationListViewController: UITableViewDelegate, UITableViewDataSo
         let conversation = conversations[(indexPath as NSIndexPath).row]
         let conversationViewController = ConversationViewController.init(conversationType: .continueConversation(conversationId: conversation.id))
         self.navigationController?.show(conversationViewController, sender: self)
+        //Stops the title on the next vc being off centre on smaller devices (5 and down)
+        self.title = ""
     }
 }
 
