@@ -34,11 +34,9 @@ class ConversationMessageTableViewCell: UITableViewCell {
         avatarImageView.layer.cornerRadius = 3
         avatarImageView.layer.masksToBounds = true
         
-        messageTextView.text = ""
         messageTextView.textContainer.lineFragmentPadding = 0
         messageTextView.textContainerInset = UIEdgeInsets.zero
-        messageTextView.text = self.message!.body
-
+        messageTextView.attributedText = self.message?.formattedBody
         if let authorId = message?.authorId{
             getUser(authorId)
         }
@@ -64,14 +62,6 @@ class ConversationMessageTableViewCell: UITableViewCell {
                 nameLabel.textColor = ColorPalette.navyDark
                 messageTextView.textColor = ColorPalette.navyDark
             }
-        }        
-        
-        do {
-            let htmlStringData = (self.message!.body ?? "").data(using: String.Encoding.utf8)!
-            let attributedHTMLString = try NSMutableAttributedString(data: htmlStringData, options: [NSDocumentTypeDocumentAttribute : NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute: String.Encoding.utf8.rawValue], documentAttributes: nil)
-            self.messageTextView.text = attributedHTMLString.string
-        } catch {
-            self.messageTextView.text = ""
         }
     }
     
@@ -81,8 +71,16 @@ class ConversationMessageTableViewCell: UITableViewCell {
             UserManager.sharedInstance.userMetaDataForUserId(userId, completion: { (user) in
                 
                 if let user = user {
-                    if let avatar = user.avatarURL, let url = URL(string: avatar) {
-                        self.avatarImageView.af_setImage(withURL: url)
+                    if let avatar = user.avatarURL {
+                        DispatchQueue.main.async {
+
+                        ImageManager.sharedManager.getImage(urlString: avatar, completion: { (image) in
+                            if let image = image{
+                                self.avatarImageView.image = image
+
+                            }
+                        })
+                        }
                     }
                     
                     if let creatorName =  user.name {
@@ -94,7 +92,14 @@ class ConversationMessageTableViewCell: UITableViewCell {
         }else {
             if let endUser = DriftDataStore.sharedInstance.auth?.enduser {
                 if let avatar = endUser.avatarURL {
-                    self.avatarImageView.af_setImage(withURL: URL.init(string: avatar)!)
+                    DispatchQueue.main.async {
+                        ImageManager.sharedManager.getImage(urlString: avatar, completion: { (image) in
+                            if let image = image{
+                                self.avatarImageView.image = image
+                                
+                            }
+                        })
+                    }
                 }
                 
                 if let creatorName = endUser.name {

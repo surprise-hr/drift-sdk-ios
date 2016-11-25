@@ -43,6 +43,7 @@ open class Message: Mappable, Equatable, Hashable{
     var conversationId: Int!
     var requestId: Double = 0
     var sendStatus: SendStatus = SendStatus.Sent
+    var formattedBody: NSAttributedString?
 
     open var hashValue: Int {
         return id
@@ -58,7 +59,6 @@ open class Message: Mappable, Equatable, Hashable{
                 return nil
             }
         }
-        
         self.init()
     }
     
@@ -74,6 +74,15 @@ open class Message: Mappable, Equatable, Hashable{
         authorType              <- map["authorType"]
         type                    <- map["type"]
         conversationId          <- map["conversationId"]
+        
+        do {
+            let htmlStringData = (body ?? "").data(using: String.Encoding.utf8)!
+            let attributedHTMLString = try NSMutableAttributedString(data: htmlStringData, options: [NSDocumentTypeDocumentAttribute : NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute: String.Encoding.utf8.rawValue, ], documentAttributes: nil)
+            attributedHTMLString.addAttributes([NSFontAttributeName: UIFont.init(name: "Avenir-Book", size: 16)], range: NSRange(location: 0, length: attributedHTMLString.length))
+            formattedBody = attributedHTMLString
+        }catch{
+            //Unable to format HTML body
+        }
     }
 
 }

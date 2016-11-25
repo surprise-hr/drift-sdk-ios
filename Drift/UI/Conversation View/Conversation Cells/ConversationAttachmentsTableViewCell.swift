@@ -52,7 +52,7 @@ class ConversationAttachmentsTableViewCell: UITableViewCell, UICollectionViewDel
         attachmentImageView.contentMode = .scaleAspectFill
         attachmentImageView.layer.cornerRadius = 3
         
-        messageTextView.text = ""
+        messageTextView.attributedText = message?.formattedBody
         messageTextView.textContainer.lineFragmentPadding = 0
         messageTextView.textContainerInset = UIEdgeInsets.zero
         
@@ -60,15 +60,7 @@ class ConversationAttachmentsTableViewCell: UITableViewCell, UICollectionViewDel
         
         timeLabel.textColor = ColorPalette.navyDark
         timeLabel.text = self.dateFormatter.createdAtStringFromDate(self.message!.createdAt)
-        
-        do {
-            let htmlStringData = (self.message!.body ?? "").data(using: String.Encoding.utf8)!
-            let attributedHTMLString = try NSMutableAttributedString(data: htmlStringData, options: [NSDocumentTypeDocumentAttribute : NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute: String.Encoding.utf8.rawValue], documentAttributes: nil)
-            self.messageTextView.text = attributedHTMLString.string
-        } catch {
-            self.messageTextView.text = ""
-        }
-        
+ 
     }
     
     
@@ -77,8 +69,14 @@ class ConversationAttachmentsTableViewCell: UITableViewCell, UICollectionViewDel
             UserManager.sharedInstance.userMetaDataForUserId(userId, completion: { (user) in
                 
                 if let user = user {
-                    if let avatar = user.avatarURL, let url = URL(string: avatar) {
-                        self.avatarImageView.af_setImage(withURL: url)
+                    if let avatar = user.avatarURL {
+                        DispatchQueue.main.async {
+                            ImageManager.sharedManager.getImage(urlString: avatar, completion: { (image) in
+                                if let image = image{
+                                    self.avatarImageView.image = image
+                                }
+                            })
+                        }
                     }
                     
                     if let creatorName =  user.name {
@@ -90,7 +88,13 @@ class ConversationAttachmentsTableViewCell: UITableViewCell, UICollectionViewDel
         }else {
             if let endUser = DriftDataStore.sharedInstance.auth?.enduser {
                 if let avatar = endUser.avatarURL {
-                    self.avatarImageView.af_setImage(withURL: URL.init(string: avatar)!)
+                    DispatchQueue.main.async {
+                        ImageManager.sharedManager.getImage(urlString: avatar, completion: { (image) in
+                            if let image = image{
+                                self.avatarImageView.image = image
+                            }
+                        })
+                    }
                 }
                 
                 if let creatorName = endUser.name {
@@ -107,9 +111,15 @@ class ConversationAttachmentsTableViewCell: UITableViewCell, UICollectionViewDel
             if fileExtension == "jpg" || fileExtension == "png" || fileExtension == "gif"{
                 let gestureRecognizer = UITapGestureRecognizer.init(target:self, action: #selector(ConversationAttachmentsTableViewCell.imagePressed))
                 attachmentImageView.addGestureRecognizer(gestureRecognizer)
-                if let previewString = attachments.first?.publicPreviewURL, let imageURL = URL(string: previewString){
+                if let previewString = attachments.first?.publicPreviewURL{
                     self.attachmentsCollectionView.isHidden = true
-                    attachmentImageView!.af_setImage(withURL: imageURL, placeholderImage: nil, filter: nil, progress: nil, progressQueue: DispatchQueue.main, imageTransition: .crossDissolve(0.5), runImageTransitionIfCached: true, completion:nil)
+                    DispatchQueue.main.async {
+                        ImageManager.sharedManager.getImage(urlString: previewString, completion: { (image) in
+                            if let image = image{
+                                self.attachmentImageView.image = image
+                            }
+                        })
+                    }
                 }
             }else{
                 self.attachmentImageView.isHidden = true
@@ -121,7 +131,7 @@ class ConversationAttachmentsTableViewCell: UITableViewCell, UICollectionViewDel
             self.attachmentsCollectionView.isHidden = false
             self.attachmentsCollectionView.reloadData()
         }
-        
+
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {

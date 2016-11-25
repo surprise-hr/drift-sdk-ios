@@ -36,10 +36,17 @@ class ConversationViewController: SLKTextViewController {
     
     let emptyState = ConversationEmptyStateView.fromNib() as! ConversationEmptyStateView
     var sections: [[Message]] = []
-    var previewItem: DriftPreviewItem?
-    var dateFormatter: DriftDateFormatter = DriftDateFormatter()
-    lazy var qlController = QLPreviewController()
+    var attachments: [Int: Attachment] = [:]
+    var attachmentIds: Set<Int> = []
 
+
+    var previewItem: DriftPreviewItem?
+    
+    var dateFormatter: DriftDateFormatter = DriftDateFormatter()
+    
+    lazy var qlController = QLPreviewController()
+    lazy var imagePicker = UIImagePickerController()
+    lazy var interactionController = UIDocumentInteractionController()
     
     var conversationType: ConversationType! {
         didSet{
@@ -79,6 +86,7 @@ class ConversationViewController: SLKTextViewController {
         return navVC
     }
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupSlackTextView()
@@ -97,6 +105,7 @@ class ConversationViewController: SLKTextViewController {
         
         didOpen()
     }
+    
     
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -150,14 +159,17 @@ class ConversationViewController: SLKTextViewController {
     func setupSlackTextView() {
         tableView?.backgroundColor = UIColor.white
         tableView?.contentInset = UIEdgeInsets.init()
-        leftButton.tintColor = UIColor.lightGray
+        tableView?.separatorStyle = .none
+
         textInputbar.barTintColor = UIColor.white
+       
+        leftButton.tintColor = UIColor.lightGray
         leftButton.isEnabled = false
         leftButton.setImage(UIImage.init(named: "plus-circle", in: Bundle(for: Drift.self), compatibleWith: nil), for: UIControlState())
+        
         isInverted = true
         shouldScrollToBottomAfterKeyboardShows = false
         bounces = true
-        tableView?.separatorStyle = .none
         
         if let organizationName = DriftDataStore.sharedInstance.embed?.organizationName {
             textView.placeholder = "Message \(organizationName)"
@@ -169,7 +181,7 @@ class ConversationViewController: SLKTextViewController {
     
     func dismissVC() {
         dismissKeyboard(true)
-        self.dismiss(animated: true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
     
     
@@ -184,17 +196,16 @@ class ConversationViewController: SLKTextViewController {
             popover?.sourceRect = self.leftButton.bounds
         }
         
-        let imagePicker = UIImagePickerController()
         imagePicker.delegate = self
         
         uploadController.addAction(UIAlertAction(title: "Take a Photo", style: .default, handler: { (UIAlertAction) in
-            imagePicker.sourceType = .camera
-            self.present(imagePicker, animated: true, completion: nil)
+            self.imagePicker.sourceType = .camera
+            self.present(self.imagePicker, animated: true, completion: nil)
         }))
         
         uploadController.addAction(UIAlertAction(title: "Choose From Library", style: .default, handler: { (UIAlertAction) in
-            imagePicker.sourceType = .photoLibrary
-            self.present(imagePicker, animated: true, completion: nil)
+            self.imagePicker.sourceType = .photoLibrary
+            self.present(self.imagePicker, animated: true, completion: nil)
         }))
 
         uploadController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
@@ -205,7 +216,8 @@ class ConversationViewController: SLKTextViewController {
         let message = Message()
         message.body = textView.text
         message.authorId = Int(DriftDataStore.sharedInstance.auth!.enduser!.externalId!)
-        self.textView.text = ""
+        
+        textView.slk_clearText(true)
         postMessage(message)
     }
     
@@ -223,18 +235,38 @@ class ConversationViewController: SLKTextViewController {
             }
         default:
             cell = tableView.dequeueReusableCell(withIdentifier: "ConversationAttachmentsTableViewCell", for: indexPath) as! ConversationAttachmentsTableViewCell
-            APIManager.getAttachmentsMetaData(message.attachments, authToken: (DriftDataStore.sharedInstance.auth?.accessToken)!, completion: { (result) in
-                switch result{
-                case .success(let attachments):
-                    if let cell = cell as? ConversationAttachmentsTableViewCell{
-                        cell.delegate = self
-                        cell.attachments = attachments
-                        cell.message = message
-                    }
-                case .failure:
-                    LoggerManager.log("Failed to get attachment metadata for id: \(message.attachments.first)")
-                }
-            })
+//            let messageAttachmentIds = Set(message.attachments)
+//            if messageAttachmentIds.isSubset(of: attachmentIds){
+//                var messageAttachments: [Attachment] = []
+//                for id in messageAttachmentIds{
+//                    if let attachment = attachments[id]{
+//                        messageAttachments.append(attachment)
+//                    }
+//                }
+////                let messageAttachments = attachments.filter({messageAttachmentIds.contains($0.id)})
+//                if let cell = cell as? ConversationAttachmentsTableViewCell{
+//                    cell.delegate = self
+//                    cell.attachments = messageAttachments
+//                    cell.message = message
+//                }
+//            }else{
+//                APIManager.getAttachmentsMetaData(message.attachments, authToken: (DriftDataStore.sharedInstance.auth?.accessToken)!, completion: { (result) in
+//                    switch result{
+//                    case .success(let attachments):
+//                        for attachment in attachments{
+//                            self.attachments[attachment.id] = attachment
+//                            self.attachmentIds.insert(attachment.id)
+//                        }
+//                        if let cell = cell as? ConversationAttachmentsTableViewCell{
+//                            cell.delegate = self
+//                            cell.attachments = attachments
+//                            cell.message = message
+//                        }
+//                    case .failure:
+//                        LoggerManager.log("Failed to get attachment metadata for id: \(message.attachments.first)")
+//                    }
+//                })
+//            }
         }
         
         cell.transform = tableView.transform
@@ -242,9 +274,44 @@ class ConversationViewController: SLKTextViewController {
         return cell
     }
     
+    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if let cell = cell as? ConversationAttachmentsTableViewCell{
+            cell.attachmentImageView.image = UIImage(named: "imageEmptyState", in: Bundle(for: Drift.self), compatibleWith: nil)
+            let message = sections[indexPath.section][indexPath.row]
+            
+            let messageAttachmentIds = Set(message.attachments)
+            if messageAttachmentIds.isSubset(of: attachmentIds){
+                var messageAttachments: [Attachment] = []
+                for id in messageAttachmentIds{
+                    if let attachment = attachments[id]{
+                        messageAttachments.append(attachment)
+                    }
+                }
+                    cell.delegate = self
+                    cell.attachments = messageAttachments
+                    cell.message = message
+                
+            }else{
+                APIManager.getAttachmentsMetaData(message.attachments, authToken: (DriftDataStore.sharedInstance.auth?.accessToken)!, completion: { (result) in
+                    switch result{
+                    case .success(let attachments):
+                        for attachment in attachments{
+                            self.attachments[attachment.id] = attachment
+                            self.attachmentIds.insert(attachment.id)
+                        }
+                            cell.delegate = self
+                            cell.attachments = attachments
+                            cell.message = message
+                    case .failure:
+                        LoggerManager.log("Failed to get attachment metadata for id: \(message.attachments.first)")
+                    }
+                })
+            }
+        }
+    }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if sections[section].count > 0{
+        if sections[section].count > 0 && !emptyState.isHidden{
             UIView.animate(withDuration: 0.4, animations: {
                 self.emptyState.alpha = 0.0
             }, completion: { (_) in
@@ -339,10 +406,10 @@ class ConversationViewController: SLKTextViewController {
             //We've already added this message, it may have failed to send
         }else{
             if sections.count > 0 && (Calendar.current as NSCalendar).component(.day, from: (sections[0].first?.createdAt)! as Date) ==  (Calendar.current as NSCalendar).component(.day, from: Date()){
-                self.sections[0].insert(message, at: 0)
+                sections[0].insert(message, at: 0)
                 tableView!.insertRows(at: [IndexPath(row: 0, section: 0)], with: .bottom)
             }else{
-                self.sections.insert([message], at: 0)
+                sections.insert([message], at: 0)
                 tableView?.insertSections(IndexSet.init(integer: 0), with: .bottom)
             }
         }
@@ -360,7 +427,7 @@ class ConversationViewController: SLKTextViewController {
                 section.append(message)
             }else{
                 let anchorMessage = section[0]
-                if  (Calendar.current as NSCalendar).component(.day, from: message.createdAt as Date) !=  (Calendar.current as NSCalendar).component(.day, from: anchorMessage.createdAt as Date) ||  (Calendar.current as NSCalendar).component(.month, from: message.createdAt as Date) !=  (Calendar.current as NSCalendar).component(.month, from: anchorMessage.createdAt as Date) ||  (Calendar.current as NSCalendar).component(.year, from: message.createdAt as Date) !=  (Calendar.current as NSCalendar).component(.year, from: anchorMessage.createdAt as Date){
+                if Calendar.current.component(.day, from: message.createdAt) !=  Calendar.current.component(.day, from: anchorMessage.createdAt) ||  Calendar.current.component(.month, from: message.createdAt) !=  Calendar.current.component(.month, from: anchorMessage.createdAt) ||  Calendar.current.component(.year, from: message.createdAt) !=  Calendar.current.component(.year, from: anchorMessage.createdAt){
                     sections.append(section)
                     section = []
                 }
@@ -529,13 +596,15 @@ extension ConversationViewController: AttachementSelectedDelegate {
                     DispatchQueue.main.async {
                         self.previewItem = DriftPreviewItem(url: tempFileURL, title: attachment.fileName)
                         self.qlController.dataSource = self
+                        self.qlController.reloadData()
                         self.present(self.qlController, animated: true, completion:nil)
                     }
                 }else{
-                    let interactionController = UIDocumentInteractionController()
-                    interactionController.url = tempFileURL
-                    interactionController.name = attachment.fileName
-                    interactionController.presentOptionsMenu(from: CGRect.zero, in: self.view, animated: true)
+                    DispatchQueue.main.async {
+                        self.interactionController.url = tempFileURL
+                        self.interactionController.name = attachment.fileName
+                        self.interactionController.presentOptionsMenu(from: CGRect.zero, in: self.view, animated: true)
+                    }
                 }
             case .failure:
                 let alert = UIAlertController.init(title: "Unable to preview file", message: "This file cannot be previewed", preferredStyle: UIAlertControllerStyle.alert)

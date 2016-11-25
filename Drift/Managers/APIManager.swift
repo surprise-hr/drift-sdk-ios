@@ -301,7 +301,7 @@ class APIManager {
             }
             
             if let data = data, let directoryURL = DriftManager.sharedInstance.directoryURL {
-                let fileURL = directoryURL.appendingPathComponent(attachment.fileName)
+                let fileURL = directoryURL.appendingPathComponent("\(attachment.id)_\(attachment.fileName)")
                 do {
                     try data.write(to: fileURL, options: .atomicWrite)
                     completion(.success(fileURL))

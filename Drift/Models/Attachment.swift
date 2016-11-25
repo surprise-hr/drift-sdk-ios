@@ -8,7 +8,7 @@
 
 import ObjectMapper
 
-open class Attachment: Mappable{
+open class Attachment: Mappable, Hashable{
     var id = 0
     var fileName = ""
     var size = 0
@@ -27,7 +27,15 @@ open class Attachment: Mappable{
         publicPreviewURL <- map["publicPreviewUrl"]
     }
     
+    open var hashValue: Int {
+        return id
+    }
+    
     required convenience public init?(map: Map) {
         self.init()
     }
+}
+
+public func ==(lhs: Attachment, rhs: Attachment) -> Bool {
+    return lhs.id == rhs.id
 }
