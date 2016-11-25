@@ -216,7 +216,7 @@ class ConversationViewController: SLKTextViewController {
         let message = Message()
         message.body = textView.text
         message.authorId = Int(DriftDataStore.sharedInstance.auth!.enduser!.externalId!)
-        
+        message.sendStatus = .Pending
         textView.slk_clearText(true)
         postMessage(message)
     }

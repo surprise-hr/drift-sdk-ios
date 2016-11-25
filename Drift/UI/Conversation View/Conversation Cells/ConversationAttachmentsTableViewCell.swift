@@ -111,6 +111,7 @@ class ConversationAttachmentsTableViewCell: UITableViewCell, UICollectionViewDel
     
     func displayAttachments() {
         if attachments.count == 1{
+            attachmentImageView.image = UIImage(named: "imageEmptyState", in: Bundle(for: Drift.self), compatibleWith: nil)
             let fileName: NSString = attachments.first!.fileName as NSString
             let fileExtension = fileName.pathExtension
             if fileExtension == "jpg" || fileExtension == "png" || fileExtension == "gif"{
