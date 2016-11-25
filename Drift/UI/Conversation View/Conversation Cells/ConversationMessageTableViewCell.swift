@@ -36,7 +36,13 @@ class ConversationMessageTableViewCell: UITableViewCell {
         
         messageTextView.textContainer.lineFragmentPadding = 0
         messageTextView.textContainerInset = UIEdgeInsets.zero
-        messageTextView.attributedText = self.message?.formattedBody
+        
+        if let formattedBody = message?.formattedBody{
+            messageTextView.attributedText = formattedBody
+        }else{
+            messageTextView.text = self.message?.body
+        }
+        
         if let authorId = message?.authorId{
             getUser(authorId)
         }
@@ -73,13 +79,12 @@ class ConversationMessageTableViewCell: UITableViewCell {
                 if let user = user {
                     if let avatar = user.avatarURL {
                         DispatchQueue.main.async {
+                            ImageManager.sharedManager.getImage(urlString: avatar, completion: { (image) in
+                                if let image = image{
+                                    self.avatarImageView.image = image
 
-                        ImageManager.sharedManager.getImage(urlString: avatar, completion: { (image) in
-                            if let image = image{
-                                self.avatarImageView.image = image
-
-                            }
-                        })
+                                }
+                            })
                         }
                     }
                     

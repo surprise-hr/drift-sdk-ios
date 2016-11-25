@@ -52,7 +52,12 @@ class ConversationAttachmentsTableViewCell: UITableViewCell, UICollectionViewDel
         attachmentImageView.contentMode = .scaleAspectFill
         attachmentImageView.layer.cornerRadius = 3
         
-        messageTextView.attributedText = message?.formattedBody
+        if let formattedBody = message?.formattedBody{
+            messageTextView.attributedText = formattedBody
+        }else{
+            messageTextView.text = self.message?.body
+        }
+
         messageTextView.textContainer.lineFragmentPadding = 0
         messageTextView.textContainerInset = UIEdgeInsets.zero
         
