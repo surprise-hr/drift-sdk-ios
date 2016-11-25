@@ -78,7 +78,7 @@ open class Message: Mappable, Equatable, Hashable{
         do {
             let htmlStringData = (body ?? "").data(using: String.Encoding.utf8)!
             let attributedHTMLString = try NSMutableAttributedString(data: htmlStringData, options: [NSDocumentTypeDocumentAttribute : NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute: String.Encoding.utf8.rawValue, ], documentAttributes: nil)
-            attributedHTMLString.addAttributes([NSFontAttributeName: UIFont.init(name: "Avenir-Book", size: 16)], range: NSRange(location: 0, length: attributedHTMLString.length))
+            attributedHTMLString.addAttributes([NSFontAttributeName: UIFont.init(name: "AvenirNext-Regular", size: 16)], range: NSRange(location: 0, length: attributedHTMLString.length))
             formattedBody = attributedHTMLString
         }catch{
             //Unable to format HTML body

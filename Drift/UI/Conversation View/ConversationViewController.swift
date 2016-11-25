@@ -166,7 +166,7 @@ class ConversationViewController: SLKTextViewController {
         leftButton.tintColor = UIColor.lightGray
         leftButton.isEnabled = false
         leftButton.setImage(UIImage.init(named: "plus-circle", in: Bundle(for: Drift.self), compatibleWith: nil), for: UIControlState())
-        
+        textView.font = UIFont(name: "AvenirNext-Regular", size: 18)
         isInverted = true
         shouldScrollToBottomAfterKeyboardShows = false
         bounces = true
