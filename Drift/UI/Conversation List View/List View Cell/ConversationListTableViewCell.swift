@@ -17,11 +17,12 @@ class ConversationListTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        selectionStyle = .None
-        messageLabel.textColor = ColorPalette.GrayColor
-        updatedAtLabel.textColor = ColorPalette.GrayColor
+        nameLabel.textColor = ColorPalette.darkPrimaryColor
+        selectionStyle = .none
+        messageLabel.textColor = ColorPalette.grayColor
+        updatedAtLabel.textColor = ColorPalette.grayColor
         avatarImageView.layer.masksToBounds = true
-        avatarImageView.contentMode = .ScaleAspectFill
+        avatarImageView.contentMode = .scaleAspectFill
         avatarImageView.layer.cornerRadius = 3
     }
 }

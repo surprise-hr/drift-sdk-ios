@@ -15,7 +15,7 @@ class NPSResponseAttributes: Mappable {
     var numericResponse: Int?
     var textResponse:String?
     
-    required convenience init?(_ map: Map) {
+    required convenience init?(map: Map) {
         self.init()
     }
     

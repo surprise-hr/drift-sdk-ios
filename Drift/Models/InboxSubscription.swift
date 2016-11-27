@@ -7,11 +7,11 @@
 //
 
 public protocol InboxDelegate: class{
-    func inboxesDidUpdate(inboxes: [Inbox])
-    func didSelectInbox(inbox: Inbox)
+    func inboxesDidUpdate(_ inboxes: [Inbox])
+    func didSelectInbox(_ inbox: Inbox)
 }
 
-public class InboxSubscription {
+open class InboxSubscription {
     
     public convenience init(delegate: InboxDelegate) {
         self.init()

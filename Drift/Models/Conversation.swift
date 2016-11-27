@@ -14,7 +14,7 @@ public enum ConversationStatus: String{
     case Pending = "PENDING"
 }
 
-public class Conversation: Mappable, Equatable{
+open class Conversation: Mappable, Equatable{
     var id: Int!
     var orgId: Int!
     var uuid: String?
@@ -26,16 +26,16 @@ public class Conversation: Mappable, Equatable{
     var status: ConversationStatus!
     var subject: String?
     var preview: String?
-    var updatedAt = NSDate()
+    var updatedAt = Date()
     var type: String!
     
     var messages: [Message]!
     
-    public required convenience init?(_ map: Map) {
+    public required convenience init?(map: Map) {
         self.init()
     }
     
-    public func mapping(map: Map) {
+    open func mapping(map: Map) {
         assigneeId  <- map["assigneeId"]
         id          <- map["id"]
         inboxId     <- map["inboxId"]

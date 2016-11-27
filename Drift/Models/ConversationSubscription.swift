@@ -8,11 +8,11 @@
 
 
 public protocol ConversationDelegate: class{
-    func conversationsDidUpdate(conversations: [Conversation])
-    func conversationDidUpdate(conversation: Conversation)
+    func conversationsDidUpdate(_ conversations: [Conversation])
+    func conversationDidUpdate(_ conversation: Conversation)
 }
 
-public class ConversationSubscription {
+open class ConversationSubscription {
     
     public convenience init(delegate: ConversationDelegate) {
         self.init()

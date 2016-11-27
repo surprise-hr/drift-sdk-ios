@@ -18,7 +18,7 @@ class User: Mappable {
     var attributes: [String: AnyObject]?
     var avatarURL: String?
 
-    required convenience init?(_ map: Map) {
+    required convenience init?(map: Map) {
         self.init()
     }
     

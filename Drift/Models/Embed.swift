@@ -27,7 +27,7 @@ struct Embed: Mappable {
     var inboxEmailAddress: String?
     var refreshRate: Int?
     
-    init?(_ map: Map) {
+    init?(map: Map) {
         //These fields are required, without them we fail to init the object
         orgId       = map["orgId"].validNotEmpty()
         embedId     = map["id"].validNotEmpty()

@@ -15,66 +15,73 @@ class ConversationAttachmentsTableViewCell: UITableViewCell, UICollectionViewDel
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var messageTextView: UITextView!
     @IBOutlet weak var attachmentsCollectionView: UICollectionView!
+    @IBOutlet weak var attachmentImageView: UIImageView!
     
     var dateFormatter: DriftDateFormatter = DriftDateFormatter()
     var attachments: [Attachment] = []
     var message: Message? {
         didSet{
             displayMessage()
-            getAttachmentsMetaData()
+            displayAttachments()
         }
     }
     weak var delegate: AttachementSelectedDelegate?
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        selectionStyle = .None
-        attachmentsCollectionView.registerNib(UINib.init(nibName: "AttachmentCollectionViewCell", bundle: NSBundle(forClass: AttachmentCollectionViewCell.classForCoder())), forCellWithReuseIdentifier: "AttachmentCollectionViewCell")
+        selectionStyle = .none
+        attachmentsCollectionView.register(UINib.init(nibName: "AttachmentCollectionViewCell", bundle: Bundle(for: AttachmentCollectionViewCell.classForCoder())), forCellWithReuseIdentifier: "AttachmentCollectionViewCell")
         attachmentsCollectionView.dataSource = self
         attachmentsCollectionView.delegate = self
-        attachmentsCollectionView.backgroundColor = UIColor.whiteColor()
+        attachmentsCollectionView.backgroundColor = UIColor.white
     }
     
     
     func displayMessage() {
   
-        avatarImageView.image = UIImage.init(named: "placeholderAvatar", inBundle: NSBundle.init(forClass: ConversationListTableViewCell.classForCoder()), compatibleWithTraitCollection: nil)
+        avatarImageView.image = UIImage.init(named: "placeholderAvatar", in: Bundle.init(for: ConversationListTableViewCell.classForCoder()), compatibleWith: nil)
         avatarImageView.layer.masksToBounds = true
-        avatarImageView.contentMode = .ScaleAspectFill
+        avatarImageView.contentMode = .scaleAspectFill
         avatarImageView.layer.cornerRadius = 3
   
         if let authorId = message?.authorId{
             getUser(authorId)
         }
         
-        messageTextView.text = ""
-        messageTextView.textContainerInset = UIEdgeInsetsZero
-        messageTextView.text = self.message!.body
+        attachmentImageView.layer.masksToBounds = true
+        attachmentImageView.contentMode = .scaleAspectFill
+        attachmentImageView.layer.cornerRadius = 3
         
-        nameLabel.textColor = DriftDataStore.primaryFontColor
-        
-        timeLabel.textColor = DriftDataStore.secondaryFontColor
-        timeLabel.text = self.dateFormatter.createdAtStringFromDate(self.message!.createdAt)
-        do {
-            let htmlStringData = (self.message!.body ?? "").dataUsingEncoding(NSUTF8StringEncoding)!
-            let options: [String: AnyObject] = [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,
-                                                NSCharacterEncodingDocumentAttribute: NSUTF8StringEncoding]
-            let attributedHTMLString = try NSMutableAttributedString(data: htmlStringData, options: options, documentAttributes: nil)
-            self.messageTextView.text = attributedHTMLString.string
-        } catch {
-            self.messageTextView.text = ""
+        if let formattedBody = message?.formattedBody{
+            messageTextView.attributedText = formattedBody
+        }else{
+            messageTextView.text = self.message?.body
         }
+
+        messageTextView.textContainer.lineFragmentPadding = 0
+        messageTextView.textContainerInset = UIEdgeInsets.zero
         
+        nameLabel.textColor = ColorPalette.darkPrimaryColor
+        
+        timeLabel.textColor = ColorPalette.navyDark
+        timeLabel.text = self.dateFormatter.createdAtStringFromDate(self.message!.createdAt)
+ 
     }
     
     
-    func getUser(userId: Int){
-        if let authorType = message?.authorType where authorType == .User {
+    func getUser(_ userId: Int){
+        if let authorType = message?.authorType , authorType == .User {
             UserManager.sharedInstance.userMetaDataForUserId(userId, completion: { (user) in
                 
                 if let user = user {
-                    if let avatar = user.avatarURL, url = NSURL(string: avatar) {
-                        self.avatarImageView.af_setImageWithURL(url)
+                    if let avatar = user.avatarURL {
+                        DispatchQueue.main.async {
+                            ImageManager.sharedManager.getImage(urlString: avatar, completion: { (image) in
+                                if let image = image{
+                                    self.avatarImageView.image = image
+                                }
+                            })
+                        }
                     }
                     
                     if let creatorName =  user.name {
@@ -86,7 +93,13 @@ class ConversationAttachmentsTableViewCell: UITableViewCell, UICollectionViewDel
         }else {
             if let endUser = DriftDataStore.sharedInstance.auth?.enduser {
                 if let avatar = endUser.avatarURL {
-                    self.avatarImageView.af_setImageWithURL(NSURL.init(string: avatar)!)
+                    DispatchQueue.main.async {
+                        ImageManager.sharedManager.getImage(urlString: avatar, completion: { (image) in
+                            if let image = image{
+                                self.avatarImageView.image = image
+                            }
+                        })
+                    }
                 }
                 
                 if let creatorName = endUser.name {
@@ -96,61 +109,81 @@ class ConversationAttachmentsTableViewCell: UITableViewCell, UICollectionViewDel
         }
     }
     
-    
-    func getAttachmentsMetaData() {
-        if let message = message{
-            APIManager.getAttachmentsMetaData(message.attachments, authToken: (DriftDataStore.sharedInstance.auth?.accessToken)!, completion: { (result) in
-                switch result{
-                    
-                case .Success(let attachments):
-                    self.attachments = attachments
-                    self.attachmentsCollectionView.reloadData()
-                    
-                case .Failure(let error):
-                    LoggerManager.log("Unable to get attachments: \(error)")
+    func displayAttachments() {
+        if attachments.count == 1{
+            attachmentImageView.image = UIImage(named: "imageEmptyState", in: Bundle(for: Drift.self), compatibleWith: nil)
+            let fileName: NSString = attachments.first!.fileName as NSString
+            let fileExtension = fileName.pathExtension
+            if fileExtension == "jpg" || fileExtension == "png" || fileExtension == "gif"{
+                let gestureRecognizer = UITapGestureRecognizer.init(target:self, action: #selector(ConversationAttachmentsTableViewCell.imagePressed))
+                attachmentImageView.addGestureRecognizer(gestureRecognizer)
+                if let previewString = attachments.first?.publicPreviewURL{
+                    self.attachmentsCollectionView.isHidden = true
+                    DispatchQueue.main.async {
+                        ImageManager.sharedManager.getImage(urlString: previewString, completion: { (image) in
+                            if let image = image{
+                                self.attachmentImageView.image = image
+                            }
+                        })
+                    }
                 }
-            })
+            }else{
+                self.attachmentImageView.isHidden = true
+                self.attachmentsCollectionView.isHidden = false
+                self.attachmentsCollectionView.reloadData()
+            }
+        }else{
+            self.attachmentImageView.isHidden = true
+            self.attachmentsCollectionView.isHidden = false
+            self.attachmentsCollectionView.reloadData()
         }
+
     }
     
-    
-    func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if let cell = cell as? AttachmentCollectionViewCell {
-            let attachment = self.attachments[indexPath.row]
-            let fileName: NSString = attachment.fileName
+            let attachment = self.attachments[(indexPath as NSIndexPath).row]
+            let fileName: NSString = attachment.fileName as NSString
             let fileExtension = fileName.pathExtension
             cell.fileNameLabel.text = "\(fileName)"
-            cell.fileExtensionLabel.text = "\(fileExtension.uppercaseString)"
+            cell.fileExtensionLabel.text = "\(fileExtension.uppercased())"
             
-            let formatter = NSByteCountFormatter()
-            formatter.stringFromByteCount(Int64(attachment.size))
+            let formatter = ByteCountFormatter()
+            formatter.string(fromByteCount: Int64(attachment.size))
             formatter.allowsNonnumericFormatting = false
-            cell.sizeLabel.text = formatter.stringFromByteCount(Int64(attachment.size))
+            cell.sizeLabel.text = formatter.string(fromByteCount: Int64(attachment.size))
         }
     }
     
     
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("AttachmentCollectionViewCell", forIndexPath: indexPath) as! AttachmentCollectionViewCell
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AttachmentCollectionViewCell", for: indexPath) as! AttachmentCollectionViewCell
         cell.layer.cornerRadius = 3.0
         return cell
     }
     
     
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return attachments.count
     }
     
     
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        if delegate != nil{
-            delegate?.attachmentSelected(attachments[indexPath.row], sender: self)
+    func imagePressed(){
+        if let attachment = attachments.first{
+            delegate?.attachmentSelected(attachment, sender: self)
         }
     }
     
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        return CGSizeMake(200, 55)
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if delegate != nil{
+            delegate?.attachmentSelected(attachments[(indexPath as NSIndexPath).row], sender: self)
+        }
+    }
+    
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 200, height: 55)
     }
     
 

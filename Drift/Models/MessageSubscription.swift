@@ -7,11 +7,11 @@
 //
 
 public protocol MessageDelegate: class{
-    func messagesDidUpdate(messages: [Message])
-    func newMessage(message: Message)
+    func messagesDidUpdate(_ messages: [Message])
+    func newMessage(_ message: Message)
 }
 
-public class MessageSubscription {
+open class MessageSubscription {
     
     public convenience init(delegate: MessageDelegate, conversationId: Int) {
         self.init()

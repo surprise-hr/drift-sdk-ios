@@ -73,22 +73,25 @@
 		A85387161D4A4F5100C1D3C1 /* ConversationListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A85387141D4A4F5100C1D3C1 /* ConversationListViewController.swift */; };
 		A85387171D4A4F5100C1D3C1 /* ConversationListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A85387151D4A4F5100C1D3C1 /* ConversationListViewController.xib */; };
 		A853871B1D4A8EAE00C1D3C1 /* ConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A85387191D4A8EAE00C1D3C1 /* ConversationViewController.swift */; };
-		A853871C1D4A8EAE00C1D3C1 /* ConversationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A853871A1D4A8EAE00C1D3C1 /* ConversationViewController.xib */; };
 		A86A47251D50D53F008C59C0 /* DriftDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A86A47241D50D53F008C59C0 /* DriftDateFormatter.swift */; };
 		A86C30C91D6120F0008DDE8D /* AttachmentCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A86C30C71D6120F0008DDE8D /* AttachmentCollectionViewCell.xib */; };
 		A86C30CA1D6120F0008DDE8D /* AttachmentCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A86C30C81D6120F0008DDE8D /* AttachmentCollectionViewCell.swift */; };
+		A887170D1DE49CCE0072E4BB /* ConversationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A887170C1DE49CCE0072E4BB /* ConversationViewController.xib */; };
 		A8B0887E1D4F51DC00FFA469 /* ConversationMessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B0887C1D4F51DC00FFA469 /* ConversationMessageTableViewCell.swift */; };
 		A8B0887F1D4F51DC00FFA469 /* ConversationMessageTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A8B0887D1D4F51DC00FFA469 /* ConversationMessageTableViewCell.xib */; };
-		A8B088831D4F549400FFA469 /* ConversationImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B088811D4F549400FFA469 /* ConversationImageTableViewCell.swift */; };
-		A8B088841D4F549400FFA469 /* ConversationImageTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A8B088821D4F549400FFA469 /* ConversationImageTableViewCell.xib */; };
 		A8B088871D4F588E00FFA469 /* ConversationAttachmentsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B088851D4F588E00FFA469 /* ConversationAttachmentsTableViewCell.swift */; };
 		A8B088881D4F588E00FFA469 /* ConversationAttachmentsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A8B088861D4F588E00FFA469 /* ConversationAttachmentsTableViewCell.xib */; };
+		A8B6FBAF1DE74631002F2321 /* ImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B6FBAE1DE74631002F2321 /* ImageManager.swift */; };
+		A8B6FBB11DE74A9A002F2321 /* AlamofireImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A8B6FBB01DE74A9A002F2321 /* AlamofireImage.framework */; };
+		A8B6FBB31DE74AAB002F2321 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A8B6FBB21DE74AAB002F2321 /* Alamofire.framework */; };
+		A8BC1BAD1DDCB0DE0049968E /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8BC1BAC1DDCB0DE0049968E /* GradientView.swift */; };
 		A8C6ADED1D632CD10024CFDC /* ConversationEmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C6ADEC1D632CD10024CFDC /* ConversationEmptyStateView.swift */; };
 		A8C6ADEF1D632CED0024CFDC /* ConversationEmptyStateView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A8C6ADEE1D632CED0024CFDC /* ConversationEmptyStateView.xib */; };
 		A8DBDD281D4259BF00E827CF /* ObjectMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A82CF5671D42585D00D570FF /* ObjectMapper.framework */; };
 		A8F589A31D478F0A0043DB8D /* ConversationListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F589A11D478F0A0043DB8D /* ConversationListTableViewCell.swift */; };
 		A8F589A41D478F0A0043DB8D /* ConversationListTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A8F589A21D478F0A0043DB8D /* ConversationListTableViewCell.xib */; };
 		B24E7E355476327343D34A70 /* Pods_Drift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 827DB2871F99163085B5B96C /* Pods_Drift.framework */; };
+		DE4BB2DAEE68729ECCFBF587 /* Pods_Drift_SDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D067B1B1C2147D16643E68C /* Pods_Drift_SDK.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -115,6 +118,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0C22BE29447B902070F10D55 /* Pods-Drift-SDK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Drift-SDK.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Drift-SDK/Pods-Drift-SDK.debug.xcconfig"; sourceTree = "<group>"; };
+		0F7B8686E6ADBA835CE5CB39 /* Pods-Drift-SDK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Drift-SDK.release.xcconfig"; path = "Pods/Target Support Files/Pods-Drift-SDK/Pods-Drift-SDK.release.xcconfig"; sourceTree = "<group>"; };
 		2CF43EA21C7E045F008E6748 /* ColorPalette.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ColorPalette.swift; path = Drift/UI/ColorPalette.swift; sourceTree = SOURCE_ROOT; };
 		2CF43EA61C7E056F008E6748 /* DriftImages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = DriftImages.xcassets; path = Drift/UI/DriftImages.xcassets; sourceTree = SOURCE_ROOT; };
 		376DB1A9D502953CD6D8325F /* Pods_DriftTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DriftTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -169,6 +174,7 @@
 		63F8581F1C63B22E00872B0D /* CampaignOrganizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CampaignOrganizer.swift; path = Drift/Models/CampaignOrganizer.swift; sourceTree = SOURCE_ROOT; };
 		63F95DBE1C5B8676003BCEE0 /* Auth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Auth.swift; path = Drift/Models/Auth.swift; sourceTree = SOURCE_ROOT; };
 		6CA1C57137B58327E8ED453E /* Pods-Drift.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Drift.release.xcconfig"; path = "Pods/Target Support Files/Pods-Drift/Pods-Drift.release.xcconfig"; sourceTree = "<group>"; };
+		7D067B1B1C2147D16643E68C /* Pods_Drift_SDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Drift_SDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		827DB2871F99163085B5B96C /* Pods_Drift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Drift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E01BE3EE4C4FBBC0B0CF127 /* Pods-DriftTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DriftTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DriftTests/Pods-DriftTests.debug.xcconfig"; sourceTree = "<group>"; };
 		A80A643D1D464CDE00A41A41 /* ObjectValidator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ObjectValidator.swift; path = Drift/Helpers/ObjectValidator.swift; sourceTree = SOURCE_ROOT; };
@@ -187,16 +193,18 @@
 		A85387141D4A4F5100C1D3C1 /* ConversationListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConversationListViewController.swift; path = "Drift/UI/Conversation List View/ConversationListViewController.swift"; sourceTree = SOURCE_ROOT; };
 		A85387151D4A4F5100C1D3C1 /* ConversationListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ConversationListViewController.xib; path = "Drift/UI/Conversation List View/ConversationListViewController.xib"; sourceTree = SOURCE_ROOT; };
 		A85387191D4A8EAE00C1D3C1 /* ConversationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConversationViewController.swift; path = "Drift/UI/Conversation View/ConversationViewController.swift"; sourceTree = SOURCE_ROOT; };
-		A853871A1D4A8EAE00C1D3C1 /* ConversationViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ConversationViewController.xib; path = "Drift/UI/Conversation View/ConversationViewController.xib"; sourceTree = SOURCE_ROOT; };
 		A86A47241D50D53F008C59C0 /* DriftDateFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DriftDateFormatter.swift; path = Drift/Helpers/DriftDateFormatter.swift; sourceTree = SOURCE_ROOT; };
 		A86C30C71D6120F0008DDE8D /* AttachmentCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AttachmentCollectionViewCell.xib; path = "Drift/UI/Conversation View/Conversation Cells/Attachment Cell/AttachmentCollectionViewCell.xib"; sourceTree = SOURCE_ROOT; };
 		A86C30C81D6120F0008DDE8D /* AttachmentCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AttachmentCollectionViewCell.swift; path = "Drift/UI/Conversation View/Conversation Cells/Attachment Cell/AttachmentCollectionViewCell.swift"; sourceTree = SOURCE_ROOT; };
+		A887170C1DE49CCE0072E4BB /* ConversationViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ConversationViewController.xib; path = "Drift/UI/Conversation View/ConversationViewController.xib"; sourceTree = SOURCE_ROOT; };
 		A8B0887C1D4F51DC00FFA469 /* ConversationMessageTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConversationMessageTableViewCell.swift; path = "Drift/UI/Conversation View/Conversation Cells/ConversationMessageTableViewCell.swift"; sourceTree = SOURCE_ROOT; };
 		A8B0887D1D4F51DC00FFA469 /* ConversationMessageTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ConversationMessageTableViewCell.xib; path = "Drift/UI/Conversation View/Conversation Cells/ConversationMessageTableViewCell.xib"; sourceTree = SOURCE_ROOT; };
-		A8B088811D4F549400FFA469 /* ConversationImageTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConversationImageTableViewCell.swift; path = "Drift/UI/Conversation View/Conversation Cells/ConversationImageTableViewCell.swift"; sourceTree = SOURCE_ROOT; };
-		A8B088821D4F549400FFA469 /* ConversationImageTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ConversationImageTableViewCell.xib; path = "Drift/UI/Conversation View/Conversation Cells/ConversationImageTableViewCell.xib"; sourceTree = SOURCE_ROOT; };
 		A8B088851D4F588E00FFA469 /* ConversationAttachmentsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConversationAttachmentsTableViewCell.swift; path = "Drift/UI/Conversation View/Conversation Cells/ConversationAttachmentsTableViewCell.swift"; sourceTree = SOURCE_ROOT; };
 		A8B088861D4F588E00FFA469 /* ConversationAttachmentsTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ConversationAttachmentsTableViewCell.xib; path = "Drift/UI/Conversation View/Conversation Cells/ConversationAttachmentsTableViewCell.xib"; sourceTree = SOURCE_ROOT; };
+		A8B6FBAE1DE74631002F2321 /* ImageManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImageManager.swift; path = Drift/Helpers/ImageManager.swift; sourceTree = SOURCE_ROOT; };
+		A8B6FBB01DE74A9A002F2321 /* AlamofireImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AlamofireImage.framework; path = "Pods/../build/Debug-iphoneos/AlamofireImage/AlamofireImage.framework"; sourceTree = "<group>"; };
+		A8B6FBB21DE74AAB002F2321 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = "../../../../Library/Developer/Xcode/DerivedData/Drift-fazaqbkkelkzfnbpeedxtxrmdjjs/Build/Products/Debug-iphoneos/Alamofire/Alamofire.framework"; sourceTree = "<group>"; };
+		A8BC1BAC1DDCB0DE0049968E /* GradientView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GradientView.swift; path = Drift/Helpers/GradientView.swift; sourceTree = SOURCE_ROOT; };
 		A8C6ADEC1D632CD10024CFDC /* ConversationEmptyStateView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConversationEmptyStateView.swift; path = "Drift/UI/Conversation View/ConversationEmptyStateView.swift"; sourceTree = SOURCE_ROOT; };
 		A8C6ADEE1D632CED0024CFDC /* ConversationEmptyStateView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ConversationEmptyStateView.xib; path = "Drift/UI/Conversation View/ConversationEmptyStateView.xib"; sourceTree = SOURCE_ROOT; };
 		A8F589A11D478F0A0043DB8D /* ConversationListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConversationListTableViewCell.swift; path = "Drift/UI/Conversation List View/List View Cell/ConversationListTableViewCell.swift"; sourceTree = SOURCE_ROOT; };
@@ -210,10 +218,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A8B6FBB31DE74AAB002F2321 /* Alamofire.framework in Frameworks */,
+				A8B6FBB11DE74A9A002F2321 /* AlamofireImage.framework in Frameworks */,
 				A82CF5681D42585D00D570FF /* ObjectMapper.framework in Frameworks */,
 				63356A541C52A0D20064F652 /* UIKit.framework in Frameworks */,
 				63C257391C9A00AE003C4C81 /* LayerKit.framework in Frameworks */,
 				B24E7E355476327343D34A70 /* Pods_Drift.framework in Frameworks */,
+				DE4BB2DAEE68729ECCFBF587 /* Pods_Drift_SDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -324,11 +335,13 @@
 		633920D11C6268EE00C3A3C2 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				A8BC1BAC1DDCB0DE0049968E /* GradientView.swift */,
 				63BBABB51C7CD6210014768A /* ColorHelper.swift */,
 				638730991C7E85EF00105867 /* TopController.swift */,
 				A80A643D1D464CDE00A41A41 /* ObjectValidator.swift */,
 				A80A64411D46534D00A41A41 /* DriftDateTransformer.swift */,
 				A86A47241D50D53F008C59C0 /* DriftDateFormatter.swift */,
+				A8B6FBAE1DE74631002F2321 /* ImageManager.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -418,12 +431,15 @@
 		74DE7736A181ADE78FB587A2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A8B6FBB21DE74AAB002F2321 /* Alamofire.framework */,
+				A8B6FBB01DE74A9A002F2321 /* AlamofireImage.framework */,
 				A82CF5671D42585D00D570FF /* ObjectMapper.framework */,
 				63C257381C9A00AE003C4C81 /* LayerKit.framework */,
 				63C257361C9A009E003C4C81 /* Gloss.framework */,
 				63356A531C52A0D20064F652 /* UIKit.framework */,
 				827DB2871F99163085B5B96C /* Pods_Drift.framework */,
 				376DB1A9D502953CD6D8325F /* Pods_DriftTests.framework */,
+				7D067B1B1C2147D16643E68C /* Pods_Drift_SDK.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -444,7 +460,7 @@
 			children = (
 				A8B088801D4F51E300FFA469 /* Conversation Cells */,
 				A85387191D4A8EAE00C1D3C1 /* ConversationViewController.swift */,
-				A853871A1D4A8EAE00C1D3C1 /* ConversationViewController.xib */,
+				A887170C1DE49CCE0072E4BB /* ConversationViewController.xib */,
 				A83E41661D50D20800B4EA35 /* MessageTableHeaderView.swift */,
 				A83E41651D50D20800B4EA35 /* MessageTableHeaderView.xib */,
 				A8C6ADEC1D632CD10024CFDC /* ConversationEmptyStateView.swift */,
@@ -468,8 +484,6 @@
 				A86C30C61D61209F008DDE8D /* Attachment Cell */,
 				A8B0887C1D4F51DC00FFA469 /* ConversationMessageTableViewCell.swift */,
 				A8B0887D1D4F51DC00FFA469 /* ConversationMessageTableViewCell.xib */,
-				A8B088811D4F549400FFA469 /* ConversationImageTableViewCell.swift */,
-				A8B088821D4F549400FFA469 /* ConversationImageTableViewCell.xib */,
 				A8B088851D4F588E00FFA469 /* ConversationAttachmentsTableViewCell.swift */,
 				A8B088861D4F588E00FFA469 /* ConversationAttachmentsTableViewCell.xib */,
 			);
@@ -493,6 +507,8 @@
 				6CA1C57137B58327E8ED453E /* Pods-Drift.release.xcconfig */,
 				8E01BE3EE4C4FBBC0B0CF127 /* Pods-DriftTests.debug.xcconfig */,
 				B830EE3166A8EBB93E22850F /* Pods-DriftTests.release.xcconfig */,
+				0C22BE29447B902070F10D55 /* Pods-Drift-SDK.debug.xcconfig */,
+				0F7B8686E6ADBA835CE5CB39 /* Pods-Drift-SDK.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -511,9 +527,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		634950D31C511A410097C474 /* Drift */ = {
+		634950D31C511A410097C474 /* Drift-SDK */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 634950E81C511A410097C474 /* Build configuration list for PBXNativeTarget "Drift" */;
+			buildConfigurationList = 634950E81C511A410097C474 /* Build configuration list for PBXNativeTarget "Drift-SDK" */;
 			buildPhases = (
 				A99DC3508C7DE9FC0A16003C /* [CP] Check Pods Manifest.lock */,
 				634950CF1C511A410097C474 /* Sources */,
@@ -528,7 +544,7 @@
 			);
 			dependencies = (
 			);
-			name = Drift;
+			name = "Drift-SDK";
 			productName = Driftt;
 			productReference = 634950D41C511A410097C474 /* Drift.framework */;
 			productType = "com.apple.product-type.framework";
@@ -562,14 +578,16 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0720;
-				LastUpgradeCheck = 0720;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = Drift;
 				TargetAttributes = {
 					634950D31C511A410097C474 = {
 						CreatedOnToolsVersion = 7.2;
+						LastSwiftMigration = 0800;
 					};
 					634950DD1C511A410097C474 = {
 						CreatedOnToolsVersion = 7.2;
+						LastSwiftMigration = 0800;
 					};
 				};
 			};
@@ -585,7 +603,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				634950D31C511A410097C474 /* Drift */,
+				634950D31C511A410097C474 /* Drift-SDK */,
 				634950DD1C511A410097C474 /* DriftTests */,
 			);
 		};
@@ -599,16 +617,15 @@
 				630E896F1C57E64C00195062 /* NPSView.xib in Resources */,
 				2CF43EA71C7E056F008E6748 /* DriftImages.xcassets in Resources */,
 				A8B088881D4F588E00FFA469 /* ConversationAttachmentsTableViewCell.xib in Resources */,
+				A887170D1DE49CCE0072E4BB /* ConversationViewController.xib in Resources */,
 				A8B0887F1D4F51DC00FFA469 /* ConversationMessageTableViewCell.xib in Resources */,
 				A86C30C91D6120F0008DDE8D /* AttachmentCollectionViewCell.xib in Resources */,
 				A8C6ADEF1D632CED0024CFDC /* ConversationEmptyStateView.xib in Resources */,
 				630E89651C57B99000195062 /* AnnouncementView.xib in Resources */,
 				63359F9F1C774C31007321DA /* AnnouncementExpandedView.xib in Resources */,
 				A85387171D4A4F5100C1D3C1 /* ConversationListViewController.xib in Resources */,
-				A853871C1D4A8EAE00C1D3C1 /* ConversationViewController.xib in Resources */,
 				A83E41671D50D20800B4EA35 /* MessageTableHeaderView.xib in Resources */,
 				6362426C1C7FBCC300632F0E /* NPSCompleteView.xib in Resources */,
-				A8B088841D4F549400FFA469 /* ConversationImageTableViewCell.xib in Resources */,
 				A8F589A41D478F0A0043DB8D /* ConversationListTableViewCell.xib in Resources */,
 				6306F4221D6379CC00722D15 /* NewMessageView.xib in Resources */,
 				6329CAC11C5933590059C678 /* NPSCommentView.xib in Resources */,
@@ -714,7 +731,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Drift/Pods-Drift-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Drift-SDK/Pods-Drift-SDK-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		F4796389BBF7812A125D4B21 /* [CP] Check Pods Manifest.lock */ = {
@@ -742,6 +759,7 @@
 				6329CABC1C58E6830059C678 /* NPSContainerView.swift in Sources */,
 				63BBABB61C7CD6210014768A /* ColorHelper.swift in Sources */,
 				633920D01C62514F00C3A3C2 /* CampaignResponseManager.swift in Sources */,
+				A8B6FBAF1DE74631002F2321 /* ImageManager.swift in Sources */,
 				A853871B1D4A8EAE00C1D3C1 /* ConversationViewController.swift in Sources */,
 				A85387161D4A4F5100C1D3C1 /* ConversationListViewController.swift in Sources */,
 				A80A64461D46655900A41A41 /* Inbox.swift in Sources */,
@@ -755,6 +773,7 @@
 				630E89671C57B9AC00195062 /* AnnouncementView.swift in Sources */,
 				A8B088871D4F588E00FFA469 /* ConversationAttachmentsTableViewCell.swift in Sources */,
 				A8F589A31D478F0A0043DB8D /* ConversationListTableViewCell.swift in Sources */,
+				A8BC1BAD1DDCB0DE0049968E /* GradientView.swift in Sources */,
 				A80A64481D4665E500A41A41 /* Conversation.swift in Sources */,
 				63356A451C529C6C0064F652 /* APIManager.swift in Sources */,
 				63356A421C529C610064F652 /* Drift.swift in Sources */,
@@ -765,7 +784,6 @@
 				63356A4C1C529C760064F652 /* CTA.swift in Sources */,
 				A80A643E1D464CDE00A41A41 /* ObjectValidator.swift in Sources */,
 				6387309A1C7E85EF00105867 /* TopController.swift in Sources */,
-				A8B088831D4F549400FFA469 /* ConversationImageTableViewCell.swift in Sources */,
 				A80A644E1D466B5E00A41A41 /* ConversationSubscription.swift in Sources */,
 				A80A64441D465E4800A41A41 /* InboxManager.swift in Sources */,
 				6302051A1C52AC5100C02F5E /* DriftManager.swift in Sources */,
@@ -810,7 +828,7 @@
 /* Begin PBXTargetDependency section */
 		634950E11C511A410097C474 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 634950D31C511A410097C474 /* Drift */;
+			target = 634950D31C511A410097C474 /* Drift-SDK */;
 			targetProxy = 634950E01C511A410097C474 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -829,8 +847,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -853,7 +873,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -877,8 +897,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -895,9 +917,10 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -907,52 +930,58 @@
 		};
 		634950E91C511A410097C474 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D05CA385937F3836AC8E1B8A /* Pods-Drift.debug.xcconfig */;
+			baseConfigurationReference = 0C22BE29447B902070F10D55 /* Pods-Drift-SDK.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 					"$(PROJECT_DIR)/Carthage/Checkouts/releases-ios",
+					"$(PROJECT_DIR)/build/Debug-iphoneos/AlamofireImage",
 				);
 				INFOPLIST_FILE = Drift/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.drift.Drift;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.drift.Drift-SDK";
 				PRODUCT_NAME = Drift;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
 		634950EA1C511A410097C474 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6CA1C57137B58327E8ED453E /* Pods-Drift.release.xcconfig */;
+			baseConfigurationReference = 0F7B8686E6ADBA835CE5CB39 /* Pods-Drift-SDK.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 					"$(PROJECT_DIR)/Carthage/Checkouts/releases-ios",
+					"$(PROJECT_DIR)/build/Debug-iphoneos/AlamofireImage",
 				);
 				INFOPLIST_FILE = Drift/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.drift.Drift;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.drift.Drift-SDK";
 				PRODUCT_NAME = Drift;
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -960,7 +989,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8E01BE3EE4C4FBBC0B0CF127 /* Pods-DriftTests.debug.xcconfig */;
 			buildSettings = {
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Checkouts/releases-ios",
@@ -970,6 +999,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.drift.DriftTests;
 				PRODUCT_NAME = DriftTests;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -977,7 +1007,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B830EE3166A8EBB93E22850F /* Pods-DriftTests.release.xcconfig */;
 			buildSettings = {
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Checkouts/releases-ios",
@@ -987,6 +1017,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.drift.DriftTests;
 				PRODUCT_NAME = DriftTests;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -1002,7 +1033,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		634950E81C511A410097C474 /* Build configuration list for PBXNativeTarget "Drift" */ = {
+		634950E81C511A410097C474 /* Build configuration list for PBXNativeTarget "Drift-SDK" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				634950E91C511A410097C474 /* Debug */,

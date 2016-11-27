@@ -8,12 +8,11 @@
 
 import UIKit
 import AlamofireImage
+import SVProgressHUD
 
 class ConversationListViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-    @IBOutlet weak var loadingConversationsLabel: UILabel!
    
     @IBOutlet weak var emptyStateView: UIView!
     @IBOutlet weak var emptyStateButton: UIButton!
@@ -21,68 +20,90 @@ class ConversationListViewController: UIViewController {
     var conversations: [Conversation] = []
     var users: [CampaignOrganizer] = []
     var dateFormatter = DriftDateFormatter()
-    
+    var refreshControl: UIRefreshControl!
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupEmptyState()
-        activityIndicator.startAnimating()
-        tableView.tableFooterView = UIView(frame: CGRectZero)
+        tableView.tableFooterView = UIView(frame: CGRect.zero)
         tableView.delegate = self
         tableView.dataSource = self
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 90
-        tableView.registerNib(UINib(nibName: "ConversationListTableViewCell", bundle:  NSBundle(forClass: ConversationListTableViewCell.classForCoder())), forCellReuseIdentifier: "ConversationListTableViewCell")
+        tableView.separatorColor = UIColor(white: 0, alpha: 0.05)
+        tableView.separatorInset = .zero
+        tableView.register(UINib(nibName: "ConversationListTableViewCell", bundle:  Bundle(for: ConversationListTableViewCell.classForCoder())), forCellReuseIdentifier: "ConversationListTableViewCell")
         InboxManager.sharedInstance.addConversationSubscription(ConversationSubscription(delegate: self))
+        
+        let tvc = UITableViewController.init()
+        tvc.tableView = tableView
+        
+        refreshControl = UIRefreshControl()
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        refreshControl.addTarget(self, action: #selector(ConversationListViewController.getConversations), for: .valueChanged)
+        tvc.refreshControl = refreshControl
     }
     
-    override func viewWillAppear(animated: Bool) {
-        APIManager.getConversations(DriftDataStore.sharedInstance.auth!.enduser!.userId!, authToken: DriftDataStore.sharedInstance.auth!.accessToken) { (result) in
-            self.activityIndicator.hidden = true
-            self.loadingConversationsLabel.hidden = true
-            self.activityIndicator.stopAnimating()
-            switch result{
-            case .Success(let conversations):
-                self.conversations = conversations
-                self.tableView.reloadData()
-                if conversations.count == 0{
-                    self.emptyStateView.hidden = false
-                }
-            case .Failure(let error):
-                LoggerManager.log("Unable to get conversations for endUser:  \(DriftDataStore.sharedInstance.auth!.enduser!.userId!): \(error)")
-            }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        title = "Conversations"
+        if conversations.count == 0{
+            SVProgressHUD.show()
         }
+        getConversations()
     }
     
     convenience init() {
-        self.init(nibName: "ConversationListViewController", bundle: NSBundle(forClass: ConversationListViewController.classForCoder()))
+        self.init(nibName: "ConversationListViewController", bundle: Bundle(for: ConversationListViewController.classForCoder()))
     }
     
     
     class func navigationController() -> UINavigationController {
         let vc = ConversationListViewController()
         let navVC = UINavigationController.init(rootViewController: vc)
-        let leftButton = UIBarButtonItem(title: "Close", style: UIBarButtonItemStyle.Done, target: vc, action: #selector(ConversationListViewController.dismiss))
-        let rightButton = UIBarButtonItem.init(image:  UIImage.init(named: "composeIcon", inBundle: NSBundle.init(forClass: ConversationListViewController.classForCoder()), compatibleWithTraitCollection: nil), style: UIBarButtonItemStyle.Plain, target: vc, action: #selector(ConversationListViewController.startNewConversation))
+        let leftButton = UIBarButtonItem.init(image: UIImage.init(named: "closeIcon", in: Bundle.init(for: ConversationListViewController.classForCoder()), compatibleWith: nil), style: UIBarButtonItemStyle.plain, target:vc, action: #selector(ConversationListViewController.dismissVC))
+        leftButton.tintColor = DriftDataStore.sharedInstance.generateForegroundColor()
+
+        let rightButton = UIBarButtonItem.init(image:  UIImage.init(named: "newChatIcon", in: Bundle.init(for: ConversationListViewController.classForCoder()), compatibleWith: nil), style: UIBarButtonItemStyle.plain, target: vc, action: #selector(ConversationListViewController.startNewConversation))
+        rightButton.tintColor = DriftDataStore.sharedInstance.generateForegroundColor()
+
         navVC.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: DriftDataStore.sharedInstance.generateForegroundColor()]
         navVC.navigationBar.barTintColor = DriftDataStore.sharedInstance.generateBackgroundColor()
         navVC.navigationBar.tintColor = DriftDataStore.sharedInstance.generateForegroundColor()
-        
+        navVC.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: DriftDataStore.sharedInstance.generateForegroundColor(), NSFontAttributeName: UIFont.init(name: "AvenirNext-Medium", size: 16)!]
+
         vc.navigationItem.leftBarButtonItem  = leftButton
         vc.navigationItem.rightBarButtonItem = rightButton
-        vc.navigationItem.title = "Conversations"
         
         return navVC
     }
     
     
-    func dismiss() {
-        dismissViewControllerAnimated(true, completion: nil)
+    func dismissVC() {
+        dismiss(animated: true, completion: nil)
     }
     
     
+    func getConversations() {
+        APIManager.getConversations(DriftDataStore.sharedInstance.auth!.enduser!.userId!, authToken: DriftDataStore.sharedInstance.auth!.accessToken) { (result) in
+            self.refreshControl.endRefreshing()
+            SVProgressHUD.dismiss()
+            switch result{
+            case .success(let conversations):
+                self.conversations = conversations
+                self.tableView.reloadData()
+                if conversations.count == 0{
+                    self.emptyStateView.isHidden = false
+                }
+            case .failure(let error):
+                LoggerManager.log("Unable to get conversations for endUser:  \(DriftDataStore.sharedInstance.auth!.enduser!.userId!): \(error)")
+            }
+        }
+    }
+    
     func startNewConversation() {
-        let conversationViewController = ConversationViewController(conversationType: ConversationViewController.ConversationType.CreateConversation(authorId: DriftDataStore.sharedInstance.auth!.enduser!.userId!))
-        self.navigationController?.showViewController(conversationViewController, sender: self)
+        let conversationViewController = ConversationViewController(conversationType: ConversationViewController.ConversationType.createConversation(authorId: DriftDataStore.sharedInstance.auth!.enduser!.userId!))
+        navigationController?.show(conversationViewController, sender: self)
     }
     
     
@@ -90,11 +111,11 @@ class ConversationListViewController: UIViewController {
         emptyStateButton.clipsToBounds = true
         emptyStateButton.layer.cornerRadius = 3.0
         emptyStateButton.backgroundColor = DriftDataStore.sharedInstance.generateBackgroundColor()
-        emptyStateButton.setTitleColor(DriftDataStore.sharedInstance.generateForegroundColor(), forState: .Normal)
+        emptyStateButton.setTitleColor(DriftDataStore.sharedInstance.generateForegroundColor(), for: UIControlState())
     }
     
     
-    @IBAction func emptyStateButtonPressed(sender: AnyObject) {
+    @IBAction func emptyStateButtonPressed(_ sender: AnyObject) {
         startNewConversation()
     }
     
@@ -102,17 +123,17 @@ class ConversationListViewController: UIViewController {
 
 extension ConversationListViewController: UITableViewDelegate, UITableViewDataSource {
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("ConversationListTableViewCell") as! ConversationListTableViewCell
-        cell.avatarImageView.image = UIImage.init(named: "placeholderAvatar", inBundle:  NSBundle(forClass: ConversationListViewController.classForCoder()), compatibleWithTraitCollection: nil)
-        let conversation = conversations[indexPath.row]
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ConversationListTableViewCell") as! ConversationListTableViewCell
+        cell.avatarImageView.image = UIImage.init(named: "placeholderAvatar", in:  Bundle(for: ConversationListViewController.classForCoder()), compatibleWith: nil)
+        let conversation = conversations[(indexPath as NSIndexPath).row]
 
-        if let assigneeId = conversation.assigneeId where assigneeId != 0{
+        if let assigneeId = conversation.assigneeId , assigneeId != 0{
             UserManager.sharedInstance.userMetaDataForUserId(assigneeId, completion: { (user) in
             
                 if let user = user {
                     if let avatar = user.avatarURL {
-                        cell.avatarImageView.af_setImageWithURL(NSURL.init(string:avatar)!)
+                        cell.avatarImageView.af_setImage(withURL: URL.init(string:avatar)!)
                     }
                     if let creatorName = user.name {
                         cell.nameLabel.text = creatorName
@@ -124,13 +145,15 @@ extension ConversationListViewController: UITableViewDelegate, UITableViewDataSo
             cell.nameLabel.text = "You"
             if let endUser = DriftDataStore.sharedInstance.auth?.enduser {
                 if let avatar = endUser.avatarURL {
-                    cell.avatarImageView.af_setImageWithURL(NSURL.init(string: avatar)!)
+                    cell.avatarImageView.af_setImage(withURL: URL.init(string: avatar)!)
                 }
             }
         }
         
-        if let string = conversation.preview{
-            cell.messageLabel.text = string.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+        if let preview = conversation.preview, preview != ""{
+            cell.messageLabel.text = preview.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+        }else{
+            cell.messageLabel.text = "📎 [Attachment]"
         }
 
         cell.updatedAtLabel.text = dateFormatter.updatedAtStringFromDate(conversation.updatedAt)
@@ -138,37 +161,39 @@ extension ConversationListViewController: UITableViewDelegate, UITableViewDataSo
     }
     
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if conversations.count > 0 {
-            self.emptyStateView.hidden = true
+            self.emptyStateView.isHidden = true
         }
         return conversations.count
     }
     
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let conversation = conversations[indexPath.row]
-        let conversationViewController = ConversationViewController.init(conversationType: .ContinueConversation(conversationId: conversation.id))
-        self.navigationController?.showViewController(conversationViewController, sender: self)
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let conversation = conversations[(indexPath as NSIndexPath).row]
+        let conversationViewController = ConversationViewController.init(conversationType: .continueConversation(conversationId: conversation.id))
+        self.navigationController?.show(conversationViewController, sender: self)
+        //Stops the title on the next vc being off centre on smaller devices (5 and down)
+        self.title = ""
     }
 }
 
 extension ConversationListViewController: ConversationDelegate{
     
-    func conversationDidUpdate(conversation: Conversation) {
-        if let index = conversations.indexOf(conversation) {
+    func conversationDidUpdate(_ conversation: Conversation) {
+        if let index = conversations.index(of: conversation) {
             conversations[index] = conversation
-            tableView.reloadRowsAtIndexPaths([NSIndexPath(forRow: index, inSection: 0)], withRowAnimation: .Automatic)
+            tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
         }else {
-            conversations.insert(conversation, atIndex: 0)
-            tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 0)], withRowAnimation: .Automatic)
+            conversations.insert(conversation, at: 0)
+            tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
         }
     }
     
     
-    func conversationsDidUpdate(conversations: [Conversation]) {
+    func conversationsDidUpdate(_ conversations: [Conversation]) {
         for conversation in conversations{
-            if let index = self.conversations.indexOf(conversation) {
+            if let index = self.conversations.index(of: conversation) {
                 if conversation.updatedAt.timeIntervalSince1970 > (self.conversations[index].updatedAt.timeIntervalSince1970){
                     self.conversations[index] = conversation
                 }

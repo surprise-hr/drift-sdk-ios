@@ -8,25 +8,26 @@
 
 import ObjectMapper
 
-public class DriftDateTransformer: TransformType{
-    public typealias Object = NSDate
+open class DriftDateTransformer: TransformType{
+
+    public typealias Object = Date
     public typealias JSON = Double
     
     public init() {}
     
-    public func transformFromJSON(value: AnyObject?) -> NSDate? {
+    public func transformFromJSON(_ value: Any?) -> Date? {
         if let timeInt = value as? Double {
-            return NSDate(timeIntervalSince1970: NSTimeInterval(timeInt/1000))
+            return Date(timeIntervalSince1970: TimeInterval(timeInt/1000))
         }
         
         if let timeStr = value as? String {
-            return NSDate(timeIntervalSince1970: NSTimeInterval(atof(timeStr)/1000))
+            return Date(timeIntervalSince1970: TimeInterval(atof(timeStr)/1000))
         }
         
         return nil
     }
     
-    public func transformToJSON(value: NSDate?) -> Double? {
+    open func transformToJSON(_ value: Date?) -> Double? {
         if let date = value {
             return Double(date.timeIntervalSince1970*1000)
         }
