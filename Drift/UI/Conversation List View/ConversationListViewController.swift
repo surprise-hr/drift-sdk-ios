@@ -42,6 +42,9 @@ class ConversationListViewController: UIViewController {
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         refreshControl.addTarget(self, action: #selector(ConversationListViewController.getConversations), for: .valueChanged)
         tvc.refreshControl = refreshControl
+        
+        //Ensure that the back button title is not being shown
+        navigationItem.backBarButtonItem = UIBarButtonItem.init(title: " ", style: UIBarButtonItemStyle.plain, target: nil, action: nil)
     }
     
     
@@ -172,7 +175,8 @@ extension ConversationListViewController: UITableViewDelegate, UITableViewDataSo
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let conversation = conversations[(indexPath as NSIndexPath).row]
         let conversationViewController = ConversationViewController.init(conversationType: .continueConversation(conversationId: conversation.id))
-        self.navigationController?.show(conversationViewController, sender: self)
+        present(conversationViewController, animated: true, completion: nil)
+//        self.navigationController?.show(conversationViewController, sender: self)
         //Stops the title on the next vc being off centre on smaller devices (5 and down)
         self.title = ""
     }
