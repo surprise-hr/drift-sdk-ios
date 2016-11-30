@@ -19,4 +19,5 @@ class ConversationEmptyStateView: UIView {
         self.messageLabel.clipsToBounds = true
         self.messageLabel.layer.cornerRadius = 3.0
     }
+
 }
