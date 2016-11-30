@@ -231,38 +231,6 @@ class ConversationViewController: SLKTextViewController {
             }
         default:
             cell = tableView.dequeueReusableCell(withIdentifier: "ConversationAttachmentsTableViewCell", for: indexPath) as! ConversationAttachmentsTableViewCell
-//            let messageAttachmentIds = Set(message.attachments)
-//            if messageAttachmentIds.isSubset(of: attachmentIds){
-//                var messageAttachments: [Attachment] = []
-//                for id in messageAttachmentIds{
-//                    if let attachment = attachments[id]{
-//                        messageAttachments.append(attachment)
-//                    }
-//                }
-////                let messageAttachments = attachments.filter({messageAttachmentIds.contains($0.id)})
-//                if let cell = cell as? ConversationAttachmentsTableViewCell{
-//                    cell.delegate = self
-//                    cell.attachments = messageAttachments
-//                    cell.message = message
-//                }
-//            }else{
-//                APIManager.getAttachmentsMetaData(message.attachments, authToken: (DriftDataStore.sharedInstance.auth?.accessToken)!, completion: { (result) in
-//                    switch result{
-//                    case .success(let attachments):
-//                        for attachment in attachments{
-//                            self.attachments[attachment.id] = attachment
-//                            self.attachmentIds.insert(attachment.id)
-//                        }
-//                        if let cell = cell as? ConversationAttachmentsTableViewCell{
-//                            cell.delegate = self
-//                            cell.attachments = attachments
-//                            cell.message = message
-//                        }
-//                    case .failure:
-//                        LoggerManager.log("Failed to get attachment metadata for id: \(message.attachments.first)")
-//                    }
-//                })
-//            }
         }
         
         cell.transform = tableView.transform
