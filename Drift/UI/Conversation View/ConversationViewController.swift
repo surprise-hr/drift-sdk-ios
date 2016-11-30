@@ -118,6 +118,7 @@ class ConversationViewController: SLKTextViewController {
             self.conversationId = conversationId
             getMessages(conversationId)
         case .createConversation(_):
+            
             if let organizationName = DriftDataStore.sharedInstance.embed?.organizationName {
                 emptyState.organizationLabel.text = organizationName
             }
@@ -130,14 +131,9 @@ class ConversationViewController: SLKTextViewController {
             }
             
             if let tableView = tableView{
-                emptyState.translatesAutoresizingMaskIntoConstraints = false
-                view.addSubview(emptyState)
-                edgesForExtendedLayout = []
-                let leadingConstraint = NSLayoutConstraint(item: emptyState, attribute: NSLayoutAttribute.leading, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.leading, multiplier: 1, constant: 0)
-                let trailingConstraint = NSLayoutConstraint(item: emptyState, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.trailing, multiplier: 1, constant: 0)
-                let topConstraint = NSLayoutConstraint(item: emptyState, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.top, multiplier: 1, constant: 0)
-                
-                view.addConstraints([leadingConstraint, trailingConstraint, topConstraint])
+                emptyState.transform = tableView.transform
+                emptyState.frame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 200)
+                tableView.tableFooterView = emptyState
                 
                 var label = UILabel(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 30))
                 label.textAlignment = .center
@@ -145,16 +141,16 @@ class ConversationViewController: SLKTextViewController {
                 label.font = UIFont(name: "Avenir-Book", size: 14)
                 label.textColor = ColorPalette.grayColor
                 label.transform = tableView.transform
-                tableView.tableFooterView = label
+                tableView.tableHeaderView = label
             }
             
             DispatchQueue.main.asyncAfter(
                 deadline: DispatchTime.now() + Double(Int64(1.0 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: {
                     self.presentKeyboard(true)
             })
+            
         }
     }
-    
     
     func setupSlackTextView() {
         tableView?.backgroundColor = UIColor.white
@@ -235,38 +231,6 @@ class ConversationViewController: SLKTextViewController {
             }
         default:
             cell = tableView.dequeueReusableCell(withIdentifier: "ConversationAttachmentsTableViewCell", for: indexPath) as! ConversationAttachmentsTableViewCell
-//            let messageAttachmentIds = Set(message.attachments)
-//            if messageAttachmentIds.isSubset(of: attachmentIds){
-//                var messageAttachments: [Attachment] = []
-//                for id in messageAttachmentIds{
-//                    if let attachment = attachments[id]{
-//                        messageAttachments.append(attachment)
-//                    }
-//                }
-////                let messageAttachments = attachments.filter({messageAttachmentIds.contains($0.id)})
-//                if let cell = cell as? ConversationAttachmentsTableViewCell{
-//                    cell.delegate = self
-//                    cell.attachments = messageAttachments
-//                    cell.message = message
-//                }
-//            }else{
-//                APIManager.getAttachmentsMetaData(message.attachments, authToken: (DriftDataStore.sharedInstance.auth?.accessToken)!, completion: { (result) in
-//                    switch result{
-//                    case .success(let attachments):
-//                        for attachment in attachments{
-//                            self.attachments[attachment.id] = attachment
-//                            self.attachmentIds.insert(attachment.id)
-//                        }
-//                        if let cell = cell as? ConversationAttachmentsTableViewCell{
-//                            cell.delegate = self
-//                            cell.attachments = attachments
-//                            cell.message = message
-//                        }
-//                    case .failure:
-//                        LoggerManager.log("Failed to get attachment metadata for id: \(message.attachments.first)")
-//                    }
-//                })
-//            }
         }
         
         cell.transform = tableView.transform
