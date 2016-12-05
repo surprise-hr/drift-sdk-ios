@@ -104,6 +104,7 @@ class ConversationListViewController: UIViewController {
         }
     }
     
+    
     func startNewConversation() {
         let conversationViewController = ConversationViewController(conversationType: ConversationViewController.ConversationType.createConversation(authorId: DriftDataStore.sharedInstance.auth!.enduser!.userId!))
         navigationController?.show(conversationViewController, sender: self)
@@ -176,13 +177,11 @@ extension ConversationListViewController: UITableViewDelegate, UITableViewDataSo
         let conversation = conversations[(indexPath as NSIndexPath).row]
         let conversationViewController = ConversationViewController.init(conversationType: .continueConversation(conversationId: conversation.id))
         present(conversationViewController, animated: true, completion: nil)
-//        self.navigationController?.show(conversationViewController, sender: self)
-        //Stops the title on the next vc being off centre on smaller devices (5 and down)
-        self.title = ""
     }
 }
 
 extension ConversationListViewController: ConversationDelegate{
+    
     
     func conversationDidUpdate(_ conversation: Conversation) {
         if let index = conversations.index(of: conversation) {
