@@ -40,26 +40,26 @@ class ConversationAttachmentsTableViewCell: UITableViewCell, UICollectionViewDel
     func displayMessage() {
   
         avatarImageView.image = UIImage.init(named: "placeholderAvatar", in: Bundle.init(for: ConversationListTableViewCell.classForCoder()), compatibleWith: nil)
-        avatarImageView.layer.masksToBounds = true
         avatarImageView.contentMode = .scaleAspectFill
+        avatarImageView.layer.masksToBounds = true
         avatarImageView.layer.cornerRadius = 3
   
-        if let authorId = message?.authorId{
-            getUser(authorId)
-        }
+        messageTextView.textContainer.lineFragmentPadding = 0
+        messageTextView.textContainerInset = UIEdgeInsets.zero
         
         attachmentImageView.layer.masksToBounds = true
         attachmentImageView.contentMode = .scaleAspectFill
         attachmentImageView.layer.cornerRadius = 3
+        
+        if let authorId = message?.authorId{
+            getUser(authorId)
+        }
         
         if let formattedBody = message?.formattedBody{
             messageTextView.attributedText = formattedBody
         }else{
             messageTextView.text = self.message?.body
         }
-
-        messageTextView.textContainer.lineFragmentPadding = 0
-        messageTextView.textContainerInset = UIEdgeInsets.zero
         
         nameLabel.textColor = ColorPalette.darkPrimaryColor
         
@@ -128,16 +128,18 @@ class ConversationAttachmentsTableViewCell: UITableViewCell, UICollectionViewDel
                     }
                 }
             }else{
-                self.attachmentImageView.isHidden = true
-                self.attachmentsCollectionView.isHidden = false
-                self.attachmentsCollectionView.reloadData()
+                showCollectionView()
             }
         }else{
-            self.attachmentImageView.isHidden = true
-            self.attachmentsCollectionView.isHidden = false
-            self.attachmentsCollectionView.reloadData()
+            showCollectionView()
         }
 
+    }
+    
+    func showCollectionView() {
+        self.attachmentImageView.isHidden = true
+        self.attachmentsCollectionView.isHidden = false
+        self.attachmentsCollectionView.reloadData()
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
