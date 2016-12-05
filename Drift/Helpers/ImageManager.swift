@@ -47,13 +47,7 @@ class ImageManager {
                 image.draw(in: CGRect(origin: CGPoint.zero, size: size))
                 
                 let newImage = UIGraphicsGetImageFromCurrentImageContext()
-                UIGraphicsEndImageContext()
-                
-                
-                let bytesPerPixel: CGFloat = 4.0
-                let bytesPerRow = newImage!.size.width * bytesPerPixel
-                let totalBytes = UInt64(bytesPerRow) * UInt64(newImage!.size.height)
-                
+                UIGraphicsEndImageContext()                
                 photoCache.add(newImage ?? image, withIdentifier: urlString)
                 
             }else{

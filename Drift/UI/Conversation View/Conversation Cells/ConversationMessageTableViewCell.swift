@@ -31,11 +31,16 @@ class ConversationMessageTableViewCell: UITableViewCell {
     func displayMessage() {
 
         avatarImageView.image = UIImage.init(named: "placeholderAvatar", in: Bundle.init(for: ConversationListTableViewCell.classForCoder()), compatibleWith: nil)
-        avatarImageView.layer.cornerRadius = 3
+        avatarImageView.contentMode = .scaleAspectFill
         avatarImageView.layer.masksToBounds = true
+        avatarImageView.layer.cornerRadius = 3
         
         messageTextView.textContainer.lineFragmentPadding = 0
         messageTextView.textContainerInset = UIEdgeInsets.zero
+        
+        if let authorId = message?.authorId{
+            getUser(authorId)
+        }
         
         if let formattedBody = message?.formattedBody{
             messageTextView.attributedText = formattedBody
@@ -43,11 +48,7 @@ class ConversationMessageTableViewCell: UITableViewCell {
             messageTextView.text = self.message?.body
         }
         
-        if let authorId = message?.authorId{
-            getUser(authorId)
-        }
-        
-        if let sendStatus = message?.sendStatus, let createdAt = message?.createdAt{
+        if let sendStatus = message?.sendStatus, let createdAt = message?.createdAt {
             switch sendStatus{
             case .Sent:
                 avatarImageView.alpha = 1.0

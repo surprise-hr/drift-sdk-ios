@@ -56,7 +56,7 @@ class NewMessageView: CampaignView {
         
         var userId: Int?
         if otherConversations.isEmpty {
-            //Setup for latest message in convo
+            //Setup for latest message in conversation
             notificationContainer.isHidden = true
 
             let latestMessage = conversation.messages.sorted(by: { $0.createdAt.compare($1.createdAt as Date) == .orderedDescending}).first!
