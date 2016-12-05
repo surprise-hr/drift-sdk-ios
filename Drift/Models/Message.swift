@@ -81,7 +81,7 @@ open class Message: Mappable, Equatable, Hashable{
             attributedHTMLString.addAttributes([NSFontAttributeName: UIFont.init(name: "AvenirNext-Regular", size: 16)], range: NSRange(location: 0, length: attributedHTMLString.length))
             formattedBody = attributedHTMLString
         }catch{
-            //Unable to format HTML body
+            //Unable to format HTML body, in this scenario the raw html will be shown in the message cell
         }
     }
 
