@@ -135,7 +135,7 @@ class ConversationViewController: SLKTextViewController {
                 emptyState.frame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 200)
                 tableView.tableFooterView = emptyState
                 
-                var label = UILabel(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 30))
+                let label = UILabel(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 30))
                 label.textAlignment = .center
                 label.text = "We're ⚡️ by Drift"
                 label.font = UIFont(name: "Avenir-Book", size: 14)
@@ -251,9 +251,10 @@ class ConversationViewController: SLKTextViewController {
                         messageAttachments.append(attachment)
                     }
                 }
-                    cell.delegate = self
-                    cell.attachments = messageAttachments
-                    cell.message = message
+                
+                cell.delegate = self
+                cell.attachments = messageAttachments
+                cell.message = message
                 
             }else{
                 APIManager.getAttachmentsMetaData(message.attachments, authToken: (DriftDataStore.sharedInstance.auth?.accessToken)!, completion: { (result) in
