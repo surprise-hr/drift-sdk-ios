@@ -38,10 +38,7 @@ class ConversationViewController: SLKTextViewController {
     var sections: [[Message]] = []
     var attachments: [Int: Attachment] = [:]
     var attachmentIds: Set<Int> = []
-
-
     var previewItem: DriftPreviewItem?
-    
     var dateFormatter: DriftDateFormatter = DriftDateFormatter()
     
     lazy var qlController = QLPreviewController()
@@ -102,7 +99,8 @@ class ConversationViewController: SLKTextViewController {
         }
         
         NotificationCenter.default.addObserver(self, selector: #selector(ConversationViewController.didOpen), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
-        
+        NotificationCenter.default.addObserver(self, selector: #selector(ConversationViewController.rotated), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
+
         didOpen()
     }
     
@@ -118,22 +116,19 @@ class ConversationViewController: SLKTextViewController {
             self.conversationId = conversationId
             getMessages(conversationId)
         case .createConversation(_):
-            
-            if let organizationName = DriftDataStore.sharedInstance.embed?.organizationName {
-                emptyState.organizationLabel.text = organizationName
-            }
-            
-            emptyState.messageLabel.backgroundColor = DriftDataStore.sharedInstance.generateBackgroundColor()
-            emptyState.messageLabel.textColor = DriftDataStore.sharedInstance.generateForegroundColor()
 
             if let welcomeMessage = DriftDataStore.sharedInstance.embed?.welcomeMessage {
                 emptyState.messageLabel.text = welcomeMessage
             }
             
             if let tableView = tableView{
-                emptyState.transform = tableView.transform
-                emptyState.frame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 200)
-                tableView.tableFooterView = emptyState
+                emptyState.translatesAutoresizingMaskIntoConstraints = false
+                view.addSubview(emptyState)
+                edgesForExtendedLayout = []
+                let leadingConstraint = NSLayoutConstraint(item: emptyState, attribute: NSLayoutAttribute.leading, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.leading, multiplier: 1, constant: 0)
+                let trailingConstraint = NSLayoutConstraint(item: emptyState, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.trailing, multiplier: 1, constant: 0)
+                let topConstraint = NSLayoutConstraint(item: emptyState, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.top, multiplier: 1, constant: 0)
+                view.addConstraints([leadingConstraint, trailingConstraint, topConstraint])
                 
                 let label = UILabel(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 30))
                 label.textAlignment = .center
@@ -149,6 +144,20 @@ class ConversationViewController: SLKTextViewController {
                     self.presentKeyboard(true)
             })
             
+        }
+    }
+    
+    func rotated() {
+        if UIDeviceOrientationIsLandscape(UIDevice.current.orientation) {
+            if emptyState.isHidden == false && emptyState.alpha == 1.0 && UIDevice.current.userInterfaceIdiom == .phone && max(UIScreen.main.bounds.size.width, UIScreen.main.bounds.size.height) <= 568.0{
+                emptyState.isHidden = true
+            }
+        }
+        
+        if UIDeviceOrientationIsPortrait(UIDevice.current.orientation) {
+            if emptyState.isHidden == true && emptyState.alpha == 1.0 && UIDevice.current.userInterfaceIdiom == .phone && max(UIScreen.main.bounds.size.width, UIScreen.main.bounds.size.height) <= 568.0{
+                emptyState.isHidden = false
+            }
         }
     }
     

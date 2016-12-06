@@ -10,8 +10,6 @@ import UIKit
 
 class ConversationEmptyStateView: UIView {
     
-    @IBOutlet weak var startAConversationLabel: UILabel!
-    @IBOutlet weak var organizationLabel: UILabel!
     @IBOutlet weak var messageLabel: UILabel!
     
     override func awakeFromNib() {
