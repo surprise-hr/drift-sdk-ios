@@ -88,18 +88,20 @@ class ConversationListViewController: UIViewController {
     
     
     func getConversations() {
-        APIManager.getConversations(DriftDataStore.sharedInstance.auth!.enduser!.userId!, authToken: DriftDataStore.sharedInstance.auth!.accessToken) { (result) in
-            self.refreshControl.endRefreshing()
-            SVProgressHUD.dismiss()
-            switch result{
-            case .success(let conversations):
-                self.conversations = conversations
-                self.tableView.reloadData()
-                if conversations.count == 0{
-                    self.emptyStateView.isHidden = false
+        if let auth = DriftDataStore.sharedInstance.auth, let endUser = auth.enduser{
+            APIManager.getConversations(endUser.userId!, authToken: auth.accessToken) { (result) in
+                self.refreshControl.endRefreshing()
+                SVProgressHUD.dismiss()
+                switch result{
+                case .success(let conversations):
+                    self.conversations = conversations
+                    self.tableView.reloadData()
+                    if conversations.count == 0{
+                        self.emptyStateView.isHidden = false
+                    }
+                case .failure(let error):
+                    LoggerManager.log("Unable to get conversations for endUser:  \(endUser.userId): \(error)")
                 }
-            case .failure(let error):
-                LoggerManager.log("Unable to get conversations for endUser:  \(DriftDataStore.sharedInstance.auth!.enduser!.userId!): \(error)")
             }
         }
     }
