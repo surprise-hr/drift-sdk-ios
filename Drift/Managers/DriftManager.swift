@@ -63,7 +63,11 @@ class DriftManager: NSObject {
     }
     
     class func showConversations(){
-        PresentationManager.sharedInstance.showConversationList()
+        if (DriftDataStore.sharedInstance.auth != nil){
+            PresentationManager.sharedInstance.showConversationList()
+        }else{
+            LoggerManager.log("No Auth, unable to show conversations for user")
+        }
     }
     
     /**
