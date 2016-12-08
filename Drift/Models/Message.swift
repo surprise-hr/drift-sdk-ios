@@ -39,6 +39,7 @@ open class Message: Mappable, Equatable, Hashable{
     var authorId: Int!
     var authorType: AuthorType!
     var type: Type!
+    var context: Context?
     
     var conversationId: Int!
     var requestId: Double = 0

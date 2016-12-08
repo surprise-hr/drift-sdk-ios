@@ -88,6 +88,8 @@
 		A8C6ADED1D632CD10024CFDC /* ConversationEmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C6ADEC1D632CD10024CFDC /* ConversationEmptyStateView.swift */; };
 		A8C6ADEF1D632CED0024CFDC /* ConversationEmptyStateView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A8C6ADEE1D632CED0024CFDC /* ConversationEmptyStateView.xib */; };
 		A8DBDD281D4259BF00E827CF /* ObjectMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A82CF5671D42585D00D570FF /* ObjectMapper.framework */; };
+		A8DECB341DF9AE5F00CE008D /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8DECB331DF9AE5F00CE008D /* Context.swift */; };
+		A8DECB361DF9B5BF00CE008D /* UIDevice+ModelName.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8DECB351DF9B5BF00CE008D /* UIDevice+ModelName.swift */; };
 		A8F589A31D478F0A0043DB8D /* ConversationListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F589A11D478F0A0043DB8D /* ConversationListTableViewCell.swift */; };
 		A8F589A41D478F0A0043DB8D /* ConversationListTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A8F589A21D478F0A0043DB8D /* ConversationListTableViewCell.xib */; };
 		B24E7E355476327343D34A70 /* Pods_Drift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 827DB2871F99163085B5B96C /* Pods_Drift.framework */; };
@@ -207,6 +209,8 @@
 		A8BC1BAC1DDCB0DE0049968E /* GradientView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GradientView.swift; path = Drift/Helpers/GradientView.swift; sourceTree = SOURCE_ROOT; };
 		A8C6ADEC1D632CD10024CFDC /* ConversationEmptyStateView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConversationEmptyStateView.swift; path = "Drift/UI/Conversation View/ConversationEmptyStateView.swift"; sourceTree = SOURCE_ROOT; };
 		A8C6ADEE1D632CED0024CFDC /* ConversationEmptyStateView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ConversationEmptyStateView.xib; path = "Drift/UI/Conversation View/ConversationEmptyStateView.xib"; sourceTree = SOURCE_ROOT; };
+		A8DECB331DF9AE5F00CE008D /* Context.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Context.swift; path = Drift/Models/Context.swift; sourceTree = SOURCE_ROOT; };
+		A8DECB351DF9B5BF00CE008D /* UIDevice+ModelName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIDevice+ModelName.swift"; sourceTree = SOURCE_ROOT; };
 		A8F589A11D478F0A0043DB8D /* ConversationListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConversationListTableViewCell.swift; path = "Drift/UI/Conversation List View/List View Cell/ConversationListTableViewCell.swift"; sourceTree = SOURCE_ROOT; };
 		A8F589A21D478F0A0043DB8D /* ConversationListTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ConversationListTableViewCell.xib; path = "Drift/UI/Conversation List View/List View Cell/ConversationListTableViewCell.xib"; sourceTree = SOURCE_ROOT; };
 		B830EE3166A8EBB93E22850F /* Pods-DriftTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DriftTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-DriftTests/Pods-DriftTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -328,6 +332,7 @@
 				A80A644D1D466B5E00A41A41 /* ConversationSubscription.swift */,
 				A80A644F1D466B7C00A41A41 /* MessageSubscription.swift */,
 				A82CCE0D1D4B731A0043D3C2 /* Attachment.swift */,
+				A8DECB331DF9AE5F00CE008D /* Context.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -342,6 +347,7 @@
 				A80A64411D46534D00A41A41 /* DriftDateTransformer.swift */,
 				A86A47241D50D53F008C59C0 /* DriftDateFormatter.swift */,
 				A8B6FBAE1DE74631002F2321 /* ImageManager.swift */,
+				A8DECB351DF9B5BF00CE008D /* UIDevice+ModelName.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -771,6 +777,7 @@
 				A80A64421D46534D00A41A41 /* DriftDateTransformer.swift in Sources */,
 				63356A4D1C529C760064F652 /* Campaign.swift in Sources */,
 				630E89671C57B9AC00195062 /* AnnouncementView.swift in Sources */,
+				A8DECB341DF9AE5F00CE008D /* Context.swift in Sources */,
 				A8B088871D4F588E00FFA469 /* ConversationAttachmentsTableViewCell.swift in Sources */,
 				A8F589A31D478F0A0043DB8D /* ConversationListTableViewCell.swift in Sources */,
 				A8BC1BAD1DDCB0DE0049968E /* GradientView.swift in Sources */,
@@ -798,6 +805,7 @@
 				630E89691C57C77300195062 /* NibLoader.swift in Sources */,
 				630E89621C57944400195062 /* PresentationManager.swift in Sources */,
 				63356A461C529C6C0064F652 /* LayerManager.swift in Sources */,
+				A8DECB361DF9B5BF00CE008D /* UIDevice+ModelName.swift in Sources */,
 				A8B0887E1D4F51DC00FFA469 /* ConversationMessageTableViewCell.swift in Sources */,
 				A8C6ADED1D632CD10024CFDC /* ConversationEmptyStateView.swift in Sources */,
 				63356A4B1C529C760064F652 /* AnnouncementAttributes.swift in Sources */,
