@@ -178,7 +178,7 @@ extension ConversationListViewController: UITableViewDelegate, UITableViewDataSo
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let conversation = conversations[(indexPath as NSIndexPath).row]
         let conversationViewController = ConversationViewController.init(conversationType: .continueConversation(conversationId: conversation.id))
-        present(conversationViewController, animated: true, completion: nil)
+        self.navigationController?.show(conversationViewController, sender: self)
     }
 }
 
