@@ -441,7 +441,7 @@ class ConversationViewController: SLKTextViewController {
     
     func getContext() -> Context {
         let context = Context()
-        context.userAgent = "Mobile App / \(UIDevice.current.modelName) / \(UIDevice.current.systemName) \(UIDevice.current.systemVersion)"
+        context.userAgent = "Mobile App / \(UIDevice.current.modelName) / \(UIDevice.current.systemName) \(UIDevice.current.systemVersion) / \(Bundle.main.infoDictionary?["CFBundleShortVersionString"])"
         return context
     }
     
