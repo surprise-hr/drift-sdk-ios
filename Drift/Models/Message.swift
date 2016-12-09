@@ -82,7 +82,9 @@ open class Message: Mappable, Equatable, Hashable{
             let attributedHTMLString = try NSMutableAttributedString(data: htmlStringData, options: [NSDocumentTypeDocumentAttribute : NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute: String.Encoding.utf8.rawValue, ], documentAttributes: nil)
             
             if let font = UIFont(name: "AvenirNext-Regular", size: 16){
-                attributedHTMLString.addAttributes([NSFontAttributeName: font], range: NSRange(location: 0, length: attributedHTMLString.length))
+                let paragraphStyle = NSMutableParagraphStyle()
+                paragraphStyle.paragraphSpacing = 0.0
+                attributedHTMLString.addAttributes([NSFontAttributeName: font, NSParagraphStyleAttributeName: paragraphStyle], range: NSRange(location: 0, length: attributedHTMLString.length))
                 formattedBody = attributedHTMLString
             }
         }catch{
