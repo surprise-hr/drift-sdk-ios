@@ -443,7 +443,7 @@ class ConversationViewController: SLKTextViewController {
         let context = Context()
         context.userAgent = "Mobile App / \(UIDevice.current.modelName) / \(UIDevice.current.systemName) \(UIDevice.current.systemVersion)"
         if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] {
-            context.userAgent?.append(" / App Version:\(version)")
+            context.userAgent?.append(" / App Version: \(version)")
         }
         return context
     }
