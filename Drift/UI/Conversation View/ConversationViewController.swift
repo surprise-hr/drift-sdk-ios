@@ -439,12 +439,18 @@ class ConversationViewController: SLKTextViewController {
         }
     }
     
+    func getContext() -> Context {
+        let context = Context()
+        context.userAgent = "Mobile App / \(UIDevice.current.modelName) / \(UIDevice.current.systemName) \(UIDevice.current.systemVersion) / \(Bundle.main.infoDictionary?["CFBundleShortVersionString"])"
+        return context
+    }
     
     func postMessage(_ messageRequest: Message){
         if messageRequest.requestId == 0{
             messageRequest.requestId = Date().timeIntervalSince1970
         }
         messageRequest.type = Type.Chat
+        messageRequest.context = getContext()
         addMessageToConversation(messageRequest)
         
         switch conversationType! {

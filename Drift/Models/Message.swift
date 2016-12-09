@@ -39,6 +39,7 @@ open class Message: Mappable, Equatable, Hashable{
     var authorId: Int!
     var authorType: AuthorType!
     var type: Type!
+    var context: Context?
     
     var conversationId: Int!
     var requestId: Double = 0
@@ -78,8 +79,11 @@ open class Message: Mappable, Equatable, Hashable{
         do {
             let htmlStringData = (body ?? "").data(using: String.Encoding.utf8)!
             let attributedHTMLString = try NSMutableAttributedString(data: htmlStringData, options: [NSDocumentTypeDocumentAttribute : NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute: String.Encoding.utf8.rawValue, ], documentAttributes: nil)
-            attributedHTMLString.addAttributes([NSFontAttributeName: UIFont.init(name: "AvenirNext-Regular", size: 16)], range: NSRange(location: 0, length: attributedHTMLString.length))
-            formattedBody = attributedHTMLString
+            
+            if let font = UIFont(name: "AvenirNext-Regular", size: 16){
+                attributedHTMLString.addAttributes([NSFontAttributeName: font], range: NSRange(location: 0, length: attributedHTMLString.length))
+                formattedBody = attributedHTMLString
+            }
         }catch{
             //Unable to format HTML body, in this scenario the raw html will be shown in the message cell
         }
