@@ -75,7 +75,8 @@ open class Message: Mappable, Equatable, Hashable{
         authorType              <- map["authorType"]
         type                    <- map["type"]
         conversationId          <- map["conversationId"]
-        
+        context                 <- map["context"]
+
         do {
             let htmlStringData = (body ?? "").data(using: String.Encoding.utf8)!
             let attributedHTMLString = try NSMutableAttributedString(data: htmlStringData, options: [NSDocumentTypeDocumentAttribute : NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute: String.Encoding.utf8.rawValue, ], documentAttributes: nil)
