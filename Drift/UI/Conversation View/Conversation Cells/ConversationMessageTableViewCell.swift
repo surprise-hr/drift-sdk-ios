@@ -110,8 +110,11 @@ class ConversationMessageTableViewCell: UITableViewCell {
                 
                 if let creatorName = endUser.name {
                     self.nameLabel.text = creatorName
+                }else if let email = endUser.email {
+                    self.nameLabel.text = email
+                }else{
+                    self.nameLabel.text = "You"
                 }
-            }
         }
     }
     
