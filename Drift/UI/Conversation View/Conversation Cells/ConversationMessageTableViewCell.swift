@@ -115,7 +115,7 @@ class ConversationMessageTableViewCell: UITableViewCell {
                 }else{
                     self.nameLabel.text = "You"
                 }
+            }
         }
     }
-    
 }
