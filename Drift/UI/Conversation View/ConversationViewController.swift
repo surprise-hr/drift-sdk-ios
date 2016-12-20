@@ -139,11 +139,6 @@ class ConversationViewController: SLKTextViewController {
                 tableView.tableHeaderView = label
             }
             
-            DispatchQueue.main.asyncAfter(
-                deadline: DispatchTime.now() + Double(Int64(1.0 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: {
-                    self.presentKeyboard(true)
-            })
-            
         }
     }
     
