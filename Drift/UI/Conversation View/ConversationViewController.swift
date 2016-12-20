@@ -535,7 +535,7 @@ extension ConversationViewController: MessageDelegate {
                     sections[(index as NSIndexPath).section][(index as NSIndexPath).row] = message
                     tableView!.reloadRows(at: [index], with: .bottom)
             }else{
-                if (Calendar.current as NSCalendar).component(.day, from: (sections[0].first?.createdAt)! as Date) ==  (Calendar.current as NSCalendar).component(.day, from: Date()){
+                if let createdAt = sections.first?.first?.createdAt, (Calendar.current as NSCalendar).component(.day, from: createdAt as Date) ==  (Calendar.current as NSCalendar).component(.day, from: Date()){
                     self.sections[0].insert(message, at: 0)
                     tableView!.insertRows(at: [IndexPath(row: 0, section: 0)], with: .bottom)
                 }else{

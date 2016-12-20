@@ -963,7 +963,7 @@
 				PRODUCT_NAME = Drift;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0.1;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -991,7 +991,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.drift.Drift-SDK";
 				PRODUCT_NAME = Drift;
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0.1;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
