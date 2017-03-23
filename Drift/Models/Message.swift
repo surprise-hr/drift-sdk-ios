@@ -68,6 +68,22 @@ open class Message: Mappable, Equatable, Hashable{
         uuid                    <- map["uuid"]
         inboxId                 <- map["inboxId"]
         body                    <- map["body"]
+        
+        if body != nil {
+            if let range = body!.range(of: "<p>", options: .caseInsensitive) {
+                body!.replaceSubrange(range, with: "")
+            }
+            
+            if let range = body!.range(of: "</p>", options: .backwards) {
+                body!.replaceSubrange(range, with: "")
+            }
+            
+            if let _ = body!.range(of: "<hr", options: .caseInsensitive) {
+                body = body!.replacingOccurrences(of: "<hr [^>]+>", with: "", options: String.CompareOptions.regularExpression, range: nil)
+            }
+            
+        }
+        
         attachments             <- map["attachments"]
         contentType             <- map["contentType"]
         createdAt               <- (map["createdAt"], DriftDateTransformer())
