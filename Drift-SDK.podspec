@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name = "Drift-SDK"
-  spec.version = "0.0.3"
+  spec.version = "1.0.0"
   spec.summary = "Drift Framework for customer communication"
   spec.homepage = "https://github.com/Driftt/drift-sdk-ios"
   spec.license = { type: 'MIT', file: 'LICENSE' }
@@ -17,6 +17,6 @@ Pod::Spec.new do |spec|
   spec.dependency 'ObjectMapper', '~> 2.0'
   spec.dependency 'SlackTextViewController', '~> 1.9.3'
   spec.dependency 'AlamofireImage', '~> 3.0'
-  spec.dependency 'SVProgressHUD', '~> 1.1'
+  spec.dependency 'SVProgressHUD', '~> 2.0'
 
 end
