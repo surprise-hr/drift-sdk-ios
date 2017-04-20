@@ -23,7 +23,7 @@ pod 'Drift', '~> 1.0.1'
 
 ## Registering
 
-To get started with the Drift iOS SDK you need an embed ID from your Drift settings page. This can be accessed [here](https://app.driftt.com/settings)
+To get started with the Drift iOS SDK you need an embed ID from your Drift settings page. This can be accessed [here](https://app.drift.com/settings/livechat) by looking after the drift.load method in the Javascript SDK.
 
 In your AppDelegate `didFinishLaunchingWithOptions` call:
 ```Swift
