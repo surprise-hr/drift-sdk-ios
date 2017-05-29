@@ -13,15 +13,10 @@ class UserManager {
     static let sharedInstance: UserManager = UserManager()
     
     
-    
     var completionDict: [Int: [((_ user: CampaignOrganizer?) -> ())]] = [:]
     
     var userCache: [Int: (CampaignOrganizer)] = [:]
 
-    
-
-    
-    
     func userMetaDataForUserId(_ userId: Int, completion: @escaping (_ user: CampaignOrganizer?) -> ()) {
         
         if let user = userCache[userId] {

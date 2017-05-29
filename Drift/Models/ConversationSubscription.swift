@@ -7,14 +7,14 @@
 //
 
 
-public protocol ConversationDelegate: class{
+protocol ConversationDelegate: class{
     func conversationsDidUpdate(_ conversations: [Conversation])
     func conversationDidUpdate(_ conversation: Conversation)
 }
 
-open class ConversationSubscription {
+class ConversationSubscription {
     
-    public convenience init(delegate: ConversationDelegate) {
+    convenience init(delegate: ConversationDelegate) {
         self.init()
         self.delegate = delegate
     }

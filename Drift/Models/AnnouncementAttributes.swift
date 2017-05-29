@@ -14,8 +14,8 @@ class AnnouncementAttributes: Mappable {
     var title: String?
     var campaignId: Int?
     
-    required convenience init?(map: Map) {
-        self.init()
+    required init?(map: Map) {
+
     }
     
     func mapping(map: Map) {

@@ -9,26 +9,26 @@
 
 import ObjectMapper
 
-public enum ContentType: String{
+enum ContentType: String{
     case Chat = "CHAT"
 }
 
-public enum Type: String{
+enum Type: String{
     case Chat = "CHAT"
 }
 
-public enum AuthorType: String{
+enum AuthorType: String{
     case User = "USER"
     case EndUser = "END_USER"
 }
 
-public enum SendStatus: String{
+enum SendStatus: String{
     case Sent = "SENT"
     case Pending = "PENDING"
     case Failed = "FAILED"
 }
 
-open class Message: Mappable, Equatable, Hashable{
+class Message: Mappable, Equatable, Hashable{
     var id: Int!
     var uuid: String?
     var inboxId: Int!
@@ -46,11 +46,11 @@ open class Message: Mappable, Equatable, Hashable{
     var sendStatus: SendStatus = SendStatus.Sent
     var formattedBody: NSAttributedString?
 
-    open var hashValue: Int {
+    var hashValue: Int {
         return id
     }
     
-    required convenience public init?(map: Map) {
+    required convenience init?(map: Map) {
         if map.JSON["contentType"] as? String == nil || ContentType(rawValue: map.JSON["contentType"] as! String) == nil{
             return nil
         }
@@ -63,7 +63,7 @@ open class Message: Mappable, Equatable, Hashable{
         self.init()
     }
     
-    open func mapping(map: Map) {
+    func mapping(map: Map) {
         id                      <- map["id"]
         uuid                    <- map["uuid"]
         inboxId                 <- map["inboxId"]
@@ -110,7 +110,7 @@ open class Message: Mappable, Equatable, Hashable{
 
 }
 
-public func ==(lhs: Message, rhs: Message) -> Bool {
+func ==(lhs: Message, rhs: Message) -> Bool {
     return lhs.uuid == rhs.uuid
 }
 

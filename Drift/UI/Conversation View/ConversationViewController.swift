@@ -23,7 +23,7 @@ class DriftPreviewItem: NSObject, QLPreviewItem{
     }
 }
 
-public protocol AttachementSelectedDelegate: class{
+protocol AttachementSelectedDelegate: class{
     func attachmentSelected(_ attachment: Attachment, sender: AnyObject)
 }
 

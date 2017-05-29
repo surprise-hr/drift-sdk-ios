@@ -6,14 +6,14 @@
 //  Copyright © 2016 Drift. All rights reserved.
 //
 
-public protocol InboxDelegate: class{
+protocol InboxDelegate: class{
     func inboxesDidUpdate(_ inboxes: [Inbox])
     func didSelectInbox(_ inbox: Inbox)
 }
 
-open class InboxSubscription {
+class InboxSubscription {
     
-    public convenience init(delegate: InboxDelegate) {
+    convenience init(delegate: InboxDelegate) {
         self.init()
         self.delegate = delegate
     }
