@@ -53,12 +53,15 @@ public enum DriftRouter: URLRequestConvertible {
 
 public enum DriftCustomerRouter: URLRequestConvertible {
     
+    case getLayerToken(data: [String: Any])
     case getAuth(email: String, userId: String, redirectURL: String, orgId: Int, clientId: String)
     case getUser(orgId: Int, userId: Int)
     case getEndUser(endUserId: Int)
     
     var request: (method: Alamofire.HTTPMethod, path: String, parameters: [String: Any]?, encoding: ParameterEncoding){
         switch self {
+        case .getLayerToken(let data):
+            return (.post, "layer/token", data, JSONEncoding.default)
         case .getAuth(let email, let userId, let redirectURL, let orgId, let clientId):
             
             let params: [String : Any] = [
@@ -116,6 +119,8 @@ public enum DriftConversationRouter: URLRequestConvertible {
     case postMessageToConversation(conversationId: Int, data: [String: Any])
     case createConversation(body: String)
     
+    case recordAnnouncement(conversationId: Int, json: [String: Any])
+    case recordNSP(conversationId: Int, json: [String: Any])
     
     var request: (method: Alamofire.HTTPMethod, path: String, parameters: [String: Any]?, encoding: ParameterEncoding){
         switch self {
@@ -127,6 +132,10 @@ public enum DriftConversationRouter: URLRequestConvertible {
             return (.post, "conversations/\(conversationId)/messages", data, JSONEncoding.default)
         case .createConversation(let body):
             return (.post, "messages", ["body":body], JSONEncoding.default)
+        case .recordAnnouncement(let conversationId, let json):
+            return (.post, "conversations/\(conversationId)/messages", json, JSONEncoding.default)
+        case .recordNSP(let conversationId, let json):
+            return (.post, "conversations/\(conversationId)/messages", json, JSONEncoding.default)
         }
     }
     

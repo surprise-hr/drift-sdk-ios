@@ -28,9 +28,10 @@ class DriftAPIManager: Alamofire.SessionManager {
     
     class func getLayerAccessToken(_ nonce: String, userId: String, completion: @escaping (Result<String>) -> ()){
         
-        makeRequest(Request(url: URLStore.layerTokenURL).setMethod(.POST).setData(.json(json: ["nonce": nonce, "userId": userId]))) { (result) in
-            
-            switch result {
+        
+        sharedManager.request(DriftCustomerRouter.getLayerToken(data: ["nonce": nonce, "userId": userId])).responseJSON(completionHandler: { (response) -> Void in
+
+            switch response.result {
             case .success(let response):
                 if let json = response as? [String: Any], let token = json["identityToken"] as? String {
                     completion(.success(token))
@@ -40,7 +41,10 @@ class DriftAPIManager: Alamofire.SessionManager {
             default:
                 completion(.failure(DriftError.apiFailure))
             }
-        }
+
+            
+        })
+    
     }
     
     class func getEmbeds(_ embedId: String, refreshRate: Int?, completion: @escaping (Result<Embed>) -> ()){
@@ -91,41 +95,26 @@ class DriftAPIManager: Alamofire.SessionManager {
     class func recordAnnouncement(_ conversationId: Int, authToken: String, response: AnnouncementResponse) {
         
         
-        guard let url = URLStore.messagesURL(conversationId, authToken: authToken) else {
-            LoggerManager.log("Failed in Messages URL Creation")
-            return
-        }
-        
         let json: [String: Any] = [
             "type": "CONVERSATION_EVENT",
             "conversationEvent": ["type": response.rawValue]
         ]
     
-        let request = Request(url: url).setData(.json(json: json)).setMethod(.POST)
-        
-        makeRequest(request) { (result) -> () in
+        sharedManager.request(DriftConversationRouter.recordAnnouncement(conversationId: conversationId, json: json)).responseJSON(completionHandler: { (result) -> Void in
             
-            switch result {
+            switch result.result {
             case .success(let json):
                 LoggerManager.log("Record Annouincment Success: \(json)")
             case .failure(let error):
                 LoggerManager.log("Record Announcement Failure: \(error)")
             }
-        }
+        })
     }
     
     
     class func recordNPS(_ conversationId: Int, authToken: String, response: NPSResponse){
-        
-        
-        guard let url = URLStore.messagesURL(conversationId, authToken: authToken) else {
-            LoggerManager.log("Failed in Messages URL Creation")
-            return
-        }
-        
-        
+
         var attributes: [String: Any] = [:]
-        
         
         switch response{
         case .dismissed:
@@ -141,19 +130,16 @@ class DriftAPIManager: Alamofire.SessionManager {
             "attributes": attributes
         ]
         
-        let request = Request(url: url).setData(.json(json: json)).setMethod(.POST)
-        
-        makeRequest(request) { (result) -> () in
+        sharedManager.request(DriftConversationRouter.recordNSP(conversationId: conversationId, json: json)).responseJSON(completionHandler: { (result) -> Void in
             
-            switch result {
+            switch result.result {
             case .success(let json):
                 LoggerManager.log("Record NPS Success: \(json)")
             case .failure(let error):
                 LoggerManager.log("Record NPS Failure: \(error)")
             }
-        }
+        })
     }
-    
     
     class func getConversations(_ endUserId: Int, authToken: String, completion: @escaping (_ result: Result<[Conversation]>) -> ()){
         
@@ -297,45 +283,6 @@ class DriftAPIManager: Alamofire.SessionManager {
         }) .resume()
     }
     
-    /**
-     Responsible for calling a request and parsing its response
-     
-     - parameter request: The request object to make the call
-     - parameter completion: Completion Block called with result Object - AnyObject or nil
-    */
-    fileprivate class func makeRequest(_ request: Request, completion: @escaping (Result<Any>) -> ()) {
-        
-        sharedManager.session.dataTask(with: request.getRequest(), completionHandler: { (data, response, error) -> Void in
-            if let response = response as? HTTPURLResponse {
-                LoggerManager.log("API Complete: \(response.statusCode) \(response.url?.path ?? "")")
-            }
-
-            let accepted = [200, 201]
-            
-            if let response = response as? HTTPURLResponse, let data = data , accepted.contains(response.statusCode){
-                do {
-                    let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
-                    DispatchQueue.main.async(execute: { 
-                        completion(.success(json))
-                    })
-                } catch {
-                    DispatchQueue.main.async(execute: {
-                        completion(.failure(DriftError.apiFailure))
-                    })
-                }
-            }else if let error = error {
-                DispatchQueue.main.async(execute: {
-                    completion(.failure(error))
-                })
-            }else{
-                DispatchQueue.main.async(execute: {
-                    completion(.failure(DriftError.apiFailure))
-                })
-            }
-            
-            }) .resume()
-    }
-    
     //Maps response to result T using ObjectMapper JSON parsing
     fileprivate class func mapResponse<T: Mappable>(_ result: DataResponse<Any>) -> Result<T> {
         
@@ -371,12 +318,6 @@ class DriftAPIManager: Alamofire.SessionManager {
 
 class URLStore{
     
-    static let layerTokenURL = URL(string: "https://customer.api.drift.com/layer/token")!
-
-    class func messagesURL(_ conversationId: Int, authToken: String) -> URL? {
-        return URL(string: "https://conversation.api.drift.com/conversations/\(conversationId)/messages?access_token=\(authToken)")
-    }
-
     class func postAttachmentURL(_ authToken: String) -> URL? {
         return URL(string: "https://conversation.api.drift.com/attachments?access_token=\(authToken)")
     }
@@ -401,183 +342,4 @@ class URLStore{
 enum Result<T> {
     case success(T)
     case failure(Error)
-}
-
-
-private enum HeaderField: String {
-    case Accept = "Accept"
-    case ContentType = "Content-Type"
-}
-
-private enum HeaderValue: String {
-    case ApplicationJson = "application/json"
-    case FormURLEncoded = "application/x-www-form-urlencoded"
-}
-
-///Request Object to encompase API Requests
-class Request {
-    
-    enum Method: String {
-        case POST = "POST"
-        case GET = "GET"
-        case OPTIONS = "OPTIONS"
-    }
-    
-    enum DataType {
-        case url(params: [String: Any])
-        case json(json: [String: Any])
-        case form(json: [String: Any])
-
-        
-        func appendToRequest(_ request:NSMutableURLRequest) -> NSMutableURLRequest {
-            
-            switch self {
-                
-            case .url(let params):
-                
-                var url = URLComponents(url: request.url!, resolvingAgainstBaseURL: false)
-                
-                let queries = params.queryItems()
-                
-                url?.queryItems = queries
-                
-                request.url = url?.url
-                
-            case .json(let json):
-                
-                request.addValue(HeaderValue.ApplicationJson.rawValue, forHTTPHeaderField: HeaderField.Accept.rawValue)
-                request.addValue(HeaderValue.ApplicationJson.rawValue, forHTTPHeaderField: HeaderField.ContentType.rawValue)
-                
-                do {
-                    let jsonData = try JSONSerialization.data(withJSONObject: json, options: JSONSerialization.WritingOptions.prettyPrinted)
-                    request.httpBody = jsonData
-                } catch let error as NSError {
-                    LoggerManager.log(error.localizedDescription)
-                }
-                
-            case .form(let params):
-                
-                request.addValue(HeaderValue.FormURLEncoded.rawValue, forHTTPHeaderField: HeaderField.ContentType.rawValue)
-
-                func query(_ parameters: [String: Any]) -> String {
-                    var components: [(String, String)] = []
-                    
-                    for key in parameters.keys.sorted(by: <) {
-                        let value = parameters[key]!
-                        components += queryComponents(key, value)
-                    }
-                    
-                    return (components.map { "\($0)=\($1)" } as [String]).joined(separator: "&")
-                }
-
-                if var URLComponents = URLComponents(url: request.url!, resolvingAgainstBaseURL: false) {
-                    let percentEncodedQuery = (URLComponents.percentEncodedQuery.map { $0 + "&" } ?? "") + query(params)
-                    URLComponents.percentEncodedQuery = percentEncodedQuery
-                    request.url = URLComponents.url
-                }
-            }
-            
-            return request
-        }
-    }
-    
-    var dataType:DataType?
-    var method: Method = .GET
-    var url: URL
-    
-    init(url: URL) {
-        self.url = url
-    }
-    
-    func setMethod(_ method: Method) -> Request {
-        self.method = method
-        return self
-    }
-    
-    func setData(_ dataType: DataType) -> Request {
-        self.dataType = dataType
-        return self
-    }
-    
-    func getRequest() -> URLRequest {
-        
-        var request = NSMutableURLRequest(url: url)
-        
-        request.httpMethod = method.rawValue
-        
-        if let dataType = dataType {
-            request = dataType.appendToRequest(request)
-        }
-        
-        return request as URLRequest
-    }
-}
-
-/**
- Creates percent-escaped, URL encoded query string components from the given key-value pair using recursion.
- 
- - parameter key:   The key of the query component.
- - parameter value: The value of the query component.
- 
- - returns: The percent-escaped, URL encoded query string components.
- */
-func queryComponents(_ key: String, _ value: Any) -> [(String, String)] {
-    var components: [(String, String)] = []
-    
-    if let dictionary = value as? [String: Any] {
-        for (nestedKey, value) in dictionary {
-            components += queryComponents("\(key)[\(nestedKey)]", value)
-        }
-    } else if let array = value as? [Any] {
-        for value in array {
-            components += queryComponents("\(key)[]", value)
-        }
-    } else {
-        components.append((escape(key), escape("\(value)")))
-    }
-    
-    return components
-}
-
-func escape(_ string: String) -> String {
-    let generalDelimitersToEncode = ":#[]@" // does not include "?" or "/" due to RFC 3986 - Section 3.4
-    let subDelimitersToEncode = "!$&'()*+,;="
-    
-    var allowedCharacterSet = (CharacterSet.urlQueryAllowed as NSCharacterSet).mutableCopy() as! CharacterSet
-    allowedCharacterSet.remove(charactersIn: generalDelimitersToEncode + subDelimitersToEncode)
-    
-    var escaped = ""
-    
-    if #available(iOS 8.3, OSX 10.10, *) {
-        escaped = string.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet as CharacterSet) ?? string
-    } else {
-        let batchSize = 50
-        var index = string.startIndex
-        
-        while index != string.endIndex {
-            let startIndex = index
-            if let endIndex = string.index(index, offsetBy: batchSize, limitedBy: string.endIndex) { //(index, offsetBy: batchSize, limitedBy: string.endIndex)
-                let range = startIndex..<endIndex
-                
-                let substring = string.substring(with: range)
-                
-                escaped += substring.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet) ?? substring
-                
-                index = endIndex
-            }
-        }
-    }
-    
-    return escaped
-}
-
-extension Dictionary {
-    
-    func queryItems() -> [URLQueryItem] {
-        var queryItems: [URLQueryItem] = []
-        for (key, value) in self {
-            queryItems.append(URLQueryItem(name: String(describing: key), value: String(describing: value)))
-        }
-        return queryItems
-    }
 }
