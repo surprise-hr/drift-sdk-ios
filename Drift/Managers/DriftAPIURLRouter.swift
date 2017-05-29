@@ -91,10 +91,10 @@ enum DriftCustomerRouter: URLRequestConvertible {
     }
     
     func asURLRequest() throws -> URLRequest {
-        var components = URLComponents.init(string: APIBase.Customer.rawValue)
+        var components = URLComponents(string: APIBase.Customer.rawValue)
         
         if let accessToken = DriftDataStore.sharedInstance.auth?.accessToken{
-            let authItem = URLQueryItem.init(name: "access_token", value: accessToken)
+            let authItem = URLQueryItem(name: "access_token", value: accessToken)
             components?.queryItems = [authItem]
         }
         
@@ -141,9 +141,9 @@ enum DriftConversationRouter: URLRequestConvertible {
     
     
     func asURLRequest() throws -> URLRequest {
-        var components = URLComponents.init(string: APIBase.Conversation.rawValue)
+        var components = URLComponents(string: APIBase.Conversation.rawValue)
         if let accessToken = DriftDataStore.sharedInstance.auth?.accessToken{
-            let authItem = URLQueryItem.init(name: "access_token", value: accessToken)
+            let authItem = URLQueryItem(name: "access_token", value: accessToken)
             components?.queryItems = [authItem]
         }
         var urlRequest = URLRequest(url: (components?.url!.appendingPathComponent(request.path))!)

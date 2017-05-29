@@ -225,7 +225,7 @@ class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
                 switch result {
                 case .success(let users):
                     if let avatar = users.first?.avatarURL {
-                        self.campaignCreatorImageView.af_setImage(withURL: URL.init(string:avatar)!)
+                        self.campaignCreatorImageView.af_setImage(withURL: URL(string:avatar)!)
                     }
                     if let creatorName = users.first?.name {
                         self.campaignCreatorNameLabel.text = creatorName

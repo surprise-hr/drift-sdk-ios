@@ -229,7 +229,7 @@ class DriftAPIManager: Alamofire.SessionManager {
         let boundary = "Boundary-\(UUID().uuidString)"
         let requestURL = URLStore.postAttachmentURL(authToken)
         
-        let request = NSMutableURLRequest.init(url: requestURL!)
+        let request = NSMutableURLRequest(url: requestURL!)
         
         request.httpMethod = "POST"
         request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")

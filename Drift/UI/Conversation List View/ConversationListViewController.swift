@@ -35,7 +35,7 @@ class ConversationListViewController: UIViewController {
         tableView.register(UINib(nibName: "ConversationListTableViewCell", bundle:  Bundle(for: ConversationListTableViewCell.classForCoder())), forCellReuseIdentifier: "ConversationListTableViewCell")
         InboxManager.sharedInstance.addConversationSubscription(ConversationSubscription(delegate: self))
         
-        let tvc = UITableViewController.init()
+        let tvc = UITableViewController()
         tvc.tableView = tableView
         
         refreshControl = UIRefreshControl()
@@ -44,7 +44,7 @@ class ConversationListViewController: UIViewController {
         tvc.refreshControl = refreshControl
         
         //Ensure that the back button title is not being shown
-        navigationItem.backBarButtonItem = UIBarButtonItem.init(title: " ", style: UIBarButtonItemStyle.plain, target: nil, action: nil)
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: " ", style: UIBarButtonItemStyle.plain, target: nil, action: nil)
     }
     
     
@@ -63,17 +63,17 @@ class ConversationListViewController: UIViewController {
     
     class func navigationController() -> UINavigationController {
         let vc = ConversationListViewController()
-        let navVC = UINavigationController.init(rootViewController: vc)
-        let leftButton = UIBarButtonItem.init(image: UIImage.init(named: "closeIcon", in: Bundle.init(for: ConversationListViewController.classForCoder()), compatibleWith: nil), style: UIBarButtonItemStyle.plain, target:vc, action: #selector(ConversationListViewController.dismissVC))
+        let navVC = UINavigationController(rootViewController: vc)
+        let leftButton = UIBarButtonItem(image: UIImage(named: "closeIcon", in: Bundle(for: ConversationListViewController.classForCoder()), compatibleWith: nil), style: UIBarButtonItemStyle.plain, target:vc, action: #selector(ConversationListViewController.dismissVC))
         leftButton.tintColor = DriftDataStore.sharedInstance.generateForegroundColor()
 
-        let rightButton = UIBarButtonItem.init(image:  UIImage.init(named: "newChatIcon", in: Bundle.init(for: ConversationListViewController.classForCoder()), compatibleWith: nil), style: UIBarButtonItemStyle.plain, target: vc, action: #selector(ConversationListViewController.startNewConversation))
+        let rightButton = UIBarButtonItem(image:  UIImage(named: "newChatIcon", in: Bundle(for: ConversationListViewController.classForCoder()), compatibleWith: nil), style: UIBarButtonItemStyle.plain, target: vc, action: #selector(ConversationListViewController.startNewConversation))
         rightButton.tintColor = DriftDataStore.sharedInstance.generateForegroundColor()
 
         navVC.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: DriftDataStore.sharedInstance.generateForegroundColor()]
         navVC.navigationBar.barTintColor = DriftDataStore.sharedInstance.generateBackgroundColor()
         navVC.navigationBar.tintColor = DriftDataStore.sharedInstance.generateForegroundColor()
-        navVC.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: DriftDataStore.sharedInstance.generateForegroundColor(), NSFontAttributeName: UIFont.init(name: "AvenirNext-Medium", size: 16)!]
+        navVC.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: DriftDataStore.sharedInstance.generateForegroundColor(), NSFontAttributeName: UIFont(name: "AvenirNext-Medium", size: 16)!]
 
         vc.navigationItem.leftBarButtonItem  = leftButton
         vc.navigationItem.rightBarButtonItem = rightButton
@@ -131,7 +131,7 @@ extension ConversationListViewController: UITableViewDelegate, UITableViewDataSo
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ConversationListTableViewCell") as! ConversationListTableViewCell
-        cell.avatarImageView.image = UIImage.init(named: "placeholderAvatar", in:  Bundle(for: ConversationListViewController.classForCoder()), compatibleWith: nil)
+        cell.avatarImageView.image = UIImage(named: "placeholderAvatar", in:  Bundle(for: ConversationListViewController.classForCoder()), compatibleWith: nil)
         let conversation = conversations[(indexPath as NSIndexPath).row]
 
         if let assigneeId = conversation.assigneeId , assigneeId != 0{
@@ -151,7 +151,7 @@ extension ConversationListViewController: UITableViewDelegate, UITableViewDataSo
             cell.nameLabel.text = "You"
             if let endUser = DriftDataStore.sharedInstance.auth?.enduser {
                 if let avatar = endUser.avatarURL {
-                    cell.avatarImageView.af_setImage(withURL: URL.init(string: avatar)!)
+                    cell.avatarImageView.af_setImage(withURL: URL(string: avatar)!)
                 }
             }
         }
@@ -177,7 +177,7 @@ extension ConversationListViewController: UITableViewDelegate, UITableViewDataSo
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let conversation = conversations[(indexPath as NSIndexPath).row]
-        let conversationViewController = ConversationViewController.init(conversationType: .continueConversation(conversationId: conversation.id))
+        let conversationViewController = ConversationViewController(conversationType: .continueConversation(conversationId: conversation.id))
         self.navigationController?.show(conversationViewController, sender: self)
     }
 }

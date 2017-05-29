@@ -73,7 +73,7 @@ class AnnouncementView: CampaignView {
                     
                 case .success(let users):
                     if let avatar = users.first?.avatarURL {
-                        self.userImageView.af_setImage(withURL: URL.init(string:avatar)!)
+                        self.userImageView.af_setImage(withURL: URL(string:avatar)!)
                     }
                 case .failure(let error):
                     LoggerManager.didRecieveError(error)

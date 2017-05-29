@@ -30,7 +30,7 @@ class ConversationAttachmentsTableViewCell: UITableViewCell, UICollectionViewDel
     override func awakeFromNib() {
         super.awakeFromNib()
         selectionStyle = .none
-        attachmentsCollectionView.register(UINib.init(nibName: "AttachmentCollectionViewCell", bundle: Bundle(for: AttachmentCollectionViewCell.classForCoder())), forCellWithReuseIdentifier: "AttachmentCollectionViewCell")
+        attachmentsCollectionView.register(UINib(nibName: "AttachmentCollectionViewCell", bundle: Bundle(for: AttachmentCollectionViewCell.classForCoder())), forCellWithReuseIdentifier: "AttachmentCollectionViewCell")
         attachmentsCollectionView.dataSource = self
         attachmentsCollectionView.delegate = self
         attachmentsCollectionView.backgroundColor = UIColor.white
@@ -39,7 +39,7 @@ class ConversationAttachmentsTableViewCell: UITableViewCell, UICollectionViewDel
     
     func displayMessage() {
   
-        avatarImageView.image = UIImage.init(named: "placeholderAvatar", in: Bundle.init(for: ConversationListTableViewCell.classForCoder()), compatibleWith: nil)
+        avatarImageView.image = UIImage(named: "placeholderAvatar", in: Bundle(for: ConversationListTableViewCell.classForCoder()), compatibleWith: nil)
         avatarImageView.contentMode = .scaleAspectFill
         avatarImageView.layer.masksToBounds = true
         avatarImageView.layer.cornerRadius = 3
@@ -119,7 +119,7 @@ class ConversationAttachmentsTableViewCell: UITableViewCell, UICollectionViewDel
             let fileName: NSString = attachments.first!.fileName as NSString
             let fileExtension = fileName.pathExtension
             if fileExtension == "jpg" || fileExtension == "png" || fileExtension == "gif"{
-                let gestureRecognizer = UITapGestureRecognizer.init(target:self, action: #selector(ConversationAttachmentsTableViewCell.imagePressed))
+                let gestureRecognizer = UITapGestureRecognizer(target:self, action: #selector(ConversationAttachmentsTableViewCell.imagePressed))
                 attachmentImageView.addGestureRecognizer(gestureRecognizer)
                 if let previewString = attachments.first?.publicPreviewURL{
                     self.attachmentsCollectionView.isHidden = true

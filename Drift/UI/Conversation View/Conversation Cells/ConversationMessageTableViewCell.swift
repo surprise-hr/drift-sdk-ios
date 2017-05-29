@@ -30,7 +30,7 @@ class ConversationMessageTableViewCell: UITableViewCell {
     
     func displayMessage() {
 
-        avatarImageView.image = UIImage.init(named: "placeholderAvatar", in: Bundle.init(for: ConversationListTableViewCell.classForCoder()), compatibleWith: nil)
+        avatarImageView.image = UIImage(named: "placeholderAvatar", in: Bundle(for: ConversationListTableViewCell.classForCoder()), compatibleWith: nil)
         avatarImageView.contentMode = .scaleAspectFill
         avatarImageView.layer.masksToBounds = true
         avatarImageView.layer.cornerRadius = 3

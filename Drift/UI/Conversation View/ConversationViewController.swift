@@ -58,7 +58,7 @@ class ConversationViewController: SLKTextViewController {
         didSet{
             leftButton.isEnabled = true
             leftButton.tintColor = DriftDataStore.sharedInstance.generateBackgroundColor()
-            leftButton.setImage(UIImage.init(named: "plus-circle", in: Bundle(for: Drift.self), compatibleWith: nil), for: UIControlState())
+            leftButton.setImage(UIImage(named: "plus-circle", in: Bundle(for: Drift.self), compatibleWith: nil), for: UIControlState())
             textView.placeholder = "Message"
         }
     }
@@ -73,10 +73,10 @@ class ConversationViewController: SLKTextViewController {
     }
 
     class func navigationController(_ conversationType: ConversationType) -> UINavigationController {
-        let vc = ConversationViewController.init(conversationType: conversationType)
-        let navVC = UINavigationController.init(rootViewController: vc)
+        let vc = ConversationViewController(conversationType: conversationType)
+        let navVC = UINavigationController(rootViewController: vc)
         
-        let leftButton = UIBarButtonItem.init(image: UIImage.init(named: "closeIcon", in: Bundle.init(for: ConversationViewController.classForCoder()), compatibleWith: nil), style: UIBarButtonItemStyle.plain, target:vc, action: #selector(ConversationViewController.dismissVC))
+        let leftButton = UIBarButtonItem(image: UIImage(named: "closeIcon", in: Bundle(for: ConversationViewController.classForCoder()), compatibleWith: nil), style: UIBarButtonItemStyle.plain, target:vc, action: #selector(ConversationViewController.dismissVC))
         leftButton.tintColor = DriftDataStore.sharedInstance.generateForegroundColor()
         vc.navigationItem.leftBarButtonItem  = leftButton
 
@@ -88,13 +88,13 @@ class ConversationViewController: SLKTextViewController {
         super.viewDidLoad()
         setupSlackTextView()
         
-        tableView?.register(UINib.init(nibName: "ConversationMessageTableViewCell", bundle: Bundle(for: ConversationMessageTableViewCell.classForCoder())), forCellReuseIdentifier: "ConversationMessageTableViewCell")
-        tableView?.register(UINib.init(nibName: "ConversationAttachmentsTableViewCell", bundle: Bundle(for: ConversationAttachmentsTableViewCell.classForCoder())), forCellReuseIdentifier: "ConversationAttachmentsTableViewCell")
+        tableView?.register(UINib(nibName: "ConversationMessageTableViewCell", bundle: Bundle(for: ConversationMessageTableViewCell.classForCoder())), forCellReuseIdentifier: "ConversationMessageTableViewCell")
+        tableView?.register(UINib(nibName: "ConversationAttachmentsTableViewCell", bundle: Bundle(for: ConversationAttachmentsTableViewCell.classForCoder())), forCellReuseIdentifier: "ConversationAttachmentsTableViewCell")
         
         if let navVC = navigationController {
             navVC.navigationBar.barTintColor = DriftDataStore.sharedInstance.generateBackgroundColor()
             navVC.navigationBar.tintColor = DriftDataStore.sharedInstance.generateForegroundColor()
-            navVC.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: DriftDataStore.sharedInstance.generateForegroundColor(), NSFontAttributeName: UIFont.init(name: "AvenirNext-Medium", size: 16)!]
+            navVC.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: DriftDataStore.sharedInstance.generateForegroundColor(), NSFontAttributeName: UIFont(name: "AvenirNext-Medium", size: 16)!]
             navigationItem.title = "Conversation"
         }
         
@@ -158,14 +158,14 @@ class ConversationViewController: SLKTextViewController {
     
     func setupSlackTextView() {
         tableView?.backgroundColor = UIColor.white
-        tableView?.contentInset = UIEdgeInsets.init()
+        tableView?.contentInset = UIEdgeInsets()
         tableView?.separatorStyle = .none
 
         textInputbar.barTintColor = UIColor.white
        
         leftButton.tintColor = UIColor.lightGray
         leftButton.isEnabled = false
-        leftButton.setImage(UIImage.init(named: "plus-circle", in: Bundle(for: Drift.self), compatibleWith: nil), for: UIControlState())
+        leftButton.setImage(UIImage(named: "plus-circle", in: Bundle(for: Drift.self), compatibleWith: nil), for: UIControlState())
         textView.font = UIFont(name: "AvenirNext-Regular", size: 18)
         isInverted = true
         shouldScrollToBottomAfterKeyboardShows = false
@@ -187,7 +187,7 @@ class ConversationViewController: SLKTextViewController {
     
     override func didPressLeftButton(_ sender: Any?) {
         dismissKeyboard(true)
-        let uploadController = UIAlertController.init(title: nil, message: nil, preferredStyle: .actionSheet)
+        let uploadController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
        
         if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad {
             uploadController.modalPresentationStyle = .popover
@@ -379,7 +379,7 @@ class ConversationViewController: SLKTextViewController {
                 tableView!.insertRows(at: [IndexPath(row: 0, section: 0)], with: .bottom)
             }else{
                 sections.insert([message], at: 0)
-                tableView?.insertSections(IndexSet.init(integer: 0), with: .bottom)
+                tableView?.insertSections(IndexSet(integer: 0), with: .bottom)
             }
         }
     }
@@ -540,7 +540,7 @@ extension ConversationViewController: MessageDelegate {
                     tableView!.insertRows(at: [IndexPath(row: 0, section: 0)], with: .bottom)
                 }else{
                     self.sections.insert([message], at: 0)
-                    tableView?.insertSections(IndexSet.init(integer: 0), with: .bottom)
+                    tableView?.insertSections(IndexSet(integer: 0), with: .bottom)
                 }
             }
         }
@@ -585,8 +585,8 @@ extension ConversationViewController: AttachementSelectedDelegate {
                     }
                 }
             case .failure:
-                let alert = UIAlertController.init(title: "Unable to preview file", message: "This file cannot be previewed", preferredStyle: UIAlertControllerStyle.alert)
-                alert.addAction(UIAlertAction.init(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+                let alert = UIAlertController(title: "Unable to preview file", message: "This file cannot be previewed", preferredStyle: UIAlertControllerStyle.alert)
+                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
                 self.present(alert, animated: true, completion: nil)
                 LoggerManager.log("Unable to preview file with mimeType: \(attachment.mimeType)")
             }
@@ -604,7 +604,7 @@ extension ConversationViewController: QLPreviewControllerDataSource {
         if let previewItem = previewItem{
             return previewItem
         }
-        return DriftPreviewItem.init(url: URLComponents().url!, title: "")
+        return DriftPreviewItem(url: URLComponents().url!, title: "")
     }
 }
 
@@ -646,8 +646,8 @@ extension ConversationViewController: UIImagePickerControllerDelegate, UINavigat
                     messageRequest.attachments.append(attachment.id)
                     self.postMessage(messageRequest)
                 case .failure:
-                    let alert = UIAlertController.init(title: "Unable to upload file", message: nil, preferredStyle: UIAlertControllerStyle.alert)
-                    alert.addAction(UIAlertAction.init(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+                    let alert = UIAlertController(title: "Unable to upload file", message: nil, preferredStyle: UIAlertControllerStyle.alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
                     self.present(alert, animated: true, completion: nil)
                     LoggerManager.log("Unable to upload file with mimeType: \(newAttachment.mimeType)")
 
