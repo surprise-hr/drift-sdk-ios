@@ -104,7 +104,7 @@ class DriftManager: NSObject {
             //Call Identify
             //Call Auth
             
-            APIManager.postIdentify(orgId, userId: userId, email: email, attributes: nil) { (result) -> () in }
+            DriftAPIManager.postIdentify(orgId, userId: userId, email: email, attributes: nil) { (result) -> () in }
             getAuth(email, userId: userId) { (success) in
                 if success {
                     self.initializeLayer(userId)
@@ -129,7 +129,7 @@ class DriftManager: NSObject {
     class func getAuth(_ email: String, userId: String, completion: @escaping (_ success: Bool) -> ()) {
         
         if let orgId = DriftDataStore.sharedInstance.embed?.orgId, let clientId = DriftDataStore.sharedInstance.embed?.clientId, let redirURI = DriftDataStore.sharedInstance.embed?.redirectUri {
-            APIManager.getAuth(email, userId: userId, redirectURL: redirURI, orgId: orgId, clientId: clientId, completion: { (result) -> () in
+            DriftAPIManager.getAuth(email, userId: userId, redirectURL: redirURI, orgId: orgId, clientId: clientId, completion: { (result) -> () in
                 switch result {
                 case .success(let auth):
                     DriftDataStore.sharedInstance.setAuth(auth)
@@ -149,7 +149,7 @@ class DriftManager: NSObject {
     */
     func didEnterForeground(){
         if let user = DriftDataStore.sharedInstance.auth?.enduser, let orgId = user.orgId, let userId = user.externalId, let email = user.email {
-            APIManager.postIdentify(orgId, userId: userId, email: email, attributes: nil) { (result) -> () in }
+            DriftAPIManager.postIdentify(orgId, userId: userId, email: email, attributes: nil) { (result) -> () in }
 
         }else{
             LoggerManager.log("No End user to post identify for")
@@ -176,7 +176,7 @@ class DriftManager: NSObject {
     
     class func getEmbedData(_ embedId: String, completion: @escaping (_ success: Bool) -> ()){
         let refresh = DriftDataStore.sharedInstance.embed?.refreshRate
-        APIManager.getEmbeds(embedId, refreshRate: refresh) { (result) -> () in
+        DriftAPIManager.getEmbeds(embedId, refreshRate: refresh) { (result) -> () in
             
             switch result {
             case .success(let embed):

@@ -1,3 +1,4 @@
+
 //
 //  LayerManager.swift
 //  Driftt
@@ -55,7 +56,7 @@ class LayerManager: NSObject, LYRClientDelegate {
                     LoggerManager.log("Layer Deauth success")
                     sharedInstance.startLayerConection()
                 }else{
-                    LoggerManager.log("\(error?.localizedDescription)")
+                    LoggerManager.log("\(String(describing: error?.localizedDescription))")
                     LoggerManager.log("Layer Deauth Failed")
                     sharedInstance.startLayerConection()
                 }
@@ -86,10 +87,10 @@ class LayerManager: NSObject, LYRClientDelegate {
             if let nonce = nonce {
                 self.getToken(nonce)
             }else{
-                if let nsError = error as? NSError, nsError.code == .some(7005) {
+                if let nsError = error as NSError?, nsError.code == .some(7005) {
                     self.completion?(true)
                 }else{
-                    LoggerManager.log("Failed to get nonce: \(error)")
+                    LoggerManager.log("Failed to get nonce: \(String(describing: error))")
                     self.completion?(false)
                 }
                 self.completion = nil
@@ -99,7 +100,7 @@ class LayerManager: NSObject, LYRClientDelegate {
     
     func getToken(_ nonce: String) {
         
-        APIManager.getLayerAccessToken(nonce, userId: "u:\(userId)") { (result) -> () in
+        DriftAPIManager.getLayerAccessToken(nonce, userId: "u:\(userId)") { (result) -> () in
             switch result {
             case .success(let token):
                 self.authWithLayer(token)

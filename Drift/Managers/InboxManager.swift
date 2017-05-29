@@ -29,7 +29,7 @@ class InboxManager {
             return
         }
         
-        APIManager.getConversations(endUserId, authToken: auth) { (result) in
+        DriftAPIManager.getConversations(endUserId, authToken: auth) { (result) in
             switch result{
             case .success(let conversations):
                 completion(conversations)
@@ -48,7 +48,7 @@ class InboxManager {
             return
         }
         
-        APIManager.getMessages(conversationId, authToken: auth) { (result) in
+        DriftAPIManager.getMessages(conversationId, authToken: auth) { (result) in
             switch result{
             case .success(let messages):
                 completion(messages)
@@ -67,7 +67,7 @@ class InboxManager {
             return
         }
         
-        APIManager.postMessage(conversationId, message: message, authToken: auth) { (result) in
+        DriftAPIManager.postMessage(conversationId, message: message, authToken: auth) { (result) in
             switch result{
             case .success(let returnedMessage):
                 completion(returnedMessage, message.requestId)
@@ -87,7 +87,7 @@ class InboxManager {
             return
         }
         
-        APIManager.createConversation(message.body ?? "", authorId: authorId, authToken: auth) { (result) in
+        DriftAPIManager.createConversation(message.body ?? "", authorId: authorId, authToken: auth) { (result) in
             switch result{
             case .success(let returnedMessage):
                 completion(returnedMessage, message.requestId)

@@ -27,7 +27,7 @@ class CampaignResponseManager {
     
     class func recordAnnouncementResponse(_ campaign: Campaign, response: AnnouncementResponse){
         
-        LoggerManager.log("Recording Announcement Response:\(response) \(campaign.conversationId) ")
+        LoggerManager.log("Recording Announcement Response:\(response) \(String(describing: campaign.conversationId)) ")
 
         guard let auth = DriftDataStore.sharedInstance.auth?.accessToken else {
             LoggerManager.log("No Auth Token for Recording")
@@ -43,13 +43,13 @@ class CampaignResponseManager {
         }
         
         if !DriftManager.sharedInstance.debug {
-            APIManager.recordAnnouncement(conversationId, authToken: auth, response: response)
+            DriftAPIManager.recordAnnouncement(conversationId, authToken: auth, response: response)
         }
     }
     
     class func recordNPSResponse(_ campaign: Campaign, response: NPSResponse){
 
-        LoggerManager.log("Recording NPS Response:\(response) \(campaign.conversationId) ")
+        LoggerManager.log("Recording NPS Response:\(response) \(String(describing: campaign.conversationId)) ")
         
         guard let auth = DriftDataStore.sharedInstance.auth?.accessToken else {
             LoggerManager.log("No Auth Token for Recording")
@@ -66,7 +66,7 @@ class CampaignResponseManager {
         }
         
         if !DriftManager.sharedInstance.debug {
-            APIManager.recordNPS(conversationId, authToken: auth, response: response)
+            DriftAPIManager.recordNPS(conversationId, authToken: auth, response: response)
         }
         
     }

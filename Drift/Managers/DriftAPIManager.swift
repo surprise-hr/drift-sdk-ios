@@ -1,43 +1,30 @@
 //
-//  APIManager.swift
-//  Driftt
+//  DriftAPIManager.swift
+//  Drift
 //
-//  Created by Eoin O'Connell on 22/01/2016.
 //  Copyright © 2016 Drift. All rights reserved.
 //
 
 import Foundation
 import ObjectMapper
+import Alamofire
 
-class APIManager {
+class DriftAPIManager: Alamofire.SessionManager {
     
-    fileprivate let session: URLSession
+    static let sharedManager: DriftAPIManager = {
+        let configuration = URLSessionConfiguration.default
+        let manager = DriftAPIManager(configuration: configuration)
+        return manager
+    }()
     
-    fileprivate static var sharedInstance: APIManager = APIManager()
-    
-    fileprivate init(){
-        session = URLSession.shared
-    }
-        
 
     class func getAuth(_ email: String, userId: String, redirectURL: String, orgId: Int, clientId: String, completion: @escaping (Result<Auth>) -> ()) {
         
-        let params: [String : Any] = [
-            
-            "email": email ,
-            "org_id": orgId,
-            "user_id": userId,
-            "grant_type": "sdk",
-            "redirect_uri":redirectURL,
-            "client_id": clientId
-        ]
+        sharedManager.request(DriftCustomerRouter.getAuth(email: email, userId: userId, redirectURL: redirectURL, orgId: orgId, clientId: clientId)).responseJSON(completionHandler: { (response) -> Void in
+            completion(mapResponse(response))
+        })
         
-        makeRequest(Request(url: URLStore.tokenURL).setMethod(.POST).setData(.form(json: params))) { (result) in
-            completion(mapResponse(result))
-        }
     }
-    
-    
     
     class func getLayerAccessToken(_ nonce: String, userId: String, completion: @escaping (Result<String>) -> ()){
         
@@ -58,49 +45,28 @@ class APIManager {
     
     class func getEmbeds(_ embedId: String, refreshRate: Int?, completion: @escaping (Result<Embed>) -> ()){
         
-        guard let url = URLStore.embedURL(embedId, refresh: refreshRate) else {
-            LoggerManager.log("Failure in Embed URL creation")
-            return
-        }
-        
-        makeRequest(Request(url: url).setMethod(.GET)) { (result) -> () in
+        sharedManager.request(DriftRouter.getEmbed(embedId: embedId, refreshRate: refreshRate)).responseJSON(completionHandler: { (result) -> Void in
             let response: Result<Embed> = mapResponse(result)
             completion(response)
-        }
+        })
+        
+
     }
     
     
     class func getUser(_ userId: Int, orgId: Int, authToken:String, completion: @escaping (Result<[CampaignOrganizer]>) -> ()) {
         
-        guard let url = URLStore.campaignUserURL(orgId, authToken: DriftDataStore.sharedInstance.auth!.accessToken) else {
-            LoggerManager.log("Failure in Campaign Organizer URL creation")
-            return
-        }
-        
-        let params: [String: Any] =
-        [   "avatar_w": 102,
-            "avatar_h": 102,
-            "avatar_fit": "1",
-            "access_token": authToken,
-            "userId": userId
-        ]
-        
-        makeRequest(Request(url: url).setMethod(.GET).setData(.url(params: params))) { (result) -> () in
+        sharedManager.request(DriftCustomerRouter.getUser(orgId: orgId, userId: userId)).responseJSON(completionHandler: { (result) -> Void in
             completion(mapResponse(result))
-        }
+        })
         
     }
     
     class func getEndUser(_ endUserId: Int, authToken:String, completion: @escaping (Result<User>) -> ()){
         
-        guard let url = URLStore.usersURL(endUserId, authToken: authToken) else {
-            LoggerManager.log("Failure in User URL creation")
-            return
-        }
-        
-        makeRequest(Request(url: url).setMethod(.GET)) { (result) in
+        sharedManager.request(DriftCustomerRouter.getEndUser(endUserId: endUserId)).responseJSON(completionHandler: { (result) -> Void in
             completion(mapResponse(result))
-        }
+        })
     }
     
     class func postIdentify(_ orgId: Int, userId: String, email: String, attributes: [String: Any]?, completion: @escaping (Result<User>) -> ()) {
@@ -116,9 +82,9 @@ class APIManager {
             params["attributes"] = attributes
         }
         
-        makeRequest(Request(url: URLStore.identifyURL).setMethod(.POST).setData(.json(json: params))) { (result) -> () in
+        sharedManager.request(DriftRouter.postIdentify(params: params)).responseJSON(completionHandler: { (result) -> Void in
             completion(mapResponse(result))
-        }
+        })
     }
     
     
@@ -191,101 +157,37 @@ class APIManager {
     
     class func getConversations(_ endUserId: Int, authToken: String, completion: @escaping (_ result: Result<[Conversation]>) -> ()){
         
-        
-        guard let url = URLStore.conversationsURL(endUserId, authToken: authToken) else {
-            LoggerManager.log("Failed in Conversations URL Creation")
-            return
-        }
-        
-        let request = Request(url: url).setMethod(.GET)
-        
-        makeRequest(request) { (result) -> () in
-            
-            switch result {
-            case .success:
-                let conversations: Result<[Conversation]> = mapResponse(result)
-                completion(conversations)
-            case .failure(let error):
-                completion(.failure(DriftError.apiFailure))
-                LoggerManager.log("Unable to get conversations for user: \(error)")
-            }
-        }
+        sharedManager.request(DriftConversationRouter.getConversationsForEndUser(endUserId: endUserId)).responseJSON(completionHandler: { (result) -> Void in
+            completion(mapResponse(result))
+        })
     }
     
    
     class func getMessages(_ conversationId: Int, authToken: String, completion: @escaping (_ result: Result<[Message]>) -> ()){
         
         
-        guard let url = URLStore.messagesURL(conversationId, authToken: authToken) else {
-            LoggerManager.log("Failed in Messages URL Creation")
-            return
-        }
-        
-        let request = Request(url: url).setMethod(.GET)
-        
-        makeRequest(request) { (result) -> () in
-            
-            switch result {
-            case .success:
-                let messages: Result<[Message]> = mapResponse(result)
-                completion(messages)
-            case .failure(let error):
-                completion(.failure(DriftError.apiFailure))
-                LoggerManager.log("Unable to get messages for conversation: \(error)")
-            }
-        }
+        sharedManager.request(DriftConversationRouter.getMessagesForConversation(conversationId: conversationId)).responseJSON(completionHandler: { (result) -> Void in
+            completion(mapResponse(result))
+        })
     }
     
     
     class func postMessage(_ conversationId: Int, message: Message, authToken: String, completion: @escaping (_ result: Result<Message>) -> ()){
         
-        
-        guard let url = URLStore.messagesURL(conversationId, authToken: authToken) else {
-            LoggerManager.log("Failed in Messages URL Creation")
-            return
-        }
-        
         let json = message.toJSON()
         
-        let request = Request(url: url).setData(.json(json: json)).setMethod(.POST)
+        sharedManager.request(DriftConversationRouter.postMessageToConversation(conversationId: conversationId, data: json)).responseJSON(completionHandler: { (result) -> Void in
+            completion(mapResponse(result))
+        })
         
-        makeRequest(request) { (result) -> () in
-            
-            switch result {
-            case .success:
-                let messages: Result<Message> = mapResponse(result)
-                completion(messages)
-            case .failure(let error):
-                completion(.failure(DriftError.apiFailure))
-                LoggerManager.log("Unable to get messages for conversation: \(error)")
-            }
-        }
-
     }
     
     class func createConversation(_ body: String, authorId:Int?, authToken: String, completion: @escaping (_ result: Result<Message>) -> ()){
         
         
-        guard let url = URLStore.createConversationURL(authToken) else {
-            LoggerManager.log("Failed in Create Conversation URL Creation")
-            return
-        }
-        
-        let json: [String : Any] = ["body":body]
-        
-        let request = Request(url: url).setData(.json(json: json)).setMethod(.POST)
-        
-        makeRequest(request) { (result) -> () in
-            
-            switch result {
-            case .success:
-                let messages: Result<Message> = mapResponse(result)
-                completion(messages)
-            case .failure(let error):
-                completion(.failure(DriftError.apiFailure))
-                LoggerManager.log("Unable to get messages for conversation: \(error)")
-            }
-        }
+        sharedManager.request(DriftConversationRouter.createConversation(body: body)).responseJSON(completionHandler: { (result) -> Void in
+            completion(mapResponse(result))
+        })
         
     }
     
@@ -295,7 +197,7 @@ class APIManager {
             return
         }
         
-        sharedInstance.session.dataTask(with: url, completionHandler: { (data, response, error) in
+        sharedManager.session.dataTask(with: url, completionHandler: { (data, response, error) in
             if let response = response as? HTTPURLResponse {
                 LoggerManager.log("API Complete: \(response.statusCode) \(response.url?.path ?? "")")
             }
@@ -316,24 +218,24 @@ class APIManager {
     
     class func getAttachmentsMetaData(_ attachmentIds: [Int], authToken: String, completion: @escaping (_ result: Result<[Attachment]>) -> ()){
         
-        guard let url = URLStore.getAttachmentsURL(attachmentIds, authToken: authToken) else {
-            LoggerManager.log("Failed in Get Attachment Metadata URL Creation")
-            return
-        }
-        
-        let request = Request(url: url).setMethod(.GET)
-        
-        makeRequest(request) { (result) -> () in
-            
-            switch result {
-            case .success:
-                let attachments: Result<[Attachment]> = mapResponse(result)
-                completion(attachments)
-            case .failure(let error):
-                completion(.failure(DriftError.apiFailure))
-                LoggerManager.log("Unable to get attachments metadata: \(error)")
-            }
-        }
+//        guard let url = URLStore.getAttachmentsURL(attachmentIds, authToken: authToken) else {
+//            LoggerManager.log("Failed in Get Attachment Metadata URL Creation")
+//            return
+//        }
+//        
+//        let request = Request(url: url).setMethod(.GET)
+//        
+//        makeRequest(request) { (result) -> () in
+//            
+//            switch result {
+//            case .success:
+//                let attachments: Result<[Attachment]> = mapResponse(result)
+//                completion(attachments)
+//            case .failure(let error):
+//                completion(.failure(DriftError.apiFailure))
+//                LoggerManager.log("Unable to get attachments metadata: \(error)")
+//            }
+//        }
     }
     
     class func postAttachment(_ attachment: Attachment, authToken: String, completion: @escaping (_ result: Result<Attachment>) ->()){
@@ -359,7 +261,7 @@ class APIManager {
         
         multipartBody.append("--\(boundary)--\r\n".data(using: String.Encoding.utf8, allowLossyConversion: false)!)
         request.httpBody = multipartBody as Data
-        sharedInstance.session.dataTask(with: request as URLRequest, completionHandler: { (data, response, error) in
+        sharedManager.session.dataTask(with: request as URLRequest, completionHandler: { (data, response, error) in
             if let response = response as? HTTPURLResponse {
                 LoggerManager.log("API Complete: \(response.statusCode) \(response.url?.path ?? "")")
             }
@@ -377,7 +279,6 @@ class APIManager {
                         }
                     }
                 } catch {
-                    print(request.httpBody)
                     print(response.statusCode)
                     DispatchQueue.main.async(execute: {
                         completion(.failure(DriftError.apiFailure))
@@ -404,7 +305,7 @@ class APIManager {
     */
     fileprivate class func makeRequest(_ request: Request, completion: @escaping (Result<Any>) -> ()) {
         
-        sharedInstance.session.dataTask(with: request.getRequest(), completionHandler: { (data, response, error) -> Void in
+        sharedManager.session.dataTask(with: request.getRequest(), completionHandler: { (data, response, error) -> Void in
             if let response = response as? HTTPURLResponse {
                 LoggerManager.log("API Complete: \(response.statusCode) \(response.url?.path ?? "")")
             }
@@ -436,9 +337,9 @@ class APIManager {
     }
     
     //Maps response to result T using ObjectMapper JSON parsing
-    fileprivate class func mapResponse<T: Mappable>(_ result: Result<Any>) -> Result<T> {
+    fileprivate class func mapResponse<T: Mappable>(_ result: DataResponse<Any>) -> Result<T> {
         
-        switch result {
+        switch result.result {
         case .success(let res):
             if let json = res as? [String : Any] {
                 let response = Mapper<T>().map(JSON: json)     ///If initialisation is done in if let this can result in getting an object back when nil is returned - This is a bug in swift
@@ -453,14 +354,13 @@ class APIManager {
     }
     
     //Maps response to result [T] using ObjectMapper JSON parsing
-    fileprivate class func mapResponse<T: Mappable>(_ result: Result<Any>) -> Result<[T]> {
+    fileprivate class func mapResponse<T: Mappable>(_ result: DataResponse<Any>) -> Result<[T]> {
         
-        switch result {
+        switch result.result {
         case .success(let res):
             if let json = res as? [[String: Any]] {
-                if let response: [T] = Mapper<T>().mapArray(JSONArray: json){
-                    return .success(response)
-                }
+                let response: [T] = Mapper<T>().mapArray(JSONArray: json)
+                return .success(response)
             }
             fallthrough
         default:
@@ -471,30 +371,10 @@ class APIManager {
 
 class URLStore{
     
-    static let identifyURL = URL(string: "https://event.api.drift.com/identify")!
     static let layerTokenURL = URL(string: "https://customer.api.drift.com/layer/token")!
-    static let tokenURL = URL(string: "https://customer.api.drift.com/oauth/token")!
-    class func embedURL(_ embedId: String, refresh: Int?) -> URL? {
 
-        let refreshString = Int(Date().timeIntervalSince1970.truncatingRemainder(dividingBy: Double((refresh ?? 30000))))
-        
-        return URL(string: "https://js.drift.com/embeds/\(refreshString)/\(embedId).json")
-    }
-    
-    class func campaignUserURL(_ orgId: Int, authToken: String) -> URL? {
-        return URL(string: "https://customer.api.drift.com/organizations/\(orgId)/users?access_token=\(authToken)")
-    }
-        
-    class func conversationsURL(_ endUserId: Int, authToken: String) -> URL? {
-        return URL(string: "https://conversation.api.drift.com/conversations/end_users/\(endUserId)?access_token=\(authToken)")
-    }
-    
     class func messagesURL(_ conversationId: Int, authToken: String) -> URL? {
         return URL(string: "https://conversation.api.drift.com/conversations/\(conversationId)/messages?access_token=\(authToken)")
-    }
-    
-    class func createConversationURL(_ authToken: String) -> URL? {
-        return URL(string: "https://conversation.api.drift.com/messages?access_token=\(authToken)")
     }
 
     class func postAttachmentURL(_ authToken: String) -> URL? {
@@ -515,9 +395,6 @@ class URLStore{
         return URL(string: "https://conversation.api.drift.com/attachments?access_token=\(authToken)\(params)")
     }
     
-    class func usersURL(_ userId: Int, authToken: String) -> URL? {
-        return URL(string: "https://customer.api.drift.com/end_users/\(userId)?access_token=\(authToken)")
-    }
 }
 
 ///Result object for either Success with sucessfully parsed T

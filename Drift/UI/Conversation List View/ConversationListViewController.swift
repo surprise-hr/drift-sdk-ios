@@ -89,7 +89,7 @@ class ConversationListViewController: UIViewController {
     
     func getConversations() {
         if let auth = DriftDataStore.sharedInstance.auth, let endUser = auth.enduser{
-            APIManager.getConversations(endUser.userId!, authToken: auth.accessToken) { (result) in
+            DriftAPIManager.getConversations(endUser.userId!, authToken: auth.accessToken) { (result) in
                 self.refreshControl.endRefreshing()
                 SVProgressHUD.dismiss()
                 switch result{
@@ -100,7 +100,7 @@ class ConversationListViewController: UIViewController {
                         self.emptyStateView.isHidden = false
                     }
                 case .failure(let error):
-                    LoggerManager.log("Unable to get conversations for endUser:  \(endUser.userId): \(error)")
+                    LoggerManager.log("Unable to get conversations for endUser:  \(String(describing: endUser.userId)): \(error)")
                 }
             }
         }
@@ -139,7 +139,7 @@ extension ConversationListViewController: UITableViewDelegate, UITableViewDataSo
             
                 if let user = user {
                     if let avatar = user.avatarURL {
-                        cell.avatarImageView.af_setImage(withURL: URL.init(string:avatar)!)
+                        cell.avatarImageView.af_setImage(withURL: URL(string:avatar)!)
                     }
                     if let creatorName = user.name {
                         cell.nameLabel.text = creatorName

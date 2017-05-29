@@ -221,7 +221,7 @@ class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
     
         if let organizerId = campaign.authorId {
             
-            APIManager.getUser(organizerId, orgId: DriftDataStore.sharedInstance.embed!.orgId, authToken: DriftDataStore.sharedInstance.auth!.accessToken, completion: { (result) -> () in
+            DriftAPIManager.getUser(organizerId, orgId: DriftDataStore.sharedInstance.embed!.orgId, authToken: DriftDataStore.sharedInstance.auth!.accessToken, completion: { (result) -> () in
                 switch result {
                 case .success(let users):
                     if let avatar = users.first?.avatarURL {

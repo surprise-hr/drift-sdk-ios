@@ -261,20 +261,20 @@ class ConversationViewController: SLKTextViewController {
                 cell.message = message
                 
             }else{
-                APIManager.getAttachmentsMetaData(message.attachments, authToken: (DriftDataStore.sharedInstance.auth?.accessToken)!, completion: { (result) in
-                    switch result{
-                    case .success(let attachments):
-                        for attachment in attachments{
-                            self.attachments[attachment.id] = attachment
-                            self.attachmentIds.insert(attachment.id)
-                        }
-                            cell.delegate = self
-                            cell.attachments = attachments
-                            cell.message = message
-                    case .failure:
-                        LoggerManager.log("Failed to get attachment metadata for id: \(message.attachments.first)")
-                    }
-                })
+//                DriftAPIManager.getAttachmentsMetaData(message.attachments, authToken: (DriftDataStore.sharedInstance.auth?.accessToken)!, completion: { (result) in
+//                    switch result{
+//                    case .success(let attachments):
+//                        for attachment in attachments{
+//                            self.attachments[attachment.id] = attachment
+//                            self.attachmentIds.insert(attachment.id)
+//                        }
+//                            cell.delegate = self
+//                            cell.attachments = attachments
+//                            cell.message = message
+//                    case .failure:
+//                        LoggerManager.log("Failed to get attachment metadata for id: \(message.attachments.first)")
+//                    }
+//                })
             }
         }
     }
@@ -421,7 +421,7 @@ class ConversationViewController: SLKTextViewController {
     
     func getMessages(_ conversationId: Int){
         SVProgressHUD.show()
-        APIManager.getMessages(conversationId, authToken: DriftDataStore.sharedInstance.auth!.accessToken) { (result) in
+        DriftAPIManager.getMessages(conversationId, authToken: DriftDataStore.sharedInstance.auth!.accessToken) { (result) in
             SVProgressHUD.dismiss()
             switch result{
             case .success(let messages):
@@ -562,7 +562,7 @@ extension ConversationViewController: AttachementSelectedDelegate {
     
     func attachmentSelected(_ attachment: Attachment, sender: AnyObject) {
         SVProgressHUD.show()
-        APIManager.downloadAttachmentFile(attachment, authToken: (DriftDataStore.sharedInstance.auth?.accessToken)!) { (result) in
+        DriftAPIManager.downloadAttachmentFile(attachment, authToken: (DriftDataStore.sharedInstance.auth?.accessToken)!) { (result) in
             DispatchQueue.main.async {
                 SVProgressHUD.dismiss()
             }
@@ -639,7 +639,7 @@ extension ConversationViewController: UIImagePickerControllerDelegate, UINavigat
             newAttachment.mimeType = "image/jpeg"
             newAttachment.fileName = "image.jpg"
             
-            APIManager.postAttachment(newAttachment,authToken: DriftDataStore.sharedInstance.auth!.accessToken) { (result) in
+            DriftAPIManager.postAttachment(newAttachment,authToken: DriftDataStore.sharedInstance.auth!.accessToken) { (result) in
                 switch result{
                 case .success(let attachment):
                     let messageRequest = Message()
