@@ -1,0 +1,8 @@
+platform :ios, '9.0'
+
+use_frameworks!
+
+target 'SDKExample' do
+  pod 'Drift', :path => '../../Drift.podspec'
+
+end
