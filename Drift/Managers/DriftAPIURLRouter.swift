@@ -10,7 +10,7 @@ import Alamofire
 
 public enum APIBase: String {
     case Customer = "https://customer.api.drift.com/"
-    case Conversation = "https://conversation.api.drift.com/conversations/"
+    case Conversation = "https://conversation.api.drift.com/"
 }
 
 
@@ -144,12 +144,6 @@ public enum DriftConversationRouter: URLRequestConvertible {
         
         req.url = URL(string: (req.url?.absoluteString.replacingOccurrences(of: "%5B%5D=", with: "="))!)
         
-        let mutableReq = (req.urlRequest! as NSURLRequest).mutableCopy() as! NSMutableURLRequest
-        
-        if let bodyData = req.httpBody {
-            URLProtocol.setProperty(bodyData, forKey: "NFXBodyData", in: mutableReq)
-        }
-        
-        return mutableReq as URLRequest
+        return req
     }
 }
