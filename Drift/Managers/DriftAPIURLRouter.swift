@@ -8,13 +8,13 @@
 
 import Alamofire
 
-public enum APIBase: String {
+enum APIBase: String {
     case Customer = "https://customer.api.drift.com/"
     case Conversation = "https://conversation.api.drift.com/"
 }
 
 
-public enum DriftRouter: URLRequestConvertible {
+enum DriftRouter: URLRequestConvertible {
     
     case getEmbed(embedId: String, refreshRate: Int?)
     case postIdentify(params: [String: Any])
@@ -33,7 +33,7 @@ public enum DriftRouter: URLRequestConvertible {
         }
     }
     
-    public func asURLRequest() throws -> URLRequest {
+    func asURLRequest() throws -> URLRequest {
 
         
         var urlRequest = URLRequest(url: request.url)
@@ -51,7 +51,7 @@ public enum DriftRouter: URLRequestConvertible {
     
 }
 
-public enum DriftCustomerRouter: URLRequestConvertible {
+enum DriftCustomerRouter: URLRequestConvertible {
     
     case getLayerToken(data: [String: Any])
     case getAuth(email: String, userId: String, redirectURL: String, orgId: Int, clientId: String)
@@ -90,7 +90,7 @@ public enum DriftCustomerRouter: URLRequestConvertible {
         }
     }
     
-    public func asURLRequest() throws -> URLRequest {
+    func asURLRequest() throws -> URLRequest {
         var components = URLComponents.init(string: APIBase.Customer.rawValue)
         
         if let accessToken = DriftDataStore.sharedInstance.auth?.accessToken{
@@ -112,7 +112,7 @@ public enum DriftCustomerRouter: URLRequestConvertible {
     
 }
 
-public enum DriftConversationRouter: URLRequestConvertible {
+enum DriftConversationRouter: URLRequestConvertible {
     
     case getConversationsForEndUser(endUserId: Int)
     case getMessagesForConversation(conversationId: Int)
@@ -140,7 +140,7 @@ public enum DriftConversationRouter: URLRequestConvertible {
     }
     
     
-    public func asURLRequest() throws -> URLRequest {
+    func asURLRequest() throws -> URLRequest {
         var components = URLComponents.init(string: APIBase.Conversation.rawValue)
         if let accessToken = DriftDataStore.sharedInstance.auth?.accessToken{
             let authItem = URLQueryItem.init(name: "access_token", value: accessToken)
