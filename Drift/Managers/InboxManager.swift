@@ -20,26 +20,7 @@ class InboxManager {
         return !matchingSub.isEmpty
     }
     
-    
-    func getConversations(_ endUserId: Int, completion:@escaping (_ conversations: [Conversation]?) -> ()){
         
-        
-        guard let auth = DriftDataStore.sharedInstance.auth?.accessToken else {
-            LoggerManager.log("No Auth Token for Recording")
-            return
-        }
-        
-        DriftAPIManager.getConversations(endUserId, authToken: auth) { (result) in
-            switch result{
-            case .success(let conversations):
-                completion(conversations)
-            case .failure:
-                LoggerManager.log("Unable to retreive conversations for endUserId: \(endUserId)")
-                completion(nil)
-            }
-        }
-    }
-    
     func getMessages(_ conversationId: Int, completion:@escaping (_ messages: [Message]?) -> ()){
 
         

@@ -21,7 +21,34 @@ class ConversationListViewController: UIViewController {
     var users: [CampaignOrganizer] = []
     var dateFormatter = DriftDateFormatter()
     var refreshControl: UIRefreshControl!
-
+    
+    var endUserId: Int!
+    
+    class func navigationController(endUserId: Int) -> UINavigationController {
+        let vc = ConversationListViewController()
+        vc.endUserId = endUserId
+        let navVC = UINavigationController(rootViewController: vc)
+        let leftButton = UIBarButtonItem(image: UIImage(named: "closeIcon", in: Bundle(for: ConversationListViewController.classForCoder()), compatibleWith: nil), style: UIBarButtonItemStyle.plain, target:vc, action: #selector(ConversationListViewController.dismissVC))
+        leftButton.tintColor = DriftDataStore.sharedInstance.generateForegroundColor()
+        
+        let rightButton = UIBarButtonItem(image:  UIImage(named: "newChatIcon", in: Bundle(for: ConversationListViewController.classForCoder()), compatibleWith: nil), style: UIBarButtonItemStyle.plain, target: vc, action: #selector(ConversationListViewController.startNewConversation))
+        rightButton.tintColor = DriftDataStore.sharedInstance.generateForegroundColor()
+        
+        navVC.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: DriftDataStore.sharedInstance.generateForegroundColor()]
+        navVC.navigationBar.barTintColor = DriftDataStore.sharedInstance.generateBackgroundColor()
+        navVC.navigationBar.tintColor = DriftDataStore.sharedInstance.generateForegroundColor()
+        navVC.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: DriftDataStore.sharedInstance.generateForegroundColor(), NSFontAttributeName: UIFont(name: "AvenirNext-Medium", size: 16)!]
+        
+        vc.navigationItem.leftBarButtonItem  = leftButton
+        vc.navigationItem.rightBarButtonItem = rightButton
+        
+        return navVC
+    }
+    
+    convenience init() {
+        self.init(nibName: "ConversationListViewController", bundle: Bundle(for: ConversationListViewController.classForCoder()))
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupEmptyState()
@@ -33,7 +60,6 @@ class ConversationListViewController: UIViewController {
         tableView.separatorColor = UIColor(white: 0, alpha: 0.05)
         tableView.separatorInset = .zero
         tableView.register(UINib(nibName: "ConversationListTableViewCell", bundle:  Bundle(for: ConversationListTableViewCell.classForCoder())), forCellReuseIdentifier: "ConversationListTableViewCell")
-        InboxManager.sharedInstance.addConversationSubscription(ConversationSubscription(delegate: self))
         
         let tvc = UITableViewController()
         tvc.tableView = tableView
@@ -45,40 +71,21 @@ class ConversationListViewController: UIViewController {
         
         //Ensure that the back button title is not being shown
         navigationItem.backBarButtonItem = UIBarButtonItem(title: " ", style: UIBarButtonItemStyle.plain, target: nil, action: nil)
+        navigationItem.title = "Conversations"
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(getConversations), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     
     override func viewWillAppear(_ animated: Bool) {
-        title = "Conversations"
         if conversations.count == 0{
             SVProgressHUD.show()
         }
         getConversations()
-    }
-    
-    convenience init() {
-        self.init(nibName: "ConversationListViewController", bundle: Bundle(for: ConversationListViewController.classForCoder()))
-    }
-    
-    
-    class func navigationController() -> UINavigationController {
-        let vc = ConversationListViewController()
-        let navVC = UINavigationController(rootViewController: vc)
-        let leftButton = UIBarButtonItem(image: UIImage(named: "closeIcon", in: Bundle(for: ConversationListViewController.classForCoder()), compatibleWith: nil), style: UIBarButtonItemStyle.plain, target:vc, action: #selector(ConversationListViewController.dismissVC))
-        leftButton.tintColor = DriftDataStore.sharedInstance.generateForegroundColor()
-
-        let rightButton = UIBarButtonItem(image:  UIImage(named: "newChatIcon", in: Bundle(for: ConversationListViewController.classForCoder()), compatibleWith: nil), style: UIBarButtonItemStyle.plain, target: vc, action: #selector(ConversationListViewController.startNewConversation))
-        rightButton.tintColor = DriftDataStore.sharedInstance.generateForegroundColor()
-
-        navVC.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: DriftDataStore.sharedInstance.generateForegroundColor()]
-        navVC.navigationBar.barTintColor = DriftDataStore.sharedInstance.generateBackgroundColor()
-        navVC.navigationBar.tintColor = DriftDataStore.sharedInstance.generateForegroundColor()
-        navVC.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: DriftDataStore.sharedInstance.generateForegroundColor(), NSFontAttributeName: UIFont(name: "AvenirNext-Medium", size: 16)!]
-
-        vc.navigationItem.leftBarButtonItem  = leftButton
-        vc.navigationItem.rightBarButtonItem = rightButton
-        
-        return navVC
     }
     
     
@@ -86,29 +93,26 @@ class ConversationListViewController: UIViewController {
         dismiss(animated: true, completion: nil)
     }
     
-    
     func getConversations() {
-        if let auth = DriftDataStore.sharedInstance.auth, let endUser = auth.enduser{
-            DriftAPIManager.getConversations(endUser.userId!, authToken: auth.accessToken) { (result) in
-                self.refreshControl.endRefreshing()
-                SVProgressHUD.dismiss()
-                switch result{
-                case .success(let conversations):
-                    self.conversations = conversations
-                    self.tableView.reloadData()
-                    if conversations.count == 0{
-                        self.emptyStateView.isHidden = false
-                    }
-                case .failure(let error):
-                    LoggerManager.log("Unable to get conversations for endUser:  \(String(describing: endUser.userId)): \(error)")
+        DriftAPIManager.getConversations(endUserId) {  (result) in
+            self.refreshControl.endRefreshing()
+            SVProgressHUD.dismiss()
+            switch result{
+            case .success(let conversations):
+                self.conversations = conversations
+                self.tableView.reloadData()
+                if conversations.count == 0{
+                    self.emptyStateView.isHidden = false
                 }
+            case .failure(let error):
+                LoggerManager.log("Unable to get conversations for endUser:  \(self.endUserId): \(error)")
             }
         }
     }
     
     
     func startNewConversation() {
-        let conversationViewController = ConversationViewController(conversationType: ConversationViewController.ConversationType.createConversation(authorId: DriftDataStore.sharedInstance.auth!.enduser!.userId!))
+        let conversationViewController = ConversationViewController(conversationType: ConversationViewController.ConversationType.createConversation(authorId: endUserId))
         navigationController?.show(conversationViewController, sender: self)
     }
     
@@ -178,7 +182,7 @@ extension ConversationListViewController: UITableViewDelegate, UITableViewDataSo
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let conversation = conversations[(indexPath as NSIndexPath).row]
         let conversationViewController = ConversationViewController(conversationType: .continueConversation(conversationId: conversation.id))
-        self.navigationController?.show(conversationViewController, sender: self)
+        navigationController?.show(conversationViewController, sender: self)
     }
 }
 

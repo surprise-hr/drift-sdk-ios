@@ -154,7 +154,9 @@ class NewMessageView: CampaignView {
         if otherConversations.isEmpty {
             PresentationManager.sharedInstance.showConversationVC(conversation.conversationId)
         }else{
-            PresentationManager.sharedInstance.showConversationList()
+            if let endUserId = DriftDataStore.sharedInstance.auth?.enduser?.userId{
+                PresentationManager.sharedInstance.showConversationList(endUserId: endUserId)
+            }
         }
     }
     

@@ -133,9 +133,9 @@ class PresentationManager: PresentationManagerDelegate {
         return false
     }
     
-    func showConversationList(){
+    func showConversationList(endUserId: Int){
 
-        let conversationListController = ConversationListViewController.navigationController()
+        let conversationListController = ConversationListViewController.navigationController(endUserId: endUserId)
         TopController.viewController()?.present(conversationListController, animated: true, completion: nil)
         
     }

@@ -141,7 +141,7 @@ class DriftAPIManager: Alamofire.SessionManager {
         })
     }
     
-    class func getConversations(_ endUserId: Int, authToken: String, completion: @escaping (_ result: Result<[Conversation]>) -> ()){
+    class func getConversations(_ endUserId: Int, completion: @escaping (_ result: Result<[Conversation]>) -> ()){
         
         sharedManager.request(DriftConversationRouter.getConversationsForEndUser(endUserId: endUserId)).responseJSON(completionHandler: { (result) -> Void in
             completion(mapResponse(result))
