@@ -18,6 +18,7 @@ enum DriftRouter: URLRequestConvertible {
     
     case getEmbed(embedId: String, refreshRate: Int?)
     case postIdentify(params: [String: Any])
+    case getSocketData(accessToken: String)
     
     var request: (method: Alamofire.HTTPMethod, url: URL, parameters: [String: Any]?, encoding: ParameterEncoding){
         switch self {
@@ -29,6 +30,8 @@ enum DriftRouter: URLRequestConvertible {
             
         case .postIdentify(let params):
             return (.post, URL(string: "https://event.api.drift.com/identify")!, params, JSONEncoding.default)
+        case .getSocketData(let accessToken):
+            return (.post, URL(string:"https://chat.api.drift.com/api/auth")!, ["access_token": accessToken], JSONEncoding.default)
             
         }
     }

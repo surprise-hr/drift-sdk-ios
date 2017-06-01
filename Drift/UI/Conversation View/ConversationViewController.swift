@@ -9,7 +9,6 @@
 import UIKit
 import SlackTextViewController
 import QuickLook
-import LayerKit
 import ObjectMapper
 import SVProgressHUD
 
@@ -100,6 +99,8 @@ class ConversationViewController: SLKTextViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(ConversationViewController.didOpen), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(ConversationViewController.rotated), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(ConversationViewController.didReceiveNewMessage), name: .driftOnNewMessageReceived, object: nil)
 
         didOpen()
     }
@@ -362,6 +363,16 @@ class ConversationViewController: SLKTextViewController {
         }else{
             return 42
         }
+    }
+    
+    func didReceiveNewMessage(notification: Notification) {
+        
+        if let message = notification.userInfo?["message"] as? Message {
+            if message.conversationId == conversationId {
+                newMessage(message)
+            }
+        }
+
     }
     
     

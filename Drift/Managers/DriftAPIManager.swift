@@ -26,27 +26,12 @@ class DriftAPIManager: Alamofire.SessionManager {
         
     }
     
-    class func getLayerAccessToken(_ nonce: String, userId: String, completion: @escaping (Result<String>) -> ()){
-        
-        
-        sharedManager.request(DriftCustomerRouter.getLayerToken(data: ["nonce": nonce, "userId": userId])).responseJSON(completionHandler: { (response) -> Void in
-
-            switch response.result {
-            case .success(let response):
-                if let json = response as? [String: Any], let token = json["identityToken"] as? String {
-                    completion(.success(token))
-                    return
-                }
-                fallthrough
-            default:
-                completion(.failure(DriftError.apiFailure))
-            }
-
-            
+    class func getSocketAuth(accessToken: String, completion: @escaping (Result<SocketAuth>) -> ()) {
+        sharedManager.request(DriftRouter.getSocketData(accessToken: accessToken)).responseJSON(completionHandler: { (result) -> Void in
+            completion(mapResponse(result))
         })
-    
     }
-    
+
     class func getEmbeds(_ embedId: String, refreshRate: Int?, completion: @escaping (Result<Embed>) -> ()){
         
         sharedManager.request(DriftRouter.getEmbed(embedId: embedId, refreshRate: refreshRate)).responseJSON(completionHandler: { (result) -> Void in

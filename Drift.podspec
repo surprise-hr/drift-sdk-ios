@@ -13,7 +13,7 @@ Pod::Spec.new do |spec|
   spec.source_files = "Drift/**/*.{h,swift}"
   spec.resources = ['Drift/**/*.xib','Drift/**/*.xcassets']
 
-  spec.dependency 'LayerKit', '~> 0.17'
+  spec.dependency 'Birdsong', '~> 0.5'
   spec.dependency 'ObjectMapper', '~> 2.0'
   spec.dependency 'SlackTextViewController', '~> 1.9.3'
   spec.dependency 'AlamofireImage', '~> 3.0'

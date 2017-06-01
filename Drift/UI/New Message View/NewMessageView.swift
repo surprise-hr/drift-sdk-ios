@@ -160,7 +160,6 @@ class NewMessageView: CampaignView {
         }
     }
     
-    
     func markAllAsRead(){
         for conv in otherConversations {
             if let msgUUID = conv.messages.first?.uuid {

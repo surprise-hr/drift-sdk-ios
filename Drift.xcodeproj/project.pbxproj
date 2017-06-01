@@ -36,8 +36,6 @@
 		632EC55D1C7E088300D703D4 /* JSONStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632EC55C1C7E088300D703D4 /* JSONStore.swift */; };
 		63356A3F1C529C530064F652 /* Drift.h in Headers */ = {isa = PBXBuildFile; fileRef = 63356A3D1C529C530064F652 /* Drift.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		63356A421C529C610064F652 /* Drift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63356A411C529C610064F652 /* Drift.swift */; };
-		63356A451C529C6C0064F652 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63356A431C529C6C0064F652 /* APIManager.swift */; };
-		63356A461C529C6C0064F652 /* LayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63356A441C529C6C0064F652 /* LayerManager.swift */; };
 		63356A4B1C529C760064F652 /* AnnouncementAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63356A471C529C760064F652 /* AnnouncementAttributes.swift */; };
 		63356A4C1C529C760064F652 /* CTA.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63356A481C529C760064F652 /* CTA.swift */; };
 		63356A4D1C529C760064F652 /* Campaign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63356A491C529C760064F652 /* Campaign.swift */; };
@@ -48,6 +46,10 @@
 		633920D01C62514F00C3A3C2 /* CampaignResponseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633920CF1C62514F00C3A3C2 /* CampaignResponseManager.swift */; };
 		633920D51C62879100C3A3C2 /* CampaignView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633920D41C62879100C3A3C2 /* CampaignView.swift */; };
 		634950DF1C511A410097C474 /* Drift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 634950D41C511A410097C474 /* Drift.framework */; };
+		635462E51EDF0C0B0012358E /* DriftAPIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635462E31EDF0C0B0012358E /* DriftAPIManager.swift */; };
+		635462E61EDF0C0B0012358E /* DriftAPIURLRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635462E41EDF0C0B0012358E /* DriftAPIURLRouter.swift */; };
+		635462E81EDF0F2B0012358E /* SocketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635462E71EDF0F2B0012358E /* SocketManager.swift */; };
+		635462EA1EDF204E0012358E /* SocketAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635462E91EDF204E0012358E /* SocketAuth.swift */; };
 		6362426A1C7FBCB400632F0E /* NPSCompleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636242691C7FBCB400632F0E /* NPSCompleteView.swift */; };
 		6362426C1C7FBCC300632F0E /* NPSCompleteView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6362426B1C7FBCC300632F0E /* NPSCompleteView.xib */; };
 		637E48FF1C9A08040067F105 /* LayerKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63C257381C9A00AE003C4C81 /* LayerKit.framework */; };
@@ -152,8 +154,6 @@
 		63356A3D1C529C530064F652 /* Drift.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Drift.h; path = Drift/Drift.h; sourceTree = SOURCE_ROOT; };
 		63356A3E1C529C530064F652 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Drift/Info.plist; sourceTree = SOURCE_ROOT; };
 		63356A411C529C610064F652 /* Drift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Drift.swift; path = Drift/Public/Drift.swift; sourceTree = SOURCE_ROOT; };
-		63356A431C529C6C0064F652 /* APIManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = APIManager.swift; path = Drift/Managers/APIManager.swift; sourceTree = SOURCE_ROOT; };
-		63356A441C529C6C0064F652 /* LayerManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LayerManager.swift; path = Drift/Managers/LayerManager.swift; sourceTree = SOURCE_ROOT; };
 		63356A471C529C760064F652 /* AnnouncementAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AnnouncementAttributes.swift; path = Drift/Models/AnnouncementAttributes.swift; sourceTree = SOURCE_ROOT; };
 		63356A481C529C760064F652 /* CTA.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CTA.swift; path = Drift/Models/CTA.swift; sourceTree = SOURCE_ROOT; };
 		63356A491C529C760064F652 /* Campaign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Campaign.swift; path = Drift/Models/Campaign.swift; sourceTree = SOURCE_ROOT; };
@@ -166,6 +166,10 @@
 		633920D41C62879100C3A3C2 /* CampaignView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CampaignView.swift; path = Drift/UI/CampaignView.swift; sourceTree = SOURCE_ROOT; };
 		634950D41C511A410097C474 /* Drift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Drift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		634950DE1C511A410097C474 /* DriftTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DriftTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		635462E31EDF0C0B0012358E /* DriftAPIManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DriftAPIManager.swift; path = Drift/Managers/DriftAPIManager.swift; sourceTree = SOURCE_ROOT; };
+		635462E41EDF0C0B0012358E /* DriftAPIURLRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DriftAPIURLRouter.swift; path = Drift/Managers/DriftAPIURLRouter.swift; sourceTree = SOURCE_ROOT; };
+		635462E71EDF0F2B0012358E /* SocketManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SocketManager.swift; path = Drift/Managers/SocketManager.swift; sourceTree = SOURCE_ROOT; };
+		635462E91EDF204E0012358E /* SocketAuth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SocketAuth.swift; path = Drift/Models/SocketAuth.swift; sourceTree = SOURCE_ROOT; };
 		636242691C7FBCB400632F0E /* NPSCompleteView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NPSCompleteView.swift; path = "Drift/UI/NPS Complete View/NPSCompleteView.swift"; sourceTree = SOURCE_ROOT; };
 		6362426B1C7FBCC300632F0E /* NPSCompleteView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = NPSCompleteView.xib; path = "Drift/UI/NPS Complete View/NPSCompleteView.xib"; sourceTree = SOURCE_ROOT; };
 		638730991C7E85EF00105867 /* TopController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TopController.swift; path = Drift/Helpers/TopController.swift; sourceTree = SOURCE_ROOT; };
@@ -333,6 +337,7 @@
 				A80A644F1D466B7C00A41A41 /* MessageSubscription.swift */,
 				A82CCE0D1D4B731A0043D3C2 /* Attachment.swift */,
 				A8DECB331DF9AE5F00CE008D /* Context.swift */,
+				635462E91EDF204E0012358E /* SocketAuth.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -411,8 +416,8 @@
 		634951271C51204C0097C474 /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				63356A431C529C6C0064F652 /* APIManager.swift */,
-				63356A441C529C6C0064F652 /* LayerManager.swift */,
+				635462E31EDF0C0B0012358E /* DriftAPIManager.swift */,
+				635462E41EDF0C0B0012358E /* DriftAPIURLRouter.swift */,
 				630205171C52A24E00C02F5E /* CampaignsManager.swift */,
 				630205191C52AC5100C02F5E /* DriftManager.swift */,
 				630E89611C57944400195062 /* PresentationManager.swift */,
@@ -421,6 +426,7 @@
 				63BBABB31C7C9D850014768A /* ErrorManager.swift */,
 				A80A64431D465E4800A41A41 /* InboxManager.swift */,
 				6306F42D1D63E68800722D15 /* UserManager.swift */,
+				635462E71EDF0F2B0012358E /* SocketManager.swift */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -707,7 +713,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		EF46B69169D466EA66772977 /* [CP] Embed Pods Frameworks */ = {
@@ -752,7 +758,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -764,6 +770,7 @@
 			files = (
 				6329CABC1C58E6830059C678 /* NPSContainerView.swift in Sources */,
 				63BBABB61C7CD6210014768A /* ColorHelper.swift in Sources */,
+				635462E81EDF0F2B0012358E /* SocketManager.swift in Sources */,
 				633920D01C62514F00C3A3C2 /* CampaignResponseManager.swift in Sources */,
 				A8B6FBAF1DE74631002F2321 /* ImageManager.swift in Sources */,
 				A853871B1D4A8EAE00C1D3C1 /* ConversationViewController.swift in Sources */,
@@ -782,12 +789,13 @@
 				A8F589A31D478F0A0043DB8D /* ConversationListTableViewCell.swift in Sources */,
 				A8BC1BAD1DDCB0DE0049968E /* GradientView.swift in Sources */,
 				A80A64481D4665E500A41A41 /* Conversation.swift in Sources */,
-				63356A451C529C6C0064F652 /* APIManager.swift in Sources */,
 				63356A421C529C610064F652 /* Drift.swift in Sources */,
+				635462EA1EDF204E0012358E /* SocketAuth.swift in Sources */,
 				633920D51C62879100C3A3C2 /* CampaignView.swift in Sources */,
 				2CF43EA31C7E045F008E6748 /* ColorPalette.swift in Sources */,
 				63BBABB41C7C9D850014768A /* ErrorManager.swift in Sources */,
 				630E89711C57E90300195062 /* NPSButton.swift in Sources */,
+				635462E61EDF0C0B0012358E /* DriftAPIURLRouter.swift in Sources */,
 				63356A4C1C529C760064F652 /* CTA.swift in Sources */,
 				A80A643E1D464CDE00A41A41 /* ObjectValidator.swift in Sources */,
 				6387309A1C7E85EF00105867 /* TopController.swift in Sources */,
@@ -804,7 +812,6 @@
 				A80A644A1D46671B00A41A41 /* Message.swift in Sources */,
 				630E89691C57C77300195062 /* NibLoader.swift in Sources */,
 				630E89621C57944400195062 /* PresentationManager.swift in Sources */,
-				63356A461C529C6C0064F652 /* LayerManager.swift in Sources */,
 				A8DECB361DF9B5BF00CE008D /* UIDevice+ModelName.swift in Sources */,
 				A8B0887E1D4F51DC00FFA469 /* ConversationMessageTableViewCell.swift in Sources */,
 				A8C6ADED1D632CD10024CFDC /* ConversationEmptyStateView.swift in Sources */,
@@ -817,6 +824,7 @@
 				6306B51E1C5F91150003F9D3 /* NPSResponseAttributes.swift in Sources */,
 				A80A64501D466B7C00A41A41 /* MessageSubscription.swift in Sources */,
 				63F858201C63B22E00872B0D /* CampaignOrganizer.swift in Sources */,
+				635462E51EDF0C0B0012358E /* DriftAPIManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1009,7 +1017,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.drift.DriftTests;
 				PRODUCT_NAME = DriftTests;
-				SWIFT_VERSION = 3.0.1;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -1027,7 +1035,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.drift.DriftTests;
 				PRODUCT_NAME = DriftTests;
-				SWIFT_VERSION = 3.0.1;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
