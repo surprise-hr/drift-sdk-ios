@@ -126,6 +126,14 @@ class DriftAPIManager: Alamofire.SessionManager {
         })
     }
     
+    class func getEnrichedConversations(_ endUserId: Int, completion: @escaping (_ result: Result<[EnrichedConversation]>) -> ()){
+        
+        sharedManager.request(DriftConversationRouter.getEnrichedConversationsForEndUser(endUserId: endUserId)).responseJSON { (result) in
+            completion(mapResponse(result))
+        }
+        
+    }
+    
     class func getConversations(_ endUserId: Int, completion: @escaping (_ result: Result<[Conversation]>) -> ()){
         
         sharedManager.request(DriftConversationRouter.getConversationsForEndUser(endUserId: endUserId)).responseJSON(completionHandler: { (result) -> Void in

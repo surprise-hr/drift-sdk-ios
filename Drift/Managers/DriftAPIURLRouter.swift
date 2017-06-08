@@ -117,6 +117,7 @@ enum DriftCustomerRouter: URLRequestConvertible {
 
 enum DriftConversationRouter: URLRequestConvertible {
     
+    case getEnrichedConversationsForEndUser(endUserId: Int)
     case getConversationsForEndUser(endUserId: Int)
     case getMessagesForConversation(conversationId: Int)
     case postMessageToConversation(conversationId: Int, data: [String: Any])
@@ -127,6 +128,8 @@ enum DriftConversationRouter: URLRequestConvertible {
     
     var request: (method: Alamofire.HTTPMethod, path: String, parameters: [String: Any]?, encoding: ParameterEncoding){
         switch self {
+        case .getEnrichedConversationsForEndUser(let endUserId):
+            return (.get, "conversations/end_users/\(endUserId)/extra", nil, URLEncoding.default)
         case .getConversationsForEndUser(let endUserId):
             return (.get, "conversations/end_users/\(endUserId)", nil, URLEncoding.default)
         case .getMessagesForConversation(let conversationId):

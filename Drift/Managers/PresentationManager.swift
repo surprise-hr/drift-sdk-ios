@@ -59,17 +59,17 @@ class PresentationManager: PresentationManagerDelegate {
         }
     }
     
-    func didRecieveNewMessages(_ messages: [(conversationId: Int, messages: [Message])]) {
+    func didRecieveNewMessages(_ enrichedConversations: [EnrichedConversation]) {
         
         if let newMessageView = NewMessageView.fromNib() as? NewMessageView , currentShownView == nil && !conversationIsPresenting() {
             
             if let window = UIApplication.shared.keyWindow {
                 currentShownView = newMessageView
                 
-                let currentConversation = messages.first!
-                let otherConversations = messages.filter({ $0.conversationId != currentConversation.conversationId })
+                let currentConversation = enrichedConversations.first!
+                let otherConversations = enrichedConversations.filter({ $0.conversation.id != currentConversation.conversation.id })
                 newMessageView.otherConversations = otherConversations                
-                newMessageView.conversation = currentConversation
+                newMessageView.enrichedConversation = currentConversation
                 newMessageView.delegate = self
                 newMessageView.showOnWindow(window)
                 

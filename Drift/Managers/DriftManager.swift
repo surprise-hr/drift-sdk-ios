@@ -81,6 +81,10 @@ class DriftManager: NSObject {
             getAuth(email, userId: userId) { (auth) in
                 if let auth = auth {
                     self.setupSocket(auth.accessToken)
+                    
+                    if let userId = auth.enduser?.userId {
+                        ConversationsManager.sharedInstance.refreshConversations(userId: userId)
+                    }
                 }
             }
         }
@@ -123,6 +127,10 @@ class DriftManager: NSObject {
     func didEnterForeground(){
         if let user = DriftDataStore.sharedInstance.auth?.enduser, let orgId = user.orgId, let userId = user.externalId, let email = user.email {
             DriftAPIManager.postIdentify(orgId, userId: userId, email: email, attributes: nil) { (result) -> () in }
+            
+            if let userId = user.userId {
+                ConversationsManager.sharedInstance.refreshConversations(userId: userId)
+            }
         }else{
             LoggerManager.log("No End user to post identify for")
         }

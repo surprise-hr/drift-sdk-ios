@@ -24,12 +24,12 @@ class NewMessageView: CampaignView {
     
     var bottomConstraint: NSLayoutConstraint!
     
-    var conversation: (conversationId: Int, messages: [Message])! {
+    var enrichedConversation: EnrichedConversation! {
         didSet{
             setupForConversation()
         }
     }
-    var otherConversations: [(conversationId: Int, messages: [Message])] = []
+    var otherConversations: [EnrichedConversation] = []
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -59,19 +59,19 @@ class NewMessageView: CampaignView {
             //Setup for latest message in conversation
             notificationContainer.isHidden = true
 
-            let latestMessage = conversation.messages.sorted(by: { $0.createdAt.compare($1.createdAt as Date) == .orderedDescending}).first!
+            let latestMessage = enrichedConversation.lastAgentMessage
 
             titleLabel.text = "New Message"
             
             do {
-                let htmlStringData = (latestMessage.body ?? "").data(using: String.Encoding.utf8)!
+                let htmlStringData = (latestMessage?.body ?? "").data(using: String.Encoding.utf8)!
                 let attributedHTMLString = try NSMutableAttributedString(data: htmlStringData, options: [NSDocumentTypeDocumentAttribute : NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute: String.Encoding.utf8.rawValue], documentAttributes: nil)
                 infoLabel.text = attributedHTMLString.string
             } catch {
-                infoLabel.text = latestMessage.body ?? ""
+                infoLabel.text = latestMessage?.body ?? ""
             }
 
-            userId = latestMessage.authorId
+            userId = latestMessage?.authorId
             
         }else{
             //Setup for new messages 
@@ -152,7 +152,7 @@ class NewMessageView: CampaignView {
         delegate?.messageViewDidFinish(self)
         markAllAsRead()
         if otherConversations.isEmpty {
-            PresentationManager.sharedInstance.showConversationVC(conversation.conversationId)
+            PresentationManager.sharedInstance.showConversationVC(enrichedConversation.conversation.id)
         }else{
             if let endUserId = DriftDataStore.sharedInstance.auth?.enduser?.userId{
                 PresentationManager.sharedInstance.showConversationList(endUserId: endUserId)
@@ -161,12 +161,12 @@ class NewMessageView: CampaignView {
     }
     
     func markAllAsRead(){
-        for conv in otherConversations {
-            if let msgUUID = conv.messages.first?.uuid {
+        for conversation in otherConversations {
+            if let msgUUID = conversation.lastMessage?.uuid {
                 CampaignsManager.markConversationAsRead(msgUUID)
             }
         }
-        if let msgUUID = conversation.messages.first?.uuid {
+        if let msgUUID = enrichedConversation.lastMessage?.uuid {
             CampaignsManager.markConversationAsRead(msgUUID)
         }
     }

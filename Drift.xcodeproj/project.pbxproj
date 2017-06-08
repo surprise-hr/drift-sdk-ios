@@ -78,6 +78,8 @@
 		A86A47251D50D53F008C59C0 /* DriftDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A86A47241D50D53F008C59C0 /* DriftDateFormatter.swift */; };
 		A86C30C91D6120F0008DDE8D /* AttachmentCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A86C30C71D6120F0008DDE8D /* AttachmentCollectionViewCell.xib */; };
 		A86C30CA1D6120F0008DDE8D /* AttachmentCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A86C30C81D6120F0008DDE8D /* AttachmentCollectionViewCell.swift */; };
+		A88682DB1EE9791B00E396D8 /* ConversationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A88682DA1EE9791B00E396D8 /* ConversationsManager.swift */; };
+		A88682DD1EE982D600E396D8 /* EnrichedConversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A88682DC1EE982D600E396D8 /* EnrichedConversation.swift */; };
 		A887170D1DE49CCE0072E4BB /* ConversationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A887170C1DE49CCE0072E4BB /* ConversationViewController.xib */; };
 		A8B0887E1D4F51DC00FFA469 /* ConversationMessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B0887C1D4F51DC00FFA469 /* ConversationMessageTableViewCell.swift */; };
 		A8B0887F1D4F51DC00FFA469 /* ConversationMessageTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A8B0887D1D4F51DC00FFA469 /* ConversationMessageTableViewCell.xib */; };
@@ -202,6 +204,8 @@
 		A86A47241D50D53F008C59C0 /* DriftDateFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DriftDateFormatter.swift; path = Drift/Helpers/DriftDateFormatter.swift; sourceTree = SOURCE_ROOT; };
 		A86C30C71D6120F0008DDE8D /* AttachmentCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AttachmentCollectionViewCell.xib; path = "Drift/UI/Conversation View/Conversation Cells/Attachment Cell/AttachmentCollectionViewCell.xib"; sourceTree = SOURCE_ROOT; };
 		A86C30C81D6120F0008DDE8D /* AttachmentCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AttachmentCollectionViewCell.swift; path = "Drift/UI/Conversation View/Conversation Cells/Attachment Cell/AttachmentCollectionViewCell.swift"; sourceTree = SOURCE_ROOT; };
+		A88682DA1EE9791B00E396D8 /* ConversationsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConversationsManager.swift; path = Drift/Managers/ConversationsManager.swift; sourceTree = SOURCE_ROOT; };
+		A88682DC1EE982D600E396D8 /* EnrichedConversation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnrichedConversation.swift; path = Drift/Models/EnrichedConversation.swift; sourceTree = SOURCE_ROOT; };
 		A887170C1DE49CCE0072E4BB /* ConversationViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ConversationViewController.xib; path = "Drift/UI/Conversation View/ConversationViewController.xib"; sourceTree = SOURCE_ROOT; };
 		A8B0887C1D4F51DC00FFA469 /* ConversationMessageTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConversationMessageTableViewCell.swift; path = "Drift/UI/Conversation View/Conversation Cells/ConversationMessageTableViewCell.swift"; sourceTree = SOURCE_ROOT; };
 		A8B0887D1D4F51DC00FFA469 /* ConversationMessageTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ConversationMessageTableViewCell.xib; path = "Drift/UI/Conversation View/Conversation Cells/ConversationMessageTableViewCell.xib"; sourceTree = SOURCE_ROOT; };
@@ -338,6 +342,7 @@
 				A82CCE0D1D4B731A0043D3C2 /* Attachment.swift */,
 				A8DECB331DF9AE5F00CE008D /* Context.swift */,
 				635462E91EDF204E0012358E /* SocketAuth.swift */,
+				A88682DC1EE982D600E396D8 /* EnrichedConversation.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -427,6 +432,7 @@
 				A80A64431D465E4800A41A41 /* InboxManager.swift */,
 				6306F42D1D63E68800722D15 /* UserManager.swift */,
 				635462E71EDF0F2B0012358E /* SocketManager.swift */,
+				A88682DA1EE9791B00E396D8 /* ConversationsManager.swift */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -778,6 +784,7 @@
 				A80A64461D46655900A41A41 /* Inbox.swift in Sources */,
 				63359F9D1C774C22007321DA /* AnnouncementExpandedView.swift in Sources */,
 				630205181C52A24E00C02F5E /* CampaignsManager.swift in Sources */,
+				A88682DD1EE982D600E396D8 /* EnrichedConversation.swift in Sources */,
 				630E896D1C57E63300195062 /* NPSView.swift in Sources */,
 				6306F4211D6379CC00722D15 /* NewMessageView.swift in Sources */,
 				6302051C1C52AD7900C02F5E /* Embed.swift in Sources */,
@@ -804,6 +811,7 @@
 				6302051A1C52AC5100C02F5E /* DriftManager.swift in Sources */,
 				63F95DBF1C5B8676003BCEE0 /* Auth.swift in Sources */,
 				A86C30CA1D6120F0008DDE8D /* AttachmentCollectionViewCell.swift in Sources */,
+				A88682DB1EE9791B00E396D8 /* ConversationsManager.swift in Sources */,
 				A80A644C1D466B3600A41A41 /* InboxSubscription.swift in Sources */,
 				6306F42E1D63E68800722D15 /* UserManager.swift in Sources */,
 				6329CAC51C5A91310059C678 /* DriftDataStore.swift in Sources */,
