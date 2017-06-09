@@ -78,6 +78,7 @@
 		A86A47251D50D53F008C59C0 /* DriftDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A86A47241D50D53F008C59C0 /* DriftDateFormatter.swift */; };
 		A86C30C91D6120F0008DDE8D /* AttachmentCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A86C30C71D6120F0008DDE8D /* AttachmentCollectionViewCell.xib */; };
 		A86C30CA1D6120F0008DDE8D /* AttachmentCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A86C30C81D6120F0008DDE8D /* AttachmentCollectionViewCell.swift */; };
+		A87272111EEAE16700A476FB /* CampaignWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A87272101EEAE16700A476FB /* CampaignWrapper.swift */; };
 		A88682DB1EE9791B00E396D8 /* ConversationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A88682DA1EE9791B00E396D8 /* ConversationsManager.swift */; };
 		A88682DD1EE982D600E396D8 /* EnrichedConversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A88682DC1EE982D600E396D8 /* EnrichedConversation.swift */; };
 		A887170D1DE49CCE0072E4BB /* ConversationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A887170C1DE49CCE0072E4BB /* ConversationViewController.xib */; };
@@ -204,6 +205,7 @@
 		A86A47241D50D53F008C59C0 /* DriftDateFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DriftDateFormatter.swift; path = Drift/Helpers/DriftDateFormatter.swift; sourceTree = SOURCE_ROOT; };
 		A86C30C71D6120F0008DDE8D /* AttachmentCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AttachmentCollectionViewCell.xib; path = "Drift/UI/Conversation View/Conversation Cells/Attachment Cell/AttachmentCollectionViewCell.xib"; sourceTree = SOURCE_ROOT; };
 		A86C30C81D6120F0008DDE8D /* AttachmentCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AttachmentCollectionViewCell.swift; path = "Drift/UI/Conversation View/Conversation Cells/Attachment Cell/AttachmentCollectionViewCell.swift"; sourceTree = SOURCE_ROOT; };
+		A87272101EEAE16700A476FB /* CampaignWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CampaignWrapper.swift; path = Drift/Models/CampaignWrapper.swift; sourceTree = SOURCE_ROOT; };
 		A88682DA1EE9791B00E396D8 /* ConversationsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConversationsManager.swift; path = Drift/Managers/ConversationsManager.swift; sourceTree = SOURCE_ROOT; };
 		A88682DC1EE982D600E396D8 /* EnrichedConversation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnrichedConversation.swift; path = Drift/Models/EnrichedConversation.swift; sourceTree = SOURCE_ROOT; };
 		A887170C1DE49CCE0072E4BB /* ConversationViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ConversationViewController.xib; path = "Drift/UI/Conversation View/ConversationViewController.xib"; sourceTree = SOURCE_ROOT; };
@@ -343,6 +345,7 @@
 				A8DECB331DF9AE5F00CE008D /* Context.swift */,
 				635462E91EDF204E0012358E /* SocketAuth.swift */,
 				A88682DC1EE982D600E396D8 /* EnrichedConversation.swift */,
+				A87272101EEAE16700A476FB /* CampaignWrapper.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -719,7 +722,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		EF46B69169D466EA66772977 /* [CP] Embed Pods Frameworks */ = {
@@ -764,7 +767,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -779,6 +782,7 @@
 				635462E81EDF0F2B0012358E /* SocketManager.swift in Sources */,
 				633920D01C62514F00C3A3C2 /* CampaignResponseManager.swift in Sources */,
 				A8B6FBAF1DE74631002F2321 /* ImageManager.swift in Sources */,
+				A87272111EEAE16700A476FB /* CampaignWrapper.swift in Sources */,
 				A853871B1D4A8EAE00C1D3C1 /* ConversationViewController.swift in Sources */,
 				A85387161D4A4F5100C1D3C1 /* ConversationListViewController.swift in Sources */,
 				A80A64461D46655900A41A41 /* Inbox.swift in Sources */,

@@ -17,7 +17,7 @@ class Campaign: Mappable {
      */
     enum MessageType: String {
         case Announcement = "ANNOUNCEMENT"
-        case NPS = "NPS"
+        case NPS = "NPS_QUESTION"
         case NPSResponse = "NPS_RESPONSE"
     }
     

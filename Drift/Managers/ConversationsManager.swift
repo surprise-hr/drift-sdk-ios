@@ -10,9 +10,7 @@ import Foundation
 
 class ConversationsManager {
     
-    static let sharedInstance: ConversationsManager = ConversationsManager()
-    
-    func refreshConversations(userId: Int) {
+    class func checkForConversations(userId: Int) {
         DriftAPIManager.getEnrichedConversations(userId) { (result) in
             switch result {
             case .success(let conversations):

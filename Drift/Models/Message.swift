@@ -11,6 +11,8 @@ import ObjectMapper
 
 enum ContentType: String{
     case Chat = "CHAT"
+    case NPS = "NPS_QUESTION"
+    case Annoucement = "ANNOUNCEMENT"
 }
 
 enum Type: String{
