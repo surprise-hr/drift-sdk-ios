@@ -539,7 +539,7 @@ extension ConversationViewController: MessageDelegate {
     
     func newMessage(_ message: Message) {
         if let uuid = message.uuid{
-            CampaignsManager.markConversationAsRead(uuid)
+            ConversationsManager.markMessageAsRead(uuid)
         }
         if message.authorId != DriftDataStore.sharedInstance.auth?.enduser?.userId{
             if let index = checkSectionsForMessages(message){
