@@ -11,6 +11,7 @@ import Alamofire
 enum APIBase: String {
     case Customer = "https://customer.api.drift.com/"
     case Conversation = "https://conversation.api.drift.com/"
+    case Conversation2 = "https://conversation2.api.drift.com/"
 }
 
 
@@ -152,6 +153,34 @@ enum DriftConversationRouter: URLRequestConvertible {
     
     func asURLRequest() throws -> URLRequest {
         var components = URLComponents(string: APIBase.Conversation.rawValue)
+        if let accessToken = DriftDataStore.sharedInstance.auth?.accessToken{
+            let authItem = URLQueryItem(name: "access_token", value: accessToken)
+            components?.queryItems = [authItem]
+        }
+        var urlRequest = URLRequest(url: (components?.url!.appendingPathComponent(request.path))!)
+        urlRequest.httpMethod = request.method.rawValue
+        let encoding = request.encoding
+        var req = try encoding.encode(urlRequest, with: request.parameters)
+        
+        req.url = URL(string: (req.url?.absoluteString.replacingOccurrences(of: "%5B%5D=", with: "="))!)
+        
+        return req
+    }
+}
+
+enum DriftConversation2Router: URLRequestConvertible {
+    
+    case markMessageAsRead(messageId: String)
+    
+    var request: (method: Alamofire.HTTPMethod, path: String, parameters: [String: Any]?, encoding: ParameterEncoding){
+        switch self {
+                case .markMessageAsRead(let messageId):
+            return (.post, "messages/\(messageId)/read", nil, URLEncoding.default)
+        }
+    }
+    
+    func asURLRequest() throws -> URLRequest {
+        var components = URLComponents(string: APIBase.Conversation2.rawValue)
         if let accessToken = DriftDataStore.sharedInstance.auth?.accessToken{
             let authItem = URLQueryItem(name: "access_token", value: accessToken)
             components?.queryItems = [authItem]

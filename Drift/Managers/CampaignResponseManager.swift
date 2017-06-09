@@ -39,7 +39,7 @@ class CampaignResponseManager {
             return
         }
         if let uuid = campaign.uuid , !DriftManager.sharedInstance.debug{
-            CampaignsManager.markConversationAsRead(uuid)
+            CampaignsManager.markCampaignAsRead(uuid)
         }
         
         if !DriftManager.sharedInstance.debug {
@@ -62,7 +62,7 @@ class CampaignResponseManager {
         }
         
         if let uuid = campaign.uuid , !DriftManager.sharedInstance.debug{
-            CampaignsManager.markConversationAsRead(uuid)
+            CampaignsManager.markCampaignAsRead(uuid)
         }
         
         if !DriftManager.sharedInstance.debug {

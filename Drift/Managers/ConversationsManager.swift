@@ -24,4 +24,16 @@ class ConversationsManager {
             }
         }
     }
+    
+    class func markMessageAsRead(_ messageId: String) {
+        DriftAPIManager.markMessageAsRead(messageId: messageId) { (result) in
+            switch result {
+            case .success:
+                LoggerManager.log("Successfully marked Message Read: \(messageId)")
+            case .failure(let error):
+                LoggerManager.didRecieveError(error)
+            }
+        }
+    }
+
 }

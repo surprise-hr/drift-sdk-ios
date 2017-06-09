@@ -81,7 +81,14 @@ class CampaignsManager {
     
     
     
-    class func markConversationAsRead(_ messageId: String) {
-
+    class func markCampaignAsRead(_ messageId: String) {
+        DriftAPIManager.markMessageAsRead(messageId: messageId) { (result) in
+            switch result {
+            case .success:
+                LoggerManager.log("Successfully marked Campaign Read: \(messageId)")
+            case .failure(let error):
+                LoggerManager.didRecieveError(error)
+            }
+        }
     }
 }
