@@ -38,7 +38,7 @@ class CampaignResponseManager {
             LoggerManager.log("No Conversation Id in campaign")
             return
         }
-        if let uuid = campaign.uuid , !DriftManager.sharedInstance.debug{
+        if let uuid = campaign.uuid, !DriftManager.sharedInstance.debug{
             CampaignsManager.markCampaignAsRead(uuid)
         }
         

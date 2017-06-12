@@ -39,9 +39,7 @@ class DriftAPIManager: Alamofire.SessionManager {
             completion(response)
         })
         
-
     }
-    
     
     class func getUser(_ userId: Int, orgId: Int, authToken:String, completion: @escaping (Result<[CampaignOrganizer]>) -> ()) {
         
@@ -96,7 +94,6 @@ class DriftAPIManager: Alamofire.SessionManager {
         })
     }
     
-    
     class func recordNPS(_ conversationId: Int, authToken: String, response: NPSResponse){
 
         var attributes: [String: Any] = [:]
@@ -128,7 +125,8 @@ class DriftAPIManager: Alamofire.SessionManager {
     
     class func markMessageAsRead(messageId: String, completion: @escaping (_ result: Result<Bool>) -> ()){
         
-        sharedManager.request(DriftConversation2Router.markMessageAsRead(messageId: messageId)).responseJSON { (result) in
+        sharedManager.request(DriftConversation2Router.markMessageAsRead(messageId: messageId)).responseString { (result) in
+            print(result)
             switch result.result{
             case .success(_):
                 completion(.success(true))
@@ -161,15 +159,12 @@ class DriftAPIManager: Alamofire.SessionManager {
         })
     }
     
-   
     class func getMessages(_ conversationId: Int, authToken: String, completion: @escaping (_ result: Result<[Message]>) -> ()){
-        
         
         sharedManager.request(DriftConversationRouter.getMessagesForConversation(conversationId: conversationId)).responseJSON(completionHandler: { (result) -> Void in
             completion(mapResponse(result))
         })
     }
-    
     
     class func postMessage(_ conversationId: Int, message: Message, authToken: String, completion: @escaping (_ result: Result<Message>) -> ()){
         
@@ -182,7 +177,6 @@ class DriftAPIManager: Alamofire.SessionManager {
     }
     
     class func createConversation(_ body: String, authorId:Int?, authToken: String, completion: @escaping (_ result: Result<Message>) -> ()){
-        
         
         sharedManager.request(DriftConversationRouter.createConversation(body: body)).responseJSON(completionHandler: { (result) -> Void in
             completion(mapResponse(result))
