@@ -29,6 +29,7 @@ class Campaign: Mappable {
     var bodyText: String?
     var authorId: Int?
     var conversationId: Int?
+    var viewerReceipientStatus: RecipientStatus?
     
     var npsAttributes: NPSAttributes?
     var announcementAttributes: AnnouncementAttributes?
@@ -45,14 +46,15 @@ class Campaign: Mappable {
     }
     
     func mapping(map: Map) {
-        orgId           <- map["orgId"]
-        id              <- map["id"]
-        uuid            <- map["uuid"]
-        messageType     <- map["type"]
-        createdAt       <- (map["createdAt"], DateTransform())
-        bodyText        <- map["body"]
-        authorId        <- map["authorId"]
-        conversationId  <- map["conversationId"]
+        orgId                   <- map["orgId"]
+        id                      <- map["id"]
+        uuid                    <- map["uuid"]
+        messageType             <- map["type"]
+        createdAt               <- (map["createdAt"], DateTransform())
+        bodyText                <- map["body"]
+        authorId                <- map["authorId"]
+        conversationId          <- map["conversationId"]
+        viewerReceipientStatus  <- map["viewerReceipientStatus"]
         
         if let messageType = messageType {
             switch messageType {

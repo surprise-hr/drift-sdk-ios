@@ -162,12 +162,12 @@ class NewMessageView: CampaignView {
     
     func markAllAsRead(){
         for conversation in otherConversations {
-            if let msgUUID = conversation.lastMessage?.uuid {
-                ConversationsManager.markMessageAsRead(msgUUID)
+            if let msgId = conversation.lastMessage?.id {
+                ConversationsManager.markMessageAsRead(msgId)
             }
         }
-        if let msgUUID = enrichedConversation.lastMessage?.uuid {
-            ConversationsManager.markMessageAsRead(msgUUID)
+        if let msgId = enrichedConversation.lastMessage?.id {
+            ConversationsManager.markMessageAsRead(msgId)
         }
     }
 }

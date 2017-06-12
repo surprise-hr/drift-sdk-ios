@@ -170,7 +170,7 @@ enum DriftConversationRouter: URLRequestConvertible {
 
 enum DriftConversation2Router: URLRequestConvertible {
     
-    case markMessageAsRead(messageId: String)
+    case markMessageAsRead(messageId: Int)
     
     var request: (method: Alamofire.HTTPMethod, path: String, parameters: [String: Any]?, encoding: ParameterEncoding){
         switch self {
@@ -191,7 +191,7 @@ enum DriftConversation2Router: URLRequestConvertible {
         var req = try encoding.encode(urlRequest, with: request.parameters)
         
         req.url = URL(string: (req.url?.absoluteString.replacingOccurrences(of: "%5B%5D=", with: "="))!)
-        
+        print(req)
         return req
     }
 }

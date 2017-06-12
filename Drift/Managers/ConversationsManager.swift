@@ -16,16 +16,13 @@ class ConversationsManager {
             case .success(let conversations):
                 let conversationsToShow = conversations.filter({$0.unreadMessages > 0})
                 PresentationManager.sharedInstance.didRecieveNewMessages(conversationsToShow)
-                for conversation in conversationsToShow {
-                    print(conversation.conversation.preview)
-                }
             case .failure(let error):
                 LoggerManager.didRecieveError(error)
             }
         }
     }
     
-    class func markMessageAsRead(_ messageId: String) {
+    class func markMessageAsRead(_ messageId: Int) {
         DriftAPIManager.markMessageAsRead(messageId: messageId) { (result) in
             switch result {
             case .success:

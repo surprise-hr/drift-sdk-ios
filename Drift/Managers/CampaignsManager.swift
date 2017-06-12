@@ -44,25 +44,27 @@ class CampaignsManager {
         
         for campaign in campaigns {
             
-            switch campaign.messageType {
-                
-            case .some(.NPS):
-                nps.append(campaign)
-            case .some(.NPSResponse):
-                npsResponse.append(campaign)
-            case .some(.Announcement):
-                //Only show chat response announcements if we have an email
-                if let ctaType = campaign.announcementAttributes?.cta?.ctaType , ctaType == .ChatResponse{
-                    if let email = DriftDataStore.sharedInstance.embed?.inboxEmailAddress , email != ""{
-                        announcements.append(campaign)
+            if campaign.viewerReceipientStatus != .Read {
+                switch campaign.messageType {
+                    
+                case .some(.NPS):
+                    nps.append(campaign)
+                case .some(.NPSResponse):
+                    npsResponse.append(campaign)
+                case .some(.Announcement):
+                    //Only show chat response announcements if we have an email
+                    if let ctaType = campaign.announcementAttributes?.cta?.ctaType , ctaType == .ChatResponse{
+                        if let email = DriftDataStore.sharedInstance.embed?.inboxEmailAddress , email != ""{
+                            announcements.append(campaign)
+                        }else{
+                            LoggerManager.log("Did remove chat announcement as we dont have an email")
+                        }
                     }else{
-                        LoggerManager.log("Did remove chat announcement as we dont have an email")
+                        announcements.append(campaign)
                     }
-                }else{
-                    announcements.append(campaign)
+                default:
+                    ()
                 }
-            default:
-                ()
             }
         }
         
@@ -81,7 +83,7 @@ class CampaignsManager {
     
     
     
-    class func markCampaignAsRead(_ messageId: String) {
+    class func markCampaignAsRead(_ messageId: Int) {
         DriftAPIManager.markMessageAsRead(messageId: messageId) { (result) in
             switch result {
             case .success:

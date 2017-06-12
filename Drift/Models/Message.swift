@@ -30,6 +30,12 @@ enum SendStatus: String{
     case Failed = "FAILED"
 }
 
+enum RecipientStatus: String {
+    case Sent = "Sent"
+    case Delivered = "Delivered"
+    case Read = "Read"
+}
+
 class Message: Mappable, Equatable, Hashable{
     var id: Int!
     var uuid: String?
@@ -47,7 +53,8 @@ class Message: Mappable, Equatable, Hashable{
     var requestId: Double = 0
     var sendStatus: SendStatus = SendStatus.Sent
     var formattedBody: NSAttributedString?
-
+    var viewerReceipientStatus: RecipientStatus?
+    
     var hashValue: Int {
         return id
     }
@@ -94,6 +101,7 @@ class Message: Mappable, Equatable, Hashable{
         type                    <- map["type"]
         conversationId          <- map["conversationId"]
         context                 <- map["context"]
+        viewerReceipientStatus  <- map["viewerReceipientStatus"]
 
         do {
             let htmlStringData = (body ?? "").data(using: String.Encoding.utf8)!
