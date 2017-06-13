@@ -139,6 +139,12 @@ extension ConversationListViewController: UITableViewDelegate, UITableViewDataSo
         cell.avatarImageView.image = UIImage(named: "placeholderAvatar", in:  Bundle(for: ConversationListViewController.classForCoder()), compatibleWith: nil)
         let enrichedConversation = enrichedConversations[(indexPath as NSIndexPath).row]
         if let conversation = enrichedConversation.conversation {
+            if enrichedConversation.unreadMessages > 0 {
+                cell.unreadCountLabel.text = " \(enrichedConversation.unreadMessages) "
+            }else{
+                cell.unreadCountLabel.isHidden = true
+            }
+            
             if let assigneeId = conversation.assigneeId , assigneeId != 0{
 
                 UserManager.sharedInstance.userMetaDataForUserId(assigneeId, completion: { (user) in
