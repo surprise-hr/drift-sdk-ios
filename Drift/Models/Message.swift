@@ -53,7 +53,7 @@ class Message: Mappable, Equatable, Hashable{
     var requestId: Double = 0
     var sendStatus: SendStatus = SendStatus.Sent
     var formattedBody: NSAttributedString?
-    var viewerReceipientStatus: RecipientStatus?
+    var viewerRecipientStatus: RecipientStatus?
     
     var hashValue: Int {
         return id
@@ -101,7 +101,7 @@ class Message: Mappable, Equatable, Hashable{
         type                    <- map["type"]
         conversationId          <- map["conversationId"]
         context                 <- map["context"]
-        viewerReceipientStatus  <- map["viewerReceipientStatus"]
+        viewerRecipientStatus  <- map["viewerRecipientStatus"]
 
         do {
             let htmlStringData = (body ?? "").data(using: String.Encoding.utf8)!

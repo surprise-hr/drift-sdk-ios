@@ -44,7 +44,7 @@ class CampaignsManager {
         
         for campaign in campaigns {
             
-            if campaign.viewerReceipientStatus != .Read {
+            if campaign.viewerRecipientStatus != .Read {
                 switch campaign.messageType {
                     
                 case .some(.NPS):

@@ -62,7 +62,7 @@ class CampaignResponseManager {
             return
         }
         
-        if let id = campaign.id , !DriftManager.sharedInstance.debug{
+        if let id = campaign.id, !DriftManager.sharedInstance.debug{
             CampaignsManager.markCampaignAsRead(id)
         }
         

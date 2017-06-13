@@ -29,7 +29,7 @@ class Campaign: Mappable {
     var bodyText: String?
     var authorId: Int?
     var conversationId: Int?
-    var viewerReceipientStatus: RecipientStatus?
+    var viewerRecipientStatus: RecipientStatus?
     
     var npsAttributes: NPSAttributes?
     var announcementAttributes: AnnouncementAttributes?
@@ -54,7 +54,7 @@ class Campaign: Mappable {
         bodyText                <- map["body"]
         authorId                <- map["authorId"]
         conversationId          <- map["conversationId"]
-        viewerReceipientStatus  <- map["viewerReceipientStatus"]
+        viewerRecipientStatus  <- map["viewerRecipientStatus"]
         
         if let messageType = messageType {
             switch messageType {
