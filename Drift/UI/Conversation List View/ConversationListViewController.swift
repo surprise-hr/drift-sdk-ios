@@ -17,7 +17,7 @@ class ConversationListViewController: UIViewController {
     @IBOutlet weak var emptyStateView: UIView!
     @IBOutlet weak var emptyStateButton: UIButton!
     
-    var conversations: [Conversation] = []
+    var enrichedConversations: [EnrichedConversation] = []
     var users: [CampaignOrganizer] = []
     var dateFormatter = DriftDateFormatter()
     var refreshControl: UIRefreshControl!
@@ -82,7 +82,7 @@ class ConversationListViewController: UIViewController {
     
     
     override func viewWillAppear(_ animated: Bool) {
-        if conversations.count == 0{
+        if enrichedConversations.count == 0{
             SVProgressHUD.show()
         }
         getConversations()
@@ -94,19 +94,20 @@ class ConversationListViewController: UIViewController {
     }
     
     func getConversations() {
-        DriftAPIManager.getConversations(endUserId) {  (result) in
+        DriftAPIManager.getEnrichedConversations(endUserId) { (result) in
             self.refreshControl.endRefreshing()
             SVProgressHUD.dismiss()
             switch result{
-            case .success(let conversations):
-                self.conversations = conversations
+            case .success(let enrichedConversations):
+                self.enrichedConversations = enrichedConversations
                 self.tableView.reloadData()
-                if conversations.count == 0{
+                if self.enrichedConversations.count == 0{
                     self.emptyStateView.isHidden = false
                 }
             case .failure(let error):
                 LoggerManager.log("Unable to get conversations for endUser:  \(self.endUserId): \(error)")
             }
+
         }
     }
     
@@ -136,80 +137,70 @@ extension ConversationListViewController: UITableViewDelegate, UITableViewDataSo
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ConversationListTableViewCell") as! ConversationListTableViewCell
         cell.avatarImageView.image = UIImage(named: "placeholderAvatar", in:  Bundle(for: ConversationListViewController.classForCoder()), compatibleWith: nil)
-        let conversation = conversations[(indexPath as NSIndexPath).row]
+        let enrichedConversation = enrichedConversations[(indexPath as NSIndexPath).row]
+        if let conversation = enrichedConversation.conversation {
+            if let assigneeId = conversation.assigneeId , assigneeId != 0{
 
-        if let assigneeId = conversation.assigneeId , assigneeId != 0{
-            UserManager.sharedInstance.userMetaDataForUserId(assigneeId, completion: { (user) in
-            
-                if let user = user {
-                    if let avatar = user.avatarURL {
-                        cell.avatarImageView.af_setImage(withURL: URL(string:avatar)!)
+                UserManager.sharedInstance.userMetaDataForUserId(assigneeId, completion: { (user) in
+
+                    if let user = user {
+                        if let avatar = user.avatarURL {
+                            cell.avatarImageView.af_setImage(withURL: URL(string:avatar)!)
+                        }
+                        if let creatorName = user.name {
+                            cell.nameLabel.text = creatorName
+                        }
                     }
-                    if let creatorName = user.name {
-                        cell.nameLabel.text = creatorName
+                })
+                
+            }else if let authorId = enrichedConversation.lastMessage?.authorId , authorId != 0{
+                if authorId == endUserId {
+                    
+                    cell.nameLabel.text = "You"
+                    if let endUser = DriftDataStore.sharedInstance.auth?.enduser {
+                        if let avatar = endUser.avatarURL {
+                            cell.avatarImageView.af_setImage(withURL: URL(string: avatar)!)
+                        }
                     }
-                }
-            })
-            
-        }else{
-            cell.nameLabel.text = "You"
-            if let endUser = DriftDataStore.sharedInstance.auth?.enduser {
-                if let avatar = endUser.avatarURL {
-                    cell.avatarImageView.af_setImage(withURL: URL(string: avatar)!)
+                }else{
+                    UserManager.sharedInstance.userMetaDataForUserId(authorId, completion: { (user) in
+                        
+                        if let user = user {
+                            if let avatar = user.avatarURL {
+                                cell.avatarImageView.af_setImage(withURL: URL(string:avatar)!)
+                            }
+                            if let creatorName = user.name {
+                                cell.nameLabel.text = creatorName
+                            }
+                        }
+                    })
                 }
             }
+            
+            if let preview = conversation.preview, preview != ""{
+                cell.messageLabel.text = preview.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+            }else{
+                cell.messageLabel.text = "📎 [Attachment]"
+            }
+            
+            cell.updatedAtLabel.text = dateFormatter.updatedAtStringFromDate(conversation.updatedAt)
         }
         
-        if let preview = conversation.preview, preview != ""{
-            cell.messageLabel.text = preview.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-        }else{
-            cell.messageLabel.text = "📎 [Attachment]"
-        }
-
-        cell.updatedAtLabel.text = dateFormatter.updatedAtStringFromDate(conversation.updatedAt)
         return cell
     }
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if conversations.count > 0 {
+        if enrichedConversations.count > 0 {
             self.emptyStateView.isHidden = true
         }
-        return conversations.count
+        return enrichedConversations.count
     }
     
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let conversation = conversations[(indexPath as NSIndexPath).row]
-        let conversationViewController = ConversationViewController(conversationType: .continueConversation(conversationId: conversation.id))
+        let enrichedConversation = enrichedConversations[(indexPath as NSIndexPath).row]
+        let conversationViewController = ConversationViewController(conversationType: .continueConversation(conversationId: enrichedConversation.conversation.id))
         navigationController?.show(conversationViewController, sender: self)
-    }
-}
-
-extension ConversationListViewController: ConversationDelegate{
-    
-    
-    func conversationDidUpdate(_ conversation: Conversation) {
-        if let index = conversations.index(of: conversation) {
-            conversations[index] = conversation
-            tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
-        }else {
-            conversations.insert(conversation, at: 0)
-            tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
-        }
-    }
-    
-    
-    func conversationsDidUpdate(_ conversations: [Conversation]) {
-        for conversation in conversations{
-            if let index = self.conversations.index(of: conversation) {
-                if conversation.updatedAt.timeIntervalSince1970 > (self.conversations[index].updatedAt.timeIntervalSince1970){
-                    self.conversations[index] = conversation
-                }
-            }else {
-                self.conversations.append(conversation)
-            }
-        }
-        tableView.reloadData()
     }
 }
