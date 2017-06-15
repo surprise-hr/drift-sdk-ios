@@ -73,7 +73,6 @@ struct Embed: Mappable {
     }
     
     mutating func mapping(map: Map) {
-        print(map.JSON)
         orgId               <- map["orgId"]
         embedId             <- map["id"]
         inboxId             <- map["configuration.inboxId"]
