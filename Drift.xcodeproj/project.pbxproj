@@ -95,8 +95,8 @@
 		A8DBDD281D4259BF00E827CF /* ObjectMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A82CF5671D42585D00D570FF /* ObjectMapper.framework */; };
 		A8DECB341DF9AE5F00CE008D /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8DECB331DF9AE5F00CE008D /* Context.swift */; };
 		A8DECB361DF9B5BF00CE008D /* UIDevice+ModelName.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8DECB351DF9B5BF00CE008D /* UIDevice+ModelName.swift */; };
-		A8E5A4731EF02FAB00113113 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E5A4711EF02FAB00113113 /* Configuration.swift */; };
 		A8E5A4741EF02FAB00113113 /* OpenHours.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E5A4721EF02FAB00113113 /* OpenHours.swift */; };
+		A8E705771EF28D6C00BC1429 /* OpenHoursHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E705761EF28D6C00BC1429 /* OpenHoursHelpers.swift */; };
 		A8F589A31D478F0A0043DB8D /* ConversationListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F589A11D478F0A0043DB8D /* ConversationListTableViewCell.swift */; };
 		A8F589A41D478F0A0043DB8D /* ConversationListTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A8F589A21D478F0A0043DB8D /* ConversationListTableViewCell.xib */; };
 		B24E7E355476327343D34A70 /* Pods_Drift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 827DB2871F99163085B5B96C /* Pods_Drift.framework */; };
@@ -223,8 +223,8 @@
 		A8C6ADEE1D632CED0024CFDC /* ConversationEmptyStateView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ConversationEmptyStateView.xib; path = "Drift/UI/Conversation View/ConversationEmptyStateView.xib"; sourceTree = SOURCE_ROOT; };
 		A8DECB331DF9AE5F00CE008D /* Context.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Context.swift; path = Drift/Models/Context.swift; sourceTree = SOURCE_ROOT; };
 		A8DECB351DF9B5BF00CE008D /* UIDevice+ModelName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIDevice+ModelName.swift"; path = "Drift/Helpers/UIDevice+ModelName.swift"; sourceTree = SOURCE_ROOT; };
-		A8E5A4711EF02FAB00113113 /* Configuration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Configuration.swift; path = Drift/Models/Configuration.swift; sourceTree = SOURCE_ROOT; };
 		A8E5A4721EF02FAB00113113 /* OpenHours.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OpenHours.swift; path = Drift/Models/OpenHours.swift; sourceTree = SOURCE_ROOT; };
+		A8E705761EF28D6C00BC1429 /* OpenHoursHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OpenHoursHelpers.swift; path = Drift/Models/OpenHoursHelpers.swift; sourceTree = SOURCE_ROOT; };
 		A8F589A11D478F0A0043DB8D /* ConversationListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConversationListTableViewCell.swift; path = "Drift/UI/Conversation List View/List View Cell/ConversationListTableViewCell.swift"; sourceTree = SOURCE_ROOT; };
 		A8F589A21D478F0A0043DB8D /* ConversationListTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ConversationListTableViewCell.xib; path = "Drift/UI/Conversation List View/List View Cell/ConversationListTableViewCell.xib"; sourceTree = SOURCE_ROOT; };
 		B830EE3166A8EBB93E22850F /* Pods-DriftTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DriftTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-DriftTests/Pods-DriftTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -330,7 +330,6 @@
 		63356A2A1C5298760064F652 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				A8E5A4711EF02FAB00113113 /* Configuration.swift */,
 				A8E5A4721EF02FAB00113113 /* OpenHours.swift */,
 				63356A471C529C760064F652 /* AnnouncementAttributes.swift */,
 				63356A481C529C760064F652 /* CTA.swift */,
@@ -367,6 +366,7 @@
 				A86A47241D50D53F008C59C0 /* DriftDateFormatter.swift */,
 				A8B6FBAE1DE74631002F2321 /* ImageManager.swift */,
 				A8DECB351DF9B5BF00CE008D /* UIDevice+ModelName.swift */,
+				A8E705761EF28D6C00BC1429 /* OpenHoursHelpers.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -808,6 +808,7 @@
 				A8BC1BAD1DDCB0DE0049968E /* GradientView.swift in Sources */,
 				A80A64481D4665E500A41A41 /* Conversation.swift in Sources */,
 				63356A421C529C610064F652 /* Drift.swift in Sources */,
+				A8E705771EF28D6C00BC1429 /* OpenHoursHelpers.swift in Sources */,
 				635462EA1EDF204E0012358E /* SocketAuth.swift in Sources */,
 				633920D51C62879100C3A3C2 /* CampaignView.swift in Sources */,
 				2CF43EA31C7E045F008E6748 /* ColorPalette.swift in Sources */,
@@ -843,7 +844,6 @@
 				6306B51E1C5F91150003F9D3 /* NPSResponseAttributes.swift in Sources */,
 				A80A64501D466B7C00A41A41 /* MessageSubscription.swift in Sources */,
 				63F858201C63B22E00872B0D /* CampaignOrganizer.swift in Sources */,
-				A8E5A4731EF02FAB00113113 /* Configuration.swift in Sources */,
 				635462E51EDF0C0B0012358E /* DriftAPIManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

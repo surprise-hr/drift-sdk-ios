@@ -118,8 +118,13 @@ class ConversationViewController: SLKTextViewController {
             getMessages(conversationId)
         case .createConversation(_):
 
-            if let welcomeMessage = DriftDataStore.sharedInstance.embed?.welcomeMessage {
-                emptyState.messageLabel.text = welcomeMessage
+            
+            if let embed = DriftDataStore.sharedInstance.embed {
+                if let welcomeMessage = embed.welcomeMessage,  embed.isOrgCurrentlyOpen() {
+                    emptyState.messageLabel.text = welcomeMessage
+                }else if let awayMessage = embed.awayMessage {
+                    emptyState.messageLabel.text = awayMessage
+                }
             }
             
             if let tableView = tableView{

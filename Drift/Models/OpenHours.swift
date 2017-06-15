@@ -8,9 +8,9 @@
 
 import ObjectMapper
 
-open class OpenHours: Object, Mappable {
+class OpenHours: Mappable {
 
-    public enum Weekday: String{
+    enum Weekday: String{
         case monday     = "MONDAY"
         case tuesday    = "TUESDAY"
         case wednesday  = "WEDNESDAY"
@@ -59,14 +59,14 @@ open class OpenHours: Object, Mappable {
         self.init()
     }
     
-    open func mapping(map: Map) {
+    func mapping(map: Map) {
         opens           <- map["opens"]
         closes          <- map["closes"]
         dayOfWeek       <- map["dayOfWeek"]
     }
     
     
-    open func populateTimeForTimezone(timezone: TimeZone) -> (open: Date?, close: Date?) {
+    func populateTimeForTimezone(timezone: TimeZone) -> (open: Date?, close: Date?) {
     
         let result: (open: Date?, close: Date?)
 
@@ -86,13 +86,13 @@ open class OpenHours: Object, Mappable {
         return result
     }
     
-    open func weekday() -> Weekday? {
+    func weekday() -> Weekday? {
         return Weekday(rawValue: dayOfWeek ?? "")
     }
     
 }
 
-public extension Sequence where Iterator.Element : OpenHours {
+extension Sequence where Iterator.Element : OpenHours {
     
     func areWeCurrentlyOpen(date : Date, timeZone: TimeZone) -> Bool {
         
@@ -113,5 +113,16 @@ public extension Sequence where Iterator.Element : OpenHours {
             }
         }
         return false
+    }
+}
+
+
+extension Date {
+    func isBefore(_ date: Date) -> Bool {
+        return self.timeIntervalSince1970 < date.timeIntervalSince1970
+    }
+    
+    func isAfter(_ date: Date) -> Bool {
+        return self.timeIntervalSince1970 > date.timeIntervalSince1970
     }
 }

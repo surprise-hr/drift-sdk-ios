@@ -35,8 +35,7 @@ class DriftAPIManager: Alamofire.SessionManager {
     class func getEmbeds(_ embedId: String, refreshRate: Int?, completion: @escaping (Result<Embed>) -> ()){
         
         sharedManager.request(DriftRouter.getEmbed(embedId: embedId, refreshRate: refreshRate)).responseJSON(completionHandler: { (result) -> Void in
-            let response: Result<Embed> = mapResponse(result)
-            completion(response)
+            completion(mapResponse(result))
         })
         
     }
