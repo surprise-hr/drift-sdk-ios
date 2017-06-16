@@ -39,6 +39,7 @@ class ConversationViewController: SLKTextViewController {
     var attachmentIds: Set<Int> = []
     var previewItem: DriftPreviewItem?
     var dateFormatter: DriftDateFormatter = DriftDateFormatter()
+    var connectionBarView: ConnectionBarView = ConnectionBarView.fromNib() as! ConnectionBarView
     
     lazy var qlController = QLPreviewController()
     lazy var imagePicker = UIImagePickerController()
@@ -101,6 +102,17 @@ class ConversationViewController: SLKTextViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(ConversationViewController.rotated), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(ConversationViewController.didReceiveNewMessage), name: .driftOnNewMessageReceived, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(ConversationViewController.connectionStatusDidUpdate), name: .driftSocketStatusUpdated, object: nil)
+
+
+        connectionBarView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(connectionBarView)
+
+        let leadingConstraint = NSLayoutConstraint(item: connectionBarView, attribute: NSLayoutAttribute.leading, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.leading, multiplier: 1, constant: 0)
+        let trailingConstraint = NSLayoutConstraint(item: connectionBarView, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.trailing, multiplier: 1, constant: 0)
+        let topConstraint = NSLayoutConstraint(item: connectionBarView, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: topLayoutGuide, attribute: NSLayoutAttribute.bottom, multiplier: 1, constant: 0)
+        let heightConstraint = NSLayoutConstraint(item: connectionBarView, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.height, multiplier: 1, constant: 4)
+        view.addConstraints([leadingConstraint, trailingConstraint, topConstraint, heightConstraint])
 
         didOpen()
     }
@@ -110,6 +122,35 @@ class ConversationViewController: SLKTextViewController {
         NotificationCenter.default.removeObserver(self)
     }
     
+    func connectionStatusDidUpdate(notification: Notification) {
+        if let status = notification.userInfo?["connectionStatus"] as? ConnectionStatus {
+            connectionBarView.didUpdateStatus(status: status)
+            showConnectionBar()
+        }
+    }
+    
+    func showConnectionBar() {
+        view.setNeedsUpdateConstraints()
+
+        UIView.animate(withDuration: 0.5) {
+            self.view.layoutIfNeeded()
+            let heightConstraint = NSLayoutConstraint(item: self.connectionBarView, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.height, multiplier: 1, constant: 30)
+            self.view.addConstraints([heightConstraint])
+        }
+
+    }
+    
+    func hideConnectionBar(){
+        view.setNeedsUpdateConstraints()
+        view.layoutIfNeeded()
+        let heightConstraint = NSLayoutConstraint(item: connectionBarView, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.height, multiplier: 1, constant: 4)
+        view.addConstraints([heightConstraint])
+        UIView.animate(withDuration: 0.5) {
+            self.connectionBarView.connectionStatusLabel.isHidden = true
+            self.view.layoutIfNeeded()
+        }
+    }
+
     
     func didOpen() {
         switch conversationType! {

@@ -98,6 +98,8 @@
 		A8E5A4741EF02FAB00113113 /* OpenHours.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E5A4721EF02FAB00113113 /* OpenHours.swift */; };
 		A8E705771EF28D6C00BC1429 /* OpenHoursHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E705761EF28D6C00BC1429 /* OpenHoursHelpers.swift */; };
 		A8E705791EF2C77900BC1429 /* ReachabilityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E705781EF2C77900BC1429 /* ReachabilityManager.swift */; };
+		A8E7057B1EF4051F00BC1429 /* ConnectionBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E7057A1EF4051F00BC1429 /* ConnectionBarView.swift */; };
+		A8E7057D1EF4054000BC1429 /* ConnectionBarView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A8E7057C1EF4054000BC1429 /* ConnectionBarView.xib */; };
 		A8F589A31D478F0A0043DB8D /* ConversationListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F589A11D478F0A0043DB8D /* ConversationListTableViewCell.swift */; };
 		A8F589A41D478F0A0043DB8D /* ConversationListTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A8F589A21D478F0A0043DB8D /* ConversationListTableViewCell.xib */; };
 		B24E7E355476327343D34A70 /* Pods_Drift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 827DB2871F99163085B5B96C /* Pods_Drift.framework */; };
@@ -227,6 +229,8 @@
 		A8E5A4721EF02FAB00113113 /* OpenHours.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OpenHours.swift; path = Drift/Models/OpenHours.swift; sourceTree = SOURCE_ROOT; };
 		A8E705761EF28D6C00BC1429 /* OpenHoursHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OpenHoursHelpers.swift; path = Drift/Models/OpenHoursHelpers.swift; sourceTree = SOURCE_ROOT; };
 		A8E705781EF2C77900BC1429 /* ReachabilityManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReachabilityManager.swift; path = Drift/Managers/ReachabilityManager.swift; sourceTree = SOURCE_ROOT; };
+		A8E7057A1EF4051F00BC1429 /* ConnectionBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConnectionBarView.swift; path = "Drift/UI/Conversation View/ConnectionBarView.swift"; sourceTree = SOURCE_ROOT; };
+		A8E7057C1EF4054000BC1429 /* ConnectionBarView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ConnectionBarView.xib; path = "Drift/UI/Conversation View/ConnectionBarView.xib"; sourceTree = SOURCE_ROOT; };
 		A8F589A11D478F0A0043DB8D /* ConversationListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConversationListTableViewCell.swift; path = "Drift/UI/Conversation List View/List View Cell/ConversationListTableViewCell.swift"; sourceTree = SOURCE_ROOT; };
 		A8F589A21D478F0A0043DB8D /* ConversationListTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ConversationListTableViewCell.xib; path = "Drift/UI/Conversation List View/List View Cell/ConversationListTableViewCell.xib"; sourceTree = SOURCE_ROOT; };
 		B830EE3166A8EBB93E22850F /* Pods-DriftTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DriftTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-DriftTests/Pods-DriftTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -495,6 +499,8 @@
 				A83E41651D50D20800B4EA35 /* MessageTableHeaderView.xib */,
 				A8C6ADEC1D632CD10024CFDC /* ConversationEmptyStateView.swift */,
 				A8C6ADEE1D632CED0024CFDC /* ConversationEmptyStateView.xib */,
+				A8E7057A1EF4051F00BC1429 /* ConnectionBarView.swift */,
+				A8E7057C1EF4054000BC1429 /* ConnectionBarView.xib */,
 			);
 			name = "Conversation View";
 			sourceTree = "<group>";
@@ -657,6 +663,7 @@
 				A83E41671D50D20800B4EA35 /* MessageTableHeaderView.xib in Resources */,
 				6362426C1C7FBCC300632F0E /* NPSCompleteView.xib in Resources */,
 				A8F589A41D478F0A0043DB8D /* ConversationListTableViewCell.xib in Resources */,
+				A8E7057D1EF4054000BC1429 /* ConnectionBarView.xib in Resources */,
 				6306F4221D6379CC00722D15 /* NewMessageView.xib in Resources */,
 				6329CAC11C5933590059C678 /* NPSCommentView.xib in Resources */,
 				6329CABE1C58E68F0059C678 /* NPSContainerView.xib in Resources */,
@@ -836,6 +843,7 @@
 				630E89691C57C77300195062 /* NibLoader.swift in Sources */,
 				630E89621C57944400195062 /* PresentationManager.swift in Sources */,
 				A8DECB361DF9B5BF00CE008D /* UIDevice+ModelName.swift in Sources */,
+				A8E7057B1EF4051F00BC1429 /* ConnectionBarView.swift in Sources */,
 				A8B0887E1D4F51DC00FFA469 /* ConversationMessageTableViewCell.swift in Sources */,
 				A8C6ADED1D632CD10024CFDC /* ConversationEmptyStateView.swift in Sources */,
 				63356A4B1C529C760064F652 /* AnnouncementAttributes.swift in Sources */,

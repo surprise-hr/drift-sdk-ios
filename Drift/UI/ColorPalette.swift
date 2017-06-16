@@ -17,4 +17,7 @@ struct ColorPalette {
     static let navyDark = UIColor(red:0.46, green:0.58, blue:0.65, alpha:1.00)
     static let navyMedium = UIColor(red:0.71, green:0.82, blue:0.88, alpha:1.00)
     static let attachmentBackgroundColor = UIColor(red:0.97, green:0.97, blue:0.97, alpha:1.00)
+    static let driftBlue = UIColor(red:0.00, green:0.46, blue:1.00, alpha:1.00)
+    static let driftGreen = UIColor(red:0.07, green:0.80, blue:0.43, alpha:1.00)
+
 }

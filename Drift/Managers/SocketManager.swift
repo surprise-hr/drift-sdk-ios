@@ -14,8 +14,13 @@ import ObjectMapper
 public extension Notification.Name {
     
     static let driftOnNewMessageReceived = Notification.Name("drift-sdk-new-message-received")
-    static let driftSocketDisconnected = Notification.Name("drift-sdk-socket-disconnected")
-    static let driftSocketConnected = Notification.Name("drift-sdk-socket-connected")
+    static let driftSocketStatusUpdated = Notification.Name("drift-sdk-socket-status-updated")
+}
+
+enum ConnectionStatus {
+    case connected
+    case connecting
+    case disconnected
 }
 
 class SocketManager {
@@ -38,7 +43,7 @@ class SocketManager {
         socket = Socket(url: URL(string: "wss://chat.api.drift.com/ws/websocket")!, params: ["session_token": socketAuth.sessionToken])
         
         socket!.onConnect =  {
-
+            self.didConnect()
             let channel = self.socket?.channel("user:\(socketAuth.userId)")
             
             channel?.on("change", callback: { (response) in
@@ -81,11 +86,11 @@ class SocketManager {
     }
     
     func didConnect() {
-        NotificationCenter.default.post(name: .driftSocketConnected, object: self, userInfo: nil)
+        NotificationCenter.default.post(name: .driftSocketStatusUpdated, object: self, userInfo: ["connectionStatus": ConnectionStatus.connected])
     }
     
     func didDisconnect() {
-        NotificationCenter.default.post(name: .driftSocketDisconnected, object: self, userInfo: nil)
+        NotificationCenter.default.post(name: .driftSocketStatusUpdated, object: self, userInfo: ["connectionStatus": ConnectionStatus.disconnected])
     }
     
     func didRecieveNewMessage(message: Message) {
