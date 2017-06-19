@@ -146,7 +146,7 @@ class DriftManager: NSObject {
         DriftAPIManager.getSocketAuth(accessToken: accessToken) { (result) in
             switch result {
             case .success(let socketAuth):
-                LoggerManager.log(socketAuth.sessionToken ?? "No Session Token")
+                LoggerManager.log(socketAuth.sessionToken)
                 SocketManager.sharedInstance.connectToSocket(socketAuth: socketAuth)
             case .failure(let error):
                 LoggerManager.log(error.localizedDescription)
