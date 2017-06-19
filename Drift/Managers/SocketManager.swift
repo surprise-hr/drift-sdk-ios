@@ -81,8 +81,13 @@ class SocketManager {
     
     @objc func networkDidBecomeReachable(){
         if socket?.isConnected == false {
+            willReconnect()
             socket?.connect()
         }
+    }
+    
+    func willReconnect() {
+        NotificationCenter.default.post(name: .driftSocketStatusUpdated, object: self, userInfo: ["connectionStatus": ConnectionStatus.connecting])
     }
     
     func didConnect() {
