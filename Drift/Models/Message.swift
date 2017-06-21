@@ -52,7 +52,7 @@ class Message: Mappable, Equatable, Hashable{
     var conversationId: Int!
     var requestId: Double = 0
     var sendStatus: SendStatus = SendStatus.Sent
-    var formattedBody: NSAttributedString?
+    var formattedBody: NSMutableAttributedString?
     var viewerRecipientStatus: RecipientStatus?
     
     var hashValue: Int {

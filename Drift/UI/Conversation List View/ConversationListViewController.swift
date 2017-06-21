@@ -28,10 +28,10 @@ class ConversationListViewController: UIViewController {
         let vc = ConversationListViewController()
         vc.endUserId = endUserId
         let navVC = UINavigationController(rootViewController: vc)
-        let leftButton = UIBarButtonItem(image: UIImage(named: "closeIcon", in: Bundle(for: ConversationListViewController.classForCoder()), compatibleWith: nil), style: UIBarButtonItemStyle.plain, target:vc, action: #selector(ConversationListViewController.dismissVC))
+        let leftButton = UIBarButtonItem(image: UIImage(named: "closeIcon", in: Bundle(for: Drift.self), compatibleWith: nil), style: UIBarButtonItemStyle.plain, target:vc, action: #selector(ConversationListViewController.dismissVC))
         leftButton.tintColor = DriftDataStore.sharedInstance.generateForegroundColor()
         
-        let rightButton = UIBarButtonItem(image:  UIImage(named: "newChatIcon", in: Bundle(for: ConversationListViewController.classForCoder()), compatibleWith: nil), style: UIBarButtonItemStyle.plain, target: vc, action: #selector(ConversationListViewController.startNewConversation))
+        let rightButton = UIBarButtonItem(image:  UIImage(named: "newChatIcon", in: Bundle(for: Drift.self), compatibleWith: nil), style: UIBarButtonItemStyle.plain, target: vc, action: #selector(ConversationListViewController.startNewConversation))
         rightButton.tintColor = DriftDataStore.sharedInstance.generateForegroundColor()
         
         navVC.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: DriftDataStore.sharedInstance.generateForegroundColor()]
@@ -136,7 +136,7 @@ extension ConversationListViewController: UITableViewDelegate, UITableViewDataSo
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ConversationListTableViewCell") as! ConversationListTableViewCell
-        cell.avatarImageView.image = UIImage(named: "placeholderAvatar", in:  Bundle(for: ConversationListViewController.classForCoder()), compatibleWith: nil)
+        cell.avatarImageView.image = UIImage(named: "placeholderAvatar", in: Bundle(for: Drift.self), compatibleWith: nil)
         let enrichedConversation = enrichedConversations[(indexPath as NSIndexPath).row]
         if let conversation = enrichedConversation.conversation {
             if enrichedConversation.unreadMessages > 0 {
