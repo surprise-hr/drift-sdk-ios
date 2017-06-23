@@ -41,7 +41,8 @@ class Message: Mappable, Equatable, Hashable{
     var uuid: String?
     var inboxId: Int!
     var body: String?
-    var attachments: [Int] = []
+    var attachmentIds: [Int] = []
+    var attachments: [Attachment] = []
     var contentType = ContentType.Chat.rawValue
     var createdAt = Date()
     var authorId: Int!
@@ -93,7 +94,7 @@ class Message: Mappable, Equatable, Hashable{
             
         }
         
-        attachments             <- map["attachments"]
+        attachmentIds           <- map["attachments"]
         contentType             <- map["contentType"]
         createdAt               <- (map["createdAt"], DriftDateTransformer())
         authorId                <- map["authorId"]

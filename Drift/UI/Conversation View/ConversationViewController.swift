@@ -375,11 +375,7 @@ class ConversationViewController: SLKTextViewController {
     
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 0{
             return CGFloat.leastNormalMagnitude
-        }else{
-            return 42
-        }
     }
     
     func didReceiveNewMessage(notification: Notification) {
@@ -522,6 +518,7 @@ extension ConversationViewController: MessageDelegate {
             
                 tableView!.reloadRows(at: [IndexPath(row: index, section: 0)], with: .bottom)
             }else{
+                messages.insert(message, at: 0)
                 tableView!.insertRows(at: [IndexPath(row: 0, section: 0)], with: .bottom)
             }
         }
@@ -613,7 +610,7 @@ extension ConversationViewController: UIImagePickerControllerDelegate, UINavigat
                 switch result{
                 case .success(let attachment):
                     let messageRequest = Message()
-                    messageRequest.attachments.append(attachment.id)
+                    messageRequest.attachmentIds.append(attachment.id)
                     self.postMessage(messageRequest)
                 case .failure:
                     let alert = UIAlertController(title: "Unable to upload file", message: nil, preferredStyle: UIAlertControllerStyle.alert)

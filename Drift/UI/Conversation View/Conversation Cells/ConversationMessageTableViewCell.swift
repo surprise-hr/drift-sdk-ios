@@ -199,51 +199,58 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
     }
     
     func setupForAttachments(message: Message) {
-        
-//        if message.attachmentIds.isEmpty == .some(true){
-//            //Hide them all
+        if message.attachmentIds.isEmpty == .some(true){
+            //Hide them all
             setupForAttachmentStyle(attachmentStyle: .none)
-//        }else {
-//            if !message.attachments.isEmpty {
-//                //Attachments are loaded
-//         
-//                if message.attachments.count == 1 {
-//                    //Single Attachments
-//                    
-//                    let attachment = message.attachments.first!
-//                    
-//                    
-//                    if attachment.isImage(){
-//                        setupForAttachmentStyle(attachmentStyle: .single)
-//                        let url = attachment.generatePublicPreviewURL() ?? attachment.generatePublicURL()
-//                        self.attachmentImageView.startAnimating()
-//                        self.attachmentImageView.sd_setImage(with: url, placeholderImage: UIImage(named: "imagePlaceholder"))
-//                    }else{
-//                        setupForAttachmentStyle(attachmentStyle: .multiple)
-//                    }
-//                    
-//                } else {
-//                    //Multiple Attachments
-//                    setupForAttachmentStyle(attachmentStyle: .multiple)
-//                }
-//            } else {
-//                //Load Attachments let realm reload table for us with the update
-//                
-//                if message.attachmentIds.count == 1 {
-//                    setupForAttachmentStyle(attachmentStyle: .loading)
-//                }else{
-//                    setupForAttachmentStyle(attachmentStyle: .multiple)
-//                }
-//                
-//                AttachmentManager.sharedInstance.getAttachmentInfo(message.attachmentIds.map({ $0.value }), messageUUID: message.uuid)
-//            }
-//        }
-//        attachmentsCollectionView.reloadData()
+        }else{
+            if !message.attachments.isEmpty {
+                //Attachments are loaded
+                displayAttachments(attachments: message.attachments)
+            } else {                
+                if message.attachmentIds.count == 1 {
+                    setupForAttachmentStyle(attachmentStyle: .loading)
+                }else{
+                    setupForAttachmentStyle(attachmentStyle: .multiple)
+                }
+                
+                DriftAPIManager.getAttachmentsMetaData(message.attachmentIds, authToken: (DriftDataStore.sharedInstance.auth?.accessToken)!, completion: { (result) in
+                    switch result{
+                    case .success(let attachments):
+                        message.attachments.append(contentsOf: attachments)
+                        self.displayAttachments(attachments: attachments)
+                    case .failure:
+                        LoggerManager.log("Failed to get attachment metadata for message: \(message.id)")
+                    }
+                })
+            }
+        }
+        attachmentsCollectionView.reloadData()
+    }
+    
+    func displayAttachments(attachments: [Attachment]) {
+        if attachments.count == 1 {
+            //Single Attachments
+            
+            let attachment = attachments.first!
+            
+            if attachment.isImage(){
+                self.setupForAttachmentStyle(attachmentStyle: .single)
+                let url = attachment.generatePublicPreviewURL() ?? attachment.generatePublicURL()
+                self.attachmentImageView.startAnimating()
+                self.attachmentImageView.af_setImage(withURL: url, placeholderImage: UIImage(named: "imagePlaceholder"))
+            }else{
+                self.setupForAttachmentStyle(attachmentStyle: .multiple)
+            }
+            
+        } else {
+            //Multiple Attachments
+            self.setupForAttachmentStyle(attachmentStyle: .multiple)
+        }
     }
     
     func imagePressed(){
         if let attachment = message?.attachments.first{
-//            delegate?.attachmentSelected(attachment: attachment, sender: self, message: message)
+            delegate?.attachmentSelected(attachment: attachment, sender: self, message: message)
         }
     }
     
@@ -278,20 +285,20 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-//        if let cell = cell as? AttachmentCollectionViewCell{
-//            if let attachment = message?.attachments[indexPath.row] {
-//                let fileName: NSString = attachment.fileName as NSString
-//                let fileExtension = fileName.pathExtension
-//                cell.fileNameLabel.text = "\(fileName)"
-//                cell.fileExtensionLabel.text = "\(fileExtension.uppercased())"
-//                
-//                let formatter = ByteCountFormatter()
-//                formatter.countStyle = .memory
-//                formatter.string(fromByteCount: Int64(attachment.size))
-//                formatter.allowsNonnumericFormatting = false
-//                cell.sizeLabel.text = formatter.string(fromByteCount: Int64(attachment.size))
-//            }
-//        }
+        if let cell = cell as? AttachmentCollectionViewCell{
+            if let attachment = message?.attachments[indexPath.row] {
+                let fileName: NSString = attachment.fileName as NSString
+                let fileExtension = fileName.pathExtension
+                cell.fileNameLabel.text = "\(fileName)"
+                cell.fileExtensionLabel.text = "\(fileExtension.uppercased())"
+                
+                let formatter = ByteCountFormatter()
+                formatter.countStyle = .memory
+                formatter.string(fromByteCount: Int64(attachment.size))
+                formatter.allowsNonnumericFormatting = false
+                cell.sizeLabel.text = formatter.string(fromByteCount: Int64(attachment.size))
+            }
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -302,11 +309,11 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         let count = message?.attachments.count ?? 0
-//        if count == 1 {
-//            if message!.attachments[0].isImage(){
-//                return 0
-//            }
-//        }
+        if count == 1 {
+            if message!.attachments[0].isImage(){
+                return 0
+            }
+        }
         return count
     }
     
@@ -315,12 +322,12 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-//        if let attachments = message?.attachments {
-//            if let attachment = attachments.first, attachments.count == 1, attachment.isImage(){
-//                return CGSize(width: 0, height: 0)
-//            }
-//            return CGSize(width: 200, height: 55)
-//        }
+        if let attachments = message?.attachments {
+            if let attachment = attachments.first, attachments.count == 1, attachment.isImage(){
+                return CGSize(width: 0, height: 0)
+            }
+            return CGSize(width: 200, height: 55)
+        }
         return CGSize(width: 0, height: 0)
     }
 

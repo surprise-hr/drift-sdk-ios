@@ -209,13 +209,23 @@ class DriftAPIManager: Alamofire.SessionManager {
     
     class func getAttachmentsMetaData(_ attachmentIds: [Int], authToken: String, completion: @escaping (_ result: Result<[Attachment]>) -> ()){
         
-//        guard let url = URLStore.getAttachmentsURL(attachmentIds, authToken: authToken) else {
-//            LoggerManager.log("Failed in Get Attachment Metadata URL Creation")
-//            return
-//        }
-//        
-//        let request = Request(url: url).setMethod(.GET)
-//        
+        guard let url = URLStore.getAttachmentsURL(attachmentIds, authToken: authToken) else {
+            LoggerManager.log("Failed in Get Attachment Metadata URL Creation")
+            return
+        }
+        
+        sharedManager.request(URLRequest(url: url)).responseJSON(completionHandler: { (result) in
+            completion(mapResponse(result))
+
+//            switch response {
+//            case .success:
+//                let attachments: Result<[Attachment]> = mapResponse(response)
+//                completion(attachments)
+//            case .failure(let error):
+//                completion(.failure(DriftError.apiFailure))
+//                LoggerManager.log("Unable to get attachments metadata: \(error)")
+//            }
+        })
 //        makeRequest(request) { (result) -> () in
 //            
 //            switch result {
