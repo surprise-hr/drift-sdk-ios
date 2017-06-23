@@ -301,7 +301,7 @@ class ConversationViewController: SLKTextViewController {
             cell = tableView.dequeueReusableCell(withIdentifier: "ConversationMessageTableViewCell", for: indexPath) as!ConversationMessageTableViewCell
             if let cell = cell as? ConversationMessageTableViewCell{
                 cell.delegate = self
-//                cell.conversationDelegate = self
+                cell.attachmentDelegate = self
                 cell.delegate = self
                 cell.indexPath = indexPath
                 cell.setupForMessage(message: message, showHeader: showHeader, configuration: configuration)
@@ -535,9 +535,7 @@ extension ConversationViewController: AttachementSelectedDelegate {
             }
             switch result{
             case .success(let tempFileURL):
-                let fileName: NSString = attachment.fileName as NSString
-                let fileExtension = fileName.pathExtension
-                if fileExtension == "jpg" || fileExtension == "png" || fileExtension == "gif"{
+                if attachment.isImage(){
                     DispatchQueue.main.async {
                         self.previewItem = DriftPreviewItem(url: tempFileURL, title: attachment.fileName)
                         self.qlController.dataSource = self

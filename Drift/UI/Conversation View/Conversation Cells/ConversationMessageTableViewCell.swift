@@ -49,15 +49,13 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
     var indexPath: IndexPath?
     var message: Message?
     var configuration: Embed?
-    weak var conversationDelegate: ConversationCellDelegate?
+    weak var attachmentDelegate: AttachementSelectedDelegate?
     weak var delegate: AttachementSelectedDelegate?
     
     override func awakeFromNib() {
         super.awakeFromNib()
         timeLabel.textColor = ColorPalette.navyDark
-        nameLabel.addGestureRecognizer(UITapGestureRecognizer.init(target:self, action: #selector(ConversationMessageTableViewCell.showProfile)))
         nameLabel.isUserInteractionEnabled = true
-        avatarView.delegate = self
         messageTextView.textContainer.lineFragmentPadding = 0
         messageTextView.textContainerInset = UIEdgeInsets.zero
         selectionStyle = .none
@@ -101,7 +99,6 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
     
     func setStyle(){
         avatarView.imageView.image = UIImage(named: "placeholderAvatar", in: Bundle(for: Drift.self), compatibleWith: nil)
-        avatarView.delegate = self
         
         if let message = message{
             let textColor: UIColor
@@ -250,7 +247,7 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
     
     func imagePressed(){
         if let attachment = message?.attachments.first{
-            delegate?.attachmentSelected(attachment: attachment, sender: self, message: message)
+            delegate?.attachmentSelected(attachment, sender: self)
         }
     }
     
@@ -318,7 +315,7 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        delegate?.attachmentSelected(attachment: message!.attachments[indexPath.row], sender: self, message: message)
+        delegate?.attachmentSelected(message!.attachments[indexPath.row], sender: self)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -331,15 +328,4 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
         return CGSize(width: 0, height: 0)
     }
 
-    func showProfile() {
-        if let indexPath = indexPath{
-            conversationDelegate?.showProfileForRow(indexPath: indexPath)
-        }
-    }
-}
-
-extension ConversationMessageTableViewCell: AvatarDelegate{
-    func avatarPressed() {
-        showProfile()
-    }
 }
