@@ -140,6 +140,7 @@ extension ConversationListViewController: UITableViewDelegate, UITableViewDataSo
         let enrichedConversation = enrichedConversations[(indexPath as NSIndexPath).row]
         if let conversation = enrichedConversation.conversation {
             if enrichedConversation.unreadMessages > 0 {
+                cell.unreadCountLabel.isHidden = false
                 cell.unreadCountLabel.text = " \(enrichedConversation.unreadMessages) "
             }else{
                 cell.unreadCountLabel.isHidden = true
