@@ -221,7 +221,6 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
                 })
             }
         }
-        attachmentsCollectionView.reloadData()
     }
     
     func displayAttachments(attachments: [Attachment]) {
@@ -243,6 +242,8 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
             //Multiple Attachments
             self.setupForAttachmentStyle(attachmentStyle: .multiple)
         }
+        
+        self.attachmentsCollectionView.reloadData()
     }
     
     func imagePressed(){

@@ -385,9 +385,7 @@ class ConversationViewController: SLKTextViewController {
                 newMessage(message)
             }
         }
-
     }
-    
     
     func addMessageToConversation(_ message: Message){
         if messages.count > 0, let _ = messages.index(where: { (currentMessage) -> Bool in
