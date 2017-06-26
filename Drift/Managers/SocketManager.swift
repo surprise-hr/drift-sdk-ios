@@ -47,7 +47,6 @@ class SocketManager {
             let channel = self.socket?.channel("user:\(socketAuth.userId)")
             
             channel?.on("change", callback: { (response) in
-                print("CHANGE PLACES")
                 if let body = response.payload["body"] as? [String: Any], let object = body["object"] as? [String: Any], let data = body["data"] as? [String: Any], let type = object["type"] as? String {
                     
                     switch type {

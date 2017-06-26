@@ -216,27 +216,7 @@ class DriftAPIManager: Alamofire.SessionManager {
         
         sharedManager.request(URLRequest(url: url)).responseJSON(completionHandler: { (result) in
             completion(mapResponse(result))
-
-//            switch response {
-//            case .success:
-//                let attachments: Result<[Attachment]> = mapResponse(response)
-//                completion(attachments)
-//            case .failure(let error):
-//                completion(.failure(DriftError.apiFailure))
-//                LoggerManager.log("Unable to get attachments metadata: \(error)")
-//            }
         })
-//        makeRequest(request) { (result) -> () in
-//            
-//            switch result {
-//            case .success:
-//                let attachments: Result<[Attachment]> = mapResponse(result)
-//                completion(attachments)
-//            case .failure(let error):
-//                completion(.failure(DriftError.apiFailure))
-//                LoggerManager.log("Unable to get attachments metadata: \(error)")
-//            }
-//        }
     }
     
     class func postAttachment(_ attachment: Attachment, authToken: String, completion: @escaping (_ result: Result<Attachment>) ->()){
