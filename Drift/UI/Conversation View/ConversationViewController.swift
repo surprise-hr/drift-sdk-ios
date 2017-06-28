@@ -285,28 +285,16 @@ class ConversationViewController: SLKTextViewController {
         
         var cell: UITableViewCell
         
-//        if let converationEvent = message.conversationEvent, converationEvent.typeEnum == .FellBack{
-//            cell = ConversationFallBackTableViewCell.reuseCell(tableView, indexPath: indexPath) as! ConversationFallBackTableViewCell
-//            if let cell = cell as? ConversationFallBackTableViewCell{
-//                cell.setupForMessage(message: message)
-//                cell.selectionStyle = .none
-//            }
-//        }else if let appointmentInfo = message.appointmentInformation {
-//            cell = MeetingMessageTableViewCell.reuseCell(tableView, indexPath: indexPath) as! MeetingMessageTableViewCell
-//            if let cell = cell as? MeetingMessageTableViewCell{
-//                cell.setupForAppointmentInformation(appointmentInformation: appointmentInfo, message: message, showHeader: showHeader)
-//            }
-//        }else{
+
         
-            cell = tableView.dequeueReusableCell(withIdentifier: "ConversationMessageTableViewCell", for: indexPath) as!ConversationMessageTableViewCell
-            if let cell = cell as? ConversationMessageTableViewCell{
-                cell.delegate = self
-                cell.attachmentDelegate = self
-                cell.delegate = self
-                cell.indexPath = indexPath
-                cell.setupForMessage(message: message, showHeader: showHeader, configuration: configuration)
-            }
-//        }
+        cell = tableView.dequeueReusableCell(withIdentifier: "ConversationMessageTableViewCell", for: indexPath) as!ConversationMessageTableViewCell
+        if let cell = cell as? ConversationMessageTableViewCell{
+            cell.delegate = self
+            cell.attachmentDelegate = self
+            cell.delegate = self
+            cell.indexPath = indexPath
+            cell.setupForMessage(message: message, showHeader: showHeader, configuration: configuration)
+        }
         
         cell.transform = tableView.transform
         cell.setNeedsLayout()
