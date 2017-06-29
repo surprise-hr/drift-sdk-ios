@@ -33,7 +33,6 @@ class ConversationViewController: SLKTextViewController {
         case continueConversation(conversationId: Int)
     }
     
-    
     let configuration = DriftDataStore.sharedInstance.embed
     let emptyState = ConversationEmptyStateView.fromNib() as! ConversationEmptyStateView
     var messages: [Message] = []
@@ -86,7 +85,6 @@ class ConversationViewController: SLKTextViewController {
         return navVC
     }
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupSlackTextView()
@@ -120,6 +118,9 @@ class ConversationViewController: SLKTextViewController {
         didOpen()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        self.markConversationRead()
+    }
     
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -284,9 +285,6 @@ class ConversationViewController: SLKTextViewController {
         }
         
         var cell: UITableViewCell
-        
-
-        
         cell = tableView.dequeueReusableCell(withIdentifier: "ConversationMessageTableViewCell", for: indexPath) as!ConversationMessageTableViewCell
         if let cell = cell as? ConversationMessageTableViewCell{
             cell.delegate = self
@@ -345,7 +343,6 @@ class ConversationViewController: SLKTextViewController {
         return nil
     }
     
-    
     override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         let message = messages[indexPath.row]
         
@@ -355,7 +352,6 @@ class ConversationViewController: SLKTextViewController {
             return 150
         }
     }
-    
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableViewAutomaticDimension
@@ -397,9 +393,23 @@ class ConversationViewController: SLKTextViewController {
             case .success(let messages):
                 let sorted = messages.sorted(by: { $0.createdAt.compare($1.createdAt as Date) == .orderedDescending})
                 self.messages = sorted
+                self.markConversationRead()
                 self.tableView?.reloadData()
             case .failure:
                 LoggerManager.log("Unable to get messages for conversationId: \(conversationId)")
+            }
+        }
+    }
+    
+    func markConversationRead() {
+        if let lastMessageId = self.messages.first?.id {
+            DriftAPIManager.markConversationAsRead(messageId: lastMessageId) { (result) in
+                switch result {
+                case .success(_):
+                    LoggerManager.log("Successfully marked conversation as read")
+                case .failure(let error):
+                    LoggerManager.didRecieveError(error)
+                }
             }
         }
     }
@@ -428,7 +438,6 @@ class ConversationViewController: SLKTextViewController {
             postMessageToConversation(conversationId, messageRequest: messageRequest)
         }
     }
-    
     
     func postMessageToConversation(_ conversationId: Int, messageRequest: Message) {
         InboxManager.sharedInstance.postMessage(messageRequest, conversationId: conversationId) { (message, requestId) in
@@ -492,7 +501,6 @@ extension ConversationViewController: MessageDelegate {
         self.messages = sorted
         self.tableView?.reloadData()
     }
-    
     
     func newMessage(_ message: Message) {
         if let id = message.id{

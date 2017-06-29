@@ -171,11 +171,14 @@ enum DriftConversationRouter: URLRequestConvertible {
 enum DriftConversation2Router: URLRequestConvertible {
     
     case markMessageAsRead(messageId: Int)
+    case markConversationAsRead(messageId: Int)
     
     var request: (method: Alamofire.HTTPMethod, path: String, parameters: [String: Any]?, encoding: ParameterEncoding){
         switch self {
-                case .markMessageAsRead(let messageId):
+        case .markMessageAsRead(let messageId):
             return (.post, "messages/\(messageId)/read", nil, URLEncoding.default)
+        case .markConversationAsRead(let messageId):
+            return (.post, "messages/\(messageId)/read-until", nil, URLEncoding.default)
         }
     }
     

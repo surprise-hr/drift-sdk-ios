@@ -66,13 +66,13 @@ class PresentationManager: PresentationManagerDelegate {
             if let window = UIApplication.shared.keyWindow {
                 currentShownView = newMessageView
                 
-                let currentConversation = enrichedConversations.first!
-                let otherConversations = enrichedConversations.filter({ $0.conversation.id != currentConversation.conversation.id })
-                newMessageView.otherConversations = otherConversations                
-                newMessageView.enrichedConversation = currentConversation
-                newMessageView.delegate = self
-                newMessageView.showOnWindow(window)
-                
+                if let currentConversation = enrichedConversations.first {
+                    let otherConversations = enrichedConversations.filter({ $0.conversation.id != currentConversation.conversation.id })
+                    newMessageView.otherConversations = otherConversations
+                    newMessageView.enrichedConversation = currentConversation
+                    newMessageView.delegate = self
+                    newMessageView.showOnWindow(window)
+                }
             }
         }
 

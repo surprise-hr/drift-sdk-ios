@@ -135,6 +135,19 @@ class DriftAPIManager: Alamofire.SessionManager {
         
     }
     
+    class func markConversationAsRead(messageId: Int, completion: @escaping (_ result: Result<Bool>) -> ()){
+        
+        sharedManager.request(DriftConversation2Router.markConversationAsRead(messageId: messageId)).responseString { (result) in
+            switch result.result{
+            case .success(_):
+                completion(.success(true))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+        
+    }
+    
     class func getCampaigns(_ endUserId: Int, completion: @escaping (_ result: Result<[CampaignWrapper]>) -> ()){
         
         sharedManager.request(DriftConversationRouter.getCampaignsForEndUser(endUserId: endUserId)).responseJSON { (result) in
