@@ -84,11 +84,14 @@ class ConversationViewController: SLKTextViewController {
 
         return navVC
     }
+
+    override func viewWillAppear(_ animated: Bool) {
+        tableView?.contentInset = UIEdgeInsets.zero
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupSlackTextView()
-        
         tableView?.register(UINib(nibName: "ConversationMessageTableViewCell", bundle: Bundle(for: ConversationMessageTableViewCell.classForCoder())), forCellReuseIdentifier: "ConversationMessageTableViewCell")
         
         if let navVC = navigationController {
@@ -211,7 +214,6 @@ class ConversationViewController: SLKTextViewController {
     
     func setupSlackTextView() {
         tableView?.backgroundColor = UIColor.white
-        tableView?.contentInset = UIEdgeInsets()
         tableView?.separatorStyle = .none
 
         textInputbar.barTintColor = UIColor.white
