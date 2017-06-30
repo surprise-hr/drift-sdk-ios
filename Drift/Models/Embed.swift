@@ -13,7 +13,6 @@ public enum WidgetStatus: String{
     case away = "AWAY"
 }
 
-
 public enum WidgetMode: String{
     case manual = "MANUAL"
     case auto   = "AUTO"
@@ -96,7 +95,6 @@ struct Embed: Mappable {
     }
     
     public func isOrgCurrentlyOpen() -> Bool {
-        
         if widgetMode == .some(.manual) {
             if widgetStatus == .some(.on) {
                 return true
@@ -113,4 +111,5 @@ struct Embed: Mappable {
             }
         }
     }
+    
 }

@@ -17,7 +17,6 @@ class OpenHoursHelpers {
     }
     
     class func convertStringForDate(dateString: String, timezone: TimeZone) -> Date?{
-        
         let dateFormat = DateFormatter()
         dateFormat.dateFormat = "HH:mm:ss"
         dateFormat.timeZone = timezone

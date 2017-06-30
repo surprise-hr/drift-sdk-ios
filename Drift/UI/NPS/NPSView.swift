@@ -85,7 +85,6 @@ class NPSView: ContainerSubView {
     }
     
     fileprivate func animateButtonsIn(){
-    
         for (i, button) in buttons.enumerated() {
             button.transform = CGAffineTransform(scaleX: 0, y: 0)
             button.isHidden = false
@@ -97,7 +96,6 @@ class NPSView: ContainerSubView {
     }
     
     func didSelectButton(_ sender: NPSButton){
-        
         let index = buttons.index(of: sender) ?? 0
         
         let background = DriftDataStore.sharedInstance.generateBackgroundColor()

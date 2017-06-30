@@ -12,8 +12,7 @@ import Alamofire
 import ObjectMapper
 
 public extension Notification.Name {
-    
-    static let driftOnNewMessageReceived = Notification.Name("drift-sdk-new-message-received")
+        static let driftOnNewMessageReceived = Notification.Name("drift-sdk-new-message-received")
     static let driftSocketStatusUpdated = Notification.Name("drift-sdk-socket-status-updated")
 }
 
@@ -34,7 +33,6 @@ class SocketManager {
     var socket: Socket?
     
     func connectToSocket(socketAuth: SocketAuth) {
-        
         ReachabilityManager.sharedInstance.start()
         if let socket = socket {
             socket.disconnect()
@@ -48,7 +46,6 @@ class SocketManager {
             
             channel?.on("change", callback: { (response) in
                 if let body = response.payload["body"] as? [String: Any], let object = body["object"] as? [String: Any], let data = body["data"] as? [String: Any], let type = object["type"] as? String {
-                    
                     switch type {
                     case "MESSAGE":
                         if let message = Mapper<Message>().map(JSON: data){
@@ -57,8 +54,6 @@ class SocketManager {
                     default:
                         LoggerManager.log("Ignoring unknown event type")
                     }
-                    
-                    
                 }else{
                     LoggerManager.log("Ignoring unknown event type")
                 }
@@ -66,7 +61,6 @@ class SocketManager {
             
             channel?.join()
         }
-        
         
         socket?.onDisconnect = { error in
             self.didDisconnect()
@@ -101,4 +95,5 @@ class SocketManager {
         PresentationManager.sharedInstance.didRecieveNewMessage(message)
         NotificationCenter.default.post(name: .driftOnNewMessageReceived, object: self, userInfo: ["message": message])
     }
+    
 }

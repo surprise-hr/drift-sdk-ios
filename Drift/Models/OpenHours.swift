@@ -95,7 +95,6 @@ class OpenHours: Mappable {
 extension Sequence where Iterator.Element : OpenHours {
     
     func areWeCurrentlyOpen(date : Date, timeZone: TimeZone) -> Bool {
-        
         for openHour in self {
 
             let currentWeekdayInTimeZone = OpenHoursHelpers.getWeekDayFromDate(date: date, timezone: timeZone)

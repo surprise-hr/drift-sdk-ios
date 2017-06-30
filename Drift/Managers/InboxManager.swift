@@ -19,11 +19,8 @@ class InboxManager {
         let matchingSub = messageSubscriptions.filter({$0.conversationId == conversationId && $0.delegate != nil})
         return !matchingSub.isEmpty
     }
-    
         
     func getMessages(_ conversationId: Int, completion:@escaping (_ messages: [Message]?) -> ()){
-
-        
         guard let auth = DriftDataStore.sharedInstance.auth?.accessToken else {
             LoggerManager.log("No Auth Token for Recording")
             return
@@ -41,8 +38,6 @@ class InboxManager {
     }
     
     func postMessage(_ message: Message, conversationId: Int, completion:@escaping (_ message: Message?, _ requestId: Double) -> ()){
-        
-
         guard let auth = DriftDataStore.sharedInstance.auth?.accessToken else {
             LoggerManager.log("No Auth Token for Recording")
             return
@@ -61,8 +56,6 @@ class InboxManager {
     
     
     func createConversation(_ message: Message, authorId: Int?, completion:@escaping (_ message: Message?, _ requestId: Double) -> ()){
-        
-        
         guard let auth = DriftDataStore.sharedInstance.auth?.accessToken else {
             LoggerManager.log("No Auth Token for Recording")
             return

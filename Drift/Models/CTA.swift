@@ -32,4 +32,5 @@ class CTA: Mappable {
         ctaType     <- map["CtaType"]
         urlLink     <- map["UrlLink"]
     }
+    
 }

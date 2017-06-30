@@ -32,4 +32,5 @@ class ConnectionBarView: UIView {
             backgroundColor = .red
         }
     }
+    
 }

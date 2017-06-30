@@ -17,7 +17,6 @@ class DriftManager: NSObject {
     ///Used to store register data while we wait for embed to finish in case where register and embed is called together
     private var registerInfo: (userId: String, email: String, attrs: [String: AnyObject]?)?
 
-    
     fileprivate override init(){
         super.init()
         NotificationCenter.default.addObserver(self, selector: #selector(DriftManager.didEnterForeground), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
@@ -26,7 +25,6 @@ class DriftManager: NSObject {
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
-    
     
     class func createTemporaryDirectory(){
         sharedInstance.directoryURL =  URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(ProcessInfo.processInfo.globallyUniqueString, isDirectory: true)
@@ -41,7 +39,6 @@ class DriftManager: NSObject {
     
     ///Call Embeds API if needed
     class func retrieveDataFromEmbeds(_ embedId: String) {
-        
         if let pastEmbedId = DriftDataStore.sharedInstance.embed?.embedId {
             //New Embed Account - Logout and continue to get new data
             if pastEmbedId != embedId {
@@ -49,9 +46,7 @@ class DriftManager: NSObject {
             }
         }
         
-        
         getEmbedData(embedId) { (success) in
-            
             //If we have pending register data go in register flow - If register called before embeds is complete
             if let registerInfo = DriftManager.sharedInstance.registerInfo , success {
                 DriftManager.registerUser(registerInfo.userId, email: registerInfo.email, attrs: registerInfo.attrs)
@@ -63,12 +58,10 @@ class DriftManager: NSObject {
         sharedInstance.debug = debug
     }
     
-    
     /**
      Gets Auth for user - Calls Identify if new user
     */
     class func registerUser(_ userId: String, email: String, attrs: [String: AnyObject]? = nil){
-        
         guard let orgId = DriftDataStore.sharedInstance.embed?.orgId else {
             LoggerManager.log("No Embed, not registering user - Waiting for Embeds to complete")
             DriftManager.sharedInstance.registerInfo = (userId, email, attrs)
@@ -142,7 +135,6 @@ class DriftManager: NSObject {
      Once we have a userId from Auth - Start Layer Auth Handoff to Layer Manager
     */
     fileprivate class func setupSocket(_ accessToken: String) {
-        
         DriftAPIManager.getSocketAuth(accessToken: accessToken) { (result) in
             switch result {
             case .success(let socketAuth):
@@ -152,7 +144,6 @@ class DriftManager: NSObject {
                 LoggerManager.log(error.localizedDescription)
             }
         }
-        
     }
     
     class func showConversations(){
@@ -178,6 +169,7 @@ class DriftManager: NSObject {
             }
         }
     }
+    
 }
 
 ///Convenience Extension to dismiss a MFMailComposeViewController - Used as views will not stay in window and delegate would become nil

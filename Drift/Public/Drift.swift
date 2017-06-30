@@ -40,7 +40,6 @@ open class Drift: NSObject {
         DriftManager.logout()
     }
     
-    
     /**
 
      This mode enables you to see the output logs of drift for debug purposes

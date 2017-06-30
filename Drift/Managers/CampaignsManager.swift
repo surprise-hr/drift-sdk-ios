@@ -33,7 +33,6 @@ class CampaignsManager {
         - returns: Tuple of NPS and Announcement Type Campaigns that are presentable in SDK
     */
     class func filtercampaigns(_ campaigns: [Campaign]) -> (nps: [Campaign], announcements: [Campaign]){
-        
         ///GET NPS or NPS_RESPONSE
         
         ///DO Priority - Announcements before NPS, Latest first
@@ -70,7 +69,6 @@ class CampaignsManager {
         
         let npsResponseIds = npsResponse.flatMap { $0.conversationId }
         
-    
         nps = nps.filter {
             if let conversationId = $0.conversationId {
                 return !npsResponseIds.contains(conversationId)
@@ -80,8 +78,6 @@ class CampaignsManager {
         
         return (nps, announcements)
     }
-    
-    
     
     class func markCampaignAsRead(_ messageId: Int) {
         DriftAPIManager.markMessageAsRead(messageId: messageId) { (result) in
@@ -93,4 +89,5 @@ class CampaignsManager {
             }
         }
     }
+    
 }

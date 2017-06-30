@@ -57,8 +57,6 @@ class NewMessageView: CampaignView {
         if otherConversations.isEmpty {
             //Setup for latest message in conversation
             notificationContainer.isHidden = true
-
-            
             titleLabel.text = "New Message"
             
             do {
@@ -101,7 +99,6 @@ class NewMessageView: CampaignView {
     
     override func showOnWindow(_ window: UIWindow) {
         window.addSubview(self)
-        
         translatesAutoresizingMaskIntoConstraints = false
         
         let leading = NSLayoutConstraint(item: self, attribute: .leading, relatedBy: .equal, toItem: window, attribute: .leading, multiplier: 1.0, constant: window.frame.size.width)
@@ -131,7 +128,6 @@ class NewMessageView: CampaignView {
     }
     
     override func hideFromWindow() {
-
         bottomConstraint.constant = 130
         setNeedsLayout()
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 1, options: UIViewAnimationOptions.curveEaseIn, animations: { () -> Void in
@@ -167,4 +163,5 @@ class NewMessageView: CampaignView {
         
         ConversationsManager.markMessageAsRead(message.id)
     }
+    
 }

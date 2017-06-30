@@ -25,4 +25,5 @@ class NPSResponseAttributes: Mappable {
         textResponse    <- map["textResponse"]
         numericResponse <- map["numericResponse"]
     }
+    
 }

@@ -122,7 +122,7 @@ class ConversationViewController: SLKTextViewController {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        self.markConversationRead()
+        markConversationRead()
     }
     
     deinit {
@@ -359,7 +359,6 @@ class ConversationViewController: SLKTextViewController {
         return UITableViewAutomaticDimension
     }
     
-    
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
             return CGFloat.leastNormalMagnitude
     }
@@ -494,6 +493,7 @@ class ConversationViewController: SLKTextViewController {
             }
         }
     }
+    
 }
 
 extension ConversationViewController: MessageDelegate {
@@ -583,7 +583,6 @@ extension ConversationViewController: UIDocumentInteractionControllerDelegate{
         return self.view.frame
     }
 }
-
 
 extension ConversationViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     

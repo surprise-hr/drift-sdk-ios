@@ -51,6 +51,7 @@ class Attachment: Mappable, Hashable{
         }
         return nil
     }
+    
 }
 
 func ==(lhs: Attachment, rhs: Attachment) -> Bool {

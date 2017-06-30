@@ -36,7 +36,6 @@ class Campaign: Mappable {
     var npsResponseAttributes: NPSResponseAttributes? 
     
     required convenience init?(map: Map) {
-        
         if map.JSON["type"] as? String == nil || MessageType(rawValue: map.JSON["type"] as! String) == nil{
             LoggerManager.log(map.JSON["type"] as? String ?? "")
             return nil
@@ -67,4 +66,5 @@ class Campaign: Mappable {
             }
         }
     }
+    
 }

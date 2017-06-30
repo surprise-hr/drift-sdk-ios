@@ -80,14 +80,12 @@ class ConversationListViewController: UIViewController {
         NotificationCenter.default.removeObserver(self)
     }
     
-    
     override func viewWillAppear(_ animated: Bool) {
         if enrichedConversations.count == 0{
             SVProgressHUD.show()
         }
         getConversations()
     }
-    
     
     func dismissVC() {
         dismiss(animated: true, completion: nil)
@@ -111,12 +109,10 @@ class ConversationListViewController: UIViewController {
         }
     }
     
-    
     func startNewConversation() {
         let conversationViewController = ConversationViewController(conversationType: ConversationViewController.ConversationType.createConversation(authorId: endUserId))
         navigationController?.show(conversationViewController, sender: self)
     }
-    
     
     func setupEmptyState() {
         emptyStateButton.clipsToBounds = true
@@ -124,7 +120,6 @@ class ConversationListViewController: UIViewController {
         emptyStateButton.backgroundColor = DriftDataStore.sharedInstance.generateBackgroundColor()
         emptyStateButton.setTitleColor(DriftDataStore.sharedInstance.generateForegroundColor(), for: UIControlState())
     }
-    
     
     @IBAction func emptyStateButtonPressed(_ sender: AnyObject) {
         startNewConversation()
@@ -196,7 +191,6 @@ extension ConversationListViewController: UITableViewDelegate, UITableViewDataSo
         return cell
     }
     
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if enrichedConversations.count > 0 {
             self.emptyStateView.isHidden = true
@@ -204,10 +198,10 @@ extension ConversationListViewController: UITableViewDelegate, UITableViewDataSo
         return enrichedConversations.count
     }
     
-    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let enrichedConversation = enrichedConversations[(indexPath as NSIndexPath).row]
         let conversationViewController = ConversationViewController(conversationType: .continueConversation(conversationId: enrichedConversation.conversation.id))
         navigationController?.show(conversationViewController, sender: self)
     }
+    
 }

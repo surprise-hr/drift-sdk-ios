@@ -69,7 +69,6 @@ class CampaignResponseManager {
         if !DriftManager.sharedInstance.debug {
             DriftAPIManager.recordNPS(conversationId, authToken: auth, response: response)
         }
-        
     }
     
 }

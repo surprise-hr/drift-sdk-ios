@@ -9,11 +9,9 @@
 import UIKit
 
 protocol PresentationManagerDelegate:class {
-    
     func campaignDidFinishWithResponse(_ view: CampaignView, campaign: Campaign, response: CampaignResponse)
     func messageViewDidFinish(_ view: CampaignView)
 }
-
 
 ///Responsible for showing a campaign
 class PresentationManager: PresentationManagerDelegate {
@@ -24,7 +22,6 @@ class PresentationManager: PresentationManagerDelegate {
     init () {}
     
     func didRecieveCampaigns(_ campaigns: [Campaign]) {
-        
         ///Show latest first
         let sortedCampaigns = campaigns.sorted {
             
@@ -41,13 +38,9 @@ class PresentationManager: PresentationManagerDelegate {
             nextCampaigns = Array(sortedCampaigns.dropFirst())
         }
         
-
         DispatchQueue.main.async { () -> Void in
-         
             if let firstCampaign = sortedCampaigns.first, let type = firstCampaign.messageType  {
-                
                 switch type {
-                    
                 case .Announcement:
                     self.showAnnouncementCampaign(firstCampaign, otherCampaigns: nextCampaigns)
                 case .NPS:
@@ -60,7 +53,6 @@ class PresentationManager: PresentationManagerDelegate {
     }
     
     func didRecieveNewMessages(_ enrichedConversations: [EnrichedConversation]) {
-        
         if let newMessageView = NewMessageView.fromNib() as? NewMessageView , currentShownView == nil && !conversationIsPresenting() {
             
             if let window = UIApplication.shared.keyWindow {
@@ -78,7 +70,6 @@ class PresentationManager: PresentationManagerDelegate {
     }
     
     func didRecieveNewMessage(_ message: Message) {
-        
         if let newMessageView = NewMessageView.fromNib() as? NewMessageView , currentShownView == nil && !conversationIsPresenting() {
             
             if let window = UIApplication.shared.keyWindow {
@@ -90,7 +81,6 @@ class PresentationManager: PresentationManagerDelegate {
         }
     }
     
-    
     func showAnnouncementCampaign(_ campaign: Campaign, otherCampaigns:[Campaign]) {
         if let announcementView = AnnouncementView.fromNib() as? AnnouncementView , currentShownView == nil && !conversationIsPresenting() {
             
@@ -100,27 +90,20 @@ class PresentationManager: PresentationManagerDelegate {
                 announcementView.campaign = campaign
                 announcementView.delegate = self
                 announcementView.showOnWindow(window)
-                                
             }
         }
     }
     
     func showExpandedAnnouncement(_ campaign: Campaign) {
-    
         if let announcementView = AnnouncementExpandedView.fromNib() as? AnnouncementExpandedView, let window = UIApplication.shared.keyWindow , !conversationIsPresenting() {
-            
             currentShownView = announcementView
             announcementView.campaign = campaign
             announcementView.delegate = self
             announcementView.showOnWindow(window)
-            
         }
     }
     
-    
     func showNPSCampaign(_ campaign: Campaign, otherCampaigns: [Campaign]) {
-     
-     
         if let npsContainer = NPSContainerView.fromNib() as? NPSContainerView, let npsView = NPSView.fromNib() as? NPSView , currentShownView == nil && !conversationIsPresenting(){
             
             if let window = UIApplication.shared.keyWindow {
@@ -145,10 +128,8 @@ class PresentationManager: PresentationManagerDelegate {
     }
     
     func showConversationList(endUserId: Int){
-
         let conversationListController = ConversationListViewController.navigationController(endUserId: endUserId)
         TopController.viewController()?.present(conversationListController, animated: true, completion: nil)
-        
     }
     
     func showConversationVC(_ conversationId: Int) {
@@ -185,6 +166,7 @@ class PresentationManager: PresentationManagerDelegate {
         view.hideFromWindow()
         currentShownView = nil
     }
+    
 }
 
 

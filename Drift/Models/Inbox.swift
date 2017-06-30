@@ -39,4 +39,5 @@ class Inbox: Mappable {
         closedConversationCount <- map["closedConversationCount"]
         createdAt               <- (map["createdAt"], DriftDateTransformer())
     }
+    
 }

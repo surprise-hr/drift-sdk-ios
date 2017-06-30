@@ -23,4 +23,5 @@ class NPSAttributes: Mappable {
         followUpQuestion    <- map["followUpMessage"]
         campaignId          <- map["campaignId"]
     }
+    
 }

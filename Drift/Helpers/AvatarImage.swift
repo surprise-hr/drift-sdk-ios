@@ -120,7 +120,6 @@ protocol AvatarDelegate {
         }
     }
     
-    
     func setupForBot(embed: Embed?){
         imageView.image = #imageLiteral(resourceName: "robot")
         if let backgroundColorString = embed?.backgroundColorString {
@@ -130,4 +129,5 @@ protocol AvatarDelegate {
             imageView.backgroundColor = ColorPalette.driftBlue
         }
     }
+    
 }

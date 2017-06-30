@@ -22,4 +22,5 @@ class AttachmentCollectionViewCell: UICollectionViewCell {
         fileNameLabel.textColor = .black
         sizeLabel.textColor = ColorPalette.navyDark
     }
+    
 }

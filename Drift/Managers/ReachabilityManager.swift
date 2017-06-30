@@ -9,9 +9,7 @@
 import Foundation
 import Alamofire
 
-
 public extension Notification.Name {
-    
     static let networkStatusReachable = Notification.Name("drift-sdk-new-network-reachable")
     static let networkStatusNotReachable = Notification.Name("drift-sdk-new-network-not-reachable")
     static let networkStatusUnknown = Notification.Name("drift-sdk-new-network-unknown")
@@ -19,7 +17,6 @@ public extension Notification.Name {
 
 class ReachabilityManager {
     static var sharedInstance: ReachabilityManager = ReachabilityManager()
-    
     let networkReachabilityManager = Alamofire.NetworkReachabilityManager()
     
     func start() {
@@ -40,4 +37,5 @@ class ReachabilityManager {
         
         networkReachabilityManager?.startListening()
     }
+    
 }

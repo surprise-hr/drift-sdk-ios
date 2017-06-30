@@ -38,8 +38,6 @@ enum DriftRouter: URLRequestConvertible {
     }
     
     func asURLRequest() throws -> URLRequest {
-
-        
         var urlRequest = URLRequest(url: request.url)
         urlRequest.httpMethod = request.method.rawValue
         let encoding = request.encoding
@@ -51,7 +49,6 @@ enum DriftRouter: URLRequestConvertible {
         
         return mutableReq as URLRequest
     }
-
     
 }
 
@@ -166,6 +163,7 @@ enum DriftConversationRouter: URLRequestConvertible {
         
         return req
     }
+    
 }
 
 enum DriftConversation2Router: URLRequestConvertible {
@@ -197,4 +195,5 @@ enum DriftConversation2Router: URLRequestConvertible {
 
         return req
     }
+    
 }

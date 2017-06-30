@@ -36,7 +36,6 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
     @IBOutlet weak var headerHeightLayoutConstraint: NSLayoutConstraint!
     @IBOutlet weak var headerView: MessageTableHeaderView!
     
-    
     enum AttachmentStyle {
         case single
         case multiple
@@ -86,7 +85,6 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
     }
     
     func setupHeader(message: Message, show: Bool){
-        
         if show {
             headerTitleLabel.text = dateFormatter.headerStringFromDate(message.createdAt)
             headerHeightLayoutConstraint.constant = 42
@@ -175,7 +173,6 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
     }
     
     func setupForAttachmentStyle(attachmentStyle: AttachmentStyle){
-        
         switch attachmentStyle{
         case .multiple:
             singleAttachmentViewHeightConstraint.constant = 0

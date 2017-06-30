@@ -19,4 +19,5 @@ class CampaignWrapper: Mappable {
     func mapping(map: Map) {
         campaigns        <- map["messages"]
     }
+    
 }
