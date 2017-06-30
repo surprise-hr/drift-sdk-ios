@@ -478,7 +478,7 @@ class ConversationViewController: SLKTextViewController {
                 if let message = message{
                     self.conversationType = ConversationType.continueConversation(conversationId: message.conversationId)
                     message.sendStatus = .Sent
-                    self.messages.insert(message, at: 0)
+                    self.messages[0] = message
                     self.conversationId = message.conversationId
                 }else{
                     let message = Message()
@@ -486,7 +486,7 @@ class ConversationViewController: SLKTextViewController {
                     message.body = messageRequest.body
                     message.requestId = messageRequest.requestId
                     message.sendStatus = .Failed
-                    self.messages.insert(message, at: 0)
+                    self.messages[0] = message
                 }
                 
                 self.tableView!.reloadRows(at: [IndexPath(row:0, section: 0)], with: .none)
