@@ -98,6 +98,7 @@ class SocketManager {
     }
     
     func didRecieveNewMessage(message: Message) {
+        PresentationManager.sharedInstance.didRecieveNewMessage(message)
         NotificationCenter.default.post(name: .driftOnNewMessageReceived, object: self, userInfo: ["message": message])
     }
 }

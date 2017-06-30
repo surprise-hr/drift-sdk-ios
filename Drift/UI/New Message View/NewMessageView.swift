@@ -23,8 +23,7 @@ class NewMessageView: CampaignView {
     @IBOutlet weak var openButton: UIButton!
     
     var bottomConstraint: NSLayoutConstraint!
-    
-    var enrichedConversation: EnrichedConversation! {
+    var message: Message! {
         didSet{
             setupForConversation()
         }
@@ -59,19 +58,18 @@ class NewMessageView: CampaignView {
             //Setup for latest message in conversation
             notificationContainer.isHidden = true
 
-            let latestMessage = enrichedConversation.lastAgentMessage
-
+            
             titleLabel.text = "New Message"
             
             do {
-                let htmlStringData = (latestMessage?.body ?? "").data(using: String.Encoding.utf8)!
+                let htmlStringData = (message?.body ?? "").data(using: String.Encoding.utf8)!
                 let attributedHTMLString = try NSMutableAttributedString(data: htmlStringData, options: [NSDocumentTypeDocumentAttribute : NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute: String.Encoding.utf8.rawValue], documentAttributes: nil)
                 infoLabel.text = attributedHTMLString.string
             } catch {
-                infoLabel.text = latestMessage?.body ?? ""
+                infoLabel.text = message?.body ?? ""
             }
 
-            userId = latestMessage?.authorId
+            userId = message?.authorId
             
         }else{
             //Setup for new messages 
@@ -152,7 +150,7 @@ class NewMessageView: CampaignView {
         delegate?.messageViewDidFinish(self)
         markAllAsRead()
         if otherConversations.isEmpty {
-            PresentationManager.sharedInstance.showConversationVC(enrichedConversation.conversation.id)
+            PresentationManager.sharedInstance.showConversationVC(message.conversationId)
         }else{
             if let endUserId = DriftDataStore.sharedInstance.auth?.enduser?.userId{
                 PresentationManager.sharedInstance.showConversationList(endUserId: endUserId)
@@ -166,8 +164,7 @@ class NewMessageView: CampaignView {
                 ConversationsManager.markMessageAsRead(msgId)
             }
         }
-        if let msgId = enrichedConversation.lastMessage?.id {
-            ConversationsManager.markMessageAsRead(msgId)
-        }
+        
+        ConversationsManager.markMessageAsRead(message.id)
     }
 }

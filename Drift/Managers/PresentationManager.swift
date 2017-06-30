@@ -66,19 +66,30 @@ class PresentationManager: PresentationManagerDelegate {
             if let window = UIApplication.shared.keyWindow {
                 currentShownView = newMessageView
                 
-                if let currentConversation = enrichedConversations.first {
+                if let currentConversation = enrichedConversations.first, let lastMessage = currentConversation.lastMessage {
                     let otherConversations = enrichedConversations.filter({ $0.conversation.id != currentConversation.conversation.id })
                     newMessageView.otherConversations = otherConversations
-                    newMessageView.enrichedConversation = currentConversation
+                    newMessageView.message = lastMessage
                     newMessageView.delegate = self
                     newMessageView.showOnWindow(window)
                 }
             }
         }
-
-        
-        
     }
+    
+    func didRecieveNewMessage(_ message: Message) {
+        
+        if let newMessageView = NewMessageView.fromNib() as? NewMessageView , currentShownView == nil && !conversationIsPresenting() {
+            
+            if let window = UIApplication.shared.keyWindow {
+                currentShownView = newMessageView
+                newMessageView.message = message
+                newMessageView.delegate = self
+                newMessageView.showOnWindow(window)
+            }
+        }
+    }
+    
     
     func showAnnouncementCampaign(_ campaign: Campaign, otherCampaigns:[Campaign]) {
         if let announcementView = AnnouncementView.fromNib() as? AnnouncementView , currentShownView == nil && !conversationIsPresenting() {
