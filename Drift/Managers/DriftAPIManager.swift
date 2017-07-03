@@ -98,7 +98,8 @@ class DriftAPIManager: Alamofire.SessionManager {
             "attributes": attributes
         ]
         
-        sharedManager.request(DriftConversationRouter.recordNSP(conversationId: conversationId, json: json)).responseJSON(completionHandler: { (result) -> Void in
+        sharedManager.request(DriftConversationRouter.recordNPS(conversationId: conversationId, json: json)).responseJSON(completionHandler: { (result) -> Void in
+            
             switch result.result {
             case .success(let json):
                 LoggerManager.log("Record NPS Success: \(json)")
