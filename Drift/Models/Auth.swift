@@ -28,4 +28,5 @@ struct Auth: Mappable {
         accessToken <- map["accessToken"]
         enduser     <- map["endUser"]
     }
+    
 }

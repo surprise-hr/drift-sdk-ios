@@ -14,9 +14,7 @@ class AnnouncementAttributes: Mappable {
     var title: String?
     var campaignId: Int?
     
-    required init?(map: Map) {
-
-    }
+    required init?(map: Map) {}
     
     func mapping(map: Map) {
         cta         <- map["cta"]

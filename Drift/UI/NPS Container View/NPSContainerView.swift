@@ -41,7 +41,6 @@ class NPSContainerView: CampaignView {
         }
     }
     
-    
     override func willMove(toWindow newWindow: UIWindow?) {
         super.willMove(toWindow: newWindow)
         if newWindow == nil {
@@ -57,9 +56,7 @@ class NPSContainerView: CampaignView {
         }
     }
     
-    
     override func awakeFromNib() {
-        
         containerView.clipsToBounds = true
         containerView.layer.cornerRadius = 5
         containerView.isHidden = true
@@ -69,7 +66,6 @@ class NPSContainerView: CampaignView {
     
     ///Animate In initial View inside container
     func popUpContainer(initialView: ContainerSubView){
-        
         initialView.translatesAutoresizingMaskIntoConstraints = false
         containerView.addSubview(initialView)
 
@@ -97,7 +93,6 @@ class NPSContainerView: CampaignView {
     
     ///Replace current top view with next view
     func replaceTopView(_ view: ContainerSubView) {
-
         view.translatesAutoresizingMaskIntoConstraints = false
         view.isHidden = true
         containerView.addSubview(view)
@@ -125,7 +120,6 @@ class NPSContainerView: CampaignView {
    
     ///Animate off view
     func animateOff(_ containerWrapper: ContainerWrapper) {
-        
         containerWrapper.topConstraint.constant = containerView.frame.size.height
         containerWrapper.bottomConstraint.constant = containerView.frame.size.height
         setNeedsLayout()
@@ -136,13 +130,10 @@ class NPSContainerView: CampaignView {
                 containerWrapper.view.isHidden = true
             }
         }) 
-        
     }
-    
     
     ///Animate on a given view
     func animateOn(_ containerWrapper: ContainerWrapper) {
-        
         containerWrapper.view.isHidden = false
         containerWrapper.topConstraint.constant = 0
         containerWrapper.bottomConstraint.constant = 0
@@ -156,19 +147,16 @@ class NPSContainerView: CampaignView {
         delegate?.campaignDidFinishWithResponse(self, campaign: campaign, response: .nps(.dismissed))
     }
     
-    
     ///Overrides
     ///Show NPS Container on window
     override func showOnWindow(_ window: UIWindow) {
         window.addSubview(self)
-        
         translatesAutoresizingMaskIntoConstraints = false
         
         window.addConstraint(NSLayoutConstraint(item: self, attribute: .leading, relatedBy: .equal, toItem: window, attribute: .leading, multiplier: 1.0, constant: 0))
         window.addConstraint(NSLayoutConstraint(item: self, attribute: .trailing, relatedBy: .equal, toItem: window, attribute: .trailing, multiplier: 1.0, constant: 0))
         window.addConstraint(NSLayoutConstraint(item: self, attribute: .bottom, relatedBy: .equal, toItem: window, attribute: .bottom, multiplier: 1.0, constant: 0.0))
         window.addConstraint(NSLayoutConstraint(item: self, attribute: .top, relatedBy: .equal, toItem: window, attribute: .top, multiplier: 1.0, constant: 0))
-        
     }
     
     ///Hide Container from view
@@ -185,7 +173,6 @@ class NPSContainerView: CampaignView {
     
     ///Keyboard
     func keyboardShown(_ notification: Notification) {
-        
         if let size = ((notification as NSNotification).userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             
             let height = min(size.height, size.width)
@@ -198,15 +185,15 @@ class NPSContainerView: CampaignView {
                     }, completion: nil)
             }
         }
-        
     }
     
     func keyboardHidden(_ notification: Notification) {
         containerViewCenterYConstraint.constant = 0
         UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.3, initialSpringVelocity: 0, options: UIViewAnimationOptions.curveEaseIn, animations: { () -> Void in
             self.layoutIfNeeded()
-            }, completion: nil)
+        }, completion: nil)
     }
+    
 }
 
 extension NPSContainerView: ContainerSubViewDelegate{
@@ -214,7 +201,6 @@ extension NPSContainerView: ContainerSubViewDelegate{
     func subViewNeedsDismiss(_ campaign: Campaign, response: CampaignResponse){
         delegate?.campaignDidFinishWithResponse(self, campaign: campaign, response: response)
     }
-    
     
     func subViewNeedsToPresent(_ campaign: Campaign, view: ContainerSubView) {
         self.campaign = campaign

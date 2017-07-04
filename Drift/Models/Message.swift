@@ -11,6 +11,8 @@ import ObjectMapper
 
 enum ContentType: String{
     case Chat = "CHAT"
+    case NPS = "NPS_QUESTION"
+    case Annoucement = "ANNOUNCEMENT"
 }
 
 enum Type: String{
@@ -28,12 +30,19 @@ enum SendStatus: String{
     case Failed = "FAILED"
 }
 
+enum RecipientStatus: String {
+    case Sent = "Sent"
+    case Delivered = "Delivered"
+    case Read = "Read"
+}
+
 class Message: Mappable, Equatable, Hashable{
     var id: Int!
     var uuid: String?
     var inboxId: Int!
     var body: String?
-    var attachments: [Int] = []
+    var attachmentIds: [Int] = []
+    var attachments: [Attachment] = []
     var contentType = ContentType.Chat.rawValue
     var createdAt = Date()
     var authorId: Int!
@@ -44,8 +53,9 @@ class Message: Mappable, Equatable, Hashable{
     var conversationId: Int!
     var requestId: Double = 0
     var sendStatus: SendStatus = SendStatus.Sent
-    var formattedBody: NSAttributedString?
-
+    var formattedBody: NSMutableAttributedString?
+    var viewerRecipientStatus: RecipientStatus?
+    
     var hashValue: Int {
         return id
     }
@@ -84,7 +94,7 @@ class Message: Mappable, Equatable, Hashable{
             
         }
         
-        attachments             <- map["attachments"]
+        attachmentIds           <- map["attachments"]
         contentType             <- map["contentType"]
         createdAt               <- (map["createdAt"], DriftDateTransformer())
         authorId                <- map["authorId"]
@@ -92,6 +102,7 @@ class Message: Mappable, Equatable, Hashable{
         type                    <- map["type"]
         conversationId          <- map["conversationId"]
         context                 <- map["context"]
+        viewerRecipientStatus  <- map["viewerRecipientStatus"]
 
         do {
             let htmlStringData = (body ?? "").data(using: String.Encoding.utf8)!

@@ -33,12 +33,15 @@ class ConversationViewController: SLKTextViewController {
         case continueConversation(conversationId: Int)
     }
     
+    let configuration = DriftDataStore.sharedInstance.embed
     let emptyState = ConversationEmptyStateView.fromNib() as! ConversationEmptyStateView
-    var sections: [[Message]] = []
+    var messages: [Message] = []
     var attachments: [Int: Attachment] = [:]
     var attachmentIds: Set<Int> = []
     var previewItem: DriftPreviewItem?
     var dateFormatter: DriftDateFormatter = DriftDateFormatter()
+    var connectionBarView: ConnectionBarView = ConnectionBarView.fromNib() as! ConnectionBarView
+    var connectionBarHeightConstraint: NSLayoutConstraint!
     
     lazy var qlController = QLPreviewController()
     lazy var imagePicker = UIImagePickerController()
@@ -75,20 +78,21 @@ class ConversationViewController: SLKTextViewController {
         let vc = ConversationViewController(conversationType: conversationType)
         let navVC = UINavigationController(rootViewController: vc)
         
-        let leftButton = UIBarButtonItem(image: UIImage(named: "closeIcon", in: Bundle(for: ConversationViewController.classForCoder()), compatibleWith: nil), style: UIBarButtonItemStyle.plain, target:vc, action: #selector(ConversationViewController.dismissVC))
+        let leftButton = UIBarButtonItem(image: UIImage(named: "closeIcon", in: Bundle(for: Drift.self), compatibleWith: nil), style: UIBarButtonItemStyle.plain, target:vc, action: #selector(ConversationViewController.dismissVC))
         leftButton.tintColor = DriftDataStore.sharedInstance.generateForegroundColor()
         vc.navigationItem.leftBarButtonItem  = leftButton
 
         return navVC
     }
-    
+
+    override func viewWillAppear(_ animated: Bool) {
+        tableView?.contentInset = UIEdgeInsets.zero
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupSlackTextView()
-        
         tableView?.register(UINib(nibName: "ConversationMessageTableViewCell", bundle: Bundle(for: ConversationMessageTableViewCell.classForCoder())), forCellReuseIdentifier: "ConversationMessageTableViewCell")
-        tableView?.register(UINib(nibName: "ConversationAttachmentsTableViewCell", bundle: Bundle(for: ConversationAttachmentsTableViewCell.classForCoder())), forCellReuseIdentifier: "ConversationAttachmentsTableViewCell")
         
         if let navVC = navigationController {
             navVC.navigationBar.barTintColor = DriftDataStore.sharedInstance.generateBackgroundColor()
@@ -101,15 +105,61 @@ class ConversationViewController: SLKTextViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(ConversationViewController.rotated), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(ConversationViewController.didReceiveNewMessage), name: .driftOnNewMessageReceived, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(ConversationViewController.connectionStatusDidUpdate), name: .driftSocketStatusUpdated, object: nil)
+
+
+        connectionBarView.translatesAutoresizingMaskIntoConstraints = false
+        connectionBarHeightConstraint = NSLayoutConstraint(item: self.connectionBarView, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.height, multiplier: 1, constant: 4)
+
+        view.addSubview(connectionBarView)
+
+        let leadingConstraint = NSLayoutConstraint(item: connectionBarView, attribute: NSLayoutAttribute.leading, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.leading, multiplier: 1, constant: 0)
+        let trailingConstraint = NSLayoutConstraint(item: connectionBarView, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.trailing, multiplier: 1, constant: 0)
+        let topConstraint = NSLayoutConstraint(item: connectionBarView, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: topLayoutGuide, attribute: NSLayoutAttribute.bottom, multiplier: 1, constant: 0)
+        view.addConstraints([leadingConstraint, trailingConstraint, topConstraint, connectionBarHeightConstraint])
 
         didOpen()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        markConversationRead()
+    }
     
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
     
+    func connectionStatusDidUpdate(notification: Notification) {
+        if let status = notification.userInfo?["connectionStatus"] as? ConnectionStatus {
+            connectionBarView.didUpdateStatus(status: status)
+            showConnectionBar()
+        }
+    }
+    
+    func showConnectionBar() {
+
+        UIView.animate(withDuration: 0.3) {
+            self.connectionBarView.connectionStatusLabel.isHidden = false
+            self.connectionBarHeightConstraint.constant = 30
+            self.view.setNeedsUpdateConstraints()
+            self.view.layoutIfNeeded()
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(2000)) {
+            self.hideConnectionBar()
+        }
+    }
+    
+    func hideConnectionBar(){
+        view.setNeedsUpdateConstraints()
+        view.layoutIfNeeded()
+        connectionBarHeightConstraint.constant = 4
+        UIView.animate(withDuration: 0.3) {
+            self.connectionBarView.connectionStatusLabel.isHidden = true
+            self.view.layoutIfNeeded()
+        }
+    }
+
     
     func didOpen() {
         switch conversationType! {
@@ -118,8 +168,13 @@ class ConversationViewController: SLKTextViewController {
             getMessages(conversationId)
         case .createConversation(_):
 
-            if let welcomeMessage = DriftDataStore.sharedInstance.embed?.welcomeMessage {
-                emptyState.messageLabel.text = welcomeMessage
+            
+            if let embed = DriftDataStore.sharedInstance.embed {
+                if let welcomeMessage = embed.welcomeMessage,  embed.isOrgCurrentlyOpen() {
+                    emptyState.messageLabel.text = welcomeMessage
+                }else if let awayMessage = embed.awayMessage {
+                    emptyState.messageLabel.text = awayMessage
+                }
             }
             
             if let tableView = tableView{
@@ -159,7 +214,6 @@ class ConversationViewController: SLKTextViewController {
     
     func setupSlackTextView() {
         tableView?.backgroundColor = UIColor.white
-        tableView?.contentInset = UIEdgeInsets()
         tableView?.separatorStyle = .none
 
         textInputbar.barTintColor = UIColor.white
@@ -167,7 +221,7 @@ class ConversationViewController: SLKTextViewController {
         leftButton.tintColor = UIColor.lightGray
         leftButton.isEnabled = false
         leftButton.setImage(UIImage(named: "plus-circle", in: Bundle(for: Drift.self), compatibleWith: nil), for: UIControlState())
-        textView.font = UIFont(name: "AvenirNext-Regular", size: 18)
+        textView.font = UIFont(name: "Avenir-Book", size: 15)
         isInverted = true
         shouldScrollToBottomAfterKeyboardShows = false
         bounces = true
@@ -224,81 +278,47 @@ class ConversationViewController: SLKTextViewController {
     
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let message = sections[indexPath.section][indexPath.row]
+        let message = messages[indexPath.row]
+        
+        var showHeader = true
+        if (indexPath.row + 1) < messages.count {
+            let pastMessage = messages[indexPath.row + 1]
+            showHeader = !Calendar.current.isDate(pastMessage.createdAt, inSameDayAs: message.createdAt)
+        }
         
         var cell: UITableViewCell
-
-        switch message.attachments.count{
-        case 0:
-            cell = tableView.dequeueReusableCell(withIdentifier: "ConversationMessageTableViewCell", for: indexPath) as! ConversationMessageTableViewCell
-            if let cell = cell as? ConversationMessageTableViewCell{
-                cell.message = message
-            }
-        default:
-            cell = tableView.dequeueReusableCell(withIdentifier: "ConversationAttachmentsTableViewCell", for: indexPath) as! ConversationAttachmentsTableViewCell
+        cell = tableView.dequeueReusableCell(withIdentifier: "ConversationMessageTableViewCell", for: indexPath) as!ConversationMessageTableViewCell
+        if let cell = cell as? ConversationMessageTableViewCell{
+            cell.delegate = self
+            cell.attachmentDelegate = self
+            cell.delegate = self
+            cell.indexPath = indexPath
+            cell.setupForMessage(message: message, showHeader: showHeader, configuration: configuration)
         }
         
         cell.transform = tableView.transform
-        
+        cell.setNeedsLayout()
         return cell
-    }
-    
-    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if let cell = cell as? ConversationAttachmentsTableViewCell{
-            cell.attachmentImageView.image = UIImage(named: "imageEmptyState", in: Bundle(for: Drift.self), compatibleWith: nil)
-            let message = sections[indexPath.section][indexPath.row]
-            
-            let messageAttachmentIds = Set(message.attachments)
-            if messageAttachmentIds.isSubset(of: attachmentIds){
-                var messageAttachments: [Attachment] = []
-                for id in messageAttachmentIds{
-                    if let attachment = attachments[id]{
-                        messageAttachments.append(attachment)
-                    }
-                }
-                
-                cell.delegate = self
-                cell.attachments = messageAttachments
-                cell.message = message
-                
-            }else{
-//                DriftAPIManager.getAttachmentsMetaData(message.attachments, authToken: (DriftDataStore.sharedInstance.auth?.accessToken)!, completion: { (result) in
-//                    switch result{
-//                    case .success(let attachments):
-//                        for attachment in attachments{
-//                            self.attachments[attachment.id] = attachment
-//                            self.attachmentIds.insert(attachment.id)
-//                        }
-//                            cell.delegate = self
-//                            cell.attachments = attachments
-//                            cell.message = message
-//                    case .failure:
-//                        LoggerManager.log("Failed to get attachment metadata for id: \(message.attachments.first)")
-//                    }
-//                })
-            }
-        }
+
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if sections[section].count > 0 && !emptyState.isHidden{
+        if messages.count > 0 && !emptyState.isHidden{
             UIView.animate(withDuration: 0.4, animations: {
                 self.emptyState.alpha = 0.0
             }, completion: { (_) in
                 self.emptyState.isHidden = true
             })
         }
-        return sections[section].count
+        return messages.count
     }
 
-    
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return sections.count
+        return 1
     }
     
-    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let message = self.sections[indexPath.section][indexPath.row]
+        let message = messages[indexPath.row]
         if message.sendStatus == .Failed{
             let alert = UIAlertController(title:nil, message: nil, preferredStyle: .actionSheet)
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
@@ -312,7 +332,7 @@ class ConversationViewController: SLKTextViewController {
                 self.postMessage(messageRequest)
             }))
             alert.addAction(UIAlertAction(title:"Delete Message", style: .destructive, handler: { (_) -> Void in
-                self.sections[indexPath.section].remove(at: self.sections[0].count-indexPath.row-1)
+                self.messages.remove(at: self.messages.count-indexPath.row-1)
                 self.tableView!.deleteRows(at: [indexPath as IndexPath], with: .none)
             }))
             
@@ -322,47 +342,25 @@ class ConversationViewController: SLKTextViewController {
     
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        
-        let headerView: MessageTableHeaderView =  MessageTableHeaderView.fromNib("MessageTableHeaderView") as! MessageTableHeaderView
-        
-        //This handles the fact we need to have a header on the last (top when inverted) section.
-        if section == 0{
-            
-            return nil
-        }else if sections[section-1].count == 0 {
-            headerView.headerLabel.text = "Today"
-        }else {
-            let message = sections[section-1][0]
-            headerView.headerLabel.text = dateFormatter.headerStringFromDate(message.createdAt)
-        }
-        
-        headerView.transform = tableView.transform
-        return headerView
+        return nil
     }
-    
     
     override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        let message = sections[indexPath.section][indexPath.row]
+        let message = messages[indexPath.row]
         
         if message.attachments.count > 0 {
-            return 150
+            return 300
         }else{
-            return 70
+            return 150
         }
     }
-    
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableViewAutomaticDimension
     }
     
-    
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 0{
             return CGFloat.leastNormalMagnitude
-        }else{
-            return 42
-        }
     }
     
     func didReceiveNewMessage(notification: Notification) {
@@ -372,63 +370,21 @@ class ConversationViewController: SLKTextViewController {
                 newMessage(message)
             }
         }
-
     }
     
-    
     func addMessageToConversation(_ message: Message){
-        if sections.count > 0, let _ = self.sections[0].index(where: { (message1) -> Bool in
-            if message1.requestId == message.requestId{
+        if messages.count > 0, let _ = messages.index(where: { (currentMessage) -> Bool in
+            if message.requestId == currentMessage.requestId{
                 return true
             }
             return false
         }){
             //We've already added this message, it may have failed to send
         }else{
-            if sections.count > 0 && (Calendar.current as NSCalendar).component(.day, from: (sections[0].first?.createdAt)! as Date) ==  (Calendar.current as NSCalendar).component(.day, from: Date()){
-                sections[0].insert(message, at: 0)
-                tableView!.insertRows(at: [IndexPath(row: 0, section: 0)], with: .bottom)
-            }else{
-                sections.insert([message], at: 0)
-                tableView?.insertSections(IndexSet(integer: 0), with: .bottom)
-            }
+            messages.insert(message, at: 0)
+            tableView!.insertRows(at: [IndexPath(row: 0, section: 0)], with: .bottom)
         }
     }
-    
-    
-    func getSections(_ messages: [Message]) -> [[Message]]{
-        let messagesReverse = messages.sorted(by: { $0.createdAt.compare($1.createdAt as Date) == .orderedDescending})
-        
-        var sections: [[Message]] = []
-        var section: [Message] = []
-        
-        for message in messagesReverse{
-            if section.count == 0{
-                section.append(message)
-            }else{
-                let anchorMessage = section[0]
-                if Calendar.current.component(.day, from: message.createdAt) !=  Calendar.current.component(.day, from: anchorMessage.createdAt) ||  Calendar.current.component(.month, from: message.createdAt) !=  Calendar.current.component(.month, from: anchorMessage.createdAt) ||  Calendar.current.component(.year, from: message.createdAt) !=  Calendar.current.component(.year, from: anchorMessage.createdAt){
-                    sections.append(section)
-                    section = []
-                }
-                section.append(message)
-                
-                if messages.count-1 == messagesReverse.index(of: message){
-                    sections.append(section)
-                }
-            }
-        }
-        
-        if sections.count == 0 && section.count > 0{
-            sections.append(section)
-        }
-        
-        //Append an empty section to ensure we have a header on the top section
-        sections.append([])
-        
-        return sections
-    }
-
     
     func getMessages(_ conversationId: Int){
         SVProgressHUD.show()
@@ -436,11 +392,25 @@ class ConversationViewController: SLKTextViewController {
             SVProgressHUD.dismiss()
             switch result{
             case .success(let messages):
-                let sorted = messages.sorted(by: { $0.createdAt.compare($1.createdAt as Date) == .orderedAscending})
-                    self.sections = self.getSections(sorted)
-                    self.tableView?.reloadData()
+                let sorted = messages.sorted(by: { $0.createdAt.compare($1.createdAt as Date) == .orderedDescending})
+                self.messages = sorted
+                self.markConversationRead()
+                self.tableView?.reloadData()
             case .failure:
                 LoggerManager.log("Unable to get messages for conversationId: \(conversationId)")
+            }
+        }
+    }
+    
+    func markConversationRead() {
+        if let lastMessageId = self.messages.first?.id {
+            DriftAPIManager.markConversationAsRead(messageId: lastMessageId) { (result) in
+                switch result {
+                case .success(_):
+                    LoggerManager.log("Successfully marked conversation as read")
+                case .failure(let error):
+                    LoggerManager.didRecieveError(error)
+                }
             }
         }
     }
@@ -470,26 +440,24 @@ class ConversationViewController: SLKTextViewController {
         }
     }
     
-    
     func postMessageToConversation(_ conversationId: Int, messageRequest: Message) {
         InboxManager.sharedInstance.postMessage(messageRequest, conversationId: conversationId) { (message, requestId) in
-            if let index = self.sections[0].index(where: { (message1) -> Bool in
-                if message1.requestId == messageRequest.requestId{
+            if let index = self.messages.index(where: { (message) -> Bool in
+                if message.requestId == messageRequest.requestId{
                     return true
                 }
                 return false
             }){
                 if let message = message{
                     message.sendStatus = .Sent
-                    self.sections[0][index] = message
-                    
+                    self.messages[index] = message
                 }else{
                     let message = Message()
                     message.authorId = DriftDataStore.sharedInstance.auth?.enduser?.userId
                     message.body = messageRequest.body
                     message.requestId = messageRequest.requestId
                     message.sendStatus = .Failed
-                    self.sections[0][index] = message
+                    self.messages.insert(message, at: 0)
                 }
                 
                 self.tableView!.reloadRows(at: [IndexPath(row:index, section: 0)], with: .none)
@@ -498,11 +466,10 @@ class ConversationViewController: SLKTextViewController {
         }
     }
     
-    
     func createConversationWithMessage(_ messageRequest: Message, authorId: Int?) {
         InboxManager.sharedInstance.createConversation(messageRequest, authorId: authorId) { (message, requestId) in
-            if let index = self.sections[0].index(where: { (message1) -> Bool in
-                if message1.requestId == messageRequest.requestId{
+            if let _ = self.messages.index(where: { (message) -> Bool in
+                if message.requestId == messageRequest.requestId{
                     return true
                 }
                 return false
@@ -510,7 +477,7 @@ class ConversationViewController: SLKTextViewController {
                 if let message = message{
                     self.conversationType = ConversationType.continueConversation(conversationId: message.conversationId)
                     message.sendStatus = .Sent
-                    self.sections[0][index] = message
+                    self.messages[0] = message
                     self.conversationId = message.conversationId
                 }else{
                     let message = Message()
@@ -518,7 +485,7 @@ class ConversationViewController: SLKTextViewController {
                     message.body = messageRequest.body
                     message.requestId = messageRequest.requestId
                     message.sendStatus = .Failed
-                    self.sections[0][index] = message
+                    self.messages[0] = message
                 }
                 
                 self.tableView!.reloadRows(at: [IndexPath(row:0, section: 0)], with: .none)
@@ -526,47 +493,32 @@ class ConversationViewController: SLKTextViewController {
             }
         }
     }
+    
 }
 
 extension ConversationViewController: MessageDelegate {
     
     func messagesDidUpdate(_ messages: [Message]) {
-        let sorted = messages.sorted(by: { $0.createdAt.compare($1.createdAt as Date) == .orderedAscending})
-        self.sections = self.getSections(sorted)
+        let sorted = messages.sorted(by: { $0.createdAt.compare($1.createdAt as Date) == .orderedDescending})
+        self.messages = sorted
         self.tableView?.reloadData()
     }
     
-    
     func newMessage(_ message: Message) {
-        if let uuid = message.uuid{
-            CampaignsManager.markConversationAsRead(uuid)
+        if let id = message.id{
+            ConversationsManager.markMessageAsRead(id)
         }
         if message.authorId != DriftDataStore.sharedInstance.auth?.enduser?.userId{
-            if let index = checkSectionsForMessages(message){
-                    sections[(index as NSIndexPath).section][(index as NSIndexPath).row] = message
-                    tableView!.reloadRows(at: [index], with: .bottom)
+            if let index = messages.index(of: message){
+                messages[index] = message
+            
+                tableView!.reloadRows(at: [IndexPath(row: index, section: 0)], with: .bottom)
             }else{
-                if let createdAt = sections.first?.first?.createdAt, (Calendar.current as NSCalendar).component(.day, from: createdAt as Date) ==  (Calendar.current as NSCalendar).component(.day, from: Date()){
-                    self.sections[0].insert(message, at: 0)
-                    tableView!.insertRows(at: [IndexPath(row: 0, section: 0)], with: .bottom)
-                }else{
-                    self.sections.insert([message], at: 0)
-                    tableView?.insertSections(IndexSet(integer: 0), with: .bottom)
-                }
+                messages.insert(message, at: 0)
+                tableView!.insertRows(at: [IndexPath(row: 0, section: 0)], with: .bottom)
             }
         }
     }
-    
-    
-    func checkSectionsForMessages(_ message: Message) -> IndexPath? {
-        if let section = sections.index(where: { $0.contains(message) }) {
-            if let row = sections[section].index(of: message) {
-                return IndexPath(row: row, section: section)
-            }
-        }
-        return nil
-    }
-    
 }
 
 extension ConversationViewController: AttachementSelectedDelegate {
@@ -579,9 +531,7 @@ extension ConversationViewController: AttachementSelectedDelegate {
             }
             switch result{
             case .success(let tempFileURL):
-                let fileName: NSString = attachment.fileName as NSString
-                let fileExtension = fileName.pathExtension
-                if fileExtension == "jpg" || fileExtension == "png" || fileExtension == "gif"{
+                if attachment.isImage(){
                     DispatchQueue.main.async {
                         self.previewItem = DriftPreviewItem(url: tempFileURL, title: attachment.fileName)
                         self.qlController.dataSource = self
@@ -634,7 +584,6 @@ extension ConversationViewController: UIDocumentInteractionControllerDelegate{
     }
 }
 
-
 extension ConversationViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
@@ -654,7 +603,7 @@ extension ConversationViewController: UIImagePickerControllerDelegate, UINavigat
                 switch result{
                 case .success(let attachment):
                     let messageRequest = Message()
-                    messageRequest.attachments.append(attachment.id)
+                    messageRequest.attachmentIds.append(attachment.id)
                     self.postMessage(messageRequest)
                 case .failure:
                     let alert = UIAlertController(title: "Unable to upload file", message: nil, preferredStyle: UIAlertControllerStyle.alert)

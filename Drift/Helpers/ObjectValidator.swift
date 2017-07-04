@@ -36,4 +36,5 @@ extension Map{
     var isValidNotEmpty: Bool{
         return failures == 0
     }
+    
 }

@@ -17,9 +17,10 @@ class AttachmentCollectionViewCell: UICollectionViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        backgroundColor = ColorPalette.attachmentBackgroundColor
+        backgroundColor = ColorPalette.navyLight
         
-        fileNameLabel.textColor = UIColor.black
-        sizeLabel.textColor = UIColor.gray
+        fileNameLabel.textColor = .black
+        sizeLabel.textColor = ColorPalette.navyDark
     }
+    
 }

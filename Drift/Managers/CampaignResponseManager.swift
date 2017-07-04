@@ -38,8 +38,9 @@ class CampaignResponseManager {
             LoggerManager.log("No Conversation Id in campaign")
             return
         }
-        if let uuid = campaign.uuid , !DriftManager.sharedInstance.debug{
-            CampaignsManager.markConversationAsRead(uuid)
+        
+        if let id = campaign.id, !DriftManager.sharedInstance.debug{
+            CampaignsManager.markCampaignAsRead(id)
         }
         
         if !DriftManager.sharedInstance.debug {
@@ -61,14 +62,13 @@ class CampaignResponseManager {
             return
         }
         
-        if let uuid = campaign.uuid , !DriftManager.sharedInstance.debug{
-            CampaignsManager.markConversationAsRead(uuid)
+        if let id = campaign.id, !DriftManager.sharedInstance.debug{
+            CampaignsManager.markCampaignAsRead(id)
         }
         
         if !DriftManager.sharedInstance.debug {
             DriftAPIManager.recordNPS(conversationId, authToken: auth, response: response)
         }
-        
     }
     
 }

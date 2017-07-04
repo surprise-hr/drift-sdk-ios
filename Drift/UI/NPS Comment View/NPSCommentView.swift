@@ -10,7 +10,6 @@ import UIKit
 
 class NPSCommentView: ContainerSubView {
 
-
     @IBOutlet weak var thankYouLabel: UILabel!
     @IBOutlet weak var textView: UITextView!
     @IBOutlet weak var sendButton: UIButton!
@@ -25,13 +24,10 @@ class NPSCommentView: ContainerSubView {
         }
     }
     
-    
     func setupForNPS(){
-        
         if let npsSurvey = campaign {
             thankYouLabel.text = npsSurvey.npsAttributes?.followUpQuestion ?? ""
         }
-        
     }
     
     override func awakeFromNib() {
@@ -48,17 +44,12 @@ class NPSCommentView: ContainerSubView {
         thankYouLabel.textColor = foreground
         closeButton.tintColor = foreground
         
- 
-        if background.brightness() < 0.7
-        {
+        if background.brightness() < 0.7{
             textView.backgroundColor = UIColor.white
         }
-        else
-        {
+        else{
             textView.backgroundColor = UIColor(white: 0, alpha: 0.1)
         }
-
-        
     }
     
     @IBAction func closePressed(_ sender: AnyObject) {
@@ -72,6 +63,6 @@ class NPSCommentView: ContainerSubView {
             npsCompleteView.comment = text
             delegate?.subViewNeedsToPresent(campaign!, view: npsCompleteView)
         }
-        
-    }    
+    }
+    
 }

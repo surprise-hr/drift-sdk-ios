@@ -14,6 +14,5 @@ class ViewController: UIViewController {
     @IBAction func showConversationButton(_ sender: Any) {
         Drift.showConversations()
     }
-
 }
 
