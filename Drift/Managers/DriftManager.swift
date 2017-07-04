@@ -129,6 +129,13 @@ class DriftManager: NSObject {
         }else{
             LoggerManager.log("No End user to post identify for")
         }
+        
+        if let pastEmbedId = DriftDataStore.sharedInstance.embed?.embedId {
+
+            DriftManager.retrieveDataFromEmbeds(pastEmbedId)
+
+        }
+        
     }
     
     /**
