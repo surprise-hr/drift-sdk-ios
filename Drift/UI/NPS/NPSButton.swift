@@ -63,6 +63,5 @@ class NPSButton: UIButton {
         super.init(coder: aDecoder)
         setupView()
     }
-    
 
 }

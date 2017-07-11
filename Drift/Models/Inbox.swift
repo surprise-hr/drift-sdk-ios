@@ -8,12 +8,12 @@
 
 import ObjectMapper
 
-public enum InboxStatus: String{
+enum InboxStatus: String{
     case Enabled = "ENABLED"
     case Closed = "CLOSED"
 }
 
-open class Inbox: Mappable {
+class Inbox: Mappable {
     
     var id: Int!
     var status: InboxStatus!
@@ -25,11 +25,11 @@ open class Inbox: Mappable {
     var createdAt: Date = Date()
     var conversations: [Conversation]!
     
-    public required convenience init?(map: Map) {
+    required convenience init?(map: Map) {
         self.init()
     }
     
-    open func mapping(map: Map) {
+    func mapping(map: Map) {
         id                      <- map["id"]
         status                  <- map["status"]
         name                    <- map["name"]
@@ -39,4 +39,5 @@ open class Inbox: Mappable {
         closedConversationCount <- map["closedConversationCount"]
         createdAt               <- (map["createdAt"], DriftDateTransformer())
     }
+    
 }

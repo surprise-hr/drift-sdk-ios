@@ -31,7 +31,6 @@ class NPSCompleteView: ContainerSubView {
     
     
     func setupForNPS(){
-        
         if numericResponse <= 6 {
             //Detractors
             imageView.isHidden = true
@@ -56,8 +55,6 @@ class NPSCompleteView: ContainerSubView {
         thankYouLabel.textColor = foreground
         bottomLabel.textColor = foreground
         imageView.tintColor = foreground
-
-    
     }
     
     @IBAction func closeButtonPressed(_ sender: AnyObject) {
@@ -69,7 +66,6 @@ class NPSCompleteView: ContainerSubView {
     }
     
     func didFinish() {
-        
         var response: CampaignResponse = .nps(.numeric(numericResponse))
 
         if comment != "" {
@@ -77,7 +73,6 @@ class NPSCompleteView: ContainerSubView {
         }
         
         delegate?.subViewNeedsDismiss(campaign!, response: response)
-
     }
     
 }

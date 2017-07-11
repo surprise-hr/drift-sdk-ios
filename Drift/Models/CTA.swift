@@ -30,6 +30,7 @@ class CTA: Mappable {
     func mapping(map: Map) {
         copy        <- map["copy"]
         ctaType     <- map["CtaType"]
-        urlLink     <- map["UrlLink"]
+        urlLink     <- (map["UrlLink"], URLTransform())
     }
+    
 }

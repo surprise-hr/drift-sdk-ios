@@ -24,6 +24,7 @@ class CampaignOrganizer: Mappable, Equatable {
         name        <- map["name"]
         avatarURL   <- map["avatarUrl"]
     }
+    
 }
 
 func ==(lhs: CampaignOrganizer, rhs: CampaignOrganizer) -> Bool {

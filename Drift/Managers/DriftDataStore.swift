@@ -36,7 +36,6 @@ class DriftDataStore {
 
     
     func loadData(){
-        
         let userDefs = UserDefaults.standard
         
         if let data = userDefs.string(forKey: DriftDataStore.driftAuthCacheString), let json = convertStringToDictionary(data) {
@@ -113,6 +112,7 @@ class DriftDataStore {
         }
         return nil
     }
+    
 }
 
 extension DriftDataStore{

@@ -14,6 +14,7 @@ class ConversationListTableViewCell: UITableViewCell {
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var updatedAtLabel: UILabel!
+    @IBOutlet weak var unreadCountLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -24,5 +25,7 @@ class ConversationListTableViewCell: UITableViewCell {
         avatarImageView.layer.masksToBounds = true
         avatarImageView.contentMode = .scaleAspectFill
         avatarImageView.layer.cornerRadius = 3
+        unreadCountLabel.clipsToBounds = true
+        unreadCountLabel.layer.cornerRadius = 6
     }
 }

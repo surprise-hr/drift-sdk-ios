@@ -9,15 +9,15 @@
 import Foundation
 import ObjectMapper
 
-open class Context: Mappable {
+class Context: Mappable {
     
     var userAgent: String?
     
-    public required convenience init?(map: Map) {
+    required convenience init?(map: Map) {
         self.init()
     }
     
-    public func mapping(map: Map) {
+    func mapping(map: Map) {
         userAgent   <- map["userAgent"]
     }
     

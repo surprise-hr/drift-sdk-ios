@@ -23,13 +23,12 @@ class NewMessageView: CampaignView {
     @IBOutlet weak var openButton: UIButton!
     
     var bottomConstraint: NSLayoutConstraint!
-    
-    var conversation: (conversationId: Int, messages: [Message])! {
+    var message: Message! {
         didSet{
             setupForConversation()
         }
     }
-    var otherConversations: [(conversationId: Int, messages: [Message])] = []
+    var otherConversations: [EnrichedConversation] = []
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -58,20 +57,17 @@ class NewMessageView: CampaignView {
         if otherConversations.isEmpty {
             //Setup for latest message in conversation
             notificationContainer.isHidden = true
-
-            let latestMessage = conversation.messages.sorted(by: { $0.createdAt.compare($1.createdAt as Date) == .orderedDescending}).first!
-
             titleLabel.text = "New Message"
             
             do {
-                let htmlStringData = (latestMessage.body ?? "").data(using: String.Encoding.utf8)!
+                let htmlStringData = (message?.body ?? "").data(using: String.Encoding.utf8)!
                 let attributedHTMLString = try NSMutableAttributedString(data: htmlStringData, options: [NSDocumentTypeDocumentAttribute : NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute: String.Encoding.utf8.rawValue], documentAttributes: nil)
                 infoLabel.text = attributedHTMLString.string
             } catch {
-                infoLabel.text = latestMessage.body ?? ""
+                infoLabel.text = message?.body ?? ""
             }
 
-            userId = latestMessage.authorId
+            userId = message?.authorId
             
         }else{
             //Setup for new messages 
@@ -103,7 +99,6 @@ class NewMessageView: CampaignView {
     
     override func showOnWindow(_ window: UIWindow) {
         window.addSubview(self)
-        
         translatesAutoresizingMaskIntoConstraints = false
         
         let leading = NSLayoutConstraint(item: self, attribute: .leading, relatedBy: .equal, toItem: window, attribute: .leading, multiplier: 1.0, constant: window.frame.size.width)
@@ -133,7 +128,6 @@ class NewMessageView: CampaignView {
     }
     
     override func hideFromWindow() {
-
         bottomConstraint.constant = 130
         setNeedsLayout()
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 1, options: UIViewAnimationOptions.curveEaseIn, animations: { () -> Void in
@@ -152,21 +146,22 @@ class NewMessageView: CampaignView {
         delegate?.messageViewDidFinish(self)
         markAllAsRead()
         if otherConversations.isEmpty {
-            PresentationManager.sharedInstance.showConversationVC(conversation.conversationId)
+            PresentationManager.sharedInstance.showConversationVC(message.conversationId)
         }else{
-            PresentationManager.sharedInstance.showConversationList()
-        }
-    }
-    
-    
-    func markAllAsRead(){
-        for conv in otherConversations {
-            if let msgUUID = conv.messages.first?.uuid {
-                CampaignsManager.markConversationAsRead(msgUUID)
+            if let endUserId = DriftDataStore.sharedInstance.auth?.enduser?.userId{
+                PresentationManager.sharedInstance.showConversationList(endUserId: endUserId)
             }
         }
-        if let msgUUID = conversation.messages.first?.uuid {
-            CampaignsManager.markConversationAsRead(msgUUID)
-        }
     }
+    
+    func markAllAsRead(){
+        for conversation in otherConversations {
+            if let msgId = conversation.lastMessage?.id {
+                ConversationsManager.markMessageAsRead(msgId)
+            }
+        }
+        
+        ConversationsManager.markMessageAsRead(message.id)
+    }
+    
 }

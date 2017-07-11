@@ -19,9 +19,8 @@ class MessageTableHeaderView: UIView {
         backgroundColor = UIColor.white
 
         barView.colors = [UIColor.white, ColorPalette.navyMedium, ColorPalette.navyMedium, UIColor.white]
-
         barView.locations = [0, 0.3, 0.7, 1.0]
         barView.direction = .horizontal
-
     }
+    
 }
