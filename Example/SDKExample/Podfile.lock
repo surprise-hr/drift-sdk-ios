@@ -20,7 +20,7 @@ DEPENDENCIES:
 
 EXTERNAL SOURCES:
   Drift:
-    :path: ../../Drift.podspec
+    :path: "../../Drift.podspec"
 
 SPEC CHECKSUMS:
   Alamofire: f28cdffd29de33a7bfa022cbd63ae95a27fae140
@@ -34,4 +34,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 6c9a270c4604e151bb168dca1f26c807213d0c8e
 
-COCOAPODS: 1.1.1
+COCOAPODS: 1.2.1

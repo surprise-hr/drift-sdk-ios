@@ -53,7 +53,7 @@ class PresentationManager: PresentationManagerDelegate {
     }
     
     func didRecieveNewMessages(_ enrichedConversations: [EnrichedConversation]) {
-        if let newMessageView = NewMessageView.fromNib() as? NewMessageView , currentShownView == nil && !conversationIsPresenting() {
+        if let newMessageView = NewMessageView.fromNib() as? NewMessageView , currentShownView == nil && !conversationIsPresenting() && !enrichedConversations.isEmpty{
             
             if let window = UIApplication.shared.keyWindow {
                 currentShownView = newMessageView

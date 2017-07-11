@@ -48,7 +48,7 @@ class SocketManager {
                 if let body = response.payload["body"] as? [String: Any], let object = body["object"] as? [String: Any], let data = body["data"] as? [String: Any], let type = object["type"] as? String {
                     switch type {
                     case "MESSAGE":
-                        if let message = Mapper<Message>().map(JSON: data){
+                        if let message = Mapper<Message>().map(JSON: data), message.contentType == ContentType.Chat.rawValue{
                             self.didRecieveNewMessage(message: message)
                         }
                     default:

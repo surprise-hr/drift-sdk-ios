@@ -53,7 +53,7 @@ class Campaign: Mappable {
         bodyText                <- map["body"]
         authorId                <- map["authorId"]
         conversationId          <- map["conversationId"]
-        viewerRecipientStatus  <- map["viewerRecipientStatus"]
+        viewerRecipientStatus   <- map["viewerRecipientStatus"]
         
         if let messageType = messageType {
             switch messageType {

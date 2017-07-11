@@ -18,7 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         Drift.setup("teergsg9bb5d")
         
-        Drift.debugMode(true)
+//        Drift.debugMode(true)
         Drift.registerUser("1237438", email: "eoin+app@8bytes.is")
         
         return true
