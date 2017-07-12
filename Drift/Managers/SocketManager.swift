@@ -39,7 +39,7 @@ class SocketManager {
         }
         
         socket = Socket(url: URL(string: "wss://chat.api.drift.com/ws/websocket")!, params: ["session_token": socketAuth.sessionToken])
-        
+        socket?.enableLogging = DriftManager.sharedInstance.debug
         socket!.onConnect =  {
             self.didConnect()
             let channel = self.socket?.channel("user:\(socketAuth.userId)")
