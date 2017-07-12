@@ -8,13 +8,13 @@
 
 import ObjectMapper
 
-public enum ConversationStatus: String{
+enum ConversationStatus: String{
     case Open = "OPEN"
     case Closed = "CLOSED"
     case Pending = "PENDING"
 }
 
-open class Conversation: Mappable, Equatable{
+class Conversation: Mappable, Equatable{
     var id: Int!
     var orgId: Int!
     var uuid: String?
@@ -31,11 +31,11 @@ open class Conversation: Mappable, Equatable{
     
     var messages: [Message]!
     
-    public required convenience init?(map: Map) {
+    required convenience init?(map: Map) {
         self.init()
     }
     
-    open func mapping(map: Map) {
+    func mapping(map: Map) {
         assigneeId  <- map["assigneeId"]
         id          <- map["id"]
         inboxId     <- map["inboxId"]
@@ -51,7 +51,7 @@ open class Conversation: Mappable, Equatable{
 
 }
 
-public func ==(lhs: Conversation, rhs: Conversation) -> Bool {
+func ==(lhs: Conversation, rhs: Conversation) -> Bool {
     return lhs.uuid == rhs.uuid
 }
 

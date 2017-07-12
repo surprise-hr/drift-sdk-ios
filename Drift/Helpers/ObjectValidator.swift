@@ -13,7 +13,7 @@ private var failures = 0
 
 extension Map{
 
-    public func validNotEmpty<T>() -> T {
+    func validNotEmpty<T>() -> T {
         if let value: T = value() {
             if value as? String == ""{
                 failures += 1
@@ -33,7 +33,8 @@ extension Map{
         return pointer.pointee
     }
     
-    public var isValidNotEmpty: Bool{
+    var isValidNotEmpty: Bool{
         return failures == 0
     }
+    
 }

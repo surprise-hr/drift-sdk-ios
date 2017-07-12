@@ -14,7 +14,6 @@ enum DriftError: Error {
     case dataCreationFailure
 }
 
-
 class LoggerManager {
     
     class func didRecieveError(_ error: Error) {
@@ -25,7 +24,8 @@ class LoggerManager {
     
     class func log(_ text: String) {
         if DriftManager.sharedInstance.debug {
-            print("🚀🚀\(text)🚀🚀")
+            print("\(text)")
         }
     }
+    
 }

@@ -8,34 +8,52 @@
 
 import ObjectMapper
 
-open class Attachment: Mappable, Hashable{
+class Attachment: Mappable, Hashable{
     var id = 0
     var fileName = ""
     var size = 0
     var data = Data()
     var mimeType = ""
     var conversationId = 0
+    var publicId = ""
     var publicPreviewURL: String?
     
-    open func mapping(map: Map) {
-        id          <- map["id"]
-        fileName    <- map["fileName"]
-        size        <- map["size"]
-        data        <- map["data"]
-        mimeType    <- map["mimeType"]
-        conversationId <- map["conversationId"]
-        publicPreviewURL <- map["publicPreviewUrl"]
+    func mapping(map: Map) {
+        id                  <- map["id"]
+        fileName            <- map["fileName"]
+        size                <- map["size"]
+        data                <- map["data"]
+        mimeType            <- map["mimeType"]
+        conversationId      <- map["conversationId"]
+        publicId            <- map["publicId"]
+        publicPreviewURL    <- map["publicPreviewUrl"]
     }
     
-    open var hashValue: Int {
+    var hashValue: Int {
         return id
     }
     
-    required convenience public init?(map: Map) {
+    required convenience init?(map: Map) {
         self.init()
     }
+    
+    open func isImage() -> Bool {
+        return (mimeType.lowercased() ==  "image/jpeg") || (mimeType.lowercased() ==  "image/png") || (mimeType.lowercased() ==  "image/gif") || (mimeType.lowercased() ==  "image/jpg")
+    }
+    
+    open func generatePublicURL() -> URL {
+        return URL(string:"https://conversation.api.driftt.com/attachments/public/" + publicId + "/data")!
+    }
+    
+    open func generatePublicPreviewURL() -> URL? {
+        if let url = publicPreviewURL{
+            return URL(string: url)
+        }
+        return nil
+    }
+    
 }
 
-public func ==(lhs: Attachment, rhs: Attachment) -> Bool {
+func ==(lhs: Attachment, rhs: Attachment) -> Bool {
     return lhs.id == rhs.id
 }

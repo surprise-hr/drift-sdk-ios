@@ -37,10 +37,8 @@ open class Drift: NSObject {
      Logs users out of Drift
      */
     open class func logout() {
-        LayerManager.logout()
         DriftManager.logout()
     }
-    
     
     /**
 

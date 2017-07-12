@@ -31,4 +31,5 @@ class User: Mappable {
         externalId  <- map["externalId"]
         avatarURL   <- map["avatarUrl"]
     }
+    
 }

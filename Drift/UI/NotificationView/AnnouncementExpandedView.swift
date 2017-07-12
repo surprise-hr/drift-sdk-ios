@@ -11,6 +11,7 @@ import SafariServices
 import MessageUI
 
 class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
+    
     var campaign: Campaign! {
         didSet{
             setupForCampaign()
@@ -94,9 +95,7 @@ class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
         window.addConstraint(leading)
         let trailing = NSLayoutConstraint(item: self, attribute: .trailing, relatedBy: .equal, toItem: window, attribute: .trailing, multiplier: 1.0, constant: 0)
         window.addConstraint(trailing)
-        
         window.addConstraint(NSLayoutConstraint(item: self, attribute: .bottom, relatedBy: .equal, toItem: window, attribute: .bottom, multiplier: 1.0, constant: 0.0))
-        
         window.addConstraint(NSLayoutConstraint(item: self, attribute: .top, relatedBy: .equal, toItem: window, attribute: .top, multiplier: 1.0, constant: 0))
 
         containerView.transform = CGAffineTransform(scaleX: 0.00001, y: 0.00001)
@@ -140,7 +139,6 @@ class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
         
         closeButton.tintColor = ColorPalette.grayColor
         
-        
         window.setNeedsUpdateConstraints()
         UIView.animate(withDuration: 0.4, delay: 0.5, usingSpringWithDamping: 0.8, initialSpringVelocity: 1, options: UIViewAnimationOptions.curveEaseIn, animations: { () -> Void in
             window.layoutIfNeeded()
@@ -164,7 +162,6 @@ class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        
         if scrollView.contentOffset.y >= scrollView.contentSize.height - scrollView.frame.size.height{
             gradient.colors = [
                 UIColor.clear.cgColor,
@@ -190,7 +187,6 @@ class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
     }
     
     func setupForCampaign() {
-        
         if let cta = campaign.announcementAttributes?.cta {
             if let copy = cta.copy {
                 ctaButton.setTitle(copy, for: UIControlState())
@@ -216,16 +212,14 @@ class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
             }
             
             announcementInfoTextView.font = UIFont(name: "Avenir", size: 16)
-            
         }
     
         if let organizerId = campaign.authorId {
-            
-            APIManager.getUser(organizerId, orgId: DriftDataStore.sharedInstance.embed!.orgId, authToken: DriftDataStore.sharedInstance.auth!.accessToken, completion: { (result) -> () in
+            DriftAPIManager.getUser(organizerId, orgId: DriftDataStore.sharedInstance.embed!.orgId, authToken: DriftDataStore.sharedInstance.auth!.accessToken, completion: { (result) -> () in
                 switch result {
                 case .success(let users):
                     if let avatar = users.first?.avatarURL {
-                        self.campaignCreatorImageView.af_setImage(withURL: URL.init(string:avatar)!)
+                        self.campaignCreatorImageView.af_setImage(withURL: URL(string:avatar)!)
                     }
                     if let creatorName = users.first?.name {
                         self.campaignCreatorNameLabel.text = creatorName
@@ -291,4 +285,5 @@ class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
             }
         }) 
     }
+    
 }

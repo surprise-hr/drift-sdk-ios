@@ -12,18 +12,10 @@ class UserManager {
 
     static let sharedInstance: UserManager = UserManager()
     
-    
-    
     var completionDict: [Int: [((_ user: CampaignOrganizer?) -> ())]] = [:]
-    
     var userCache: [Int: (CampaignOrganizer)] = [:]
 
-    
-
-    
-    
     func userMetaDataForUserId(_ userId: Int, completion: @escaping (_ user: CampaignOrganizer?) -> ()) {
-        
         if let user = userCache[userId] {
             completion(user)
         }else{
@@ -32,7 +24,7 @@ class UserManager {
                 completionDict[userId] = completionArr + [completion]
             }else{
                 completionDict[userId] = [completion]
-                APIManager.getUser(userId, orgId: DriftDataStore.sharedInstance.embed!.orgId, authToken: DriftDataStore.sharedInstance.auth!.accessToken, completion: { (result) -> () in
+                DriftAPIManager.getUser(userId, orgId: DriftDataStore.sharedInstance.embed!.orgId, authToken: DriftDataStore.sharedInstance.auth!.accessToken, completion: { (result) -> () in
                   
                     switch result {
                     case .success(let users):
@@ -58,4 +50,5 @@ class UserManager {
         }
         completionDict[userId] = nil
     }
+    
 }

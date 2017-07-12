@@ -9,12 +9,12 @@
 import UIKit
 
 /// Simple view for drawing gradients and borders.
-@IBDesignable open class GradientView: UIView {
+@IBDesignable class GradientView: UIView {
     
     // MARK: - Types
     
     /// The mode of the gradient.
-    public enum Mode {
+    enum Mode {
         /// A linear gradient.
         case linear
         
@@ -24,7 +24,7 @@ import UIKit
     
     
     /// The direction of the gradient.
-    public enum Direction {
+    enum Direction {
         /// The gradient is vertical.
         case vertical
         
@@ -37,7 +37,7 @@ import UIKit
     
     /// An optional array of `UIColor` objects used to draw the gradient. If the value is `nil`, the `backgroundColor`
     /// will be drawn instead of a gradient. The default is `nil`.
-    open var colors: [UIColor]? {
+    var colors: [UIColor]? {
         didSet {
             updateGradient()
         }
@@ -48,7 +48,7 @@ import UIKit
     /// things will happen. You must make sure the number of dimmed colors equals the number of regular colors.
     ///
     /// The default is `nil`.
-    open var dimmedColors: [UIColor]? {
+    var dimmedColors: [UIColor]? {
         didSet {
             updateGradient()
         }
@@ -57,7 +57,7 @@ import UIKit
     /// Automatically dim gradient colors when prompted by the system (i.e. when an alert is shown).
     ///
     /// The default is `true`.
-    open var automaticallyDims: Bool = true
+    var automaticallyDims: Bool = true
     
     /// An optional array of `CGFloat`s defining the location of each gradient stop.
     ///
@@ -65,56 +65,56 @@ import UIKit
     /// `nil`, the stops are spread uniformly across the range.
     ///
     /// Defaults to `nil`.
-    open var locations: [CGFloat]? {
+    var locations: [CGFloat]? {
         didSet {
             updateGradient()
         }
     }
     
     /// The mode of the gradient. The default is `.Linear`.
-    @IBInspectable open var mode: Mode = .linear {
+    @IBInspectable var mode: Mode = .linear {
         didSet {
             setNeedsDisplay()
         }
     }
     
     /// The direction of the gradient. Only valid for the `Mode.Linear` mode. The default is `.Vertical`.
-    @IBInspectable open var direction: Direction = .vertical {
+    @IBInspectable var direction: Direction = .vertical {
         didSet {
             setNeedsDisplay()
         }
     }
     
     /// 1px borders will be drawn instead of 1pt borders. The default is `true`.
-    @IBInspectable open var drawsThinBorders: Bool = true {
+    @IBInspectable var drawsThinBorders: Bool = true {
         didSet {
             setNeedsDisplay()
         }
     }
     
     /// The top border color. The default is `nil`.
-    @IBInspectable open var topBorderColor: UIColor? {
+    @IBInspectable var topBorderColor: UIColor? {
         didSet {
             setNeedsDisplay()
         }
     }
     
     /// The right border color. The default is `nil`.
-    @IBInspectable open var rightBorderColor: UIColor? {
+    @IBInspectable var rightBorderColor: UIColor? {
         didSet {
             setNeedsDisplay()
         }
     }
     
     ///  The bottom border color. The default is `nil`.
-    @IBInspectable open var bottomBorderColor: UIColor? {
+    @IBInspectable var bottomBorderColor: UIColor? {
         didSet {
             setNeedsDisplay()
         }
     }
     
     /// The left border color. The default is `nil`.
-    @IBInspectable open var leftBorderColor: UIColor? {
+    @IBInspectable var leftBorderColor: UIColor? {
         didSet {
             setNeedsDisplay()
         }
@@ -123,7 +123,7 @@ import UIKit
     
     // MARK: - UIView
     
-    override open func draw(_ rect: CGRect) {
+    override func draw(_ rect: CGRect) {
         let context = UIGraphicsGetCurrentContext()
         let size = bounds.size
         
@@ -172,7 +172,7 @@ import UIKit
         }
     }
     
-    override open func tintColorDidChange() {
+    override func tintColorDidChange() {
         super.tintColorDidChange()
         
         if automaticallyDims {
@@ -180,7 +180,7 @@ import UIKit
         }
     }
     
-    override open func didMoveToWindow() {
+    override func didMoveToWindow() {
         super.didMoveToWindow()
         contentMode = .redraw
     }
@@ -244,4 +244,5 @@ import UIKit
         
         return colors
     }
+    
 }

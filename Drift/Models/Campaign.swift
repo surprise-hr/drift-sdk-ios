@@ -17,7 +17,7 @@ class Campaign: Mappable {
      */
     enum MessageType: String {
         case Announcement = "ANNOUNCEMENT"
-        case NPS = "NPS"
+        case NPS = "NPS_QUESTION"
         case NPSResponse = "NPS_RESPONSE"
     }
     
@@ -29,13 +29,13 @@ class Campaign: Mappable {
     var bodyText: String?
     var authorId: Int?
     var conversationId: Int?
+    var viewerRecipientStatus: RecipientStatus?
     
     var npsAttributes: NPSAttributes?
     var announcementAttributes: AnnouncementAttributes?
     var npsResponseAttributes: NPSResponseAttributes? 
     
     required convenience init?(map: Map) {
-        
         if map.JSON["type"] as? String == nil || MessageType(rawValue: map.JSON["type"] as! String) == nil{
             LoggerManager.log(map.JSON["type"] as? String ?? "")
             return nil
@@ -45,14 +45,15 @@ class Campaign: Mappable {
     }
     
     func mapping(map: Map) {
-        orgId           <- map["orgId"]
-        id              <- map["id"]
-        uuid            <- map["uuid"]
-        messageType     <- map["type"]
-        createdAt       <- (map["createdAt"], DateTransform())
-        bodyText        <- map["body"]
-        authorId        <- map["authorId"]
-        conversationId  <- map["conversationId"]
+        orgId                   <- map["orgId"]
+        id                      <- map["id"]
+        uuid                    <- map["uuid"]
+        messageType             <- map["type"]
+        createdAt               <- (map["createdAt"], DateTransform())
+        bodyText                <- map["body"]
+        authorId                <- map["authorId"]
+        conversationId          <- map["conversationId"]
+        viewerRecipientStatus   <- map["viewerRecipientStatus"]
         
         if let messageType = messageType {
             switch messageType {
@@ -65,4 +66,5 @@ class Campaign: Mappable {
             }
         }
     }
+    
 }

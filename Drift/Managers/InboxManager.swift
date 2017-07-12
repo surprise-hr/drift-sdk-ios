@@ -19,36 +19,14 @@ class InboxManager {
         let matchingSub = messageSubscriptions.filter({$0.conversationId == conversationId && $0.delegate != nil})
         return !matchingSub.isEmpty
     }
-    
-    
-    func getConversations(_ endUserId: Int, completion:@escaping (_ conversations: [Conversation]?) -> ()){
         
-        
-        guard let auth = DriftDataStore.sharedInstance.auth?.accessToken else {
-            LoggerManager.log("No Auth Token for Recording")
-            return
-        }
-        
-        APIManager.getConversations(endUserId, authToken: auth) { (result) in
-            switch result{
-            case .success(let conversations):
-                completion(conversations)
-            case .failure:
-                LoggerManager.log("Unable to retreive conversations for endUserId: \(endUserId)")
-                completion(nil)
-            }
-        }
-    }
-    
     func getMessages(_ conversationId: Int, completion:@escaping (_ messages: [Message]?) -> ()){
-
-        
         guard let auth = DriftDataStore.sharedInstance.auth?.accessToken else {
             LoggerManager.log("No Auth Token for Recording")
             return
         }
         
-        APIManager.getMessages(conversationId, authToken: auth) { (result) in
+        DriftAPIManager.getMessages(conversationId, authToken: auth) { (result) in
             switch result{
             case .success(let messages):
                 completion(messages)
@@ -60,14 +38,12 @@ class InboxManager {
     }
     
     func postMessage(_ message: Message, conversationId: Int, completion:@escaping (_ message: Message?, _ requestId: Double) -> ()){
-        
-
         guard let auth = DriftDataStore.sharedInstance.auth?.accessToken else {
             LoggerManager.log("No Auth Token for Recording")
             return
         }
         
-        APIManager.postMessage(conversationId, message: message, authToken: auth) { (result) in
+        DriftAPIManager.postMessage(conversationId, message: message, authToken: auth) { (result) in
             switch result{
             case .success(let returnedMessage):
                 completion(returnedMessage, message.requestId)
@@ -80,14 +56,12 @@ class InboxManager {
     
     
     func createConversation(_ message: Message, authorId: Int?, completion:@escaping (_ message: Message?, _ requestId: Double) -> ()){
-        
-        
         guard let auth = DriftDataStore.sharedInstance.auth?.accessToken else {
             LoggerManager.log("No Auth Token for Recording")
             return
         }
         
-        APIManager.createConversation(message.body ?? "", authorId: authorId, authToken: auth) { (result) in
+        DriftAPIManager.createConversation(message.body ?? "", authorId: authorId, authToken: auth) { (result) in
             switch result{
             case .success(let returnedMessage):
                 completion(returnedMessage, message.requestId)

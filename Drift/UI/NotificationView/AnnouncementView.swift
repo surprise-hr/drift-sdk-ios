@@ -68,12 +68,12 @@ class AnnouncementView: CampaignView {
 
         if let organizerId = campaign.authorId {
             
-            APIManager.getUser(organizerId, orgId: DriftDataStore.sharedInstance.embed!.orgId, authToken: DriftDataStore.sharedInstance.auth!.accessToken, completion: { (result) -> () in
+            DriftAPIManager.getUser(organizerId, orgId: DriftDataStore.sharedInstance.embed!.orgId, authToken: DriftDataStore.sharedInstance.auth!.accessToken, completion: { (result) -> () in
                 switch result {
                     
                 case .success(let users):
                     if let avatar = users.first?.avatarURL {
-                        self.userImageView.af_setImage(withURL: URL.init(string:avatar)!)
+                        self.userImageView.af_setImage(withURL: URL(string:avatar)!)
                     }
                 case .failure(let error):
                     LoggerManager.didRecieveError(error)
@@ -95,7 +95,6 @@ class AnnouncementView: CampaignView {
     
     override func showOnWindow(_ window: UIWindow) {
         window.addSubview(self)
-        
         translatesAutoresizingMaskIntoConstraints = false
         
         let leading = NSLayoutConstraint(item: self, attribute: .leading, relatedBy: .equal, toItem: window, attribute: .leading, multiplier: 1.0, constant: window.frame.size.width)
@@ -124,10 +123,7 @@ class AnnouncementView: CampaignView {
         }, completion:nil)
     }
     
-    
-    
     override func hideFromWindow() {
-
         bottomConstraint.constant = 130
         setNeedsLayout()
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 1, options: UIViewAnimationOptions.curveEaseIn, animations: { () -> Void in
@@ -145,6 +141,4 @@ class AnnouncementView: CampaignView {
         delegate?.campaignDidFinishWithResponse(self, campaign: campaign, response: .announcement(.Opened))
     }
     
-        
-
 }

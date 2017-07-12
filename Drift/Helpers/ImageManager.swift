@@ -19,7 +19,6 @@ class ImageManager {
         preferredMemoryUsageAfterPurge: 60 * 1024 * 1024
     )
 
-    
     func getImage(urlString: String, completion:@escaping (UIImage?) -> ()) {
         if let cachedImage = cachedImage(urlString: urlString){
             completion(cachedImage)
@@ -34,7 +33,6 @@ class ImageManager {
             }
         }
     }
-    
     
     func cacheImage(image: Image, urlString: String) {
         if photoCache.image(withIdentifier: urlString) == nil{
