@@ -1,5 +1,5 @@
 Pod::Spec.new do |spec|
-  spec.name = "Drift"
+  spec.name = "Drift-SDK"
   spec.version = "1.1.0"
   spec.summary = "Drift Framework for customer communication"
   spec.homepage = "https://github.com/Driftt/drift-sdk-ios"
@@ -13,7 +13,7 @@ Pod::Spec.new do |spec|
   spec.source_files = "Drift/**/*.{h,swift}"
   spec.resources = ['Drift/**/*.xib','Drift/**/*.xcassets']
 
-  spec.dependency 'Birdsong', '~> 0.5'
+  spec.dependency 'Birdsong'
   spec.dependency 'ObjectMapper', '~> 2.0'
   spec.dependency 'SlackTextViewController', '~> 1.9.3'
   spec.dependency 'AlamofireImage', '~> 3.0'
