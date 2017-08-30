@@ -13,6 +13,7 @@ Pod::Spec.new do |spec|
   spec.source_files = "Drift/**/*.{h,swift}"
   spec.resources = ['Drift/**/*.xib','Drift/**/*.xcassets']
 
+
   spec.dependency 'Starscream'
   spec.dependency 'ObjectMapper', '~> 2.0'
   spec.dependency 'SlackTextViewController', '~> 1.9.3'
