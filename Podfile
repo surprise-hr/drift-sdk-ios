@@ -6,10 +6,9 @@ target 'Drift-SDK' do
     pod 'SlackTextViewController', '~> 1.9.3'
     pod 'AlamofireImage', '~> 3.0'
     pod 'SVProgressHUD', '~> 1.1'
-    pod 'Birdsong', '~> 0.5'
+    pod 'Starscream', '~> 2.1.1'
 end
 
 target 'DriftTests' do
     pod 'ObjectMapper', '~> 2.0'
-    pod 'Birdsong', '~> 0.5'
 end
