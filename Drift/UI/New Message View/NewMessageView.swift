@@ -59,12 +59,16 @@ class NewMessageView: CampaignView {
             notificationContainer.isHidden = true
             titleLabel.text = "New Message"
             
-            do {
-                let htmlStringData = (message?.body ?? "").data(using: String.Encoding.utf8)!
-                let attributedHTMLString = try NSMutableAttributedString(data: htmlStringData, options: [NSDocumentTypeDocumentAttribute : NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute: String.Encoding.utf8.rawValue], documentAttributes: nil)
-                infoLabel.text = attributedHTMLString.string
-            } catch {
-                infoLabel.text = message?.body ?? ""
+            if message.attachmentIds.count > 0{
+                infoLabel.text = "📎 [Attachment]"
+            }else{
+                do {
+                    let htmlStringData = (message?.body ?? "").data(using: String.Encoding.utf8)!
+                    let attributedHTMLString = try NSMutableAttributedString(data: htmlStringData, options: [NSDocumentTypeDocumentAttribute : NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute: String.Encoding.utf8.rawValue], documentAttributes: nil)
+                    infoLabel.text = attributedHTMLString.string
+                } catch {
+                    infoLabel.text = message?.body ?? ""
+                }
             }
 
             userId = message?.authorId
