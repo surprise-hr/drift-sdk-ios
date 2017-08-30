@@ -1,6 +1,7 @@
 Pod::Spec.new do |spec|
   spec.name = "Drift"
-  spec.version = "1.1.0"
+
+  spec.version = "1.1.1"
   spec.summary = "Drift Framework for customer communication"
   spec.homepage = "https://github.com/Driftt/drift-sdk-ios"
   spec.license = { type: 'MIT', file: 'LICENSE' }
@@ -12,6 +13,7 @@ Pod::Spec.new do |spec|
   spec.source = { git: "https://github.com/Driftt/drift-sdk-ios.git", tag: "#{spec.version}", submodules: false }
   spec.source_files = "Drift/**/*.{h,swift}"
   spec.resources = ['Drift/**/*.xib','Drift/**/*.xcassets']
+
 
   spec.dependency 'Starscream'
   spec.dependency 'ObjectMapper', '~> 2.0'

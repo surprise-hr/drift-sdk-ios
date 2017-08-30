@@ -1,4 +1,5 @@
 PODS:
+
   - Alamofire (4.5.0)
   - AlamofireImage (3.2.0):
     - Alamofire (~> 4.1)
@@ -15,6 +16,7 @@ DEPENDENCIES:
   - SVProgressHUD (~> 1.1)
 
 SPEC CHECKSUMS:
+
   Alamofire: f28cdffd29de33a7bfa022cbd63ae95a27fae140
   AlamofireImage: 157ed682cc81d3b9db4fb90c1f12180ac552d93b
   ObjectMapper: 3d571bb5af471c779e1160828cd9ad5c4ef90958
