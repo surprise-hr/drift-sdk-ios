@@ -6,7 +6,7 @@
 //  Copyright © 2017 Drift. All rights reserved.
 //
 
-import Foundation
+import ObjectMapper
 
 class TeamMember: Mappable {
     var id: Int = 0
