@@ -213,12 +213,17 @@ class ConversationViewController: SLKTextViewController {
     
     func rotated() {
         if UIDeviceOrientationIsLandscape(UIDevice.current.orientation) {
-            if emptyState.isHidden == false && emptyState.alpha == 1.0 && UIDevice.current.userInterfaceIdiom == .phone && max(UIScreen.main.bounds.size.width, UIScreen.main.bounds.size.height) <= 568.0{
-                emptyState.isHidden = true
+            if UIDevice.current.userInterfaceIdiom == .phone {
+                emptyState.avatarImageView.isHidden = true
+                if emptyState.isHidden == false && emptyState.alpha == 1.0 && max(UIScreen.main.bounds.size.width, UIScreen.main.bounds.size.height) <= 568.0{
+                    emptyState.isHidden = true
+                }
             }
+
         }
         
         if UIDeviceOrientationIsPortrait(UIDevice.current.orientation) {
+            emptyState.avatarImageView.isHidden = false
             if emptyState.isHidden == true && emptyState.alpha == 1.0 && UIDevice.current.userInterfaceIdiom == .phone && max(UIScreen.main.bounds.size.width, UIScreen.main.bounds.size.height) <= 568.0{
                 emptyState.isHidden = false
             }
