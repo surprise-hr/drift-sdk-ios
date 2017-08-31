@@ -175,6 +175,19 @@ class ConversationViewController: SLKTextViewController {
                 }else if let awayMessage = embed.awayMessage {
                     emptyState.messageLabel.text = awayMessage
                 }
+                
+                if embed.userListMode == .custom {
+                    if let chosenTeamMember = embed.team.filter({embed.userList.contains($0.id)}).first{
+                        if let avatarURL = URL(string: chosenTeamMember.avatarURL){
+                            emptyState.avatarImageView.af_setImage(withURL: avatarURL)
+                        }
+                    }
+                }else{
+                    let teamMember = embed.team[Int(arc4random_uniform(UInt32(embed.team.count)))]
+                    if let avatarURL = URL(string: teamMember.avatarURL){
+                        emptyState.avatarImageView.af_setImage(withURL: avatarURL)
+                    }
+                }
             }
             
             if let tableView = tableView{

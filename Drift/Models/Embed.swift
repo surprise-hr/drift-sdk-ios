@@ -18,6 +18,11 @@ public enum WidgetMode: String{
     case auto   = "AUTO"
 }
 
+public enum UserListMode: String{
+    case random = "RANDOM"
+    case custom   = "CUSTOM"
+}
+
 ///Embed - The organisation specific data used to customise the SDK for each organization
 struct Embed: Mappable {
     
@@ -56,6 +61,15 @@ struct Embed: Mappable {
     var openHours: [OpenHours] = []
     var timeZoneString: String?
     var backgroundColorString: String?
+    var team: [TeamMember] = []
+    
+    var userListMode: UserListMode?{
+        get{
+            return UserListMode(rawValue: userListModeRaw)
+        }
+    }
+    var userListModeRaw = UserListMode.random.rawValue
+    var userList: [Int] = []
     
     init?(map: Map) {
         //These fields are required, without them we fail to init the object
@@ -72,6 +86,7 @@ struct Embed: Mappable {
     }
     
     mutating func mapping(map: Map) {
+        print(map.JSON)
         orgId               <- map["orgId"]
         embedId             <- map["id"]
         inboxId             <- map["configuration.inboxId"]
@@ -91,7 +106,9 @@ struct Embed: Mappable {
         timeZoneString          <- map["configuration.theme.timezone"]
         backgroundColorString   <- map["configuration.theme.backgroundColor"]
         openHours               <- map["configuration.theme.openHours"]
-
+        userListModeRaw         <- map["configuration.theme.userListMode"]
+        team                    <- map["configuration.team"]
+        userList                <- map["configuration.theme.userList"]
     }
     
     public func isOrgCurrentlyOpen() -> Bool {
