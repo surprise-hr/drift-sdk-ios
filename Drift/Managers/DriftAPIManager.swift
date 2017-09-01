@@ -35,7 +35,7 @@ class DriftAPIManager: Alamofire.SessionManager {
         })
     }
     
-    class func getUser(_ userId: Int, orgId: Int, authToken:String, completion: @escaping (Result<[CampaignOrganizer]>) -> ()) {
+    class func getUser(_ userId: Int, orgId: Int, authToken:String, completion: @escaping (Result<[User]>) -> ()) {
         sharedManager.request(DriftCustomerRouter.getUser(orgId: orgId, userId: userId)).responseJSON(completionHandler: { (result) -> Void in
             completion(mapResponse(result))
         })
