@@ -16,6 +16,7 @@ class User: Mappable, Equatable {
     var name: String?
     var externalId: String?
     var avatarURL: String?
+    var bot = false
 
     required convenience init?(map: Map) {
         self.init()
@@ -28,8 +29,8 @@ class User: Mappable, Equatable {
         name        <- map["name"]
         externalId  <- map["externalId"]
         avatarURL   <- map["avatarUrl"]
+        bot         <- map["bot"]
     }
-    
 }
 
 func ==(lhs: User, rhs: User) -> Bool {
