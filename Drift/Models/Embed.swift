@@ -44,32 +44,17 @@ struct Embed: Mappable {
     var inboxEmailAddress: String?
     var refreshRate: Int?
     
-    var widgetStatus: WidgetStatus?{
-        get{
-            return WidgetStatus(rawValue: widgetStatusRaw)
-        }
-    }
-    var widgetStatusRaw = WidgetStatus.on.rawValue
+    var widgetStatus: WidgetStatus = .on
     
-    var widgetMode: WidgetMode?{
-        get{
-            return WidgetMode(rawValue: widgetModeRaw)
-        }
-    }
-    var widgetModeRaw = WidgetMode.manual.rawValue
+    var widgetMode: WidgetMode = .manual
     
     var openHours: [OpenHours] = []
     var timeZoneString: String?
     var backgroundColorString: String?
-    var team: [TeamMember] = []
+    var users: [User] = []
     
-    var userListMode: UserListMode?{
-        get{
-            return UserListMode(rawValue: userListModeRaw)
-        }
-    }
-    var userListModeRaw = UserListMode.random.rawValue
-    var userList: [Int] = []
+    var userListMode: UserListMode = .random
+    var userListIds: [Int] = []
     
     init?(map: Map) {
         //These fields are required, without them we fail to init the object
@@ -86,7 +71,6 @@ struct Embed: Mappable {
     }
     
     mutating func mapping(map: Map) {
-        print(map.JSON)
         orgId               <- map["orgId"]
         embedId             <- map["id"]
         inboxId             <- map["configuration.inboxId"]
@@ -101,14 +85,14 @@ struct Embed: Mappable {
         inboxEmailAddress   <- map["configuration.inboxEmailAddress"]
         refreshRate         <- map["configuration.refreshRate"]
         
-        widgetStatusRaw         <- map["configuration.widgetStatus"]
-        widgetModeRaw           <- map["configuration.widgetMode"]
+        widgetStatus         <- map["configuration.widgetStatus"]
+        widgetMode           <- map["configuration.widgetMode"]
         timeZoneString          <- map["configuration.theme.timezone"]
         backgroundColorString   <- map["configuration.theme.backgroundColor"]
         openHours               <- map["configuration.theme.openHours"]
-        userListModeRaw         <- map["configuration.theme.userListMode"]
-        team                    <- map["configuration.team"]
-        userList                <- map["configuration.theme.userList"]
+        userListMode         <- map["configuration.theme.userListMode"]
+        users                    <- map["configuration.team"]
+        userListIds                <- map["configuration.theme.userList"]
     }
     
     public func isOrgCurrentlyOpen() -> Bool {
