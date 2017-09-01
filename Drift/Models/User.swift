@@ -8,7 +8,7 @@
 
 import ObjectMapper
 ///User obect - Attached to Auth and used to make sure user has not changed during app close
-class User: Mappable {
+class User: Mappable, Equatable {
     
     var userId: Int?
     var orgId: Int?
@@ -30,4 +30,8 @@ class User: Mappable {
         avatarURL   <- map["avatarUrl"]
     }
     
+}
+
+func ==(lhs: User, rhs: User) -> Bool {
+    return lhs.userId == rhs.userId
 }

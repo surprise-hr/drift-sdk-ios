@@ -18,7 +18,7 @@ class ConversationListViewController: UIViewController {
     @IBOutlet weak var emptyStateButton: UIButton!
     
     var enrichedConversations: [EnrichedConversation] = []
-    var users: [CampaignOrganizer] = []
+    var users: [User] = []
     var dateFormatter = DriftDateFormatter()
     var refreshControl: UIRefreshControl!
     
