@@ -2,7 +2,7 @@ PODS:
   - Alamofire (4.5.0)
   - AlamofireImage (3.2.0):
     - Alamofire (~> 4.1)
-  - Drift (1.1.1):
+  - Drift (1.1.3):
     - AlamofireImage (~> 3.0)
     - ObjectMapper (~> 2.0)
     - SlackTextViewController (~> 1.9.3)
@@ -23,7 +23,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Alamofire: f28cdffd29de33a7bfa022cbd63ae95a27fae140
   AlamofireImage: 157ed682cc81d3b9db4fb90c1f12180ac552d93b
-  Drift: 5ced38de6e68c5d4e65ed887fc7a271b40bff040
+  Drift: f0f7fadb344d6bef78aa907dc53dd7a125a7ea2f
   ObjectMapper: 3d571bb5af471c779e1160828cd9ad5c4ef90958
   SlackTextViewController: fbcdadbb8090673f604484ff5b6eb8d77baed42a
   Starscream: 142bd8ef24592d985daee9fa48c936070b85b15f
