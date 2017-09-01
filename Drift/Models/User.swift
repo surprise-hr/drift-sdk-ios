@@ -15,7 +15,6 @@ class User: Mappable {
     var email: String?
     var name: String?
     var externalId: String?
-    var attributes: [String: AnyObject]?
     var avatarURL: String?
 
     required convenience init?(map: Map) {
@@ -27,7 +26,6 @@ class User: Mappable {
         email       <- map["email"]
         orgId       <- map["orgId"]
         name        <- map["name"]
-        attributes  <- map["attributes"]
         externalId  <- map["externalId"]
         avatarURL   <- map["avatarUrl"]
     }
