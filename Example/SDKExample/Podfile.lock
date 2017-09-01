@@ -2,8 +2,7 @@ PODS:
   - Alamofire (4.5.0)
   - AlamofireImage (3.2.0):
     - Alamofire (~> 4.1)
-
-  - Drift (1.1.0):
+  - Drift (1.1.1):
     - AlamofireImage (~> 3.0)
     - ObjectMapper (~> 2.0)
     - SlackTextViewController (~> 1.9.3)
@@ -19,19 +18,17 @@ DEPENDENCIES:
 
 EXTERNAL SOURCES:
   Drift:
-    :path: "../../Drift.podspec"
+    :path: ../../Drift.podspec
 
 SPEC CHECKSUMS:
   Alamofire: f28cdffd29de33a7bfa022cbd63ae95a27fae140
   AlamofireImage: 157ed682cc81d3b9db4fb90c1f12180ac552d93b
-  Birdsong: 9ba3983693609813270fbb4aee5484abddc1ea30
-  Drift: e52fbc74b290610df22e127eebfb128426e25c6f
+  Drift: 5ced38de6e68c5d4e65ed887fc7a271b40bff040
   ObjectMapper: 3d571bb5af471c779e1160828cd9ad5c4ef90958
   SlackTextViewController: fbcdadbb8090673f604484ff5b6eb8d77baed42a
-  Starscream: ce7a202d95615bd4113bc5a0f1932f1db8c808a4
-
+  Starscream: 142bd8ef24592d985daee9fa48c936070b85b15f
   SVProgressHUD: c404a55d78acbeb7ebb78b76d3faf986475a6994
 
 PODFILE CHECKSUM: 6c9a270c4604e151bb168dca1f26c807213d0c8e
 
-COCOAPODS: 1.2.1
+COCOAPODS: 1.3.1

@@ -12,11 +12,13 @@ class UserManager {
 
     static let sharedInstance: UserManager = UserManager()
     
-    var completionDict: [Int: [((_ user: CampaignOrganizer?) -> ())]] = [:]
-    var userCache: [Int: (CampaignOrganizer)] = [:]
+    var completionDict: [Int: [((_ user: User?) -> ())]] = [:]
+    var userCache: [Int: (User)] = [:]
 
-    func userMetaDataForUserId(_ userId: Int, completion: @escaping (_ user: CampaignOrganizer?) -> ()) {
+    func userMetaDataForUserId(_ userId: Int, completion: @escaping (_ user: User?) -> ()) {
         if let user = userCache[userId] {
+            completion(user)
+        }else if let user = DriftDataStore.sharedInstance.embed?.users.filter({$0.userId == userId}).first {
             completion(user)
         }else{
             
@@ -42,7 +44,7 @@ class UserManager {
         }
     }
     
-    func executeCompletions(_ userId: Int, user : CampaignOrganizer?) {
+    func executeCompletions(_ userId: Int, user : User?) {
         if let completions = self.completionDict[userId] {
             for completion in completions {
                 completion(user)
