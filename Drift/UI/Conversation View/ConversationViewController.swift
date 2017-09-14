@@ -175,6 +175,30 @@ class ConversationViewController: SLKTextViewController {
                 }else if let awayMessage = embed.awayMessage {
                     emptyState.messageLabel.text = awayMessage
                 }
+                
+                if embed.userListMode == .custom, let teamMember = embed.users.filter({embed.userListIds.contains($0.userId ?? -1)}).first{    
+                    if teamMember.bot {
+
+                        emptyState.avatarImageView.image = UIImage(named: "robot", in: Bundle(for: Drift.self), compatibleWith: nil)
+                        emptyState.avatarImageView.backgroundColor = DriftDataStore.sharedInstance.generateBackgroundColor()
+
+                    } else if let avatarURLString = teamMember.avatarURL, let avatarURL = URL(string: avatarURLString) {
+                        emptyState.avatarImageView.af_setImage(withURL: avatarURL)
+                    }
+                    
+                }else{
+                    if embed.users.count > 0 {
+                        let teamMember = embed.users[Int(arc4random_uniform(UInt32(embed.users.count)))]
+                        if teamMember.bot {
+                            
+                            emptyState.avatarImageView.image = UIImage(named: "robot", in: Bundle(for: Drift.self), compatibleWith: nil)
+                            emptyState.avatarImageView.backgroundColor = DriftDataStore.sharedInstance.generateBackgroundColor()
+                            
+                        } else if let avatarURLString = teamMember.avatarURL, let avatarURL = URL(string: avatarURLString) {
+                            emptyState.avatarImageView.af_setImage(withURL: avatarURL)
+                        }
+                    }
+                }
             }
             
             if let tableView = tableView{
@@ -200,12 +224,17 @@ class ConversationViewController: SLKTextViewController {
     
     func rotated() {
         if UIDeviceOrientationIsLandscape(UIDevice.current.orientation) {
-            if emptyState.isHidden == false && emptyState.alpha == 1.0 && UIDevice.current.userInterfaceIdiom == .phone && max(UIScreen.main.bounds.size.width, UIScreen.main.bounds.size.height) <= 568.0{
-                emptyState.isHidden = true
+            if UIDevice.current.userInterfaceIdiom == .phone {
+                emptyState.avatarImageView.isHidden = true
+                if emptyState.isHidden == false && emptyState.alpha == 1.0 && max(UIScreen.main.bounds.size.width, UIScreen.main.bounds.size.height) <= 568.0{
+                    emptyState.isHidden = true
+                }
             }
+
         }
         
         if UIDeviceOrientationIsPortrait(UIDevice.current.orientation) {
+            emptyState.avatarImageView.isHidden = false
             if emptyState.isHidden == true && emptyState.alpha == 1.0 && UIDevice.current.userInterfaceIdiom == .phone && max(UIScreen.main.bounds.size.width, UIScreen.main.bounds.size.height) <= 568.0{
                 emptyState.isHidden = false
             }

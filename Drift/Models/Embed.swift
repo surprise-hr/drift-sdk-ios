@@ -18,6 +18,11 @@ public enum WidgetMode: String{
     case auto   = "AUTO"
 }
 
+public enum UserListMode: String{
+    case random = "RANDOM"
+    case custom   = "CUSTOM"
+}
+
 ///Embed - The organisation specific data used to customise the SDK for each organization
 struct Embed: Mappable {
     
@@ -39,23 +44,17 @@ struct Embed: Mappable {
     var inboxEmailAddress: String?
     var refreshRate: Int?
     
-    var widgetStatus: WidgetStatus?{
-        get{
-            return WidgetStatus(rawValue: widgetStatusRaw)
-        }
-    }
-    var widgetStatusRaw = WidgetStatus.on.rawValue
+    var widgetStatus: WidgetStatus = .on
     
-    var widgetMode: WidgetMode?{
-        get{
-            return WidgetMode(rawValue: widgetModeRaw)
-        }
-    }
-    var widgetModeRaw = WidgetMode.manual.rawValue
+    var widgetMode: WidgetMode = .manual
     
     var openHours: [OpenHours] = []
     var timeZoneString: String?
     var backgroundColorString: String?
+    var users: [User] = []
+    
+    var userListMode: UserListMode = .random
+    var userListIds: [Int] = []
     
     init?(map: Map) {
         //These fields are required, without them we fail to init the object
@@ -86,12 +85,14 @@ struct Embed: Mappable {
         inboxEmailAddress   <- map["configuration.inboxEmailAddress"]
         refreshRate         <- map["configuration.refreshRate"]
         
-        widgetStatusRaw         <- map["configuration.widgetStatus"]
-        widgetModeRaw           <- map["configuration.widgetMode"]
+        widgetStatus         <- map["configuration.widgetStatus"]
+        widgetMode           <- map["configuration.widgetMode"]
         timeZoneString          <- map["configuration.theme.timezone"]
         backgroundColorString   <- map["configuration.theme.backgroundColor"]
         openHours               <- map["configuration.theme.openHours"]
-
+        userListMode         <- map["configuration.theme.userListMode"]
+        users                    <- map["configuration.team"]
+        userListIds                <- map["configuration.theme.userList"]
     }
     
     public func isOrgCurrentlyOpen() -> Bool {

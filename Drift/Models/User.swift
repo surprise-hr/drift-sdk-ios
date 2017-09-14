@@ -8,15 +8,15 @@
 
 import ObjectMapper
 ///User obect - Attached to Auth and used to make sure user has not changed during app close
-class User: Mappable {
+class User: Mappable, Equatable {
     
     var userId: Int?
     var orgId: Int?
     var email: String?
     var name: String?
     var externalId: String?
-    var attributes: [String: AnyObject]?
     var avatarURL: String?
+    var bot = false
 
     required convenience init?(map: Map) {
         self.init()
@@ -27,9 +27,12 @@ class User: Mappable {
         email       <- map["email"]
         orgId       <- map["orgId"]
         name        <- map["name"]
-        attributes  <- map["attributes"]
         externalId  <- map["externalId"]
         avatarURL   <- map["avatarUrl"]
+        bot         <- map["bot"]
     }
-    
+}
+
+func ==(lhs: User, rhs: User) -> Bool {
+    return lhs.userId == rhs.userId
 }
