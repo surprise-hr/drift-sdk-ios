@@ -176,18 +176,16 @@ class ConversationViewController: SLKTextViewController {
                     emptyState.messageLabel.text = awayMessage
                 }
                 
-                if embed.userListMode == .custom {
-                    if let teamMember = embed.users.filter({embed.userListIds.contains($0.userId ?? -1)}).first{
-                        
-                        if teamMember.bot {
-                            
-                            emptyState.avatarImageView.image = UIImage(named: "robot", in: Bundle(for: Drift.self), compatibleWith: nil)
-                            emptyState.avatarImageView.backgroundColor = DriftDataStore.sharedInstance.generateBackgroundColor()
-                            
-                        } else if let avatarURLString = teamMember.avatarURL, let avatarURL = URL(string: avatarURLString) {
-                            emptyState.avatarImageView.af_setImage(withURL: avatarURL)
-                        }
+                if embed.userListMode == .custom, let teamMember = embed.users.filter({embed.userListIds.contains($0.userId ?? -1)}).first{    
+                    if teamMember.bot {
+
+                        emptyState.avatarImageView.image = UIImage(named: "robot", in: Bundle(for: Drift.self), compatibleWith: nil)
+                        emptyState.avatarImageView.backgroundColor = DriftDataStore.sharedInstance.generateBackgroundColor()
+
+                    } else if let avatarURLString = teamMember.avatarURL, let avatarURL = URL(string: avatarURLString) {
+                        emptyState.avatarImageView.af_setImage(withURL: avatarURL)
                     }
+                    
                 }else{
                     if embed.users.count > 0 {
                         let teamMember = embed.users[Int(arc4random_uniform(UInt32(embed.users.count)))]
