@@ -121,6 +121,14 @@ class ConversationViewController: SLKTextViewController {
         didOpen()
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        textInputbar.bringSubview(toFront: textInputbar.textView)
+        textInputbar.bringSubview(toFront: textInputbar.leftButton)
+        textInputbar.bringSubview(toFront: textInputbar.rightButton)
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         markConversationRead()
     }
