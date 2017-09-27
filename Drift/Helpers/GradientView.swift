@@ -72,14 +72,14 @@ import UIKit
     }
     
     /// The mode of the gradient. The default is `.Linear`.
-    @IBInspectable var mode: Mode = .linear {
+    var mode: Mode = .linear {
         didSet {
             setNeedsDisplay()
         }
     }
     
     /// The direction of the gradient. Only valid for the `Mode.Linear` mode. The default is `.Vertical`.
-    @IBInspectable var direction: Direction = .vertical {
+    var direction: Direction = .vertical {
         didSet {
             setNeedsDisplay()
         }

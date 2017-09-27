@@ -97,7 +97,7 @@ class ConversationViewController: SLKTextViewController {
         if let navVC = navigationController {
             navVC.navigationBar.barTintColor = DriftDataStore.sharedInstance.generateBackgroundColor()
             navVC.navigationBar.tintColor = DriftDataStore.sharedInstance.generateForegroundColor()
-            navVC.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: DriftDataStore.sharedInstance.generateForegroundColor(), NSFontAttributeName: UIFont(name: "AvenirNext-Medium", size: 16)!]
+            navVC.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: DriftDataStore.sharedInstance.generateForegroundColor(), NSAttributedStringKey.font: UIFont(name: "AvenirNext-Medium", size: 16)!]
             navigationItem.title = "Conversation"
         }
         
@@ -121,6 +121,14 @@ class ConversationViewController: SLKTextViewController {
         didOpen()
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        textInputbar.bringSubview(toFront: textInputbar.textView)
+        textInputbar.bringSubview(toFront: textInputbar.leftButton)
+        textInputbar.bringSubview(toFront: textInputbar.rightButton)
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         markConversationRead()
     }
@@ -129,7 +137,7 @@ class ConversationViewController: SLKTextViewController {
         NotificationCenter.default.removeObserver(self)
     }
     
-    func connectionStatusDidUpdate(notification: Notification) {
+    @objc func connectionStatusDidUpdate(notification: Notification) {
         if let status = notification.userInfo?["connectionStatus"] as? ConnectionStatus {
             connectionBarView.didUpdateStatus(status: status)
             showConnectionBar()
@@ -161,7 +169,7 @@ class ConversationViewController: SLKTextViewController {
     }
 
     
-    func didOpen() {
+    @objc func didOpen() {
         switch conversationType! {
         case .continueConversation(let conversationId):
             self.conversationId = conversationId
@@ -222,7 +230,7 @@ class ConversationViewController: SLKTextViewController {
         }
     }
     
-    func rotated() {
+    @objc func rotated() {
         if UIDeviceOrientationIsLandscape(UIDevice.current.orientation) {
             if UIDevice.current.userInterfaceIdiom == .phone {
                 emptyState.avatarImageView.isHidden = true
@@ -263,7 +271,7 @@ class ConversationViewController: SLKTextViewController {
     }
     
     
-    func dismissVC() {
+    @objc func dismissVC() {
         dismissKeyboard(true)
         dismiss(animated: true, completion: nil)
     }
@@ -392,7 +400,7 @@ class ConversationViewController: SLKTextViewController {
             return CGFloat.leastNormalMagnitude
     }
     
-    func didReceiveNewMessage(notification: Notification) {
+    @objc func didReceiveNewMessage(notification: Notification) {
         
         if let message = notification.userInfo?["message"] as? Message {
             if message.conversationId == conversationId {
