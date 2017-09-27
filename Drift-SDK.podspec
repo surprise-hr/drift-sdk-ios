@@ -15,9 +15,13 @@ Pod::Spec.new do |spec|
 
 
   spec.dependency 'Starscream'
-  spec.dependency 'ObjectMapper', '~> 2.0'
+  spec.dependency 'ObjectMapper', '~> 3.0'
   spec.dependency 'SlackTextViewController', '~> 1.9.3'
   spec.dependency 'AlamofireImage', '~> 3.0'
   spec.dependency 'SVProgressHUD', '~> 2.0'
+
+  spec.pod_target_xcconfig = {
+    'SWIFT_VERSION' => '4.0',
+  }
 
 end

@@ -23,7 +23,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Alamofire: 2d95912bf4c34f164fdfc335872e8c312acaea4a
   AlamofireImage: 2e784dc5d00f04903a52c1d169181469c805c3df
-  Drift: d4a978da0ae4ba5d98205227e0993a2edb5bd77b
+  Drift: de8d23cbea05dab3018a73818ed8dae8fc3ed172
   ObjectMapper: 92230db59bf8f341a5c3a3cf0b9fbdde3cf0d87f
   SlackTextViewController: fbcdadbb8090673f604484ff5b6eb8d77baed42a
   Starscream: 877369259cafa975ceaf2ce11eb9ef54ac51e195
