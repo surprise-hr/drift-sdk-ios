@@ -252,7 +252,12 @@ class ConversationViewController: SLKTextViewController {
     func setupSlackTextView() {
         tableView?.backgroundColor = UIColor.white
         tableView?.separatorStyle = .none
-
+        automaticallyAdjustsScrollViewInsets = false
+        
+        if #available(iOS 11.0, *) {
+            tableView?.contentInsetAdjustmentBehavior = .never
+        }
+        
         textInputbar.barTintColor = UIColor.white
        
         leftButton.tintColor = UIColor.lightGray
