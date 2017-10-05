@@ -336,7 +336,7 @@ class ConversationViewController: SLKTextViewController {
         cell.transform = tableView.transform
         cell.setNeedsLayout()
         return cell
-
+        
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -349,7 +349,7 @@ class ConversationViewController: SLKTextViewController {
         }
         return messages.count
     }
-
+    
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -360,13 +360,10 @@ class ConversationViewController: SLKTextViewController {
             let alert = UIAlertController(title:nil, message: nil, preferredStyle: .actionSheet)
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
             alert.addAction(UIAlertAction(title:"Retry Send", style: .default, handler: { (_) -> Void in
-                let messageRequest = Message()
-                messageRequest.body = message.body!
-                messageRequest.requestId = message.requestId
-                messageRequest.sendStatus = .Pending
-                messageRequest.type = message.type
-                self.tableView!.reloadRows(at: [indexPath as IndexPath], with: .none)
-                self.postMessage(messageRequest)
+                message.sendStatus = .Pending
+                self.messages[indexPath.row] = message
+                self.tableView!.reloadRows(at: [indexPath], with: .none)
+                self.postMessage(message)
             }))
             alert.addAction(UIAlertAction(title:"Delete Message", style: .destructive, handler: { (_) -> Void in
                 self.messages.remove(at: self.messages.count-indexPath.row-1)
@@ -489,12 +486,8 @@ class ConversationViewController: SLKTextViewController {
                     message.sendStatus = .Sent
                     self.messages[index] = message
                 }else{
-                    let message = Message()
-                    message.authorId = DriftDataStore.sharedInstance.auth?.enduser?.userId
-                    message.body = messageRequest.body
-                    message.requestId = messageRequest.requestId
-                    message.sendStatus = .Failed
-                    self.messages.insert(message, at: 0)
+                    messageRequest.sendStatus = .Failed
+                    self.messages[index] = messageRequest
                 }
                 
                 self.tableView!.reloadRows(at: [IndexPath(row:index, section: 0)], with: .none)
