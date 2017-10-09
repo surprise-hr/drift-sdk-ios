@@ -625,30 +625,32 @@ extension ConversationViewController: UIImagePickerControllerDelegate, UINavigat
         picker.dismiss(animated: true, completion: nil)
     }
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingImage image: UIImage!, editingInfo: [AnyHashable: Any]!) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         picker.dismiss(animated: true, completion: nil)
-        if let imageRep = UIImageJPEGRepresentation(image, 0.2){
-            let newAttachment = Attachment()
-            newAttachment.data = imageRep
-            newAttachment.conversationId = conversationId!
-            newAttachment.mimeType = "image/jpeg"
-            newAttachment.fileName = "image.jpg"
-            
-            DriftAPIManager.postAttachment(newAttachment,authToken: DriftDataStore.sharedInstance.auth!.accessToken) { (result) in
-                switch result{
-                case .success(let attachment):
-                    let messageRequest = Message()
-                    messageRequest.attachmentIds.append(attachment.id)
-                    self.postMessage(messageRequest)
-                case .failure:
-                    let alert = UIAlertController(title: "Unable to upload file", message: nil, preferredStyle: UIAlertControllerStyle.alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-                    self.present(alert, animated: true, completion: nil)
-                    LoggerManager.log("Unable to upload file with mimeType: \(newAttachment.mimeType)")
 
+        if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            if let imageRep = UIImageJPEGRepresentation(image, 0.2){
+                let newAttachment = Attachment()
+                newAttachment.data = imageRep
+                newAttachment.conversationId = conversationId!
+                newAttachment.mimeType = "image/jpeg"
+                newAttachment.fileName = "image.jpg"
+                
+                DriftAPIManager.postAttachment(newAttachment,authToken: DriftDataStore.sharedInstance.auth!.accessToken) { (result) in
+                    switch result{
+                    case .success(let attachment):
+                        let messageRequest = Message()
+                        messageRequest.attachmentIds.append(attachment.id)
+                        self.postMessage(messageRequest)
+                    case .failure:
+                        let alert = UIAlertController(title: "Unable to upload file", message: nil, preferredStyle: UIAlertControllerStyle.alert)
+                        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+                        self.present(alert, animated: true, completion: nil)
+                        LoggerManager.log("Unable to upload file with mimeType: \(newAttachment.mimeType)")
+                        
+                    }
                 }
             }
         }
-    }
-    
+    }    
 }

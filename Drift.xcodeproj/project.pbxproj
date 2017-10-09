@@ -61,7 +61,6 @@
 		6387309A1C7E85EF00105867 /* TopController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638730991C7E85EF00105867 /* TopController.swift */; };
 		63BBABB41C7C9D850014768A /* ErrorManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBABB31C7C9D850014768A /* ErrorManager.swift */; };
 		63BBABB61C7CD6210014768A /* ColorHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBABB51C7CD6210014768A /* ColorHelper.swift */; };
-		63C257391C9A00AE003C4C81 /* LayerKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63C257381C9A00AE003C4C81 /* LayerKit.framework */; };
 		63F95DBF1C5B8676003BCEE0 /* Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F95DBE1C5B8676003BCEE0 /* Auth.swift */; };
 		A80A643E1D464CDE00A41A41 /* ObjectValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A80A643D1D464CDE00A41A41 /* ObjectValidator.swift */; };
 		A80A64421D46534D00A41A41 /* DriftDateTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A80A64411D46534D00A41A41 /* DriftDateTransformer.swift */; };
@@ -104,7 +103,6 @@
 		A8E705871EF8192500BC1429 /* AttachmentCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E705851EF8192500BC1429 /* AttachmentCollectionViewCell.swift */; };
 		A8F589A31D478F0A0043DB8D /* ConversationListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F589A11D478F0A0043DB8D /* ConversationListTableViewCell.swift */; };
 		A8F589A41D478F0A0043DB8D /* ConversationListTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A8F589A21D478F0A0043DB8D /* ConversationListTableViewCell.xib */; };
-		B24E7E355476327343D34A70 /* Pods_Drift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 827DB2871F99163085B5B96C /* Pods_Drift.framework */; };
 		DE4BB2DAEE68729ECCFBF587 /* Pods_Drift_SDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D067B1B1C2147D16643E68C /* Pods_Drift_SDK.framework */; };
 /* End PBXBuildFile section */
 
@@ -250,8 +248,6 @@
 				A8B6FBB11DE74A9A002F2321 /* AlamofireImage.framework in Frameworks */,
 				A82CF5681D42585D00D570FF /* ObjectMapper.framework in Frameworks */,
 				63356A541C52A0D20064F652 /* UIKit.framework in Frameworks */,
-				63C257391C9A00AE003C4C81 /* LayerKit.framework in Frameworks */,
-				B24E7E355476327343D34A70 /* Pods_Drift.framework in Frameworks */,
 				DE4BB2DAEE68729ECCFBF587 /* Pods_Drift_SDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -579,7 +575,6 @@
 				634950D11C511A410097C474 /* Headers */,
 				634950D21C511A410097C474 /* Resources */,
 				634951201C511D5A0097C474 /* Copy Frameworks */,
-				630144FD1C9A117F002812AB /* Carthage */,
 				F24C6A9D00716292A2BE066D /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
@@ -708,22 +703,6 @@
 				"$(SRCROOT)/Carthage/Build/iOS/ObjectMapper.framework",
 				"$(SRCROOT)/Carthage/Checkouts/releases-ios/LayerKit.framework",
 			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks";
-		};
-		630144FD1C9A117F002812AB /* Carthage */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/Carthage/Build/iOS/ObjectMapper.framework",
-				"$(SRCROOT)/Carthage/Checkouts/releases-ios/LayerKit.framework",
-			);
-			name = Carthage;
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
