@@ -101,7 +101,6 @@ class Message: Mappable, Equatable, Hashable{
         authorType              <- map["authorType"]
         type                    <- map["type"]
         conversationId          <- map["conversationId"]
-        context                 <- map["context"]
         viewerRecipientStatus  <- map["viewerRecipientStatus"]
 
         do {
@@ -119,6 +118,22 @@ class Message: Mappable, Equatable, Hashable{
         }
     }
 
+    open func toMessageJSON() -> [String: Any]{
+        
+        var json:[String : Any] = [
+            "body": body ?? "",
+            "contentType": contentType,
+            "type": type.rawValue,
+            "attachments": attachmentIds
+        ]
+        
+        if let context = context {
+            json["context"] = context.toJSON()
+        }
+        
+        return json
+    }
+    
 }
 
 func ==(lhs: Message, rhs: Message) -> Bool {
