@@ -70,7 +70,7 @@ class ConversationViewController: SLKTextViewController {
     }
     
     convenience init(conversationType: ConversationType) {
-        self.init(tableViewStyle: UITableViewStyle.grouped)
+        self.init(tableViewStyle: UITableViewStyle.grouped)!
         setConversationType(conversationType)
     }
 
