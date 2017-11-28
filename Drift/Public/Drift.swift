@@ -18,7 +18,7 @@ open class Drift: NSObject {
      - Parameter embedId: Embed ID found in Driftt Settings
      
     */
-    open class func setup(_ embedId: String) {
+    @objc open class func setup(_ embedId: String) {
         DriftManager.retrieveDataFromEmbeds(embedId)
         DriftManager.createTemporaryDirectory()
     }
@@ -29,14 +29,14 @@ open class Drift: NSObject {
      - Parameter userId: The User id from your database. Will be the same as on driftt.
      
     */
-    open class func registerUser(_ userId: String, email: String) {
+    @objc open class func registerUser(_ userId: String, email: String) {
         DriftManager.registerUser(userId, email: email, attrs: nil)
     }
     
     /**
      Logs users out of Drift
      */
-    open class func logout() {
+    @objc open class func logout() {
         DriftManager.logout()
     }
     
@@ -48,7 +48,7 @@ open class Drift: NSObject {
      - parameter debug: A Bool indicating if debug mode should be enabled or not
      
     */
-    open class func debugMode(_ debug:Bool) {
+    @objc open class func debugMode(_ debug:Bool) {
         DriftManager.debugMode(debug)
     }
     
@@ -57,7 +57,7 @@ open class Drift: NSObject {
      This will show a list of Drift conversations for the current user
      
      */
-    open class func showConversations() {
+    @objc open class func showConversations() {
         DriftManager.showConversations()
     }
     
