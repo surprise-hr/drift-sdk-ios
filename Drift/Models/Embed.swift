@@ -30,7 +30,6 @@ struct Embed: Mappable {
     var embedId: String!
     var inboxId: Int!
     
-    var layerAppId: String!
     var clientId: String!
     var redirectUri: String!
     
@@ -61,7 +60,6 @@ struct Embed: Mappable {
         orgId       = map["orgId"].validNotEmpty()
         embedId     = map["id"].validNotEmpty()
         inboxId     = map["configuration.inboxId"].validNotEmpty()
-        layerAppId  = map["configuration.layerAppId"].validNotEmpty()
         clientId    = map["configuration.authClientId"].validNotEmpty()
         redirectUri = map["configuration.redirectUri"].validNotEmpty()
         
@@ -74,7 +72,6 @@ struct Embed: Mappable {
         orgId               <- map["orgId"]
         embedId             <- map["id"]
         inboxId             <- map["configuration.inboxId"]
-        layerAppId          <- map["configuration.layerAppId"]
         clientId            <- map["configuration.authClientId"]
         redirectUri         <- map["configuration.redirectUri"]
         backgroundColor     <- map["configuration.theme.backgroundColor"]

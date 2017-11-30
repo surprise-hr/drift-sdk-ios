@@ -33,8 +33,6 @@ class ModelTests: XCTestCase {
         XCTAssertNotNil(Mapper<Embed>().map(JSONStore.convertStringToDictionary(JSONStore.embedJSONCorrect)!), "Embed Did not Map For correct JSON")
         XCTAssertNil(Mapper<Embed>().map(JSONStore.convertStringToDictionary(JSONStore.embedJSONNoOrgId)!), "Embed Mapped embed with no orgId")
         XCTAssertNil(Mapper<Embed>().map(JSONStore.convertStringToDictionary(JSONStore.embedJSONEmptyOrgId)!), "Embed Mapped embed with string org Id")
-        XCTAssertNil(Mapper<Embed>().map(JSONStore.convertStringToDictionary(JSONStore.embedJSONNoLayerAppId)!), "Embed Mapped embed with no layer app id")
-        XCTAssertNil(Mapper<Embed>().map(JSONStore.convertStringToDictionary(JSONStore.embedJSONEmptyLayerAppId)!), "Embed Mapped embed with empty string layer app Id")
     }
     
     func testCampaignOrganizer() {
