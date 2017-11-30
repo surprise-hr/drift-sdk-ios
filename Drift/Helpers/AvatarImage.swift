@@ -9,7 +9,7 @@
 import UIKit
 import AlamofireImage
 
-protocol AvatarDelegate {
+protocol AvatarDelegate: class {
     func avatarPressed()
 }
 
@@ -24,7 +24,7 @@ protocol AvatarDelegate {
     var button = UIButton()
     var imageView = UIImageView()
     var initialsLabel = UILabel()
-    var delegate: AvatarDelegate?
+    weak var delegate: AvatarDelegate?
     
     var wiggleAnimation: CAKeyframeAnimation{
         let wiggleAnimation = CAKeyframeAnimation(keyPath: "transform")
