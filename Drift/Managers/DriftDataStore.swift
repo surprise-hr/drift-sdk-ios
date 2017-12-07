@@ -111,7 +111,6 @@ class DriftDataStore {
         userDefs.removeObject(forKey: DriftDataStore.driftEmbedCacheString)
         userDefs.synchronize()
         auth = nil
-        embed = nil
         userId = nil
         userEmail = nil
     }
