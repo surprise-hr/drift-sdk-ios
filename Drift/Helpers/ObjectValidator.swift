@@ -13,24 +13,18 @@ private var failures = 0
 
 extension Map{
 
-    func validNotEmpty<T>() -> T {
+    func validNotEmpty<T>() -> T? {
         if let value: T = value() {
             if value as? String == ""{
                 failures += 1
-                return dummyObject()
+                return nil
             }
             return value
         }else {
             // Collects failed count
             failures += 1
-            return dummyObject()
+            return nil
         }
-    }
-    
-    fileprivate func dummyObject<T>() -> T{
-        let pointer = UnsafeMutablePointer<T>.allocate(capacity: 0)
-        pointer.deallocate(capacity: 0)
-        return pointer.pointee
     }
     
     var isValidNotEmpty: Bool{
