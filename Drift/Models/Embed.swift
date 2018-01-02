@@ -57,7 +57,11 @@ struct Embed: Mappable {
     
     init?(map: Map) {
         //These fields are required, without them we fail to init the object
-        if map["orgId"] == nil || map["id"] == nil || map["configuration.inboxId"] == nil || map["configuration.authClientId"] == nil || map["configuration.authClientId"] == nil{
+        if map["orgId"] == nil || map["orgId"] as? String == "" ||
+            map["id"] == nil || map["id"] as? String == "" ||
+            map["configuration.inboxId"] == nil || map["configuration.inboxId"] as? String == "" ||
+            map["configuration.authClientId"] == nil || map["configuration.authClientId"] as? String == "" ||
+            map["configuration.authClientId"] == nil || map["configuration.authClientId"] as? String == ""{
             return nil
         }
     }
