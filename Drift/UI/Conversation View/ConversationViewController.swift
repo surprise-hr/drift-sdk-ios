@@ -100,7 +100,7 @@ class ConversationViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         tableView = UITableView(frame: view.frame, style: .grouped)
         view.addSubview(tableView)
         
@@ -162,7 +162,7 @@ class ConversationViewController: UIViewController {
         NSLayoutConstraint.activate([
             connectionBarView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             connectionBarView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            connectionBarView.topAnchor.constraint(equalTo: view.topAnchor),
+            connectionBarView.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor),
             connectionBarHeightConstraint
         ])
         didOpen()
@@ -252,10 +252,12 @@ class ConversationViewController: UIViewController {
             if let tableView = tableView{
                 emptyState.translatesAutoresizingMaskIntoConstraints = false
                 view.addSubview(emptyState)
-                let leadingConstraint = NSLayoutConstraint(item: emptyState, attribute: NSLayoutAttribute.leading, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.leading, multiplier: 1, constant: 0)
-                let trailingConstraint = NSLayoutConstraint(item: emptyState, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.trailing, multiplier: 1, constant: 0)
-                let topConstraint = NSLayoutConstraint(item: emptyState, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.top, multiplier: 1, constant: 0)
-                view.addConstraints([leadingConstraint, trailingConstraint, topConstraint])
+                
+                NSLayoutConstraint.activate([
+                    emptyState.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                    emptyState.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                    emptyState.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor)
+                ])
                 
                 let label = UILabel(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 30))
                 label.textAlignment = .center
@@ -459,7 +461,7 @@ class ConversationViewController: UIViewController {
             tableView.contentInset.top = keyboardOffsetFrame.height
             tableView.contentInset.bottom = topLayoutGuide.length
             tableView.scrollIndicatorInsets.top = keyboardOffsetFrame.height
-            tableView.scrollIndicatorInsets.bottom = topLayoutGuide.length
+            tableView.scrollIndicatorInsets.bottom = topLayoutGuide.length + connectionBarView.frame.height
             let offset = CGPoint(x: 0, y: -self.tableView.contentInset.top)
             tableView.setContentOffset(offset, animated: false)
         }
