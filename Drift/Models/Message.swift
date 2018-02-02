@@ -56,6 +56,8 @@ class Message: Mappable, Equatable, Hashable{
     var formattedBody: NSMutableAttributedString?
     var viewerRecipientStatus: RecipientStatus?
     
+    var preMessages: [PreMessage] = []
+
     var hashValue: Int {
         return id
     }
@@ -79,20 +81,8 @@ class Message: Mappable, Equatable, Hashable{
         inboxId                 <- map["inboxId"]
         body                    <- map["body"]
         
-        if body != nil {
-            if let range = body!.range(of: "<p>", options: .caseInsensitive) {
-                body!.replaceSubrange(range, with: "")
-            }
-            
-            if let range = body!.range(of: "</p>", options: .backwards) {
-                body!.replaceSubrange(range, with: "")
-            }
-            
-            if let _ = body!.range(of: "<hr", options: .caseInsensitive) {
-                body = body!.replacingOccurrences(of: "<hr [^>]+>", with: "", options: String.CompareOptions.regularExpression, range: nil)
-            }
-            
-        }
+        body = TextHelper.cleanString(body: body ?? "")
+        
         
         attachmentIds           <- map["attachments"]
         contentType             <- map["contentType"]
@@ -102,6 +92,7 @@ class Message: Mappable, Equatable, Hashable{
         type                    <- map["type"]
         conversationId          <- map["conversationId"]
         viewerRecipientStatus  <- map["viewerRecipientStatus"]
+        preMessages             <- map["attributes.preMessages"]
 
         do {
             let htmlStringData = (body ?? "").data(using: String.Encoding.utf8)!
@@ -133,8 +124,53 @@ class Message: Mappable, Equatable, Hashable{
         
         return json
     }
+}
+
+extension Array where Iterator.Element == Message
+{
+    
+    mutating func sortMessagesForConversation() -> Array {
+        
+        for message in self {
+            if !message.preMessages.isEmpty {
+                self.append(contentsOf: getMessagesFromPreMessages(message: message, preMessages: message.preMessages))
+            }
+        }
+        
+        sorted(by: { $0.createdAt.compare($1.createdAt as Date) == .orderedDescending})
+        
+        return self
+    }
+    
+    private func getMessagesFromPreMessages(message: Message, preMessages: [PreMessage]) -> [Message] {
+        
+        let date = message.createdAt
+        var output: [Message] = []
+        for (index, preMessage) in preMessages.enumerated() {
+            let fakeMessage = Message()
+            
+            fakeMessage.createdAt = date.addingTimeInterval(TimeInterval(-(index + 1)))
+            fakeMessage.conversationId = message.conversationId
+            fakeMessage.body = TextHelper.cleanString(body: preMessage.messageBody)
+//            fakeMessage.saveFormattedString()
+            
+            fakeMessage.uuid = UUID().uuidString
+            
+            fakeMessage.sendStatus = .Sent
+            fakeMessage.contentType = ContentType.Chat.rawValue
+            fakeMessage.authorType = AuthorType.User
+            
+            if let sender = preMessage.user {
+                fakeMessage.authorId = sender.userId
+                output.append(fakeMessage)
+            }
+        }
+        
+        return output
+    }
     
 }
+
 
 func ==(lhs: Message, rhs: Message) -> Bool {
     return lhs.uuid == rhs.uuid

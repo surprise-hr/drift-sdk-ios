@@ -48,7 +48,6 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
     var indexPath: IndexPath?
     var message: Message?
     var configuration: Embed?
-    weak var attachmentDelegate: AttachementSelectedDelegate?
     weak var delegate: AttachementSelectedDelegate?
     
     override func awakeFromNib() {
@@ -281,18 +280,18 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if let cell = cell as? AttachmentCollectionViewCell{
-            if let attachment = message?.attachments[indexPath.row] {
-                let fileName: NSString = attachment.fileName as NSString
-                let fileExtension = fileName.pathExtension
-                cell.fileNameLabel.text = "\(fileName)"
-                cell.fileExtensionLabel.text = "\(fileExtension.uppercased())"
-                
-                let formatter = ByteCountFormatter()
-                formatter.countStyle = .memory
-                formatter.string(fromByteCount: Int64(attachment.size))
-                formatter.allowsNonnumericFormatting = false
-                cell.sizeLabel.text = formatter.string(fromByteCount: Int64(attachment.size))
-            }
+//            if let attachment = message?.attachments[indexPath.row] {
+//                let fileName: NSString = attachment.fileName as NSString
+//                let fileExtension = fileName.pathExtension
+//                cell.fileNameLabel.text = "\(fileName)"
+//                cell.fileExtensionLabel.text = "\(fileExtension.uppercased())"
+//
+//                let formatter = ByteCountFormatter()
+//                formatter.countStyle = .memory
+//                formatter.string(fromByteCount: Int64(attachment.size))
+//                formatter.allowsNonnumericFormatting = false
+//                cell.sizeLabel.text = formatter.string(fromByteCount: Int64(attachment.size))
+//            }
         }
     }
     

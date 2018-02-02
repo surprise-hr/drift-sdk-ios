@@ -39,6 +39,8 @@
 		6329CAC51C5A91310059C678 /* DriftDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6329CAC41C5A91310059C678 /* DriftDataStore.swift */; };
 		632EC55B1C7E070B00D703D4 /* ModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632EC55A1C7E070B00D703D4 /* ModelTests.swift */; };
 		632EC55D1C7E088300D703D4 /* JSONStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632EC55C1C7E088300D703D4 /* JSONStore.swift */; };
+		632EC9492023307400761E72 /* PreMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632EC9482023307400761E72 /* PreMessage.swift */; };
+		632EC94B2023401100761E72 /* TextHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632EC94A2023401100761E72 /* TextHelper.swift */; };
 		63356A3F1C529C530064F652 /* Drift.h in Headers */ = {isa = PBXBuildFile; fileRef = 63356A3D1C529C530064F652 /* Drift.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		63356A421C529C610064F652 /* Drift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63356A411C529C610064F652 /* Drift.swift */; };
 		63356A4B1C529C760064F652 /* AnnouncementAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63356A471C529C760064F652 /* AnnouncementAttributes.swift */; };
@@ -51,10 +53,12 @@
 		633920D01C62514F00C3A3C2 /* CampaignResponseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633920CF1C62514F00C3A3C2 /* CampaignResponseManager.swift */; };
 		633920D51C62879100C3A3C2 /* CampaignView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633920D41C62879100C3A3C2 /* CampaignView.swift */; };
 		634950DF1C511A410097C474 /* Drift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 634950D41C511A410097C474 /* Drift.framework */; };
+		634EC1F52018BA670020DF97 /* ConversationInputAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634EC1F42018BA670020DF97 /* ConversationInputAccessoryView.swift */; };
 		635462E51EDF0C0B0012358E /* DriftAPIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635462E31EDF0C0B0012358E /* DriftAPIManager.swift */; };
 		635462E61EDF0C0B0012358E /* DriftAPIURLRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635462E41EDF0C0B0012358E /* DriftAPIURLRouter.swift */; };
 		635462E81EDF0F2B0012358E /* SocketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635462E71EDF0F2B0012358E /* SocketManager.swift */; };
 		635462EA1EDF204E0012358E /* SocketAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635462E91EDF204E0012358E /* SocketAuth.swift */; };
+		635977B1201F6B3500333774 /* ConversationInputTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635977B0201F6B3500333774 /* ConversationInputTextView.swift */; };
 		6362426A1C7FBCB400632F0E /* NPSCompleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636242691C7FBCB400632F0E /* NPSCompleteView.swift */; };
 		6362426C1C7FBCC300632F0E /* NPSCompleteView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6362426B1C7FBCC300632F0E /* NPSCompleteView.xib */; };
 		637E48FF1C9A08040067F105 /* LayerKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63C257381C9A00AE003C4C81 /* LayerKit.framework */; };
@@ -163,6 +167,8 @@
 		6329CAC41C5A91310059C678 /* DriftDataStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DriftDataStore.swift; path = Drift/Managers/DriftDataStore.swift; sourceTree = SOURCE_ROOT; };
 		632EC55A1C7E070B00D703D4 /* ModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModelTests.swift; path = DriftTests/ModelTests.swift; sourceTree = SOURCE_ROOT; };
 		632EC55C1C7E088300D703D4 /* JSONStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JSONStore.swift; path = DriftTests/JSONStore.swift; sourceTree = SOURCE_ROOT; };
+		632EC9482023307400761E72 /* PreMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PreMessage.swift; path = Drift/Models/PreMessage.swift; sourceTree = SOURCE_ROOT; };
+		632EC94A2023401100761E72 /* TextHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TextHelper.swift; path = Drift/Helpers/TextHelper.swift; sourceTree = SOURCE_ROOT; };
 		63356A3D1C529C530064F652 /* Drift.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Drift.h; path = Drift/Drift.h; sourceTree = SOURCE_ROOT; };
 		63356A3E1C529C530064F652 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Drift/Info.plist; sourceTree = SOURCE_ROOT; };
 		63356A411C529C610064F652 /* Drift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Drift.swift; path = Drift/Public/Drift.swift; sourceTree = SOURCE_ROOT; };
@@ -178,10 +184,12 @@
 		633920D41C62879100C3A3C2 /* CampaignView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CampaignView.swift; path = Drift/UI/CampaignView.swift; sourceTree = SOURCE_ROOT; };
 		634950D41C511A410097C474 /* Drift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Drift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		634950DE1C511A410097C474 /* DriftTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DriftTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		634EC1F42018BA670020DF97 /* ConversationInputAccessoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ConversationInputAccessoryView.swift; path = "Drift/UI/Conversation View/ConversationInputAccessoryView.swift"; sourceTree = SOURCE_ROOT; };
 		635462E31EDF0C0B0012358E /* DriftAPIManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DriftAPIManager.swift; path = Drift/Managers/DriftAPIManager.swift; sourceTree = SOURCE_ROOT; };
 		635462E41EDF0C0B0012358E /* DriftAPIURLRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DriftAPIURLRouter.swift; path = Drift/Managers/DriftAPIURLRouter.swift; sourceTree = SOURCE_ROOT; };
 		635462E71EDF0F2B0012358E /* SocketManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SocketManager.swift; path = Drift/Managers/SocketManager.swift; sourceTree = SOURCE_ROOT; };
 		635462E91EDF204E0012358E /* SocketAuth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SocketAuth.swift; path = Drift/Models/SocketAuth.swift; sourceTree = SOURCE_ROOT; };
+		635977B0201F6B3500333774 /* ConversationInputTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ConversationInputTextView.swift; path = "Drift/UI/Conversation View/ConversationInputTextView.swift"; sourceTree = SOURCE_ROOT; };
 		636242691C7FBCB400632F0E /* NPSCompleteView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NPSCompleteView.swift; path = "Drift/UI/NPS Complete View/NPSCompleteView.swift"; sourceTree = SOURCE_ROOT; };
 		6362426B1C7FBCC300632F0E /* NPSCompleteView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = NPSCompleteView.xib; path = "Drift/UI/NPS Complete View/NPSCompleteView.xib"; sourceTree = SOURCE_ROOT; };
 		638730991C7E85EF00105867 /* TopController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TopController.swift; path = Drift/Helpers/TopController.swift; sourceTree = SOURCE_ROOT; };
@@ -366,6 +374,7 @@
 				635462E91EDF204E0012358E /* SocketAuth.swift */,
 				A88682DC1EE982D600E396D8 /* EnrichedConversation.swift */,
 				A87272101EEAE16700A476FB /* CampaignWrapper.swift */,
+				632EC9482023307400761E72 /* PreMessage.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -382,6 +391,7 @@
 				A8DECB351DF9B5BF00CE008D /* UIDevice+ModelName.swift */,
 				A8E705761EF28D6C00BC1429 /* OpenHoursHelpers.swift */,
 				A8E705821EF815C500BC1429 /* AvatarImage.swift */,
+				632EC94A2023401100761E72 /* TextHelper.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -510,6 +520,8 @@
 				A8C6ADEE1D632CED0024CFDC /* ConversationEmptyStateView.xib */,
 				A8E7057A1EF4051F00BC1429 /* ConnectionBarView.swift */,
 				A8E7057C1EF4054000BC1429 /* ConnectionBarView.xib */,
+				634EC1F42018BA670020DF97 /* ConversationInputAccessoryView.swift */,
+				635977B0201F6B3500333774 /* ConversationInputTextView.swift */,
 			);
 			name = "Conversation View";
 			sourceTree = "<group>";
@@ -824,6 +836,7 @@
 				A8E705771EF28D6C00BC1429 /* OpenHoursHelpers.swift in Sources */,
 				635462EA1EDF204E0012358E /* SocketAuth.swift in Sources */,
 				633920D51C62879100C3A3C2 /* CampaignView.swift in Sources */,
+				635977B1201F6B3500333774 /* ConversationInputTextView.swift in Sources */,
 				2CF43EA31C7E045F008E6748 /* ColorPalette.swift in Sources */,
 				63BBABB41C7C9D850014768A /* ErrorManager.swift in Sources */,
 				630E89711C57E90300195062 /* NPSButton.swift in Sources */,
@@ -832,6 +845,7 @@
 				63356A4C1C529C760064F652 /* CTA.swift in Sources */,
 				6387309A1C7E85EF00105867 /* TopController.swift in Sources */,
 				A80A644E1D466B5E00A41A41 /* ConversationSubscription.swift in Sources */,
+				632EC94B2023401100761E72 /* TextHelper.swift in Sources */,
 				A80A64441D465E4800A41A41 /* InboxManager.swift in Sources */,
 				6302051A1C52AC5100C02F5E /* DriftManager.swift in Sources */,
 				63F95DBF1C5B8676003BCEE0 /* Auth.swift in Sources */,
@@ -846,6 +860,7 @@
 				630E89691C57C77300195062 /* NibLoader.swift in Sources */,
 				492F77F01F55A72300A05094 /* Socket.swift in Sources */,
 				630E89621C57944400195062 /* PresentationManager.swift in Sources */,
+				632EC9492023307400761E72 /* PreMessage.swift in Sources */,
 				A8DECB361DF9B5BF00CE008D /* UIDevice+ModelName.swift in Sources */,
 				A8E7057B1EF4051F00BC1429 /* ConnectionBarView.swift in Sources */,
 				A8C6ADED1D632CD10024CFDC /* ConversationEmptyStateView.swift in Sources */,
@@ -857,6 +872,7 @@
 				6302051E1C56739000C02F5E /* User.swift in Sources */,
 				A8E705791EF2C77900BC1429 /* ReachabilityManager.swift in Sources */,
 				6306B51E1C5F91150003F9D3 /* NPSResponseAttributes.swift in Sources */,
+				634EC1F52018BA670020DF97 /* ConversationInputAccessoryView.swift in Sources */,
 				A80A64501D466B7C00A41A41 /* MessageSubscription.swift in Sources */,
 				635462E51EDF0C0B0012358E /* DriftAPIManager.swift in Sources */,
 			);

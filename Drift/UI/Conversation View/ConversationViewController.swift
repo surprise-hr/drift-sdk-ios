@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import SlackTextViewController
 import QuickLook
 import ObjectMapper
 import SVProgressHUD
@@ -26,7 +25,7 @@ protocol AttachementSelectedDelegate: class{
     func attachmentSelected(_ attachment: Attachment, sender: AnyObject)
 }
 
-class ConversationViewController: SLKTextViewController {
+class ConversationViewController: UIViewController {
     
     enum ConversationType {
         case createConversation(authorId: Int?)
@@ -43,9 +42,23 @@ class ConversationViewController: SLKTextViewController {
     var connectionBarView: ConnectionBarView = ConnectionBarView.fromNib() as! ConnectionBarView
     var connectionBarHeightConstraint: NSLayoutConstraint!
     
+    var keyboardFrame: CGRect = .zero
+    
     lazy var qlController = QLPreviewController()
     lazy var imagePicker = UIImagePickerController()
     lazy var interactionController = UIDocumentInteractionController()
+    
+    var conversationInputView: ConversationInputAccessoryView = ConversationInputAccessoryView()
+    
+    var tableView: UITableView!
+    var ignoreKeyboardChanges = false
+    var dimmingView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor(white: 0, alpha: 0.5)
+        view.alpha = 0
+        return view
+    }()
     
     var conversationType: ConversationType! {
         didSet{
@@ -58,10 +71,8 @@ class ConversationViewController: SLKTextViewController {
 
     var conversationId: Int?{
         didSet{
-            leftButton.isEnabled = true
-            leftButton.tintColor = DriftDataStore.sharedInstance.generateBackgroundColor()
-            leftButton.setImage(UIImage(named: "plus-circle", in: Bundle(for: Drift.self), compatibleWith: nil), for: UIControlState())
-            textView.placeholder = "Message"
+            conversationInputView.addButton.isEnabled = true
+            conversationInputView.textView.placeholder = "Message"
         }
     }
     
@@ -69,11 +80,7 @@ class ConversationViewController: SLKTextViewController {
         self.conversationType = conversationType
     }
     
-    convenience init(conversationType: ConversationType) {
-        self.init(tableViewStyle: UITableViewStyle.grouped)!
-        setConversationType(conversationType)
-    }
-
+ 
     class func navigationController(_ conversationType: ConversationType) -> UINavigationController {
         let vc = ConversationViewController(conversationType: conversationType)
         let navVC = UINavigationController(rootViewController: vc)
@@ -84,13 +91,34 @@ class ConversationViewController: SLKTextViewController {
 
         return navVC
     }
-
-    override func viewWillAppear(_ animated: Bool) {
-        tableView?.contentInset = UIEdgeInsets.zero
+    
+    convenience init(conversationType: ConversationType) {
+        self.init()
+        setConversationType(conversationType)
     }
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        tableView = UITableView(frame: view.frame, style: .grouped)
+        view.addSubview(tableView)
+        
+        NSLayoutConstraint.activate([
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.topAnchor.constraint(equalTo: view.topAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+        
+        view.addSubview(dimmingView)
+        NSLayoutConstraint.activate([
+            dimmingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            dimmingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            dimmingView.topAnchor.constraint(equalTo: view.topAnchor),
+            dimmingView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            ])
+
         setupSlackTextView()
         tableView?.register(UINib(nibName: "ConversationMessageTableViewCell", bundle: Bundle(for: ConversationMessageTableViewCell.classForCoder())), forCellReuseIdentifier: "ConversationMessageTableViewCell")
         
@@ -107,29 +135,41 @@ class ConversationViewController: SLKTextViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(ConversationViewController.didReceiveNewMessage), name: .driftOnNewMessageReceived, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(ConversationViewController.connectionStatusDidUpdate), name: .driftSocketStatusUpdated, object: nil)
 
+        tableView.dataSource = self
+        conversationInputView.delegate = self
+        automaticallyAdjustsScrollViewInsets = false
+        if #available(iOS 11.0, *) {
+            tableView.contentInsetAdjustmentBehavior = .never
+        }
+        
+        tableView.tableFooterView = UIView()
+        tableView.transform = CGAffineTransform(rotationAngle: CGFloat.pi)
+        tableView.keyboardDismissMode = .interactive
+        
+        tableView.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: view.frame.width - 10)
+        
+        tableView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard)))
+        
+        tableView.becomeFirstResponder()
+        
 
         connectionBarView.translatesAutoresizingMaskIntoConstraints = false
-        connectionBarHeightConstraint = NSLayoutConstraint(item: self.connectionBarView, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.height, multiplier: 1, constant: 4)
 
+        connectionBarHeightConstraint = connectionBarView.heightAnchor.constraint(equalToConstant: 4)
+        
         view.addSubview(connectionBarView)
 
-        let leadingConstraint = NSLayoutConstraint(item: connectionBarView, attribute: NSLayoutAttribute.leading, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.leading, multiplier: 1, constant: 0)
-        let trailingConstraint = NSLayoutConstraint(item: connectionBarView, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.trailing, multiplier: 1, constant: 0)
-        let topConstraint = NSLayoutConstraint(item: connectionBarView, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: topLayoutGuide, attribute: NSLayoutAttribute.bottom, multiplier: 1, constant: 0)
-        view.addConstraints([leadingConstraint, trailingConstraint, topConstraint, connectionBarHeightConstraint])
-
+        NSLayoutConstraint.activate([
+            connectionBarView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            connectionBarView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            connectionBarView.topAnchor.constraint(equalTo: view.topAnchor),
+            connectionBarHeightConstraint
+        ])
         didOpen()
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        textInputbar.bringSubview(toFront: textInputbar.textView)
-        textInputbar.bringSubview(toFront: textInputbar.leftButton)
-        textInputbar.bringSubview(toFront: textInputbar.rightButton)
-    }
-    
     override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
         markConversationRead()
     }
     
@@ -212,7 +252,6 @@ class ConversationViewController: SLKTextViewController {
             if let tableView = tableView{
                 emptyState.translatesAutoresizingMaskIntoConstraints = false
                 view.addSubview(emptyState)
-                edgesForExtendedLayout = []
                 let leadingConstraint = NSLayoutConstraint(item: emptyState, attribute: NSLayoutAttribute.leading, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.leading, multiplier: 1, constant: 0)
                 let trailingConstraint = NSLayoutConstraint(item: emptyState, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.trailing, multiplier: 1, constant: 0)
                 let topConstraint = NSLayoutConstraint(item: emptyState, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.top, multiplier: 1, constant: 0)
@@ -258,148 +297,20 @@ class ConversationViewController: SLKTextViewController {
             tableView?.contentInsetAdjustmentBehavior = .never
         }
         
-        textInputbar.barTintColor = UIColor.white
-       
-        leftButton.tintColor = UIColor.lightGray
-        leftButton.isEnabled = false
-        leftButton.setImage(UIImage(named: "plus-circle", in: Bundle(for: Drift.self), compatibleWith: nil), for: UIControlState())
-        textView.font = UIFont(name: "Avenir-Book", size: 15)
-        isInverted = true
-        shouldScrollToBottomAfterKeyboardShows = false
-        bounces = true
-        
+        conversationInputView.addButton.isEnabled = false
+        conversationInputView.textView.font = UIFont(name: "Avenir-Book", size: 15)
+
         if let organizationName = DriftDataStore.sharedInstance.embed?.organizationName {
-            textView.placeholder = "Message \(organizationName)"
+            conversationInputView.textView.placeholder = "Message \(organizationName)"
         }else{
-            textView.placeholder = "Message"
+            conversationInputView.textView.placeholder = "Message"
         }
     }
     
     
     @objc func dismissVC() {
-        dismissKeyboard(true)
+        dismissKeyboard()
         dismiss(animated: true, completion: nil)
-    }
-    
-    
-    override func didPressLeftButton(_ sender: Any?) {
-        dismissKeyboard(true)
-        let uploadController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-       
-        if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad {
-            uploadController.modalPresentationStyle = .popover
-            let popover = uploadController.popoverPresentationController
-            popover?.sourceView = self.leftButton
-            popover?.sourceRect = self.leftButton.bounds
-        }
-        
-        imagePicker.delegate = self
-        
-        uploadController.addAction(UIAlertAction(title: "Take a Photo", style: .default, handler: { (UIAlertAction) in
-            self.imagePicker.sourceType = .camera
-            self.present(self.imagePicker, animated: true, completion: nil)
-        }))
-        
-        uploadController.addAction(UIAlertAction(title: "Choose From Library", style: .default, handler: { (UIAlertAction) in
-            self.imagePicker.sourceType = .photoLibrary
-            self.present(self.imagePicker, animated: true, completion: nil)
-        }))
-
-        uploadController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        present(uploadController, animated: true, completion: nil)
-    }
-    
-    override func didPressRightButton(_ sender: Any?) {
-        let message = Message()
-        message.body = textView.text
-        message.authorId = Int(DriftDataStore.sharedInstance.auth!.enduser!.externalId!)
-        message.sendStatus = .Pending
-        textView.slk_clearText(true)
-        postMessage(message)
-    }
-    
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let message = messages[indexPath.row]
-        
-        var showHeader = true
-        if (indexPath.row + 1) < messages.count {
-            let pastMessage = messages[indexPath.row + 1]
-            showHeader = !Calendar.current.isDate(pastMessage.createdAt, inSameDayAs: message.createdAt)
-        }
-        
-        var cell: UITableViewCell
-        cell = tableView.dequeueReusableCell(withIdentifier: "ConversationMessageTableViewCell", for: indexPath) as!ConversationMessageTableViewCell
-        if let cell = cell as? ConversationMessageTableViewCell{
-            cell.delegate = self
-            cell.attachmentDelegate = self
-            cell.delegate = self
-            cell.indexPath = indexPath
-            cell.setupForMessage(message: message, showHeader: showHeader, configuration: configuration)
-        }
-        
-        cell.transform = tableView.transform
-        cell.setNeedsLayout()
-        return cell
-        
-    }
-    
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if messages.count > 0 && !emptyState.isHidden{
-            UIView.animate(withDuration: 0.4, animations: {
-                self.emptyState.alpha = 0.0
-            }, completion: { (_) in
-                self.emptyState.isHidden = true
-            })
-        }
-        return messages.count
-    }
-    
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let message = messages[indexPath.row]
-        if message.sendStatus == .Failed{
-            let alert = UIAlertController(title:nil, message: nil, preferredStyle: .actionSheet)
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-            alert.addAction(UIAlertAction(title:"Retry Send", style: .default, handler: { (_) -> Void in
-                message.sendStatus = .Pending
-                self.messages[indexPath.row] = message
-                self.tableView!.reloadRows(at: [indexPath], with: .none)
-                self.postMessage(message)
-            }))
-            alert.addAction(UIAlertAction(title:"Delete Message", style: .destructive, handler: { (_) -> Void in
-                self.messages.remove(at: self.messages.count-indexPath.row-1)
-                self.tableView!.deleteRows(at: [indexPath as IndexPath], with: .none)
-            }))
-            
-            present(alert, animated: true, completion: nil)
-        }
-    }
-    
-    
-    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return nil
-    }
-    
-    override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        let message = messages[indexPath.row]
-        
-        if message.attachments.count > 0 {
-            return 300
-        }else{
-            return 150
-        }
-    }
-    
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableViewAutomaticDimension
-    }
-    
-    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-            return CGFloat.leastNormalMagnitude
     }
     
     @objc func didReceiveNewMessage(notification: Notification) {
@@ -430,9 +341,8 @@ class ConversationViewController: SLKTextViewController {
         DriftAPIManager.getMessages(conversationId, authToken: DriftDataStore.sharedInstance.auth!.accessToken) { (result) in
             SVProgressHUD.dismiss()
             switch result{
-            case .success(let messages):
-                let sorted = messages.sorted(by: { $0.createdAt.compare($1.createdAt as Date) == .orderedDescending})
-                self.messages = sorted
+            case .success(var messages):
+                self.messages = messages.sortMessagesForConversation()
                 self.markConversationRead()
                 self.tableView?.reloadData()
             case .failure:
@@ -527,6 +437,225 @@ class ConversationViewController: SLKTextViewController {
                 self.tableView?.scrollToRow(at: IndexPath(row:0, section: 0), at: .bottom, animated: true)
             }
         }
+    }
+    
+    
+    
+    private var isFirstLayout: Bool = true
+    
+    override var inputAccessoryView: UIView? {
+        return conversationInputView
+    }
+    
+    override var canBecomeFirstResponder: Bool {
+        return true
+    }
+    
+    open override func viewDidLayoutSubviews() {
+        // Hack to prevent animation of the contentInset after viewDidAppear
+        if isFirstLayout {
+            defer { isFirstLayout = false }
+            addKeyboardObservers()
+            tableView.contentInset.top = keyboardOffsetFrame.height
+            tableView.contentInset.bottom = topLayoutGuide.length
+            tableView.scrollIndicatorInsets.top = keyboardOffsetFrame.height
+            tableView.scrollIndicatorInsets.bottom = topLayoutGuide.length
+            let offset = CGPoint(x: 0, y: -self.tableView.contentInset.top)
+            tableView.setContentOffset(offset, animated: false)
+        }
+    }
+    
+    func addKeyboardObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardFrameWillChange(notification:)), name: Notification.Name.UIKeyboardWillChangeFrame, object: nil)
+    }
+    
+    @objc func keyboardFrameWillChange(notification: Notification) {
+        let endFrame = notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? CGRect
+        
+        keyboardFrame = endFrame ?? .zero
+        
+        if ignoreKeyboardChanges {
+            return
+        }
+        
+        if let endFrame = endFrame {
+            
+            if (endFrame.origin.y + endFrame.size.height) > UIScreen.main.bounds.height {
+                // Hardware keyboard is found
+                self.tableView.contentInset.top = view.frame.size.height - endFrame.origin.y
+            } else {
+                //Software keyboard is found
+                let afterBottomInset = endFrame.height > keyboardOffsetFrame.height ? endFrame.height : keyboardOffsetFrame.height
+                let differenceOfBottomInset = afterBottomInset - tableView.contentInset.top
+                let contentOffset = CGPoint(x: tableView.contentOffset.x, y: tableView.contentOffset.y - differenceOfBottomInset)
+                
+                //                print("😴\(afterBottomInset)")
+                
+                self.tableView.contentOffset = contentOffset
+                self.tableView.contentInset.top = afterBottomInset
+                self.tableView.scrollIndicatorInsets.top = afterBottomInset
+            }
+        }
+    }
+    
+    var keyboardOffsetFrame: CGRect {
+        guard let inputFrame = inputAccessoryView?.frame else { return .zero }
+        return CGRect(origin: inputFrame.origin, size: CGSize(width: inputFrame.width, height: inputFrame.height))
+    }
+    
+}
+
+extension ConversationViewController: ConversationInputAccessoryViewDelegate {
+    
+    
+    func expandingKeyboard() {
+        ignoreKeyboardChanges = true
+
+        UIView.animate(withDuration: 0.3, animations: {
+            self.dimmingView.alpha = 1
+        })
+    }
+    
+    func compressingKeyboard() {
+        UIView.animate(withDuration: 0.3, animations: {
+            self.dimmingView.alpha = 0
+        }) { (success) in
+            if success {
+                self.ignoreKeyboardChanges = false
+            }
+        }
+    }
+    
+    func getKeyboardRect() -> CGRect {
+        return keyboardFrame
+    }
+    
+    func didPressLeftButton() {
+        dismissKeyboard()
+        let uploadController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
+        if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad {
+            uploadController.modalPresentationStyle = .popover
+            let popover = uploadController.popoverPresentationController
+            popover?.sourceView = self.conversationInputView.addButton
+            popover?.sourceRect = self.conversationInputView.addButton.bounds
+        }
+        
+        imagePicker.delegate = self
+        
+        uploadController.addAction(UIAlertAction(title: "Take a Photo", style: .default, handler: { (UIAlertAction) in
+            self.imagePicker.sourceType = .camera
+            self.present(self.imagePicker, animated: true, completion: nil)
+        }))
+        
+        uploadController.addAction(UIAlertAction(title: "Choose From Library", style: .default, handler: { (UIAlertAction) in
+            self.imagePicker.sourceType = .photoLibrary
+            self.present(self.imagePicker, animated: true, completion: nil)
+        }))
+        
+        uploadController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        present(uploadController, animated: true, completion: nil)
+    }
+    
+    func didPressRightButton() {
+        let message = Message()
+        message.body = conversationInputView.textView.text
+        message.authorId = Int(DriftDataStore.sharedInstance.auth!.enduser!.externalId!)
+        message.sendStatus = .Pending
+        conversationInputView.textView.text  = ""
+        postMessage(message)
+    }
+    
+    @objc func dismissKeyboard(){
+        conversationInputView.textView.resignFirstResponder()
+    }
+    
+}
+
+extension ConversationViewController : UITableViewDelegate, UITableViewDataSource{
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let message = messages[indexPath.row]
+        
+        var showHeader = true
+        if (indexPath.row + 1) < messages.count {
+            let pastMessage = messages[indexPath.row + 1]
+            showHeader = !Calendar.current.isDate(pastMessage.createdAt, inSameDayAs: message.createdAt)
+        }
+        
+        var cell: UITableViewCell
+        cell = tableView.dequeueReusableCell(withIdentifier: "ConversationMessageTableViewCell", for: indexPath) as!ConversationMessageTableViewCell
+        if let cell = cell as? ConversationMessageTableViewCell{
+            cell.delegate = self
+            cell.indexPath = indexPath
+            cell.setupForMessage(message: message, showHeader: showHeader, configuration: configuration)
+        }
+        
+        cell.transform = tableView.transform
+        cell.setNeedsLayout()
+        return cell
+        
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+        if messages.count > 0 && !emptyState.isHidden{
+            UIView.animate(withDuration: 0.4, animations: {
+                self.emptyState.alpha = 0.0
+            }, completion: { (_) in
+                self.emptyState.isHidden = true
+            })
+        }
+        return messages.count
+    }
+
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        
+        let message = messages[indexPath.row]
+        if message.sendStatus == .Failed{
+            let alert = UIAlertController(title:nil, message: nil, preferredStyle: .actionSheet)
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            alert.addAction(UIAlertAction(title:"Retry Send", style: .default, handler: { (_) -> Void in
+                message.sendStatus = .Pending
+                self.messages[indexPath.row] = message
+                self.tableView!.reloadRows(at: [indexPath], with: .none)
+                self.postMessage(message)
+            }))
+            alert.addAction(UIAlertAction(title:"Delete Message", style: .destructive, handler: { (_) -> Void in
+                self.messages.remove(at: self.messages.count-indexPath.row-1)
+                self.tableView!.deleteRows(at: [indexPath as IndexPath], with: .none)
+            }))
+            
+            present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        return nil
+    }
+    
+    
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        let message = messages[indexPath.row]
+        
+        if message.attachments.count > 0 {
+            return 300
+        }else{
+            return 150
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return CGFloat.leastNormalMagnitude
     }
     
 }
