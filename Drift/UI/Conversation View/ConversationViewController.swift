@@ -61,6 +61,16 @@ class ConversationViewController: UIViewController {
         return view
     }()
     
+    private var isFirstLayout: Bool = true
+
+    override var inputAccessoryView: UIView? {
+        return conversationInputView
+    }
+    
+    override var canBecomeFirstResponder: Bool {
+        return true
+    }
+    
     var conversationType: ConversationType! {
         didSet{
             if case ConversationType.continueConversation(let conversationId) = conversationType!{
@@ -75,6 +85,11 @@ class ConversationViewController: UIViewController {
             conversationInputView.addButton.isEnabled = true
             conversationInputView.textView.placeholder = "Message"
         }
+    }
+    
+    var keyboardOffsetFrame: CGRect {
+        guard let inputFrame = inputAccessoryView?.frame else { return .zero }
+        return CGRect(origin: inputFrame.origin, size: CGSize(width: inputFrame.width, height: inputFrame.height))
     }
  
     class func navigationController(_ conversationType: ConversationType) -> UINavigationController {
@@ -93,7 +108,6 @@ class ConversationViewController: UIViewController {
         self.conversationType = conversationType
     }
 
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -118,11 +132,6 @@ class ConversationViewController: UIViewController {
         
         tableView.backgroundColor = UIColor.white
         tableView.separatorStyle = .none
-        automaticallyAdjustsScrollViewInsets = false
-        
-        if #available(iOS 11.0, *) {
-            tableView.contentInsetAdjustmentBehavior = .never
-        }
         
         conversationInputView.addButton.isEnabled = false
         conversationInputView.textView.font = UIFont(name: "Avenir-Book", size: 15)
@@ -148,6 +157,7 @@ class ConversationViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(ConversationViewController.connectionStatusDidUpdate), name: .driftSocketStatusUpdated, object: nil)
 
         tableView.dataSource = self
+        tableView.delegate = self
         conversationInputView.delegate = self
         automaticallyAdjustsScrollViewInsets = false
         if #available(iOS 11.0, *) {
@@ -182,6 +192,47 @@ class ConversationViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         markConversationRead()
+    }
+    
+    open override func viewDidLayoutSubviews() {
+        // Hack to prevent animation of the contentInset after viewDidAppear
+        if isFirstLayout {
+            defer { isFirstLayout = false }
+            NotificationCenter.default.addObserver(self, selector: #selector(keyboardFrameWillChange(notification:)), name: Notification.Name.UIKeyboardWillChangeFrame, object: nil)
+            tableView.contentInset.top = keyboardOffsetFrame.height
+            tableView.contentInset.bottom = topLayoutGuide.length
+            tableView.scrollIndicatorInsets.top = keyboardOffsetFrame.height
+            tableView.scrollIndicatorInsets.bottom = topLayoutGuide.length + connectionBarView.frame.height
+            let offset = CGPoint(x: 0, y: -self.tableView.contentInset.top)
+            tableView.setContentOffset(offset, animated: false)
+        }
+    }
+    
+    @objc func keyboardFrameWillChange(notification: Notification) {
+        let endFrame = notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? CGRect
+        
+        keyboardFrame = endFrame ?? .zero
+        
+        if ignoreKeyboardChanges {
+            return
+        }
+        
+        if let endFrame = endFrame {
+            
+            if (endFrame.origin.y + endFrame.size.height) > UIScreen.main.bounds.height {
+                // Hardware keyboard is found
+                self.tableView.contentInset.top = view.frame.size.height - endFrame.origin.y
+            } else {
+                //Software keyboard is found
+                let afterBottomInset = endFrame.height > keyboardOffsetFrame.height ? endFrame.height : keyboardOffsetFrame.height
+                let differenceOfBottomInset = afterBottomInset - tableView.contentInset.top
+                let contentOffset = CGPoint(x: tableView.contentOffset.x, y: tableView.contentOffset.y - differenceOfBottomInset)
+                
+                self.tableView.contentOffset = contentOffset
+                self.tableView.contentInset.top = afterBottomInset
+                self.tableView.scrollIndicatorInsets.top = afterBottomInset
+            }
+        }
     }
     
     deinit {
@@ -411,69 +462,6 @@ class ConversationViewController: UIViewController {
             self.tableView!.reloadRows(at: [IndexPath(row:0, section: 0)], with: .none)
             self.tableView?.scrollToRow(at: IndexPath(row:0, section: 0), at: .bottom, animated: true)
         }
-    }
-    
-    
-    private var isFirstLayout: Bool = true
-    
-    override var inputAccessoryView: UIView? {
-        return conversationInputView
-    }
-    
-    override var canBecomeFirstResponder: Bool {
-        return true
-    }
-    
-    open override func viewDidLayoutSubviews() {
-        // Hack to prevent animation of the contentInset after viewDidAppear
-        if isFirstLayout {
-            defer { isFirstLayout = false }
-            addKeyboardObservers()
-            tableView.contentInset.top = keyboardOffsetFrame.height
-            tableView.contentInset.bottom = topLayoutGuide.length
-            tableView.scrollIndicatorInsets.top = keyboardOffsetFrame.height
-            tableView.scrollIndicatorInsets.bottom = topLayoutGuide.length + connectionBarView.frame.height
-            let offset = CGPoint(x: 0, y: -self.tableView.contentInset.top)
-            tableView.setContentOffset(offset, animated: false)
-        }
-    }
-    
-    func addKeyboardObservers() {
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardFrameWillChange(notification:)), name: Notification.Name.UIKeyboardWillChangeFrame, object: nil)
-    }
-    
-    @objc func keyboardFrameWillChange(notification: Notification) {
-        let endFrame = notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? CGRect
-        
-        keyboardFrame = endFrame ?? .zero
-        
-        if ignoreKeyboardChanges {
-            return
-        }
-        
-        if let endFrame = endFrame {
-            
-            if (endFrame.origin.y + endFrame.size.height) > UIScreen.main.bounds.height {
-                // Hardware keyboard is found
-                self.tableView.contentInset.top = view.frame.size.height - endFrame.origin.y
-            } else {
-                //Software keyboard is found
-                let afterBottomInset = endFrame.height > keyboardOffsetFrame.height ? endFrame.height : keyboardOffsetFrame.height
-                let differenceOfBottomInset = afterBottomInset - tableView.contentInset.top
-                let contentOffset = CGPoint(x: tableView.contentOffset.x, y: tableView.contentOffset.y - differenceOfBottomInset)
-                
-                //                print("😴\(afterBottomInset)")
-                
-                self.tableView.contentOffset = contentOffset
-                self.tableView.contentInset.top = afterBottomInset
-                self.tableView.scrollIndicatorInsets.top = afterBottomInset
-            }
-        }
-    }
-    
-    var keyboardOffsetFrame: CGRect {
-        guard let inputFrame = inputAccessoryView?.frame else { return .zero }
-        return CGRect(origin: inputFrame.origin, size: CGSize(width: inputFrame.width, height: inputFrame.height))
     }
     
 }
