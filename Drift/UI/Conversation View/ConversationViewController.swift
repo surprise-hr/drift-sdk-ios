@@ -115,7 +115,23 @@ class ConversationViewController: UIViewController {
             dimmingView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
             ])
 
-        setupSlackTextView()
+        
+        tableView.backgroundColor = UIColor.white
+        tableView.separatorStyle = .none
+        automaticallyAdjustsScrollViewInsets = false
+        
+        if #available(iOS 11.0, *) {
+            tableView.contentInsetAdjustmentBehavior = .never
+        }
+        
+        conversationInputView.addButton.isEnabled = false
+        conversationInputView.textView.font = UIFont(name: "Avenir-Book", size: 15)
+        if let organizationName = DriftDataStore.sharedInstance.embed?.organizationName {
+            conversationInputView.textView.placeholder = "Message \(organizationName)"
+        }else{
+            conversationInputView.textView.placeholder = "Message"
+        }
+        
         tableView.register(UINib(nibName: "ConversationMessageTableViewCell", bundle: Bundle(for: ConversationMessageTableViewCell.classForCoder())), forCellReuseIdentifier: "ConversationMessageTableViewCell")
         
         if let navVC = navigationController {
@@ -272,26 +288,6 @@ class ConversationViewController: UIViewController {
             }
         }
     }
-    
-    func setupSlackTextView() {
-        tableView?.backgroundColor = UIColor.white
-        tableView?.separatorStyle = .none
-        automaticallyAdjustsScrollViewInsets = false
-        
-        if #available(iOS 11.0, *) {
-            tableView?.contentInsetAdjustmentBehavior = .never
-        }
-        
-        conversationInputView.addButton.isEnabled = false
-        conversationInputView.textView.font = UIFont(name: "Avenir-Book", size: 15)
-
-        if let organizationName = DriftDataStore.sharedInstance.embed?.organizationName {
-            conversationInputView.textView.placeholder = "Message \(organizationName)"
-        }else{
-            conversationInputView.textView.placeholder = "Message"
-        }
-    }
-    
     
     @objc func dismissVC() {
         dismissKeyboard()

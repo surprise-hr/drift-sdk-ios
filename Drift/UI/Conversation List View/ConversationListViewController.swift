@@ -70,6 +70,9 @@ class ConversationListViewController: UIViewController {
             present(unableToAuthAlert, animated: true)
         }
         
+        if #available(iOS 11.0, *) {
+            tableView.contentInsetAdjustmentBehavior = .never
+        }
         
         setupEmptyState()
         tableView.tableFooterView = UIView(frame: CGRect.zero)
