@@ -586,10 +586,6 @@ extension ConversationViewController : UITableViewDelegate, UITableViewDataSourc
         }
         return messages.count
     }
-
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         
@@ -612,10 +608,6 @@ extension ConversationViewController : UITableViewDelegate, UITableViewDataSourc
         }
     }
     
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return nil
-    }
-    
     
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         let message = messages[indexPath.row]
@@ -626,15 +618,6 @@ extension ConversationViewController : UITableViewDelegate, UITableViewDataSourc
             return 150
         }
     }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableViewAutomaticDimension
-    }
-    
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return CGFloat.leastNormalMagnitude
-    }
-    
 }
 
 extension ConversationViewController: MessageDelegate {
