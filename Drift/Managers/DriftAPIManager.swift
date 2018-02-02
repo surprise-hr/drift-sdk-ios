@@ -165,8 +165,24 @@ class DriftAPIManager: Alamofire.SessionManager {
         })
     }
     
-    class func createConversation(_ body: String, authorId:Int?, authToken: String, completion: @escaping (_ result: Result<Message>) -> ()){
-        sharedManager.request(DriftConversationRouter.createConversation(body: body)).responseJSON(completionHandler: { (result) -> Void in
+    class func createConversation(_ body: String, welcomeUserId: Int?, welcomeMessage: String?, authToken: String, completion: @escaping (_ result: Result<Message>) -> ()){
+        
+        var data: [String: Any] = [:]
+        
+        data["body"] = body
+        
+        if let welcomeUserId = welcomeUserId, let welcomeMessage = welcomeMessage {
+            
+            let preMessage : [String: Any] = [
+                "body": welcomeMessage,
+                "sender": ["id":welcomeUserId]
+            ]
+
+            data["attributes"] = ["preMessages": [preMessage]]
+            
+        }
+        
+        sharedManager.request(DriftConversationRouter.createConversation(data: data)).responseJSON(completionHandler: { (result) -> Void in
             completion(mapResponse(result))
         })
     }

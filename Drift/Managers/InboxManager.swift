@@ -55,13 +55,13 @@ class InboxManager {
     }
     
     
-    func createConversation(_ message: Message, authorId: Int?, completion:@escaping (_ message: Message?, _ requestId: Double) -> ()){
+    func createConversation(_ message: Message, welcomeMessageUser: User?, welcomeMessage: String?, completion:@escaping (_ message: Message?, _ requestId: Double) -> ()){
         guard let auth = DriftDataStore.sharedInstance.auth?.accessToken else {
             LoggerManager.log("No Auth Token for Recording")
             return
         }
         
-        DriftAPIManager.createConversation(message.body ?? "", authorId: authorId, authToken: auth) { (result) in
+        DriftAPIManager.createConversation(message.body ?? "", welcomeUserId: welcomeMessageUser?.userId, welcomeMessage: welcomeMessage, authToken: auth) { (result) in
             switch result{
             case .success(let returnedMessage):
                 completion(returnedMessage, message.requestId)

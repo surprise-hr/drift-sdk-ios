@@ -28,12 +28,11 @@ protocol AttachementSelectedDelegate: class{
 class ConversationViewController: UIViewController {
     
     enum ConversationType {
-        case createConversation(authorId: Int?)
+        case createConversation
         case continueConversation(conversationId: Int)
     }
     
-    let configuration = DriftDataStore.sharedInstance.embed
-    let emptyState = ConversationEmptyStateView.fromNib() as! ConversationEmptyStateView
+    lazy var emptyState = ConversationEmptyStateView.fromNib() as! ConversationEmptyStateView
     var messages: [Message] = []
     var attachments: [Int: Attachment] = [:]
     var attachmentIds: Set<Int> = []
@@ -47,6 +46,8 @@ class ConversationViewController: UIViewController {
     lazy var qlController = QLPreviewController()
     lazy var imagePicker = UIImagePickerController()
     lazy var interactionController = UIDocumentInteractionController()
+    
+    var welcomeUser: User?
     
     var conversationInputView: ConversationInputAccessoryView = ConversationInputAccessoryView()
     
@@ -75,11 +76,6 @@ class ConversationViewController: UIViewController {
             conversationInputView.textView.placeholder = "Message"
         }
     }
-    
-    func setConversationType(_ conversationType: ConversationType){
-        self.conversationType = conversationType
-    }
-    
  
     class func navigationController(_ conversationType: ConversationType) -> UINavigationController {
         let vc = ConversationViewController(conversationType: conversationType)
@@ -94,7 +90,7 @@ class ConversationViewController: UIViewController {
     
     convenience init(conversationType: ConversationType) {
         self.init()
-        setConversationType(conversationType)
+        self.conversationType = conversationType
     }
 
     
@@ -120,7 +116,7 @@ class ConversationViewController: UIViewController {
             ])
 
         setupSlackTextView()
-        tableView?.register(UINib(nibName: "ConversationMessageTableViewCell", bundle: Bundle(for: ConversationMessageTableViewCell.classForCoder())), forCellReuseIdentifier: "ConversationMessageTableViewCell")
+        tableView.register(UINib(nibName: "ConversationMessageTableViewCell", bundle: Bundle(for: ConversationMessageTableViewCell.classForCoder())), forCellReuseIdentifier: "ConversationMessageTableViewCell")
         
         if let navVC = navigationController {
             navVC.navigationBar.barTintColor = DriftDataStore.sharedInstance.generateBackgroundColor()
@@ -152,7 +148,6 @@ class ConversationViewController: UIViewController {
         
         tableView.becomeFirstResponder()
         
-
         connectionBarView.translatesAutoresizingMaskIntoConstraints = false
 
         connectionBarHeightConstraint = connectionBarView.heightAnchor.constraint(equalToConstant: 4)
@@ -214,42 +209,31 @@ class ConversationViewController: UIViewController {
         case .continueConversation(let conversationId):
             self.conversationId = conversationId
             getMessages(conversationId)
-        case .createConversation(_):
+        case .createConversation:
 
             
             if let embed = DriftDataStore.sharedInstance.embed {
-                if let welcomeMessage = embed.welcomeMessage,  embed.isOrgCurrentlyOpen() {
-                    emptyState.messageLabel.text = welcomeMessage
-                }else if let awayMessage = embed.awayMessage {
-                    emptyState.messageLabel.text = awayMessage
-                }
+      
+                emptyState.messageLabel.text = embed.getWelcomeMessageForUser() ?? ""
                 
-                if embed.userListMode == .custom, let teamMember = embed.users.filter({embed.userListIds.contains($0.userId ?? -1)}).first{    
-                    if teamMember.bot {
-
+                welcomeUser = embed.getUserForWelcomeMessage()
+                if let welcomeUser = welcomeUser {
+                    if welcomeUser.bot {
+                        
                         emptyState.avatarImageView.image = UIImage(named: "robot", in: Bundle(for: Drift.self), compatibleWith: nil)
                         emptyState.avatarImageView.backgroundColor = DriftDataStore.sharedInstance.generateBackgroundColor()
-
-                    } else if let avatarURLString = teamMember.avatarURL, let avatarURL = URL(string: avatarURLString) {
+                        
+                    } else if let avatarURLString = welcomeUser.avatarURL, let avatarURL = URL(string: avatarURLString) {
                         emptyState.avatarImageView.af_setImage(withURL: avatarURL)
                     }
-                    
-                }else{
-                    if embed.users.count > 0 {
-                        let teamMember = embed.users[Int(arc4random_uniform(UInt32(embed.users.count)))]
-                        if teamMember.bot {
-                            
-                            emptyState.avatarImageView.image = UIImage(named: "robot", in: Bundle(for: Drift.self), compatibleWith: nil)
-                            emptyState.avatarImageView.backgroundColor = DriftDataStore.sharedInstance.generateBackgroundColor()
-                            
-                        } else if let avatarURLString = teamMember.avatarURL, let avatarURL = URL(string: avatarURLString) {
-                            emptyState.avatarImageView.af_setImage(withURL: avatarURL)
-                        }
-                    }
+                } else {
+                    emptyState.avatarImageView.image = nil
+                    emptyState.avatarImageView.backgroundColor = .clear
                 }
             }
             
-            if let tableView = tableView{
+            if emptyState.superview == nil {
+            
                 emptyState.translatesAutoresizingMaskIntoConstraints = false
                 view.addSubview(emptyState)
                 
@@ -267,7 +251,6 @@ class ConversationViewController: UIViewController {
                 label.transform = tableView.transform
                 tableView.tableHeaderView = label
             }
-            
         }
     }
     
@@ -384,8 +367,8 @@ class ConversationViewController: UIViewController {
         addMessageToConversation(messageRequest)
         
         switch conversationType! {
-        case .createConversation(let authodId):
-            createConversationWithMessage(messageRequest, authorId: authodId)
+        case .createConversation:
+            createConversationWithMessage(messageRequest)
         case .continueConversation(let conversationId):
             postMessageToConversation(conversationId, messageRequest: messageRequest)
         }
@@ -413,34 +396,26 @@ class ConversationViewController: UIViewController {
         }
     }
     
-    func createConversationWithMessage(_ messageRequest: Message, authorId: Int?) {
-        InboxManager.sharedInstance.createConversation(messageRequest, authorId: authorId) { (message, requestId) in
-            if let _ = self.messages.index(where: { (message) -> Bool in
-                if message.requestId == messageRequest.requestId{
-                    return true
-                }
-                return false
-            }){
-                if let message = message{
-                    self.conversationType = ConversationType.continueConversation(conversationId: message.conversationId)
-                    message.sendStatus = .Sent
-                    self.messages[0] = message
-                    self.conversationId = message.conversationId
-                }else{
-                    let message = Message()
-                    message.authorId = DriftDataStore.sharedInstance.auth?.enduser?.userId
-                    message.body = messageRequest.body
-                    message.requestId = messageRequest.requestId
-                    message.sendStatus = .Failed
-                    self.messages[0] = message
-                }
-                
-                self.tableView!.reloadRows(at: [IndexPath(row:0, section: 0)], with: .none)
-                self.tableView?.scrollToRow(at: IndexPath(row:0, section: 0), at: .bottom, animated: true)
+    func createConversationWithMessage(_ messageRequest: Message) {
+        InboxManager.sharedInstance.createConversation(messageRequest, welcomeMessageUser: welcomeUser, welcomeMessage: DriftDataStore.sharedInstance.embed?.getWelcomeMessageForUser()) { (message, requestId) in
+            if let message = message{
+                self.conversationType = ConversationType.continueConversation(conversationId: message.conversationId)
+                message.sendStatus = .Sent
+                self.messages[0] = message
+                self.didOpen()
+            }else{
+                let message = Message()
+                message.authorId = DriftDataStore.sharedInstance.auth?.enduser?.userId
+                message.body = messageRequest.body
+                message.requestId = messageRequest.requestId
+                message.sendStatus = .Failed
+                self.messages[0] = message
             }
+            
+            self.tableView!.reloadRows(at: [IndexPath(row:0, section: 0)], with: .none)
+            self.tableView?.scrollToRow(at: IndexPath(row:0, section: 0), at: .bottom, animated: true)
         }
     }
-    
     
     
     private var isFirstLayout: Bool = true
@@ -591,7 +566,7 @@ extension ConversationViewController : UITableViewDelegate, UITableViewDataSourc
         if let cell = cell as? ConversationMessageTableViewCell{
             cell.delegate = self
             cell.indexPath = indexPath
-            cell.setupForMessage(message: message, showHeader: showHeader, configuration: configuration)
+            cell.setupForMessage(message: message, showHeader: showHeader, configuration: DriftDataStore.sharedInstance.embed)
         }
         
         cell.transform = tableView.transform

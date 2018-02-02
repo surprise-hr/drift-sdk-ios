@@ -135,7 +135,7 @@ class ConversationListViewController: UIViewController {
     }
     
     @objc func startNewConversation() {
-        let conversationViewController = ConversationViewController(conversationType: ConversationViewController.ConversationType.createConversation(authorId: endUserId))
+        let conversationViewController = ConversationViewController(conversationType: ConversationViewController.ConversationType.createConversation)
         navigationController?.show(conversationViewController, sender: self)
     }
     

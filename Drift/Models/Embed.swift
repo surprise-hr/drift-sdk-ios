@@ -90,7 +90,7 @@ struct Embed: Mappable {
         userListIds                <- map["configuration.theme.userList"]
     }
     
-    public func isOrgCurrentlyOpen() -> Bool {
+    func isOrgCurrentlyOpen() -> Bool {
         if widgetMode == .some(.manual) {
             if widgetStatus == .some(.on) {
                 return true
@@ -108,4 +108,27 @@ struct Embed: Mappable {
         }
     }
     
+    func getWelcomeMessageForUser() -> String? {
+        
+        if let welcomeMessage = welcomeMessage,  isOrgCurrentlyOpen() {
+            return welcomeMessage
+        }else if let awayMessage = awayMessage {
+            return awayMessage
+        }
+        return nil
+    }
+    
+    func getUserForWelcomeMessage() -> User? {
+        
+        if userListMode == .custom, let teamMember = users.filter({userListIds.contains($0.userId ?? -1)}).first{
+            return teamMember
+        }else{
+            if users.count > 0 {
+                return users[Int(arc4random_uniform(UInt32(users.count)))]
+            } else {
+                return nil
+            }
+        }
+        
+    }
 }
