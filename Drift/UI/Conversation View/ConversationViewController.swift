@@ -12,7 +12,8 @@ import ObjectMapper
 import SVProgressHUD
 
 
-protocol AttachementSelectedDelegate: class{
+protocol ConversationCellDelegate: class{
+    func presentScheduleOfferingForUserId(userId: Int)
     func attachmentSelected(_ attachment: Attachment, sender: AnyObject)
 }
 
@@ -51,6 +52,8 @@ class ConversationViewController: UIViewController {
         view.alpha = 0
         return view
     }()
+    
+    var scheduleMeetingVC: ScheduleMeetingViewController?
     
     private var isFirstLayout: Bool = true
 
@@ -103,6 +106,7 @@ class ConversationViewController: UIViewController {
         super.viewDidLoad()
 
         tableView = UITableView(frame: view.frame, style: .grouped)
+        tableView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(tableView)
         
         NSLayoutConstraint.activate([
@@ -151,6 +155,7 @@ class ConversationViewController: UIViewController {
         tableView.delegate = self
         conversationInputView.delegate = self
         automaticallyAdjustsScrollViewInsets = false
+        extendedLayoutIncludesOpaqueBars = true
         if #available(iOS 11.0, *) {
             tableView.contentInsetAdjustmentBehavior = .never
         }
@@ -177,6 +182,7 @@ class ConversationViewController: UIViewController {
             connectionBarView.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor),
             connectionBarHeightConstraint
         ])
+        
         didOpen()
     }
     
@@ -190,7 +196,11 @@ class ConversationViewController: UIViewController {
         if isFirstLayout {
             defer { isFirstLayout = false }
             NotificationCenter.default.addObserver(self, selector: #selector(keyboardFrameWillChange(notification:)), name: Notification.Name.UIKeyboardWillChangeFrame, object: nil)
+//            if #available(iOS 11.0, *) {
+//                tableView.contentInset.top = keyboardOffsetFrame.height - view.safeAreaInsets.bottom
+//            } else {
             tableView.contentInset.top = keyboardOffsetFrame.height
+//            }
             tableView.contentInset.bottom = topLayoutGuide.length
             tableView.scrollIndicatorInsets.top = keyboardOffsetFrame.height
             tableView.scrollIndicatorInsets.bottom = topLayoutGuide.length + connectionBarView.frame.height
@@ -355,7 +365,7 @@ class ConversationViewController: UIViewController {
             //We've already added this message, it may have failed to send
         }else{
             messages.insert(message, at: 0)
-            tableView!.insertRows(at: [IndexPath(row: 0, section: 0)], with: .bottom)
+            tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .bottom)
         }
     }
     
@@ -367,7 +377,7 @@ class ConversationViewController: UIViewController {
             case .success(var messages):
                 self.messages = messages.sortMessagesForConversation()
                 self.markConversationRead()
-                self.tableView?.reloadData()
+                self.tableView.reloadData()
             case .failure:
                 LoggerManager.log("Unable to get messages for conversationId: \(conversationId)")
             }
@@ -428,8 +438,8 @@ class ConversationViewController: UIViewController {
                     self.messages[index] = messageRequest
                 }
                 
-                self.tableView!.reloadRows(at: [IndexPath(row:index, section: 0)], with: .none)
-                self.tableView?.scrollToRow(at: IndexPath(row:0, section: 0), at: .bottom, animated: true)
+                self.tableView.reloadRows(at: [IndexPath(row:index, section: 0)], with: .none)
+                self.tableView.scrollToRow(at: IndexPath(row:0, section: 0), at: .bottom, animated: true)
             }
         }
     }
@@ -450,8 +460,8 @@ class ConversationViewController: UIViewController {
                 self.messages[0] = message
             }
             
-            self.tableView!.reloadRows(at: [IndexPath(row:0, section: 0)], with: .none)
-            self.tableView?.scrollToRow(at: IndexPath(row:0, section: 0), at: .bottom, animated: true)
+            self.tableView.reloadRows(at: [IndexPath(row:0, section: 0)], with: .none)
+            self.tableView.scrollToRow(at: IndexPath(row:0, section: 0), at: .bottom, animated: true)
         }
     }
     
@@ -620,7 +630,53 @@ extension ConversationViewController: MessageDelegate {
     }
 }
 
-extension ConversationViewController: AttachementSelectedDelegate {
+extension ConversationViewController: ScheduleMeetingViewControllerDelegate {
+    
+    func didDismissScheduleVC() {
+        
+        UIView.animate(withDuration: 0.4, animations: {
+            self.scheduleMeetingVC?.view.alpha = 0
+        }) { (_) in
+            
+            self.scheduleMeetingVC?.view.removeFromSuperview()
+            self.scheduleMeetingVC?.removeFromParentViewController()
+            
+            self.scheduleMeetingVC = nil
+        }
+        
+    }
+}
+
+extension ConversationViewController: ConversationCellDelegate {
+    
+    func presentScheduleOfferingForUserId(userId: Int) {
+        
+        if let scheduleMeetingVC = scheduleMeetingVC {
+            scheduleMeetingVC.updateForUserId(userId: userId)
+            return
+        }
+        
+        let presentVC = ScheduleMeetingViewController(userId: userId, delegate: self)
+        
+        addChildViewController(presentVC)
+        presentVC.view.alpha = 0
+        view.addSubview(presentVC.view)
+        
+        NSLayoutConstraint.activate([
+            presentVC.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            presentVC.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            presentVC.view.topAnchor.constraint(equalTo: view.topAnchor),
+            presentVC.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+        
+        presentVC.didMove(toParentViewController: self)
+        
+        scheduleMeetingVC = presentVC
+        
+        UIView.animate(withDuration: 0.4) {
+            self.scheduleMeetingVC?.view.alpha = 1
+        }
+    }
     
     func attachmentSelected(_ attachment: Attachment, sender: AnyObject) {
         SVProgressHUD.show()

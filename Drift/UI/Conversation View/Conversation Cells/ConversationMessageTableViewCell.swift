@@ -9,10 +9,6 @@
 import UIKit
 import AlamofireImage
 
-public protocol ConversationCellDelegate: class {
-    func showProfileForRow(indexPath: IndexPath)
-}
-
 class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     @IBOutlet weak var avatarView: AvatarView!
     @IBOutlet weak var nameLabel: UILabel!
@@ -36,6 +32,13 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
     @IBOutlet weak var headerHeightLayoutConstraint: NSLayoutConstraint!
     @IBOutlet weak var headerView: MessageTableHeaderView!
     
+    @IBOutlet var scheduleMeetingHeightConstraint: NSLayoutConstraint!
+    
+    @IBOutlet var scheduleMeetingAvatarView: AvatarView!
+    @IBOutlet var scheduleMeetingLabel: UILabel!
+    @IBOutlet var scheduleMeetingButton: UIButton!
+    @IBOutlet var scheduleMeetingBorderView: UIView!
+    
     enum AttachmentStyle {
         case single
         case multiple
@@ -48,7 +51,7 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
     var indexPath: IndexPath?
     var message: Message?
     var configuration: Embed?
-    weak var delegate: AttachementSelectedDelegate?
+    weak var delegate: ConversationCellDelegate?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -61,6 +64,13 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
         attachmentsCollectionView.dataSource = self
         attachmentsCollectionView.delegate = self
         attachmentsCollectionView.backgroundColor = UIColor.white
+        
+        
+        scheduleMeetingBorderView.layer.borderWidth = 1
+        scheduleMeetingBorderView.layer.borderColor = UIColor(white: 0, alpha: 0.4).cgColor
+        scheduleMeetingBorderView.layer.cornerRadius = 3
+        
+        scheduleMeetingButton.layer.cornerRadius = 3
         
         loadingContainerView.backgroundColor = UIColor(white: 0, alpha: 0.4)
         loadingContainerView.layer.cornerRadius = 6
@@ -80,6 +90,7 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
         setupHeader(message: message, show: showHeader)
         setStyle()
         setupForAttachments(message: message)
+        setupForOfferMeeting(message: message)
         
     }
     
@@ -91,6 +102,33 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
         }else{
             headerHeightLayoutConstraint.constant = 0
             headerView.isHidden = true
+        }
+    }
+    
+    func setupForOfferMeeting(message: Message) {
+        
+        if let offerMeetingUser = message.presentSchedule {
+            scheduleMeetingHeightConstraint.constant = 140
+            scheduleMeetingBorderView.isHidden = false
+            scheduleMeetingAvatarView.imageView.image = UIImage(named: "placeholderAvatar", in: Bundle(for: Drift.self), compatibleWith: nil)
+            scheduleMeetingLabel.text = "Schedule Meeting"
+            
+            UserManager.sharedInstance.userMetaDataForUserId(offerMeetingUser, completion: { (user) in
+                
+                if let user = user {
+                    if let avatarURL = user.avatarURL {
+                        self.scheduleMeetingAvatarView.setUpForAvatarURL(avatarUrl: avatarURL)
+                    }
+                    
+                    if let creatorName =  user.name {
+                        self.scheduleMeetingLabel.text = "Schedule a meeting with \(creatorName)"
+                    }
+                }
+            })
+            
+        } else {
+            scheduleMeetingHeightConstraint.constant = 0
+            scheduleMeetingBorderView.isHidden = true
         }
     }
     
@@ -248,21 +286,6 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
         }
     }
     
-    func showLoadingView(){
-//        loadingView.startAnimating()
-//        UIView.animate(withDuration: 0.3) {
-//            self.loadingContainerView.alpha = 1
-//        }
-    }
-    
-    func hideLoadingView(){
-//        UIView.animate(withDuration: 0.3, animations: {
-//            self.loadingContainerView.alpha = 0
-//        }) { (done) in
-//            self.loadingView.stopAnimating()
-//        }
-    }
-    
     func setTimeLabel(date: Date) {
         let formatter = DateFormatter()
         formatter.dateFormat = "hh:mm a"
@@ -277,6 +300,13 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
             nameLabel.text = name == nil ? email : name
         }
     }
+    
+    @IBAction func schedulePressed() {
+        if let scheduleUserId = message?.presentSchedule {
+            delegate?.presentScheduleOfferingForUserId(userId: scheduleUserId)
+        }
+    }
+    
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if let cell = cell as? AttachmentCollectionViewCell{
@@ -324,5 +354,4 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
         }
         return CGSize(width: 0, height: 0)
     }
-
 }

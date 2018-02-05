@@ -58,6 +58,7 @@ enum DriftCustomerRouter: URLRequestConvertible {
     case getAuth(email: String, userId: String, redirectURL: String, orgId: Int, clientId: String)
     case getUser(orgId: Int, userId: Int)
     case getEndUser(endUserId: Int)
+    case getUserAvailability(userId: Int)
     
     var request: (method: Alamofire.HTTPMethod, path: String, parameters: [String: Any]?, encoding: ParameterEncoding){
         switch self {
@@ -88,6 +89,8 @@ enum DriftCustomerRouter: URLRequestConvertible {
             return (.get, "organizations/\(orgId)/users", params, URLEncoding.default)
         case .getEndUser(let endUserId):
             return (.get, "end_users/\(endUserId)", nil, URLEncoding.default)
+        case .getUserAvailability(let userId):
+            return (.get, "scheduling/\(userId)/availability", nil, URLEncoding.default)
         }
     }
     

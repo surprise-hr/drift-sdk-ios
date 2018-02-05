@@ -56,6 +56,8 @@ class Message: Mappable, Equatable, Hashable{
     var formattedBody: NSMutableAttributedString?
     var viewerRecipientStatus: RecipientStatus?
     
+    var presentSchedule: Int?
+
     var preMessages: [PreMessage] = []
 
     var hashValue: Int {
@@ -91,8 +93,9 @@ class Message: Mappable, Equatable, Hashable{
         authorType              <- map["authorType"]
         type                    <- map["type"]
         conversationId          <- map["conversationId"]
-        viewerRecipientStatus  <- map["viewerRecipientStatus"]
+        viewerRecipientStatus   <- map["viewerRecipientStatus"]
         preMessages             <- map["attributes.preMessages"]
+        presentSchedule         <- map["attributes.presentSchedule"]
 
         do {
             let htmlStringData = (body ?? "").data(using: String.Encoding.utf8)!
