@@ -11,15 +11,6 @@ import QuickLook
 import ObjectMapper
 import SVProgressHUD
 
-class DriftPreviewItem: NSObject, QLPreviewItem{
-    var previewItemURL: URL?
-    var previewItemTitle: String?
-    
-    init(url: URL, title: String){
-        self.previewItemURL = url
-        self.previewItemTitle = title
-    }
-}
 
 protocol AttachementSelectedDelegate: class{
     func attachmentSelected(_ attachment: Attachment, sender: AnyObject)
