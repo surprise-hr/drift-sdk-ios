@@ -53,8 +53,8 @@ class DriftAPIManager: Alamofire.SessionManager {
         })
     }
     
-    class func scheduleMeeting(_ userId: Int, timestamp: Double, completion: @escaping (Bool) -> ()) {
-        sharedManager.request(DriftCustomerRouter.scheduleMeeting(userId: userId, timestamp: timestamp)).responseJSON(completionHandler: { (result) -> Void in
+    class func scheduleMeeting(_ userId: Int, conversationId:Int, timestamp: Double, completion: @escaping (Bool) -> ()) {
+        sharedManager.request(DriftCustomerRouter.scheduleMeeting(userId: userId, conversationId: conversationId, timestamp: timestamp)).responseJSON(completionHandler: { (result) -> Void in
             
             if result.response?.statusCode == 200 {
                 LoggerManager.log("Scheduled Meeting Success: \(result.result.value)")

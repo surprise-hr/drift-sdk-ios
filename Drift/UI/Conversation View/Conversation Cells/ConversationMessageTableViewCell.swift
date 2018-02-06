@@ -67,11 +67,12 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
         
         
         scheduleMeetingBorderView.layer.borderWidth = 1
-        scheduleMeetingBorderView.layer.borderColor = UIColor(white: 0, alpha: 0.4).cgColor
+        scheduleMeetingBorderView.layer.borderColor = UIColor(white: 0, alpha: 0.1).cgColor
         scheduleMeetingBorderView.layer.cornerRadius = 3
         
         scheduleMeetingButton.layer.cornerRadius = 3
-        
+        scheduleMeetingButton.backgroundColor = DriftDataStore.sharedInstance.generateBackgroundColor()
+        scheduleMeetingButton.setTitleColor(DriftDataStore.sharedInstance.generateForegroundColor(), for: .normal)
         loadingContainerView.backgroundColor = UIColor(white: 0, alpha: 0.4)
         loadingContainerView.layer.cornerRadius = 6
         loadingContainerView.clipsToBounds = true
@@ -80,7 +81,7 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
         attachmentImageView.contentMode = .scaleAspectFill
         attachmentImageView.layer.cornerRadius = 3
         attachmentImageView.isUserInteractionEnabled = true
-        let gestureRecognizer = UITapGestureRecognizer.init(target:self, action: #selector(ConversationMessageTableViewCell.imagePressed))
+        let gestureRecognizer = UITapGestureRecognizer(target:self, action: #selector(ConversationMessageTableViewCell.imagePressed))
         attachmentImageView.addGestureRecognizer(gestureRecognizer)
     }
     

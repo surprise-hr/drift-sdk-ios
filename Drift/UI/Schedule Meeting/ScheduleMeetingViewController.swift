@@ -65,14 +65,17 @@ class ScheduleMeetingViewController: UIViewController {
     var userAvailability: UserAvailability?
     
     var userId: Int!
+    var conversationId: Int!
+
     weak var delegate: ScheduleMeetingViewControllerDelegate?
     
     var days: [Date] = []
     var times: [Date] = []
     
-    convenience init(userId: Int, delegate: ScheduleMeetingViewControllerDelegate) {
+    convenience init(userId: Int, conversationId: Int, delegate: ScheduleMeetingViewControllerDelegate) {
         self.init(nibName: "ScheduleMeetingViewController", bundle: Bundle(for: ScheduleMeetingViewController.classForCoder()))
         self.userId = userId
+        self.conversationId = conversationId
         self.delegate = delegate
     }
     
@@ -180,7 +183,7 @@ class ScheduleMeetingViewController: UIViewController {
         }
         
         SVProgressHUD.show()
-        DriftAPIManager.scheduleMeeting(userId, timestamp: date.timeIntervalSince1970*1000) { [weak self] (success) in
+        DriftAPIManager.scheduleMeeting(userId, conversationId: conversationId, timestamp: date.timeIntervalSince1970*1000) { [weak self] (success) in
             SVProgressHUD.dismiss()
             if success {
                 self?.delegate?.didDismissScheduleVC()

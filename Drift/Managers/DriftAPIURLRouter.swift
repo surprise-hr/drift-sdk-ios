@@ -59,7 +59,7 @@ enum DriftCustomerRouter: URLRequestConvertible {
     case getUser(orgId: Int, userId: Int)
     case getEndUser(endUserId: Int)
     case getUserAvailability(userId: Int)
-    case scheduleMeeting(userId: Int, timestamp: Double)
+    case scheduleMeeting(userId: Int, conversationId: Int, timestamp: Double)
     
     var request: (method: Alamofire.HTTPMethod, path: String, parameters: [String: Any]?, encoding: ParameterEncoding){
         switch self {
@@ -92,8 +92,8 @@ enum DriftCustomerRouter: URLRequestConvertible {
             return (.get, "end_users/\(endUserId)", nil, URLEncoding.default)
         case .getUserAvailability(let userId):
             return (.get, "scheduling/\(userId)/availability", nil, URLEncoding.default)
-        case .scheduleMeeting(let userId, let timestamp):
-            return (.post, "scheduling/\(userId)/schedule", nil, ScheduleEncoding(timestamp: timestamp))
+        case .scheduleMeeting(let userId, let conversationId, let timestamp):
+            return (.post, "scheduling/\(userId)/schedule", nil, ScheduleEncoding(conversationId: conversationId, timestamp: timestamp))
         }
     }
     
@@ -112,9 +112,7 @@ enum DriftCustomerRouter: URLRequestConvertible {
         
         req.url = URL(string: (req.url?.absoluteString.replacingOccurrences(of: "%5B%5D=", with: "="))!)
         
-        let mutableReq = (req.urlRequest! as NSURLRequest).mutableCopy() as! NSMutableURLRequest
-        
-        return mutableReq as URLRequest
+        return req
     }
     
 }
@@ -207,9 +205,10 @@ enum DriftConversation2Router: URLRequestConvertible {
 
 struct ScheduleEncoding: ParameterEncoding {
     private let timestamp: Double
-    
-    init(timestamp:Double) {
+    private let conversationId: Int
+    init(conversationId: Int, timestamp:Double) {
         self.timestamp = timestamp
+        self.conversationId = conversationId
     }
     
     func encode(_ urlRequest: URLRequestConvertible, with parameters: Parameters?) throws -> URLRequest {
@@ -223,6 +222,8 @@ struct ScheduleEncoding: ParameterEncoding {
         
         urlRequest.httpBody = data
         
-        return urlRequest
+        let req = try URLEncoding.queryString.encode(urlRequest, with: ["conversationId": conversationId])
+        
+        return req
     }
 }

@@ -651,12 +651,16 @@ extension ConversationViewController: ConversationCellDelegate {
     
     func presentScheduleOfferingForUserId(userId: Int) {
         
+        guard let conversationId = conversationId else {
+            return
+        }
+        
         if let scheduleMeetingVC = scheduleMeetingVC {
             scheduleMeetingVC.updateForUserId(userId: userId)
             return
         }
         
-        let presentVC = ScheduleMeetingViewController(userId: userId, delegate: self)
+        let presentVC = ScheduleMeetingViewController(userId: userId, conversationId: conversationId, delegate: self)
         
         addChildViewController(presentVC)
         presentVC.view.alpha = 0
