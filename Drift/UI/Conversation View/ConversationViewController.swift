@@ -104,8 +104,7 @@ class ConversationViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        tableView = UITableView(frame: view.frame, style: .grouped)
+        tableView = UITableView(frame: view.frame, style: .plain)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(tableView)
         
@@ -125,7 +124,7 @@ class ConversationViewController: UIViewController {
             ])
 
         
-        tableView.backgroundColor = UIColor.white
+        tableView.backgroundColor = .white
         tableView.separatorStyle = .none
         
         conversationInputView.addButton.isEnabled = false
@@ -155,7 +154,6 @@ class ConversationViewController: UIViewController {
         tableView.delegate = self
         conversationInputView.delegate = self
         automaticallyAdjustsScrollViewInsets = false
-        extendedLayoutIncludesOpaqueBars = true
         if #available(iOS 11.0, *) {
             tableView.contentInsetAdjustmentBehavior = .never
         }
@@ -196,12 +194,10 @@ class ConversationViewController: UIViewController {
         if isFirstLayout {
             defer { isFirstLayout = false }
             NotificationCenter.default.addObserver(self, selector: #selector(keyboardFrameWillChange(notification:)), name: Notification.Name.UIKeyboardWillChangeFrame, object: nil)
-//            if #available(iOS 11.0, *) {
-//                tableView.contentInset.top = keyboardOffsetFrame.height - view.safeAreaInsets.bottom
-//            } else {
+
             tableView.contentInset.top = keyboardOffsetFrame.height
-//            }
-            tableView.contentInset.bottom = topLayoutGuide.length
+
+            tableView.contentInset.bottom = topLayoutGuide.length + connectionBarView.frame.height
             tableView.scrollIndicatorInsets.top = keyboardOffsetFrame.height
             tableView.scrollIndicatorInsets.bottom = topLayoutGuide.length + connectionBarView.frame.height
             let offset = CGPoint(x: 0, y: -self.tableView.contentInset.top)
@@ -592,17 +588,6 @@ extension ConversationViewController : UITableViewDelegate, UITableViewDataSourc
             present(alert, animated: true, completion: nil)
         }
     }
-    
-    
-    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        let message = messages[indexPath.row]
-        
-        if message.attachments.count > 0 {
-            return 300
-        }else{
-            return 150
-        }
-    }
 }
 
 extension ConversationViewController: MessageDelegate {
@@ -771,7 +756,6 @@ extension ConversationViewController: UIImagePickerControllerDelegate, UINavigat
                         alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
                         self.present(alert, animated: true, completion: nil)
                         LoggerManager.log("Unable to upload file with mimeType: \(newAttachment.mimeType)")
-                        
                     }
                 }
             }

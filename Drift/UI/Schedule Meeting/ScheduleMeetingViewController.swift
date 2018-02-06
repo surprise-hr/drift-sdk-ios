@@ -233,11 +233,11 @@ class ScheduleMeetingViewController: UIViewController {
             backButton.isHidden = false
             
             
-            let startTime = DateFormatter.localizedString(from: date, dateStyle: .short, timeStyle: .none)
+            let startTime = DateFormatter.localizedString(from: date, dateStyle: .none, timeStyle: .short)
 
             let endDate = date.addingTimeInterval(TimeInterval((userAvailability.duration ?? 0) * 60))
             
-            let endTime = DateFormatter.localizedString(from: endDate, dateStyle: .short, timeStyle: .none)
+            let endTime = DateFormatter.localizedString(from: endDate, dateStyle: .none, timeStyle: .short)
             
             confirmationTimeLabel.text = "\(startTime) - \(endTime)"
             confirmationDateLabel.text = DateFormatter.localizedString(from: date, dateStyle: .long, timeStyle: .none)
