@@ -59,6 +59,7 @@ enum DriftCustomerRouter: URLRequestConvertible {
     case getUser(orgId: Int, userId: Int)
     case getEndUser(endUserId: Int)
     case getUserAvailability(userId: Int)
+    case scheduleMeeting(userId: Int, timestamp: Double)
     
     var request: (method: Alamofire.HTTPMethod, path: String, parameters: [String: Any]?, encoding: ParameterEncoding){
         switch self {
@@ -91,6 +92,8 @@ enum DriftCustomerRouter: URLRequestConvertible {
             return (.get, "end_users/\(endUserId)", nil, URLEncoding.default)
         case .getUserAvailability(let userId):
             return (.get, "scheduling/\(userId)/availability", nil, URLEncoding.default)
+        case .scheduleMeeting(let userId, let timestamp):
+            return (.post, "scheduling/\(userId)/schedule", nil, ScheduleEncoding(timestamp: timestamp))
         }
     }
     
@@ -199,4 +202,27 @@ enum DriftConversation2Router: URLRequestConvertible {
         return req
     }
     
+}
+
+
+struct ScheduleEncoding: ParameterEncoding {
+    private let timestamp: Double
+    
+    init(timestamp:Double) {
+        self.timestamp = timestamp
+    }
+    
+    func encode(_ urlRequest: URLRequestConvertible, with parameters: Parameters?) throws -> URLRequest {
+        var urlRequest = try urlRequest.asURLRequest()
+    
+        let data = "\(timestamp)".data(using: .utf8)
+        
+        if urlRequest.value(forHTTPHeaderField: "Content-Type") == nil {
+            urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        }
+        
+        urlRequest.httpBody = data
+        
+        return urlRequest
+    }
 }

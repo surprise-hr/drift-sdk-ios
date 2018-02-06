@@ -19,18 +19,47 @@ class ScheduleMeetingViewController: UIViewController {
         case day
         case time(date: Date)
         case confirm(date: Date)
-        
     }
     
-    @IBOutlet var scheduleTableView: UITableView!
+    @IBOutlet var scheduleTableView: UITableView! {
+        didSet{
+            scheduleTableView.isHidden = true
+        }
+    }
     @IBOutlet var containerView: UIView!
+    @IBOutlet var blurView: UIVisualEffectView!
     
-    @IBOutlet var confirmationView: UIView!
+    @IBOutlet var confirmationView: UIView! {
+        didSet{
+            confirmationView.isHidden = true
+        }
+    }
     
+    @IBOutlet var shadowView: UIView!
+    @IBOutlet var topHeaderContainerView: UIView!
+    @IBOutlet var meetingDurationLabel: UILabel!{
+        didSet{
+            meetingDurationLabel.text = ""
+        }
+    }
     @IBOutlet var confirmationTimeLabel: UILabel!
     @IBOutlet var confirmationDateLabel: UILabel!
     @IBOutlet var confirmationTimeZoneLabel: UILabel!
-    @IBOutlet var scheduleButton: UIButton!
+    @IBOutlet var scheduleButton: UIButton! {
+        didSet{
+            scheduleButton.layer.cornerRadius = 4
+        }
+    }
+    @IBOutlet var backButton: UIButton! {
+        didSet{
+            backButton.isHidden = true
+            backButton.tintColor = DriftDataStore.sharedInstance.generateBackgroundColor()
+        }
+    }
+    
+    @IBOutlet var userAvatarView: AvatarView!
+    @IBOutlet var userNameLabel: UILabel!
+    
     
     var scheduleMode: ScheduleMode = .day
     var userAvailability: UserAvailability?
@@ -50,11 +79,20 @@ class ScheduleMeetingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.translatesAutoresizingMaskIntoConstraints = false
-//        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didDismissScheduleVC)))
+        blurView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didDismissScheduleVC)))
         
         
-        containerView.layer.cornerRadius = 5
+        topHeaderContainerView.backgroundColor = DriftDataStore.sharedInstance.generateBackgroundColor()
+        
+        containerView.layer.cornerRadius = 6
         containerView.clipsToBounds = true
+        
+        shadowView.layer.shadowColor = UIColor.black.cgColor
+        shadowView.layer.shadowOffset = CGSize(width: 0, height: 2)
+        shadowView.layer.shadowOpacity = 0.2
+        shadowView.layer.shadowRadius = 2
+        shadowView.layer.cornerRadius = 6
+        
         scheduleTableView.delegate = self
         scheduleTableView.dataSource = self
         scheduleTableView.tableFooterView = UIView()
@@ -74,15 +112,91 @@ class ScheduleMeetingViewController: UIViewController {
             switch result {
             case .success(let userAvailability):
                 self?.userAvailability = userAvailability
+                self?.setupForUserAvailability()
                 self?.updateForMode(userAvailability: userAvailability)
             case .failure(_):
                 self?.showAPIError()
             }
         }
+        
+        userAvatarView.imageView.image = UIImage(named: "placeholderAvatar", in: Bundle(for: Drift.self), compatibleWith: nil)
+        userNameLabel.text = ""
+        UserManager.sharedInstance.userMetaDataForUserId(userId, completion: { (user) in
+            
+            if let user = user {
+                if let avatarURL = user.avatarURL {
+                    self.userAvatarView.setUpForAvatarURL(avatarUrl: avatarURL)
+                }
+                
+                if let creatorName =  user.name {
+                    self.userNameLabel.text = creatorName
+                }
+            }
+        })
+        
+    }
+    
+    func setupForUserAvailability() {
+        
+        guard let userAvailability = userAvailability else {
+            return
+        }
+        
+        if let duration = userAvailability.duration {
+            meetingDurationLabel.text = "\(duration) minutes"
+        } else {
+            meetingDurationLabel.text = ""
+        }
+        
+        
+        
+    }
+    
+    @IBAction func backButtonPressed() {
+        
+        guard let userAvailability = userAvailability else {
+            return
+        }
+        
+        switch scheduleMode {
+        case .day:
+            ()
+        case .time(let day):
+            self.scheduleMode = .day
+        case .confirm(let date):
+            //hide table view
+            self.scheduleMode = .time(date: date)
+        }
+        
+        updateForMode(userAvailability: userAvailability)
+        
     }
     
     @IBAction func schedulePressed() {
         
+        guard case let .confirm(date) = scheduleMode else {
+            schedulePressed()
+            return
+        }
+        
+        SVProgressHUD.show()
+        DriftAPIManager.scheduleMeeting(userId, timestamp: date.timeIntervalSince1970*1000) { [weak self] (success) in
+            SVProgressHUD.dismiss()
+            if success {
+                self?.delegate?.didDismissScheduleVC()
+            } else {
+                self?.scheduleMeetingError()
+            }
+        }
+    }
+    
+    func scheduleMeetingError(){
+        let alert = UIAlertController(title: "Error", message: "Failed to schedule meeting", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Retry", style: .default, handler: { [weak self] (_) in
+            self?.schedulePressed()
+        }))
+        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        present(alert, animated: true)
     }
     
     func showAPIError(){
@@ -99,6 +213,7 @@ class ScheduleMeetingViewController: UIViewController {
             scheduleTableView.reloadData()
             scheduleTableView.isHidden = false
             confirmationView.isHidden = true
+            backButton.isHidden = true
             //show tableview
         case .time(let day):
             //show tableview
@@ -107,10 +222,23 @@ class ScheduleMeetingViewController: UIViewController {
             scheduleTableView.reloadData()
             scheduleTableView.isHidden = false
             confirmationView.isHidden = true
+            backButton.isHidden = false
         case .confirm(let date):
             //hide table view
             scheduleTableView.isHidden = true
             confirmationView.isHidden = false
+            backButton.isHidden = false
+            
+            
+            let startTime = DateFormatter.localizedString(from: date, dateStyle: .short, timeStyle: .none)
+
+            let endDate = date.addingTimeInterval(TimeInterval((userAvailability.duration ?? 0) * 60))
+            
+            let endTime = DateFormatter.localizedString(from: endDate, dateStyle: .short, timeStyle: .none)
+            
+            confirmationTimeLabel.text = "\(startTime) - \(endTime)"
+            confirmationDateLabel.text = DateFormatter.localizedString(from: date, dateStyle: .long, timeStyle: .none)
+            confirmationTimeZoneLabel.text = TimeZone.current.identifier
         }
         
     }
@@ -149,13 +277,12 @@ extension ScheduleMeetingViewController: UITableViewDataSource, UITableViewDeleg
         
         let cell = UITableViewCell()
         cell.selectionStyle = .none
+        cell.textLabel?.font = UIFont(name: "AvenirNext-Regular", size: 16)!
         
         switch scheduleMode {
         case .day:
             let date = days[indexPath.row]
-            
             cell.textLabel?.text = DateFormatter.localizedString(from: date, dateStyle: .medium, timeStyle: .none)
-            
         case .time(_):
             let date = times[indexPath.row]
             cell.textLabel?.text = DateFormatter.localizedString(from: date, dateStyle: .none, timeStyle: .short)
