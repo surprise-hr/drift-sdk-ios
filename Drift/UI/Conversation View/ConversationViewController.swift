@@ -69,7 +69,6 @@ class ConversationViewController: UIViewController {
         didSet{
             if case ConversationType.continueConversation(let conversationId) = conversationType!{
                 self.conversationId = conversationId
-                InboxManager.sharedInstance.addMessageSubscription(MessageSubscription(delegate: self, conversationId: conversationId))
             }
         }
     }
@@ -581,25 +580,20 @@ extension ConversationViewController : UITableViewDelegate, UITableViewDataSourc
     }
 }
 
-extension ConversationViewController: MessageDelegate {
-    
-    func messagesDidUpdate(_ messages: [Message]) {
-        let sorted = messages.sorted(by: { $0.createdAt.compare($1.createdAt as Date) == .orderedDescending})
-        self.messages = sorted
-        self.tableView?.reloadData()
-    }
-    
+extension ConversationViewController {
+        
     func newMessage(_ message: Message) {
         if let id = message.id{
             ConversationsManager.markMessageAsRead(id)
         }
-        if message.authorId != DriftDataStore.sharedInstance.auth?.enduser?.userId{
+        if message.authorId != DriftDataStore.sharedInstance.auth?.enduser?.userId && message.contentType == .Chat{
             if let index = messages.index(of: message){
                 messages[index] = message
             
                 tableView!.reloadRows(at: [IndexPath(row: index, section: 0)], with: .bottom)
             }else{
                 messages.insert(message, at: 0)
+                messages = messages.sortMessagesForConversation()
                 tableView!.insertRows(at: [IndexPath(row: 0, section: 0)], with: .bottom)
             }
         }

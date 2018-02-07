@@ -52,7 +52,9 @@ class Message: Mappable, Equatable, Hashable{
     var appointmentInformation: AppointmentInformation?
 
     var presentSchedule: Int?
-
+    var scheduleMeetingFlow: Bool = false
+    var offerSchedule: Int = -1
+    
     var preMessages: [PreMessage] = []
 
     var hashValue: Int {
@@ -86,7 +88,10 @@ class Message: Mappable, Equatable, Hashable{
         appointmentInformation  <- map["attributes.appointmentInfo"]
         preMessages             <- map["attributes.preMessages"]
         presentSchedule         <- map["attributes.presentSchedule"]
+        offerSchedule           <- map["attributes.offerSchedule"]
+        scheduleMeetingFlow     <- map["attributes.scheduleMeetingFlow"]
 
+        
         do {
             let htmlStringData = (body ?? "").data(using: String.Encoding.utf8)!
             let attributedHTMLString = try NSMutableAttributedString(data: htmlStringData, options: [NSAttributedString.DocumentReadingOptionKey.documentType : NSAttributedString.DocumentType.html, NSAttributedString.DocumentReadingOptionKey.characterEncoding: String.Encoding.utf8.rawValue], documentAttributes: nil)
@@ -109,13 +114,34 @@ extension Array where Iterator.Element == Message
     
     mutating func sortMessagesForConversation() -> Array {
         
+        var output:[Message] = []
+        
         for message in self {
             if !message.preMessages.isEmpty {
-                self.append(contentsOf: getMessagesFromPreMessages(message: message, preMessages: message.preMessages))
+                output.append(contentsOf: getMessagesFromPreMessages(message: message, preMessages: message.preMessages))
             }
+            
+            if message.offerSchedule != -1 {
+                continue
+            }
+            
+            if let appointmentInformation = message.appointmentInformation {
+                //Go backwards and remove the most recent message asking for an apointment
+                
+                output = output.map({
+                    
+                    if let _ = $0.presentSchedule {
+                        $0.presentSchedule = nil
+                    }
+                    return $0
+                })
+                
+            }
+            
+            output.append(message)
         }
         
-        return sorted(by: { $0.createdAt.compare($1.createdAt as Date) == .orderedDescending})
+        return output.sorted(by: { $0.createdAt.compare($1.createdAt as Date) == .orderedDescending})
     }
     
     private func getMessagesFromPreMessages(message: Message, preMessages: [PreMessage]) -> [Message] {
