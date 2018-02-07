@@ -37,37 +37,33 @@ class InboxManager {
         }
     }
     
-    func postMessage(_ message: Message, conversationId: Int, completion:@escaping (_ message: Message?, _ requestId: Double) -> ()){
-        guard let auth = DriftDataStore.sharedInstance.auth?.accessToken else {
-            LoggerManager.log("No Auth Token for Recording")
-            return
-        }
-        
-        DriftAPIManager.postMessage(conversationId, message: message, authToken: auth) { (result) in
+    func postMessage(_ messageReques: MessageRequest, conversationId: Int, completion:@escaping (_ message: Message?, _ requestId: Double) -> ()){
+
+        DriftAPIManager.postMessage(conversationId, messageRequest: messageReques) { (result) in
             switch result{
             case .success(let returnedMessage):
-                completion(returnedMessage, message.requestId)
+                completion(returnedMessage, messageReques.requestId)
             case .failure:
                 LoggerManager.log("Unable to post message for conversationId: \(conversationId)")
-                completion(nil, message.requestId)
+                completion(nil, messageReques.requestId)
             }
         }
     }
     
     
-    func createConversation(_ message: Message, welcomeMessageUser: User?, welcomeMessage: String?, completion:@escaping (_ message: Message?, _ requestId: Double) -> ()){
+    func createConversation(_ messageReques: MessageRequest, welcomeMessageUser: User?, welcomeMessage: String?, completion:@escaping (_ message: Message?, _ requestId: Double) -> ()){
         guard let auth = DriftDataStore.sharedInstance.auth?.accessToken else {
             LoggerManager.log("No Auth Token for Recording")
             return
         }
         
-        DriftAPIManager.createConversation(message.body ?? "", welcomeUserId: welcomeMessageUser?.userId, welcomeMessage: welcomeMessage, authToken: auth) { (result) in
+        DriftAPIManager.createConversation(messageReques.body ?? "", welcomeUserId: welcomeMessageUser?.userId, welcomeMessage: welcomeMessage, authToken: auth) { (result) in
             switch result{
             case .success(let returnedMessage):
-                completion(returnedMessage, message.requestId)
+                completion(returnedMessage, messageReques.requestId)
             case .failure:
                 LoggerManager.log("Unable to create conversation")
-                completion(nil, message.requestId)
+                completion(nil, messageReques.requestId)
             }
         }
     }

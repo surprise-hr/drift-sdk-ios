@@ -9,16 +9,12 @@
 
 import ObjectMapper
 
-enum ContentType: String{
+public enum ContentType: String{
     case Chat = "CHAT"
-    case NPS = "NPS_QUESTION"
     case Annoucement = "ANNOUNCEMENT"
+    case NPS = "NPS_QUESTION"
+    case Edit = "EDIT"
 }
-
-enum Type: String{
-    case Chat = "CHAT"
-}
-
 enum AuthorType: String{
     case User = "USER"
     case EndUser = "END_USER"
@@ -43,12 +39,10 @@ class Message: Mappable, Equatable, Hashable{
     var body: String?
     var attachmentIds: [Int] = []
     var attachments: [Attachment] = []
-    var contentType = ContentType.Chat.rawValue
+    var contentType:ContentType = ContentType.Chat
     var createdAt = Date()
     var authorId: Int!
     var authorType: AuthorType!
-    var type: Type!
-    var context: Context?
     
     var conversationId: Int!
     var requestId: Double = 0
@@ -87,11 +81,10 @@ class Message: Mappable, Equatable, Hashable{
         
         
         attachmentIds           <- map["attachments"]
-        contentType             <- map["contentType"]
+        contentType             <- (map["contentType"], EnumTransform<ContentType>())
         createdAt               <- (map["createdAt"], DriftDateTransformer())
         authorId                <- map["authorId"]
         authorType              <- map["authorType"]
-        type                    <- map["type"]
         conversationId          <- map["conversationId"]
         viewerRecipientStatus   <- map["viewerRecipientStatus"]
         preMessages             <- map["attributes.preMessages"]
@@ -112,21 +105,6 @@ class Message: Mappable, Equatable, Hashable{
         }
     }
 
-    open func toMessageJSON() -> [String: Any]{
-        
-        var json:[String : Any] = [
-            "body": body ?? "",
-            "contentType": contentType,
-            "type": type.rawValue,
-            "attachments": attachmentIds
-        ]
-        
-        if let context = context {
-            json["context"] = context.toJSON()
-        }
-        
-        return json
-    }
 }
 
 extension Array where Iterator.Element == Message
@@ -158,7 +136,7 @@ extension Array where Iterator.Element == Message
             fakeMessage.uuid = UUID().uuidString
             
             fakeMessage.sendStatus = .Sent
-            fakeMessage.contentType = ContentType.Chat.rawValue
+            fakeMessage.contentType = ContentType.Chat
             fakeMessage.authorType = AuthorType.User
             
             if let sender = preMessage.user {

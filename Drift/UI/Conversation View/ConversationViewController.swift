@@ -352,7 +352,7 @@ class ConversationViewController: UIViewController {
     }
     
     func addMessageToConversation(_ message: Message){
-        if messages.count > 0, let _ = messages.index(where: { (currentMessage) -> Bool in
+        if !messages.isEmpty, let _ = messages.index(where: { (currentMessage) -> Bool in
             if message.requestId == currentMessage.requestId{
                 return true
             }
@@ -393,34 +393,22 @@ class ConversationViewController: UIViewController {
         }
     }
     
-    func getContext() -> Context {
-        let context = Context()
-        context.userAgent = "Mobile App / \(UIDevice.current.modelName) / \(UIDevice.current.systemName) \(UIDevice.current.systemVersion)"
-        if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] {
-            context.userAgent?.append(" / App Version: \(version)")
-        }
-        return context
-    }
+
     
-    func postMessage(_ messageRequest: Message){
-        if messageRequest.requestId == 0{
-            messageRequest.requestId = Date().timeIntervalSince1970
-        }
-        messageRequest.type = Type.Chat
-        messageRequest.context = getContext()
-        addMessageToConversation(messageRequest)
-        
+    func generateFakeMessageAndSend(_ messageRequest: MessageRequest){
+
         switch conversationType! {
         case .createConversation:
             createConversationWithMessage(messageRequest)
         case .continueConversation(let conversationId):
+            addMessageToConversation(messageRequest.generateFakeMessage(conversationId: conversationId, userId: DriftDataStore.sharedInstance.auth?.enduser?.userId ?? -1))
             postMessageToConversation(conversationId, messageRequest: messageRequest)
         }
     }
     
-    func postMessageToConversation(_ conversationId: Int, messageRequest: Message) {
-        InboxManager.sharedInstance.postMessage(messageRequest, conversationId: conversationId) { (message, requestId) in
-            if let index = self.messages.index(where: { (message) -> Bool in
+    func postMessageToConversation(_ conversationId: Int, messageRequest: MessageRequest) {
+        InboxManager.sharedInstance.postMessage(messageRequest, conversationId: conversationId) { [weak self] (message, requestId) in
+            if let index = self?.messages.index(where: { (message) -> Bool in
                 if message.requestId == messageRequest.requestId{
                     return true
                 }
@@ -428,19 +416,19 @@ class ConversationViewController: UIViewController {
             }){
                 if let message = message{
                     message.sendStatus = .Sent
-                    self.messages[index] = message
-                }else{
-                    messageRequest.sendStatus = .Failed
-                    self.messages[index] = messageRequest
+                    self?.messages[index] = message
+                } else if let failedMessage = self?.messages[index] {
+                    failedMessage.sendStatus = .Failed
+                    self?.messages[index] = failedMessage
                 }
                 
-                self.tableView.reloadRows(at: [IndexPath(row:index, section: 0)], with: .none)
-                self.tableView.scrollToRow(at: IndexPath(row:0, section: 0), at: .bottom, animated: true)
+                self?.tableView.reloadRows(at: [IndexPath(row:index, section: 0)], with: .none)
+                self?.tableView.scrollToRow(at: IndexPath(row:0, section: 0), at: .bottom, animated: true)
             }
         }
     }
     
-    func createConversationWithMessage(_ messageRequest: Message) {
+    func createConversationWithMessage(_ messageRequest: MessageRequest) {
         InboxManager.sharedInstance.createConversation(messageRequest, welcomeMessageUser: welcomeUser, welcomeMessage: DriftDataStore.sharedInstance.embed?.getWelcomeMessageForUser()) { (message, requestId) in
             if let message = message{
                 self.conversationType = ConversationType.continueConversation(conversationId: message.conversationId)
@@ -516,12 +504,9 @@ extension ConversationViewController: ConversationInputAccessoryViewDelegate {
     }
     
     func didPressRightButton() {
-        let message = Message()
-        message.body = conversationInputView.textView.text
-        message.authorId = Int(DriftDataStore.sharedInstance.auth!.enduser!.externalId!)
-        message.sendStatus = .Pending
+        let messageReguest = MessageRequest(body: conversationInputView.textView.text)
         conversationInputView.textView.text  = ""
-        postMessage(message)
+        generateFakeMessageAndSend(messageReguest)
     }
     
     @objc func dismissKeyboard(){
@@ -578,7 +563,8 @@ extension ConversationViewController : UITableViewDelegate, UITableViewDataSourc
                 message.sendStatus = .Pending
                 self.messages[indexPath.row] = message
                 self.tableView!.reloadRows(at: [indexPath], with: .none)
-                self.postMessage(message)
+                let messageRequest = MessageRequest(body: message.body ?? "", contentType: message.contentType)
+                self.postMessageToConversation(message.conversationId, messageRequest: messageRequest)
             }))
             alert.addAction(UIAlertAction(title:"Delete Message", style: .destructive, handler: { (_) -> Void in
                 self.messages.remove(at: self.messages.count-indexPath.row-1)
@@ -745,12 +731,11 @@ extension ConversationViewController: UIImagePickerControllerDelegate, UINavigat
                 newAttachment.mimeType = "image/jpeg"
                 newAttachment.fileName = "image.jpg"
                 
-                DriftAPIManager.postAttachment(newAttachment,authToken: DriftDataStore.sharedInstance.auth!.accessToken) { (result) in
+                DriftAPIManager.postAttachment(newAttachment, authToken: DriftDataStore.sharedInstance.auth!.accessToken) { (result) in
                     switch result{
                     case .success(let attachment):
-                        let messageRequest = Message()
-                        messageRequest.attachmentIds.append(attachment.id)
-                        self.postMessage(messageRequest)
+                        let messageRequest = MessageRequest(body: "", attachmentIds: [attachment.id])
+                        self.generateFakeMessageAndSend(messageRequest)
                     case .failure:
                         let alert = UIAlertController(title: "Unable to upload file", message: nil, preferredStyle: UIAlertControllerStyle.alert)
                         alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))

@@ -177,8 +177,8 @@ class DriftAPIManager: Alamofire.SessionManager {
         })
     }
     
-    class func postMessage(_ conversationId: Int, message: Message, authToken: String, completion: @escaping (_ result: Result<Message>) -> ()){
-        let json = message.toMessageJSON()
+    class func postMessage(_ conversationId: Int, messageRequest: MessageRequest, completion: @escaping (_ result: Result<Message>) -> ()){
+        let json = messageRequest.toJSON()
         
         sharedManager.request(DriftConversationRouter.postMessageToConversation(conversationId: conversationId, data: json)).responseJSON(completionHandler: { (result) -> Void in
             completion(mapResponse(result))
