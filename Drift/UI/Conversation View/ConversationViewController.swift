@@ -548,8 +548,9 @@ extension ConversationViewController : UITableViewDelegate, UITableViewDataSourc
         return messages.count
     }
     
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
+        print("Did Select Row at Index")
         let message = messages[indexPath.row]
         if message.sendStatus == .Failed{
             let alert = UIAlertController(title:nil, message: nil, preferredStyle: .actionSheet)
