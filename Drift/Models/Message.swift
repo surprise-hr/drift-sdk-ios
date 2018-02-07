@@ -49,7 +49,8 @@ class Message: Mappable, Equatable, Hashable{
     var sendStatus: SendStatus = SendStatus.Sent
     var formattedBody: NSMutableAttributedString?
     var viewerRecipientStatus: RecipientStatus?
-    
+    var appointmentInformation: AppointmentInformation?
+
     var presentSchedule: Int?
 
     var preMessages: [PreMessage] = []
@@ -63,11 +64,6 @@ class Message: Mappable, Equatable, Hashable{
             return nil
         }
         
-        if let body = map.JSON["body"] as? String, let attachments = map.JSON["attachments"] as? [Int]{
-            if body == "" && attachments.count == 0{
-                return nil
-            }
-        }
         self.init()
     }
     
@@ -87,6 +83,7 @@ class Message: Mappable, Equatable, Hashable{
         authorType              <- map["authorType"]
         conversationId          <- map["conversationId"]
         viewerRecipientStatus   <- map["viewerRecipientStatus"]
+        appointmentInformation  <- map["attributes.appointmentInfo"]
         preMessages             <- map["attributes.preMessages"]
         presentSchedule         <- map["attributes.presentSchedule"]
 

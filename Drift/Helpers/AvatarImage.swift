@@ -68,26 +68,22 @@ import AlamofireImage
             if let url = URL(string: avatarUrl){
                 
                 initialsLabel.isHidden = true
-                let filter = AspectScaledToFillSizeFilter(
-                    size: self.frame.size
-                )
-                
+ 
                 imageView.backgroundColor = UIColor.clear
                 imageView.isHidden = false
                 imageView.layer.add(wiggleAnimation, forKey: "wiggle")
                 
                 let placeholder = UIImage(named: "placeholderAvatar", in: Bundle(for: Drift.self), compatibleWith: nil)
-                let placeholderScaled = placeholder?.af_imageAspectScaled(toFill: self.frame.size)
                 
-                imageView.af_setImage(withURL: url, placeholderImage: nil, filter: filter, imageTransition: .crossDissolve(0.1), runImageTransitionIfCached: false, completion: { result in
+                imageView.af_setImage(withURL: url, placeholderImage: nil, filter: nil, imageTransition: .crossDissolve(0.1), runImageTransitionIfCached: false, completion: { result in
                     
                     self.initialsLabel.text = ""
                     switch result.result {
                     case .success(let image):
-                        self.imageView.image = image.af_imageAspectScaled(toFill: self.frame.size)
+                        self.imageView.image = image
                         self.initialsLabel.isHidden = true
                     case .failure(_):
-                        self.imageView.image = placeholderScaled
+                        self.imageView.image = placeholder
                         
                     }
                     self.imageView.layer.removeAllAnimations()
@@ -96,8 +92,7 @@ import AlamofireImage
             }
         }else{
             let placeholder = UIImage(named: "placeholderAvatar", in: Bundle(for: Drift.self), compatibleWith: nil)
-            let placeholderScaled = placeholder?.af_imageAspectScaled(toFill: self.frame.size)
-            self.imageView.image = placeholderScaled
+            self.imageView.image = placeholder
         }
     }
     

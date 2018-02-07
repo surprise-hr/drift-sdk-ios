@@ -56,6 +56,8 @@
 		63359F9F1C774C31007321DA /* AnnouncementExpandedView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63359F9E1C774C31007321DA /* AnnouncementExpandedView.xib */; };
 		633920D01C62514F00C3A3C2 /* CampaignResponseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633920CF1C62514F00C3A3C2 /* CampaignResponseManager.swift */; };
 		633920D51C62879100C3A3C2 /* CampaignView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633920D41C62879100C3A3C2 /* CampaignView.swift */; };
+		633F2B5F202B60A100D675B7 /* GoogleMeeting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633F2B5E202B60A100D675B7 /* GoogleMeeting.swift */; };
+		633F2B61202B707B00D675B7 /* AppointmentInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633F2B60202B707B00D675B7 /* AppointmentInformation.swift */; };
 		634950DF1C511A410097C474 /* Drift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 634950D41C511A410097C474 /* Drift.framework */; };
 		634EC1F52018BA670020DF97 /* ConversationInputAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634EC1F42018BA670020DF97 /* ConversationInputAccessoryView.swift */; };
 		635462E51EDF0C0B0012358E /* DriftAPIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635462E31EDF0C0B0012358E /* DriftAPIManager.swift */; };
@@ -191,6 +193,8 @@
 		63359F9E1C774C31007321DA /* AnnouncementExpandedView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AnnouncementExpandedView.xib; path = Drift/UI/NotificationView/AnnouncementExpandedView.xib; sourceTree = SOURCE_ROOT; };
 		633920CF1C62514F00C3A3C2 /* CampaignResponseManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CampaignResponseManager.swift; path = Drift/Managers/CampaignResponseManager.swift; sourceTree = SOURCE_ROOT; };
 		633920D41C62879100C3A3C2 /* CampaignView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CampaignView.swift; path = Drift/UI/CampaignView.swift; sourceTree = SOURCE_ROOT; };
+		633F2B5E202B60A100D675B7 /* GoogleMeeting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GoogleMeeting.swift; path = Drift/Models/GoogleMeeting.swift; sourceTree = SOURCE_ROOT; };
+		633F2B60202B707B00D675B7 /* AppointmentInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppointmentInformation.swift; path = Drift/Models/AppointmentInformation.swift; sourceTree = SOURCE_ROOT; };
 		634950D41C511A410097C474 /* Drift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Drift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		634950DE1C511A410097C474 /* DriftTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DriftTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		634EC1F42018BA670020DF97 /* ConversationInputAccessoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ConversationInputAccessoryView.swift; path = "Drift/UI/Conversation View/ConversationInputAccessoryView.swift"; sourceTree = SOURCE_ROOT; };
@@ -398,6 +402,8 @@
 				63EC66F02024F463003CB5FC /* DriftPreviewItem.swift */,
 				632E624C2028F15F001EA5EC /* UserAvailability.swift */,
 				632E624E202A1C08001EA5EC /* MessageRequest.swift */,
+				633F2B5E202B60A100D675B7 /* GoogleMeeting.swift */,
+				633F2B60202B707B00D675B7 /* AppointmentInformation.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -880,6 +886,7 @@
 				A88682DB1EE9791B00E396D8 /* ConversationsManager.swift in Sources */,
 				A80A644C1D466B3600A41A41 /* InboxSubscription.swift in Sources */,
 				6306F42E1D63E68800722D15 /* UserManager.swift in Sources */,
+				633F2B61202B707B00D675B7 /* AppointmentInformation.swift in Sources */,
 				6329CAC51C5A91310059C678 /* DriftDataStore.swift in Sources */,
 				492F77ED1F55A72300A05094 /* Presence.swift in Sources */,
 				6362426A1C7FBCB400632F0E /* NPSCompleteView.swift in Sources */,
@@ -900,6 +907,7 @@
 				6302051E1C56739000C02F5E /* User.swift in Sources */,
 				A8E705791EF2C77900BC1429 /* ReachabilityManager.swift in Sources */,
 				6306B51E1C5F91150003F9D3 /* NPSResponseAttributes.swift in Sources */,
+				633F2B5F202B60A100D675B7 /* GoogleMeeting.swift in Sources */,
 				634EC1F52018BA670020DF97 /* ConversationInputAccessoryView.swift in Sources */,
 				A80A64501D466B7C00A41A41 /* MessageSubscription.swift in Sources */,
 				635462E51EDF0C0B0012358E /* DriftAPIManager.swift in Sources */,

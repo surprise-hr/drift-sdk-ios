@@ -177,21 +177,41 @@ class ScheduleMeetingViewController: UIViewController {
     
     @IBAction func schedulePressed() {
         
-        guard case let .confirm(date) = scheduleMode else {
-            schedulePressed()
+        guard case let .confirm(date) = scheduleMode, let userAvailability = userAvailability else {
             return
         }
         
         SVProgressHUD.show()
-        DriftAPIManager.scheduleMeeting(userId, conversationId: conversationId, timestamp: date.timeIntervalSince1970*1000) { [weak self] (success) in
-            SVProgressHUD.dismiss()
-            if success {
-                self?.delegate?.didDismissScheduleVC()
-            } else {
+        DriftAPIManager.scheduleMeeting(userId, conversationId: conversationId, timestamp: date.timeIntervalSince1970*1000) { [weak self] (result) in
+            
+            switch result {
+            case .success(let googleMeeting):
+                self?.postMeetingInfo(googleMeeting, userAvailability: userAvailability, slotDate: date)
+            case .failure(_):
                 self?.scheduleMeetingError()
             }
         }
     }
+    
+    func postMeetingInfo(_ googleMeeting: GoogleMeeting, userAvailability: UserAvailability, slotDate: Date) {
+        
+        let messageRequest = MessageRequest(googleMeeting: googleMeeting, userAvailability: userAvailability, meetingUserId: userId, conversationId: conversationId, timeSlot: slotDate)
+        DriftAPIManager.postMessage(conversationId, messageRequest: messageRequest) { [weak self] (result) in
+            SVProgressHUD.dismiss()
+ 
+            switch (result) {
+            case .success(let message):
+                self?.delegate?.didDismissScheduleVC()
+            case .failure(let error):
+                
+                self?.scheduleMeetingError()
+            }
+        }
+        
+        
+        
+    }
+    
     
     func scheduleMeetingError(){
         let alert = UIAlertController(title: "Error", message: "Failed to schedule meeting", preferredStyle: .alert)

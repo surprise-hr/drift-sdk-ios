@@ -106,6 +106,8 @@ class ConversationViewController: UIViewController {
         super.viewDidLoad()
         tableView = UITableView(frame: view.frame, style: .plain)
         tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.estimatedRowHeight = 150
         view.addSubview(tableView)
         
         NSLayoutConstraint.activate([
@@ -394,8 +396,6 @@ class ConversationViewController: UIViewController {
         }
     }
     
-
-    
     func generateFakeMessageAndSend(_ messageRequest: MessageRequest){
 
         switch conversationType! {
@@ -626,6 +626,8 @@ extension ConversationViewController: ScheduleMeetingViewControllerDelegate {
 extension ConversationViewController: ConversationCellDelegate {
     
     func presentScheduleOfferingForUserId(userId: Int) {
+        
+        dismissKeyboard()
         
         guard let conversationId = conversationId else {
             return
