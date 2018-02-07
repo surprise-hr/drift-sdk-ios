@@ -339,6 +339,7 @@ class ConversationViewController: UIViewController {
     
     @objc func dismissVC() {
         dismissKeyboard()
+        resignFirstResponder()
         dismiss(animated: true, completion: nil)
     }
     
@@ -429,23 +430,17 @@ class ConversationViewController: UIViewController {
     }
     
     func createConversationWithMessage(_ messageRequest: MessageRequest) {
+        SVProgressHUD.show()
         InboxManager.sharedInstance.createConversation(messageRequest, welcomeMessageUser: welcomeUser, welcomeMessage: DriftDataStore.sharedInstance.embed?.getWelcomeMessageForUser()) { (message, requestId) in
             if let message = message{
                 self.conversationType = ConversationType.continueConversation(conversationId: message.conversationId)
-                message.sendStatus = .Sent
-                self.messages[0] = message
                 self.didOpen()
             }else{
-                let message = Message()
-                message.authorId = DriftDataStore.sharedInstance.auth?.enduser?.userId
-                message.body = messageRequest.body
-                message.requestId = messageRequest.requestId
-                message.sendStatus = .Failed
-                self.messages[0] = message
+                SVProgressHUD.dismiss()
+                //TODO: Show Error
+                self.conversationInputView.textView.text = messageRequest.body
             }
             
-            self.tableView.reloadRows(at: [IndexPath(row:0, section: 0)], with: .none)
-            self.tableView.scrollToRow(at: IndexPath(row:0, section: 0), at: .bottom, animated: true)
         }
     }
     
