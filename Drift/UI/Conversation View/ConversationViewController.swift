@@ -437,11 +437,20 @@ class ConversationViewController: UIViewController {
                 self.didOpen()
             }else{
                 SVProgressHUD.dismiss()
-                //TODO: Show Error
+                self.failedToCreateConversation()
                 self.conversationInputView.textView.text = messageRequest.body
             }
             
         }
+    }
+    
+    func failedToCreateConversation(){
+        let alert = UIAlertController(title: "Error", message: "Faield to start conversation", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Retry", style: .default, handler: { (_) in
+            self.didPressRightButton()
+        }))
+        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        present(alert, animated: true)
     }
     
 }
