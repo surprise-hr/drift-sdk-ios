@@ -198,7 +198,9 @@ class DriftAPIManager: Alamofire.SessionManager {
                 "sender": ["id":welcomeUserId]
             ]
 
-            data["attributes"] = ["preMessages": [preMessage]]
+            data["attributes"] = [
+                "preMessages": [preMessage],
+                "sentWelcomeMessage": true]
             
         }
         
