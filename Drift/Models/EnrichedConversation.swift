@@ -16,8 +16,12 @@ class EnrichedConversation: Mappable {
     var lastAgentMessage: Message?
     
     required convenience init?(map: Map) {
+        if let conversationJSON = map.JSON["conversation"] as? [String: Any], conversationJSON["type"] as? String == "EMAIL"{
+            return nil
+        }
         self.init()
     }
+    
     
     func mapping(map: Map) {
         conversation        <- map["conversation"]
