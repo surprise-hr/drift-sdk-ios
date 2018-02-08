@@ -445,6 +445,11 @@ class ConversationViewController: UIViewController {
 
 extension ConversationViewController: ConversationInputAccessoryViewDelegate {
     
+    func didPressView() {
+        if let scheduleVC = scheduleMeetingVC {
+            didDismissScheduleVC()
+        }
+    }
     
     func expandingKeyboard() {
         ignoreKeyboardChanges = true

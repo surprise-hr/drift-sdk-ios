@@ -14,6 +14,7 @@ protocol ConversationInputAccessoryViewDelegate: class {
     func getKeyboardRect() -> CGRect
     func expandingKeyboard()
     func compressingKeyboard()
+    func didPressView()
 }
 
 class ConversationInputAccessoryView: UIView {
@@ -126,6 +127,9 @@ class ConversationInputAccessoryView: UIView {
     func setup(){
         autoresizingMask = .flexibleHeight
         textView.delegate = self
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didPressView))
+        tapGesture.cancelsTouchesInView = false
+        addGestureRecognizer(tapGesture)
         addViews()
         layoutConstraints()
     }
@@ -156,6 +160,10 @@ class ConversationInputAccessoryView: UIView {
                 backgroundBottomConstraint.constant = window.safeAreaInsets.bottom
             }
         }
+    }
+    
+    @objc func didPressView(){
+        delegate?.didPressView()
     }
     
     func addViews(){
@@ -337,5 +345,9 @@ extension ConversationInputAccessoryView : UITextViewDelegate {
                 self.superview?.superview?.layoutIfNeeded()
             })
         }
+    }
+    
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        delegate?.didPressView()
     }
 }
