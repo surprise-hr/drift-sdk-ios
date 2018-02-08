@@ -21,9 +21,6 @@ class AppointmentInformation: Mappable{
     var conversationId = -1
     var endUserTimeZone: String?
     var agentTimeZone: String?
-    var user: User?
-    
-    
     
     open func mapping(map: Map) {
         

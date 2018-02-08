@@ -138,6 +138,8 @@ class ConversationViewController: UIViewController {
         
         tableView.register(UINib(nibName: "ConversationMessageTableViewCell", bundle: Bundle(for: ConversationMessageTableViewCell.classForCoder())), forCellReuseIdentifier: "ConversationMessageTableViewCell")
         
+        tableView.register(UINib(nibName: "MeetingMessageTableViewCell", bundle: Bundle(for: MeetingMessageTableViewCell.classForCoder())), forCellReuseIdentifier: "MeetingMessageTableViewCell")
+
         if let navVC = navigationController {
             navVC.navigationBar.barTintColor = DriftDataStore.sharedInstance.generateBackgroundColor()
             navVC.navigationBar.tintColor = DriftDataStore.sharedInstance.generateForegroundColor()
@@ -353,20 +355,6 @@ class ConversationViewController: UIViewController {
         }
     }
     
-    func addMessageToConversation(_ message: Message){
-        if !messages.isEmpty, let _ = messages.index(where: { (currentMessage) -> Bool in
-            if message.requestId == currentMessage.requestId{
-                return true
-            }
-            return false
-        }){
-            //We've already added this message, it may have failed to send
-        }else{
-            messages.insert(message, at: 0)
-            tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .bottom)
-        }
-    }
-    
     func getMessages(_ conversationId: Int){
         SVProgressHUD.show()
         DriftAPIManager.getMessages(conversationId, authToken: DriftDataStore.sharedInstance.auth!.accessToken) { (result) in
@@ -401,7 +389,7 @@ class ConversationViewController: UIViewController {
         case .createConversation:
             createConversationWithMessage(messageRequest)
         case .continueConversation(let conversationId):
-            addMessageToConversation(messageRequest.generateFakeMessage(conversationId: conversationId, userId: DriftDataStore.sharedInstance.auth?.enduser?.userId ?? -1))
+            newMessage(messageRequest.generateFakeMessage(conversationId: conversationId, userId: DriftDataStore.sharedInstance.auth?.enduser?.userId ?? -1))
             postMessageToConversation(conversationId, messageRequest: messageRequest)
         }
     }
@@ -531,11 +519,19 @@ extension ConversationViewController : UITableViewDelegate, UITableViewDataSourc
         }
         
         var cell: UITableViewCell
-        cell = tableView.dequeueReusableCell(withIdentifier: "ConversationMessageTableViewCell", for: indexPath) as!ConversationMessageTableViewCell
-        if let cell = cell as? ConversationMessageTableViewCell{
-            cell.delegate = self
-            cell.indexPath = indexPath
-            cell.setupForMessage(message: message, showHeader: showHeader, configuration: DriftDataStore.sharedInstance.embed)
+
+        if let appointmentInfo = message.appointmentInformation {
+            cell = tableView.dequeueReusableCell(withIdentifier: "MeetingMessageTableViewCell", for: indexPath) as!MeetingMessageTableViewCell
+            if let cell = cell as? MeetingMessageTableViewCell{
+                cell.setupForAppointmentInformation(appointmentInformation: appointmentInfo, message: message, showHeader: showHeader)
+            }
+        } else {
+            cell = tableView.dequeueReusableCell(withIdentifier: "ConversationMessageTableViewCell", for: indexPath) as!ConversationMessageTableViewCell
+            if let cell = cell as? ConversationMessageTableViewCell{
+                cell.delegate = self
+                cell.indexPath = indexPath
+                cell.setupForMessage(message: message, showHeader: showHeader, configuration: DriftDataStore.sharedInstance.embed)
+            }
         }
         
         cell.transform = tableView.transform
@@ -586,16 +582,19 @@ extension ConversationViewController {
         if let id = message.id{
             ConversationsManager.markMessageAsRead(id)
         }
-        if message.authorId != DriftDataStore.sharedInstance.auth?.enduser?.userId && message.contentType == .Chat{
-            if let index = messages.index(of: message){
-                messages[index] = message
-            
-                tableView!.reloadRows(at: [IndexPath(row: index, section: 0)], with: .bottom)
-            }else{
-                messages.insert(message, at: 0)
-                messages = messages.sortMessagesForConversation()
-                tableView!.insertRows(at: [IndexPath(row: 0, section: 0)], with: .bottom)
-            }
+        if message.authorId == DriftDataStore.sharedInstance.auth?.enduser?.userId && message.contentType == .Chat{
+            print("Ignoring own message")
+            return
+        }
+        
+        if let index = messages.index(of: message){
+            messages[index] = message
+        
+            tableView!.reloadRows(at: [IndexPath(row: index, section: 0)], with: .bottom)
+        }else{
+            messages.insert(message, at: 0)
+            messages = messages.sortMessagesForConversation()
+            tableView!.insertRows(at: [IndexPath(row: 0, section: 0)], with: .bottom)
         }
     }
 }

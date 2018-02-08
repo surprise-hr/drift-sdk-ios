@@ -31,6 +31,9 @@ class User: Mappable, Equatable {
         avatarURL   <- map["avatarUrl"]
         bot         <- map["bot"]
     }
+    func getUserName() -> String{
+        return name ?? email ?? "No Name Set"
+    }
 }
 
 func ==(lhs: User, rhs: User) -> Bool {

@@ -58,6 +58,8 @@
 		633920D51C62879100C3A3C2 /* CampaignView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633920D41C62879100C3A3C2 /* CampaignView.swift */; };
 		633F2B5F202B60A100D675B7 /* GoogleMeeting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633F2B5E202B60A100D675B7 /* GoogleMeeting.swift */; };
 		633F2B61202B707B00D675B7 /* AppointmentInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633F2B60202B707B00D675B7 /* AppointmentInformation.swift */; };
+		633F2B64202C8D7200D675B7 /* MeetingMessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633F2B62202C8D7200D675B7 /* MeetingMessageTableViewCell.swift */; };
+		633F2B65202C8D7200D675B7 /* MeetingMessageTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 633F2B63202C8D7200D675B7 /* MeetingMessageTableViewCell.xib */; };
 		634950DF1C511A410097C474 /* Drift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 634950D41C511A410097C474 /* Drift.framework */; };
 		634EC1F52018BA670020DF97 /* ConversationInputAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634EC1F42018BA670020DF97 /* ConversationInputAccessoryView.swift */; };
 		635462E51EDF0C0B0012358E /* DriftAPIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635462E31EDF0C0B0012358E /* DriftAPIManager.swift */; };
@@ -192,6 +194,8 @@
 		633920D41C62879100C3A3C2 /* CampaignView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CampaignView.swift; path = Drift/UI/CampaignView.swift; sourceTree = SOURCE_ROOT; };
 		633F2B5E202B60A100D675B7 /* GoogleMeeting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GoogleMeeting.swift; path = Drift/Models/GoogleMeeting.swift; sourceTree = SOURCE_ROOT; };
 		633F2B60202B707B00D675B7 /* AppointmentInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppointmentInformation.swift; path = Drift/Models/AppointmentInformation.swift; sourceTree = SOURCE_ROOT; };
+		633F2B62202C8D7200D675B7 /* MeetingMessageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MeetingMessageTableViewCell.swift; path = "Drift/UI/Conversation View/Conversation Cells/MeetingMessageTableViewCell.swift"; sourceTree = SOURCE_ROOT; };
+		633F2B63202C8D7200D675B7 /* MeetingMessageTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = MeetingMessageTableViewCell.xib; path = "Drift/UI/Conversation View/Conversation Cells/MeetingMessageTableViewCell.xib"; sourceTree = SOURCE_ROOT; };
 		634950D41C511A410097C474 /* Drift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Drift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		634950DE1C511A410097C474 /* DriftTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DriftTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		634EC1F42018BA670020DF97 /* ConversationInputAccessoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ConversationInputAccessoryView.swift; path = "Drift/UI/Conversation View/ConversationInputAccessoryView.swift"; sourceTree = SOURCE_ROOT; };
@@ -553,6 +557,8 @@
 				A8E705851EF8192500BC1429 /* AttachmentCollectionViewCell.swift */,
 				A8E7057E1EF80BC700BC1429 /* ConversationMessageTableViewCell.xib */,
 				A8E7057F1EF80BC700BC1429 /* ConversationMessageTableViewCell.swift */,
+				633F2B62202C8D7200D675B7 /* MeetingMessageTableViewCell.swift */,
+				633F2B63202C8D7200D675B7 /* MeetingMessageTableViewCell.xib */,
 			);
 			name = "Conversation Cells";
 			path = "Drift/UI/Conversation View/Conversation Cells";
@@ -683,6 +689,7 @@
 				630E896F1C57E64C00195062 /* NPSView.xib in Resources */,
 				2CF43EA71C7E056F008E6748 /* DriftImages.xcassets in Resources */,
 				A8E705861EF8192500BC1429 /* AttachmentCollectionViewCell.xib in Resources */,
+				633F2B65202C8D7200D675B7 /* MeetingMessageTableViewCell.xib in Resources */,
 				A8C6ADEF1D632CED0024CFDC /* ConversationEmptyStateView.xib in Resources */,
 				630E89651C57B99000195062 /* AnnouncementView.xib in Resources */,
 				632E624B2028B933001EA5EC /* ScheduleMeetingViewController.xib in Resources */,
@@ -852,6 +859,7 @@
 				A8BC1BAD1DDCB0DE0049968E /* GradientView.swift in Sources */,
 				A8E705831EF815C500BC1429 /* AvatarImage.swift in Sources */,
 				A8E705811EF80BC700BC1429 /* ConversationMessageTableViewCell.swift in Sources */,
+				633F2B64202C8D7200D675B7 /* MeetingMessageTableViewCell.swift in Sources */,
 				A80A64481D4665E500A41A41 /* Conversation.swift in Sources */,
 				63356A421C529C610064F652 /* Drift.swift in Sources */,
 				A8E705771EF28D6C00BC1429 /* OpenHoursHelpers.swift in Sources */,
