@@ -167,7 +167,9 @@ class ConversationViewController: UIViewController {
         
         tableView.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: view.frame.width - 10)
         
-        tableView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard)))
+        let dismissGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        dismissGesture.cancelsTouchesInView = false
+        tableView.addGestureRecognizer(dismissGesture)
         
         tableView.becomeFirstResponder()
         
