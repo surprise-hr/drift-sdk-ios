@@ -413,7 +413,6 @@ class ConversationViewController: UIViewController {
                 }
                 
                 self?.tableView.reloadRows(at: [IndexPath(row:index, section: 0)], with: .none)
-                self?.tableView.scrollToRow(at: IndexPath(row:0, section: 0), at: .bottom, animated: true)
             }
         }
     }
@@ -556,7 +555,6 @@ extension ConversationViewController : UITableViewDelegate, UITableViewDataSourc
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        print("Did Select Row at Index")
         let message = messages[indexPath.row]
         if message.sendStatus == .Failed{
             let alert = UIAlertController(title:nil, message: nil, preferredStyle: .actionSheet)
@@ -584,7 +582,9 @@ extension ConversationViewController {
         if let id = message.id{
             ConversationsManager.markMessageAsRead(id)
         }
-        if message.authorId == DriftDataStore.sharedInstance.auth?.enduser?.userId && message.contentType == .Chat{
+        
+        //User created message with appointment information should be allowed through
+        if message.authorId == DriftDataStore.sharedInstance.auth?.enduser?.userId && message.contentType == .Chat && message.appointmentInformation == nil{
             print("Ignoring own message")
             return
         }
@@ -595,8 +595,14 @@ extension ConversationViewController {
             tableView!.reloadRows(at: [IndexPath(row: index, section: 0)], with: .bottom)
         }else{
             messages.insert(message, at: 0)
+            let messagesCount = messages.count
             messages = messages.sortMessagesForConversation()
-            tableView!.insertRows(at: [IndexPath(row: 0, section: 0)], with: .bottom)
+            
+            if messagesCount == messages.count && message.appointmentInformation == nil {
+                tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .bottom)
+            } else {
+                tableView.reloadData()
+            }
         }
     }
 }

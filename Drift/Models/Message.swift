@@ -56,7 +56,7 @@ class Message: Mappable, Equatable, Hashable{
     var offerSchedule: Int = -1
     
     var preMessages: [PreMessage] = []
-
+    var fakeMessage = false
     var hashValue: Int {
         return id
     }
@@ -116,7 +116,15 @@ extension Array where Iterator.Element == Message
         
         var output:[Message] = []
         
-        for message in self {
+        let sorted = self.sorted(by: { $0.createdAt.compare($1.createdAt as Date) == .orderedAscending})
+        
+        for message in sorted {
+            
+            if message.fakeMessage {
+                //Ignore fake messages, we will recreate them
+                continue
+            }
+            
             if !message.preMessages.isEmpty {
                 output.append(contentsOf: getMessagesFromPreMessages(message: message, preMessages: message.preMessages))
             }
@@ -155,7 +163,7 @@ extension Array where Iterator.Element == Message
             fakeMessage.conversationId = message.conversationId
             fakeMessage.body = TextHelper.cleanString(body: preMessage.messageBody)
 //            fakeMessage.saveFormattedString()
-            
+            fakeMessage.fakeMessage = true
             fakeMessage.uuid = UUID().uuidString
             
             fakeMessage.sendStatus = .Sent
