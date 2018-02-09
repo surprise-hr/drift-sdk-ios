@@ -111,7 +111,7 @@ class MessageRequest {
         message.sendStatus = .Pending
         message.conversationId = conversationId
         message.createdAt = Date()
-        message.authorType = .User
+        message.authorType = .EndUser
         message.requestId = requestId
         return message
     }
