@@ -107,7 +107,7 @@ class MessageRequest {
         message.body = body
         message.uuid = UUID().uuidString
         message.contentType = type
-        
+        message.fakeMessage = true
         message.sendStatus = .Pending
         message.conversationId = conversationId
         message.createdAt = Date()
