@@ -223,7 +223,7 @@ class ConversationViewController: UIViewController {
             
             if (endFrame.origin.y + endFrame.size.height) > UIScreen.main.bounds.height {
                 // Hardware keyboard is found
-                self.tableView.contentInset.top = view.frame.size.height - endFrame.origin.y
+                self.tableView.contentInset.top = UIScreen.main.bounds.height - endFrame.origin.y
             } else {
                 //Software keyboard is found
                 let afterBottomInset = endFrame.height > keyboardOffsetFrame.height ? endFrame.height : keyboardOffsetFrame.height
