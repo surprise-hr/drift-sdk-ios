@@ -174,11 +174,6 @@
                                     <constraint firstAttribute="bottom" secondItem="EJW-Mv-Vfa" secondAttribute="bottom" id="nZR-fZ-KrE"/>
                                     <constraint firstItem="EJW-Mv-Vfa" firstAttribute="top" secondItem="vvP-EA-ldv" secondAttribute="bottom" id="ovA-w8-vy6"/>
                                 </constraints>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                        <color key="value" red="0.70980392160000005" green="0.82352941180000006" blue="0.88235294119999996" alpha="1" colorSpace="calibratedRGB"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

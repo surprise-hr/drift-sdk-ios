@@ -278,7 +278,7 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
             self.setupForAttachmentStyle(attachmentStyle: .multiple)
         }
         
-        self.attachmentsCollectionView.reloadData()
+        attachmentsCollectionView.reloadData()
     }
     
     @objc func imagePressed(){
@@ -308,27 +308,23 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
         }
     }
     
-    
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if let cell = cell as? AttachmentCollectionViewCell{
-//            if let attachment = message?.attachments[indexPath.row] {
-//                let fileName: NSString = attachment.fileName as NSString
-//                let fileExtension = fileName.pathExtension
-//                cell.fileNameLabel.text = "\(fileName)"
-//                cell.fileExtensionLabel.text = "\(fileExtension.uppercased())"
-//
-//                let formatter = ByteCountFormatter()
-//                formatter.countStyle = .memory
-//                formatter.string(fromByteCount: Int64(attachment.size))
-//                formatter.allowsNonnumericFormatting = false
-//                cell.sizeLabel.text = formatter.string(fromByteCount: Int64(attachment.size))
-//            }
-        }
-    }
-    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AttachmentCollectionViewCell", for: indexPath) as! AttachmentCollectionViewCell
         cell.layer.cornerRadius = 3.0
+        
+        if let attachment = message?.attachments[indexPath.row] {
+            let fileName: NSString = attachment.fileName as NSString
+            let fileExtension = fileName.pathExtension
+            cell.fileNameLabel.text = "\(fileName)"
+            cell.fileExtensionLabel.text = "\(fileExtension.uppercased())"
+            
+            let formatter = ByteCountFormatter()
+            formatter.countStyle = .memory
+            formatter.string(fromByteCount: Int64(attachment.size))
+            formatter.allowsNonnumericFormatting = false
+            cell.sizeLabel.text = formatter.string(fromByteCount: Int64(attachment.size))
+        }
+        
         return cell
     }
     
