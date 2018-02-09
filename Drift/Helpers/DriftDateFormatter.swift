@@ -7,15 +7,15 @@
 //
 
 
-open class DriftDateFormatter: DateFormatter {
+class DriftDateFormatter: DateFormatter {
     
-    open func createdAtStringFromDate(_ date: Date) -> String{
+    func createdAtStringFromDate(_ date: Date) -> String{
         dateFormat = "HH:mm"
         timeStyle = .short
         return string(from: date)
     }
     
-    open func updatedAtStringFromDate(_ date: Date) -> String{
+    func updatedAtStringFromDate(_ date: Date) -> String{
         let now = Date()
         if (Calendar.current as NSCalendar).component(.day, from: date) != (Calendar.current as NSCalendar).component(.day, from: now){
             dateStyle = .short
@@ -25,13 +25,18 @@ open class DriftDateFormatter: DateFormatter {
         return string(from: date)
     }
     
-    open func headerStringFromDate(_ date: Date) -> String{
+    func headerStringFromDate(_ date: Date) -> String{
         let now = Date()
         if (Calendar.current as NSCalendar).component(.day, from: date) != (Calendar.current as NSCalendar).component(.day, from: now){
             dateFormat = "MMMM d"
         }else{
             return "Today"
         }
+        return string(from: date)
+    }
+    
+    func dateFormatForMeetings(date: Date) -> String {
+        dateFormat = "EEEE, MMMM dd, YYYY"
         return string(from: date)
     }
     

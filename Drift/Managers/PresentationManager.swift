@@ -141,7 +141,7 @@ class PresentationManager: PresentationManagerDelegate {
     
     func showNewConversationVC(_ authorId: Int?) {
         if let topVC = TopController.viewController()  {
-            let navVC = ConversationViewController.navigationController(ConversationViewController.ConversationType.createConversation(authorId: authorId))
+            let navVC = ConversationViewController.navigationController(ConversationViewController.ConversationType.createConversation)
             topVC.present(navVC, animated: true, completion: nil)
         }
     }

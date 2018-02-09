@@ -16,7 +16,7 @@ struct Auth: Mappable {
     
     init?(map: Map) {
         //These fields are required, without them we fail to init the object
-        if map["accessToken"] == nil || map["accessToken"] as? String == ""{
+        if map["accessToken"].currentValue == nil || map["accessToken"].currentValue as? String == ""{
             return nil
         }
     }

@@ -10,7 +10,11 @@ import UIKit
 
 class ConnectionBarView: UIView {
 
-    @IBOutlet weak var connectionStatusLabel: UILabel!
+    @IBOutlet weak var connectionStatusLabel: UILabel! {
+        didSet{
+            connectionStatusLabel.font = UIFont(name: "Avenir-Book", size: 14)
+        }
+    }
     
     override func awakeFromNib() {
         backgroundColor = ColorPalette.driftGreen

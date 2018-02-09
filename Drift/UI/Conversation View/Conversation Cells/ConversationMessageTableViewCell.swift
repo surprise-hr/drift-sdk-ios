@@ -9,10 +9,6 @@
 import UIKit
 import AlamofireImage
 
-public protocol ConversationCellDelegate: class {
-    func showProfileForRow(indexPath: IndexPath)
-}
-
 class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     @IBOutlet weak var avatarView: AvatarView!
     @IBOutlet weak var nameLabel: UILabel!
@@ -36,6 +32,13 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
     @IBOutlet weak var headerHeightLayoutConstraint: NSLayoutConstraint!
     @IBOutlet weak var headerView: MessageTableHeaderView!
     
+    @IBOutlet var scheduleMeetingHeightConstraint: NSLayoutConstraint!
+    
+    @IBOutlet var scheduleMeetingAvatarView: AvatarView!
+    @IBOutlet var scheduleMeetingLabel: UILabel!
+    @IBOutlet var scheduleMeetingButton: UIButton!
+    @IBOutlet var scheduleMeetingBorderView: UIView!
+    
     enum AttachmentStyle {
         case single
         case multiple
@@ -48,8 +51,7 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
     var indexPath: IndexPath?
     var message: Message?
     var configuration: Embed?
-    weak var attachmentDelegate: AttachementSelectedDelegate?
-    weak var delegate: AttachementSelectedDelegate?
+    weak var delegate: ConversationCellDelegate?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -63,6 +65,14 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
         attachmentsCollectionView.delegate = self
         attachmentsCollectionView.backgroundColor = UIColor.white
         
+        
+        scheduleMeetingBorderView.layer.borderWidth = 1
+        scheduleMeetingBorderView.layer.borderColor = UIColor(white: 0, alpha: 0.1).cgColor
+        scheduleMeetingBorderView.layer.cornerRadius = 3
+        
+        scheduleMeetingButton.layer.cornerRadius = 3
+        scheduleMeetingButton.backgroundColor = DriftDataStore.sharedInstance.generateBackgroundColor()
+        scheduleMeetingButton.setTitleColor(DriftDataStore.sharedInstance.generateForegroundColor(), for: .normal)
         loadingContainerView.backgroundColor = UIColor(white: 0, alpha: 0.4)
         loadingContainerView.layer.cornerRadius = 6
         loadingContainerView.clipsToBounds = true
@@ -71,7 +81,7 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
         attachmentImageView.contentMode = .scaleAspectFill
         attachmentImageView.layer.cornerRadius = 3
         attachmentImageView.isUserInteractionEnabled = true
-        let gestureRecognizer = UITapGestureRecognizer.init(target:self, action: #selector(ConversationMessageTableViewCell.imagePressed))
+        let gestureRecognizer = UITapGestureRecognizer(target:self, action: #selector(ConversationMessageTableViewCell.imagePressed))
         attachmentImageView.addGestureRecognizer(gestureRecognizer)
     }
     
@@ -81,6 +91,7 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
         setupHeader(message: message, show: showHeader)
         setStyle()
         setupForAttachments(message: message)
+        setupForOfferMeeting(message: message)
         
     }
     
@@ -92,6 +103,33 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
         }else{
             headerHeightLayoutConstraint.constant = 0
             headerView.isHidden = true
+        }
+    }
+    
+    func setupForOfferMeeting(message: Message) {
+        
+        if let offerMeetingUser = message.presentSchedule {
+            scheduleMeetingHeightConstraint.constant = 140
+            scheduleMeetingBorderView.isHidden = false
+            scheduleMeetingAvatarView.imageView.image = UIImage(named: "placeholderAvatar", in: Bundle(for: Drift.self), compatibleWith: nil)
+            scheduleMeetingLabel.text = "Schedule Meeting"
+            
+            UserManager.sharedInstance.userMetaDataForUserId(offerMeetingUser, completion: { (user) in
+                
+                if let user = user {
+                    if let avatarURL = user.avatarURL {
+                        self.scheduleMeetingAvatarView.setUpForAvatarURL(avatarUrl: avatarURL)
+                    }
+                    
+                    if let creatorName =  user.name {
+                        self.scheduleMeetingLabel.text = "Schedule a meeting with \(creatorName)"
+                    }
+                }
+            })
+            
+        } else {
+            scheduleMeetingHeightConstraint.constant = 0
+            scheduleMeetingBorderView.isHidden = true
         }
     }
     
@@ -240,28 +278,13 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
             self.setupForAttachmentStyle(attachmentStyle: .multiple)
         }
         
-        self.attachmentsCollectionView.reloadData()
+        attachmentsCollectionView.reloadData()
     }
     
     @objc func imagePressed(){
         if let attachment = message?.attachments.first{
             delegate?.attachmentSelected(attachment, sender: self)
         }
-    }
-    
-    func showLoadingView(){
-//        loadingView.startAnimating()
-//        UIView.animate(withDuration: 0.3) {
-//            self.loadingContainerView.alpha = 1
-//        }
-    }
-    
-    func hideLoadingView(){
-//        UIView.animate(withDuration: 0.3, animations: {
-//            self.loadingContainerView.alpha = 0
-//        }) { (done) in
-//            self.loadingView.stopAnimating()
-//        }
     }
     
     func setTimeLabel(date: Date) {
@@ -279,26 +302,29 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
         }
     }
     
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if let cell = cell as? AttachmentCollectionViewCell{
-            if let attachment = message?.attachments[indexPath.row] {
-                let fileName: NSString = attachment.fileName as NSString
-                let fileExtension = fileName.pathExtension
-                cell.fileNameLabel.text = "\(fileName)"
-                cell.fileExtensionLabel.text = "\(fileExtension.uppercased())"
-                
-                let formatter = ByteCountFormatter()
-                formatter.countStyle = .memory
-                formatter.string(fromByteCount: Int64(attachment.size))
-                formatter.allowsNonnumericFormatting = false
-                cell.sizeLabel.text = formatter.string(fromByteCount: Int64(attachment.size))
-            }
+    @IBAction func schedulePressed() {
+        if let scheduleUserId = message?.presentSchedule {
+            delegate?.presentScheduleOfferingForUserId(userId: scheduleUserId)
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AttachmentCollectionViewCell", for: indexPath) as! AttachmentCollectionViewCell
         cell.layer.cornerRadius = 3.0
+        
+        if let attachment = message?.attachments[indexPath.row] {
+            let fileName: NSString = attachment.fileName as NSString
+            let fileExtension = fileName.pathExtension
+            cell.fileNameLabel.text = "\(fileName)"
+            cell.fileExtensionLabel.text = "\(fileExtension.uppercased())"
+            
+            let formatter = ByteCountFormatter()
+            formatter.countStyle = .memory
+            formatter.string(fromByteCount: Int64(attachment.size))
+            formatter.allowsNonnumericFormatting = false
+            cell.sizeLabel.text = formatter.string(fromByteCount: Int64(attachment.size))
+        }
+        
         return cell
     }
     
@@ -325,5 +351,4 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
         }
         return CGSize(width: 0, height: 0)
     }
-
 }

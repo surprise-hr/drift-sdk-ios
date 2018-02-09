@@ -9,10 +9,6 @@
 import UIKit
 import AlamofireImage
 
-protocol AvatarDelegate: class {
-    func avatarPressed()
-}
-
 @IBDesignable class AvatarView: UIView {
     
     @IBInspectable var cornerRadius: CGFloat = 3{
@@ -21,10 +17,8 @@ protocol AvatarDelegate: class {
         }
     }
     
-    var button = UIButton()
     var imageView = UIImageView()
     var initialsLabel = UILabel()
-    weak var delegate: AvatarDelegate?
     
     var wiggleAnimation: CAKeyframeAnimation{
         let wiggleAnimation = CAKeyframeAnimation(keyPath: "transform")
@@ -41,12 +35,9 @@ protocol AvatarDelegate: class {
         return wiggleAnimation
     }
     
-    @objc func buttonPressed() {
-        delegate?.avatarPressed()
-    }
-    
     override func awakeFromNib() {
         super.awakeFromNib()
+        imageView.isUserInteractionEnabled = true
         
         self.addSubview(imageView)
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -55,16 +46,6 @@ protocol AvatarDelegate: class {
         let imageViewtopConstraint = NSLayoutConstraint(item: imageView, attribute: NSLayoutAttribute.bottom, relatedBy: NSLayoutRelation.equal, toItem: self, attribute: NSLayoutAttribute.bottom, multiplier: 1, constant: 0)
         let imageViewbottomConstraint = NSLayoutConstraint(item: imageView, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: self, attribute: NSLayoutAttribute.top, multiplier: 1, constant: 0)
         self.addConstraints([imageViewleadingConstraint, imageViewtrailingConstraint, imageViewtopConstraint, imageViewbottomConstraint])
-        
-        self.addSubview(button)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        let buttonLeadingConstraint = NSLayoutConstraint(item: button, attribute: NSLayoutAttribute.leading, relatedBy: NSLayoutRelation.equal, toItem: self, attribute: NSLayoutAttribute.leading, multiplier: 1, constant: 0)
-        let buttonTrailingConstraint = NSLayoutConstraint(item: button, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: self, attribute: NSLayoutAttribute.trailing, multiplier: 1, constant: 0)
-        let buttonTopConstraint = NSLayoutConstraint(item: button, attribute: NSLayoutAttribute.bottom, relatedBy: NSLayoutRelation.equal, toItem: self, attribute: NSLayoutAttribute.bottom, multiplier: 1, constant: 0)
-        let buttonBottomConstraint = NSLayoutConstraint(item: button, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: self, attribute: NSLayoutAttribute.top, multiplier: 1, constant: 0)
-        self.addConstraints([buttonLeadingConstraint, buttonTrailingConstraint, buttonTopConstraint, buttonBottomConstraint])
-        
-        button.addTarget(self, action: #selector(AvatarView.buttonPressed), for: UIControlEvents.touchUpInside)
         
         self.addSubview(initialsLabel)
         imageView.contentMode = .scaleAspectFill
@@ -87,26 +68,22 @@ protocol AvatarDelegate: class {
             if let url = URL(string: avatarUrl){
                 
                 initialsLabel.isHidden = true
-                let filter = AspectScaledToFillSizeFilter(
-                    size: self.frame.size
-                )
-                
+ 
                 imageView.backgroundColor = UIColor.clear
                 imageView.isHidden = false
                 imageView.layer.add(wiggleAnimation, forKey: "wiggle")
                 
                 let placeholder = UIImage(named: "placeholderAvatar", in: Bundle(for: Drift.self), compatibleWith: nil)
-                let placeholderScaled = placeholder?.af_imageAspectScaled(toFill: self.frame.size)
                 
-                imageView.af_setImage(withURL: url, placeholderImage: nil, filter: filter, imageTransition: .crossDissolve(0.1), runImageTransitionIfCached: false, completion: { result in
+                imageView.af_setImage(withURL: url, placeholderImage: nil, filter: nil, imageTransition: .crossDissolve(0.1), runImageTransitionIfCached: false, completion: { result in
                     
                     self.initialsLabel.text = ""
                     switch result.result {
                     case .success(let image):
-                        self.imageView.image = image.af_imageAspectScaled(toFill: self.frame.size)
+                        self.imageView.image = image
                         self.initialsLabel.isHidden = true
                     case .failure(_):
-                        self.imageView.image = placeholderScaled
+                        self.imageView.image = placeholder
                         
                     }
                     self.imageView.layer.removeAllAnimations()
@@ -115,8 +92,7 @@ protocol AvatarDelegate: class {
             }
         }else{
             let placeholder = UIImage(named: "placeholderAvatar", in: Bundle(for: Drift.self), compatibleWith: nil)
-            let placeholderScaled = placeholder?.af_imageAspectScaled(toFill: self.frame.size)
-            self.imageView.image = placeholderScaled
+            self.imageView.image = placeholder
         }
     }
     

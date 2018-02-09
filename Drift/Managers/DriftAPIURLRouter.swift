@@ -58,6 +58,8 @@ enum DriftCustomerRouter: URLRequestConvertible {
     case getAuth(email: String, userId: String, redirectURL: String, orgId: Int, clientId: String)
     case getUser(orgId: Int, userId: Int)
     case getEndUser(endUserId: Int)
+    case getUserAvailability(userId: Int)
+    case scheduleMeeting(userId: Int, conversationId: Int, timestamp: Double)
     
     var request: (method: Alamofire.HTTPMethod, path: String, parameters: [String: Any]?, encoding: ParameterEncoding){
         switch self {
@@ -88,6 +90,10 @@ enum DriftCustomerRouter: URLRequestConvertible {
             return (.get, "organizations/\(orgId)/users", params, URLEncoding.default)
         case .getEndUser(let endUserId):
             return (.get, "end_users/\(endUserId)", nil, URLEncoding.default)
+        case .getUserAvailability(let userId):
+            return (.get, "scheduling/\(userId)/availability", nil, URLEncoding.default)
+        case .scheduleMeeting(let userId, let conversationId, let timestamp):
+            return (.post, "scheduling/\(userId)/schedule", nil, ScheduleEncoding(conversationId: conversationId, timestamp: timestamp))
         }
     }
     
@@ -106,9 +112,7 @@ enum DriftCustomerRouter: URLRequestConvertible {
         
         req.url = URL(string: (req.url?.absoluteString.replacingOccurrences(of: "%5B%5D=", with: "="))!)
         
-        let mutableReq = (req.urlRequest! as NSURLRequest).mutableCopy() as! NSMutableURLRequest
-        
-        return mutableReq as URLRequest
+        return req
     }
     
 }
@@ -121,7 +125,7 @@ enum DriftConversationRouter: URLRequestConvertible {
     case getConversationsForEndUser(endUserId: Int)
     case getMessagesForConversation(conversationId: Int)
     case postMessageToConversation(conversationId: Int, data: [String: Any])
-    case createConversation(body: String)
+    case createConversation(data: [String: Any])
     
     case recordAnnouncement(conversationId: Int, json: [String: Any])
     case recordNPS(conversationId: Int, json: [String: Any])
@@ -138,8 +142,8 @@ enum DriftConversationRouter: URLRequestConvertible {
             return (.get, "conversations/\(conversationId)/messages", nil, URLEncoding.default)
         case .postMessageToConversation(let conversationId, let data):
             return (.post, "conversations/\(conversationId)/messages", data, JSONEncoding.default)
-        case .createConversation(let body):
-            return (.post, "messages", ["body":body], JSONEncoding.default)
+        case .createConversation(let data):
+            return (.post, "messages", data, JSONEncoding.default)
         case .recordAnnouncement(let conversationId, let json):
             return (.post, "conversations/\(conversationId)/messages", json, JSONEncoding.default)
         case .recordNPS(let conversationId, let json):
@@ -196,4 +200,30 @@ enum DriftConversation2Router: URLRequestConvertible {
         return req
     }
     
+}
+
+
+struct ScheduleEncoding: ParameterEncoding {
+    private let timestamp: Double
+    private let conversationId: Int
+    init(conversationId: Int, timestamp:Double) {
+        self.timestamp = timestamp
+        self.conversationId = conversationId
+    }
+    
+    func encode(_ urlRequest: URLRequestConvertible, with parameters: Parameters?) throws -> URLRequest {
+        var urlRequest = try urlRequest.asURLRequest()
+    
+        let data = "\(timestamp)".data(using: .utf8)
+        
+        if urlRequest.value(forHTTPHeaderField: "Content-Type") == nil {
+            urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        }
+        
+        urlRequest.httpBody = data
+        
+        let req = try URLEncoding.queryString.encode(urlRequest, with: ["conversationId": conversationId])
+        
+        return req
+    }
 }

@@ -70,7 +70,6 @@ class ConversationListViewController: UIViewController {
             present(unableToAuthAlert, animated: true)
         }
         
-        
         setupEmptyState()
         tableView.tableFooterView = UIView(frame: CGRect.zero)
         tableView.delegate = self
@@ -135,7 +134,7 @@ class ConversationListViewController: UIViewController {
     }
     
     @objc func startNewConversation() {
-        let conversationViewController = ConversationViewController(conversationType: ConversationViewController.ConversationType.createConversation(authorId: endUserId))
+        let conversationViewController = ConversationViewController(conversationType: ConversationViewController.ConversationType.createConversation)
         navigationController?.show(conversationViewController, sender: self)
     }
     
