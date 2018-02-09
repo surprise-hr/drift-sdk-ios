@@ -57,6 +57,7 @@ class Message: Mappable, Equatable, Hashable{
     
     var preMessages: [PreMessage] = []
     var fakeMessage = false
+    var preMessage = false
     var hashValue: Int {
         return id
     }
@@ -120,8 +121,8 @@ extension Array where Iterator.Element == Message
         
         for message in sorted {
             
-            if message.fakeMessage {
-                //Ignore fake messages, we will recreate them
+            if message.preMessage {
+                //Ignore pre messages, we will recreate them
                 continue
             }
             
@@ -164,6 +165,7 @@ extension Array where Iterator.Element == Message
             fakeMessage.body = TextHelper.cleanString(body: preMessage.messageBody)
 //            fakeMessage.saveFormattedString()
             fakeMessage.fakeMessage = true
+            fakeMessage.preMessage = true
             fakeMessage.uuid = UUID().uuidString
             
             fakeMessage.sendStatus = .Sent

@@ -589,7 +589,7 @@ extension ConversationViewController {
         }
         
         //User created message with appointment information should be allowed through
-        if message.authorId == DriftDataStore.sharedInstance.auth?.enduser?.userId && message.contentType == .Chat && message.appointmentInformation == nil{
+        if message.authorId == DriftDataStore.sharedInstance.auth?.enduser?.userId && message.contentType == .Chat && message.appointmentInformation == nil && !message.fakeMessage{
             print("Ignoring own message")
             return
         }
