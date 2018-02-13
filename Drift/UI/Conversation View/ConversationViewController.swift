@@ -76,7 +76,6 @@ class ConversationViewController: UIViewController {
     var conversationId: Int?{
         didSet{
             conversationInputView.addButton.isEnabled = true
-            conversationInputView.textView.placeholder = "Message"
         }
     }
     
@@ -131,9 +130,9 @@ class ConversationViewController: UIViewController {
         conversationInputView.addButton.isEnabled = false
         conversationInputView.textView.font = UIFont(name: "Avenir-Book", size: 15)
         if let organizationName = DriftDataStore.sharedInstance.embed?.organizationName {
-            conversationInputView.textView.placeholder = "Message \(organizationName)"
+            conversationInputView.textView.placeholder = "Type your message to \(organizationName)..."
         }else{
-            conversationInputView.textView.placeholder = "Message"
+            conversationInputView.textView.placeholder = "Type your message..."
         }
         
         tableView.register(UINib(nibName: "ConversationMessageTableViewCell", bundle: Bundle(for: ConversationMessageTableViewCell.classForCoder())), forCellReuseIdentifier: "ConversationMessageTableViewCell")
