@@ -127,10 +127,8 @@ class ScheduleMeetingViewController: UIViewController {
         UserManager.sharedInstance.userMetaDataForUserId(userId, completion: { (user) in
             
             if let user = user {
-                if let avatarURL = user.avatarURL {
-                    self.userAvatarView.setUpForAvatarURL(avatarUrl: avatarURL)
-                }
-                
+                self.userAvatarView.setupForUser(user: user)
+
                 if let creatorName =  user.name {
                     self.userNameLabel.text = creatorName
                 }

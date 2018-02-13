@@ -117,9 +117,7 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
             UserManager.sharedInstance.userMetaDataForUserId(offerMeetingUser, completion: { (user) in
                 
                 if let user = user {
-                    if let avatarURL = user.avatarURL {
-                        self.scheduleMeetingAvatarView.setUpForAvatarURL(avatarUrl: avatarURL)
-                    }
+                    self.scheduleMeetingAvatarView.setupForUser(user: user)
                     
                     if let creatorName =  user.name {
                         self.scheduleMeetingLabel.text = "Schedule a meeting with \(creatorName)"
@@ -164,7 +162,7 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
             messageTextView.textColor = textColor
             
             if let formattedString = message.formattedBody {
-                let finalString: NSMutableAttributedString = formattedString
+                let finalString = NSMutableAttributedString(attributedString: formattedString)
                 finalString.addAttribute(NSAttributedStringKey.foregroundColor, value: textColor, range: NSMakeRange(0, finalString.length))
                 
                 messageTextView.attributedText = finalString
@@ -183,10 +181,7 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
             UserManager.sharedInstance.userMetaDataForUserId(userId, completion: { (user) in
                 
                 if let user = user {
-                    if let avatarURL = user.avatarURL {
-                        self.avatarView.setUpForAvatarURL(avatarUrl: avatarURL)
-                    }
-                    
+                    self.avatarView.setupForUser(user: user)                    
                     if let creatorName =  user.name {
                         self.nameLabel.text = creatorName
                     }
@@ -195,10 +190,8 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
             
         }else {
             if let endUser = DriftDataStore.sharedInstance.auth?.enduser {
-                if let avatarURL = endUser.avatarURL {
-                    avatarView.setUpForAvatarURL(avatarUrl: avatarURL)
-                }
-                
+                avatarView.setupForUser(user: endUser)
+                            
                 if let creatorName = endUser.name {
                     self.nameLabel.text = creatorName
                 }else if let email = endUser.email {
