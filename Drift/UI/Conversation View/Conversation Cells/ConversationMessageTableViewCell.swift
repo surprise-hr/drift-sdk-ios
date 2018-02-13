@@ -162,7 +162,7 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
             messageTextView.textColor = textColor
             
             if let formattedString = message.formattedBody {
-                let finalString: NSMutableAttributedString = formattedString
+                let finalString = NSMutableAttributedString(attributedString: formattedString)
                 finalString.addAttribute(NSAttributedStringKey.foregroundColor, value: textColor, range: NSMakeRange(0, finalString.length))
                 
                 messageTextView.attributedText = finalString
