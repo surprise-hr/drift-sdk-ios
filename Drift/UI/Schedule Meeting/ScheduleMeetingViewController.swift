@@ -59,6 +59,7 @@ class ScheduleMeetingViewController: UIViewController {
     
     @IBOutlet var userAvatarView: AvatarView!
     @IBOutlet var userNameLabel: UILabel!
+    @IBOutlet var selectDateLabel: UILabel!
     
     
     var scheduleMode: ScheduleMode = .day
@@ -234,6 +235,7 @@ class ScheduleMeetingViewController: UIViewController {
             scheduleTableView.isHidden = false
             confirmationView.isHidden = true
             backButton.isHidden = true
+            selectDateLabel.text = "Select a Day"
             //show tableview
         case .time(let day):
             //show tableview
@@ -243,11 +245,13 @@ class ScheduleMeetingViewController: UIViewController {
             scheduleTableView.isHidden = false
             confirmationView.isHidden = true
             backButton.isHidden = false
+            selectDateLabel.text = "Select a Time"
         case .confirm(let date):
             //hide table view
             scheduleTableView.isHidden = true
             confirmationView.isHidden = false
             backButton.isHidden = false
+            selectDateLabel.text = ""
             
             
             let startTime = DateFormatter.localizedString(from: date, dateStyle: .none, timeStyle: .short)
