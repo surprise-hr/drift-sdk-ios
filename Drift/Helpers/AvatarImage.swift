@@ -106,11 +106,16 @@ import AlamofireImage
         }
     }
     
-    func setupForUser(user: User) {
-        if user.bot {
-            setupForBot(embed: DriftDataStore.sharedInstance.embed)
+    func setupForUser(user: User?) {
+        if let user = user {
+            if user.bot {
+                setupForBot(embed: DriftDataStore.sharedInstance.embed)
+            } else {
+                setUpForAvatarURL(avatarUrl: user.avatarURL)
+            }
         } else {
-            setUpForAvatarURL(avatarUrl: user.avatarURL)
+            let placeholder = UIImage(named: "placeholderAvatar", in: Bundle(for: Drift.self), compatibleWith: nil)
+            self.imageView.image = placeholder
         }
     }
     

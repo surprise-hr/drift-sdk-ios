@@ -29,6 +29,7 @@
                 <outlet property="meetingDurationLabel" destination="0dD-Vk-FZh" id="ivD-hc-uMt"/>
                 <outlet property="scheduleButton" destination="m2d-r3-Wgr" id="SHr-Mb-oPv"/>
                 <outlet property="scheduleTableView" destination="jVT-c2-221" id="w33-A0-SP8"/>
+                <outlet property="selectDateLabel" destination="9wZ-qH-nQP" id="Nqa-Qe-BiF"/>
                 <outlet property="shadowView" destination="akz-TA-HjC" id="8B0-u1-0YM"/>
                 <outlet property="topHeaderContainerView" destination="amn-6M-QAx" id="NKE-gy-bNL"/>
                 <outlet property="userAvatarView" destination="Xgu-Oh-Pxb" id="SNt-GN-UyC"/>
@@ -122,7 +123,7 @@
                                         <constraint firstAttribute="height" constant="25" id="lHU-0d-RGt"/>
                                     </constraints>
                                 </stackView>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select a Date" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9wZ-qH-nQP">
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select a Day" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9wZ-qH-nQP">
                                     <rect key="frame" x="15" y="95.5" width="270" height="22"/>
                                     <fontDescription key="fontDescription" name="AvenirNext-DemiBold" family="Avenir Next" pointSize="16"/>
                                     <nil key="textColor"/>
@@ -194,7 +195,7 @@
                                         <action selector="schedulePressed" destination="-1" eventType="touchUpInside" id="4ak-Oc-VRG"/>
                                     </connections>
                                 </button>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Meet ⚡️ by Drift" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tH9-CV-nve">
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Meeting⚡️ by Drift" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tH9-CV-nve">
                                     <rect key="frame" x="15" y="248" width="270" height="14.5"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                     <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

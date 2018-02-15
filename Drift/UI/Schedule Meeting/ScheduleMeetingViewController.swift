@@ -59,6 +59,7 @@ class ScheduleMeetingViewController: UIViewController {
     
     @IBOutlet var userAvatarView: AvatarView!
     @IBOutlet var userNameLabel: UILabel!
+    @IBOutlet var selectDateLabel: UILabel!
     
     
     var scheduleMode: ScheduleMode = .day
@@ -205,13 +206,11 @@ class ScheduleMeetingViewController: UIViewController {
                 self?.scheduleMeetingError()
             }
         }
-        
-        
-        
     }
     
     
     func scheduleMeetingError(){
+        SVProgressHUD.dismiss()
         let alert = UIAlertController(title: "Error", message: "Failed to schedule meeting", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Retry", style: .default, handler: { [weak self] (_) in
             self?.schedulePressed()
@@ -221,6 +220,7 @@ class ScheduleMeetingViewController: UIViewController {
     }
     
     func showAPIError(){
+        SVProgressHUD.dismiss()
         let alert = UIAlertController(title: "Error", message: "Failed to get calendar information", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
         present(alert, animated: true)
@@ -235,6 +235,7 @@ class ScheduleMeetingViewController: UIViewController {
             scheduleTableView.isHidden = false
             confirmationView.isHidden = true
             backButton.isHidden = true
+            selectDateLabel.text = "Select a Day"
             //show tableview
         case .time(let day):
             //show tableview
@@ -244,11 +245,13 @@ class ScheduleMeetingViewController: UIViewController {
             scheduleTableView.isHidden = false
             confirmationView.isHidden = true
             backButton.isHidden = false
+            selectDateLabel.text = "Select a Time"
         case .confirm(let date):
             //hide table view
             scheduleTableView.isHidden = true
             confirmationView.isHidden = false
             backButton.isHidden = false
+            selectDateLabel.text = ""
             
             
             let startTime = DateFormatter.localizedString(from: date, dateStyle: .none, timeStyle: .short)
