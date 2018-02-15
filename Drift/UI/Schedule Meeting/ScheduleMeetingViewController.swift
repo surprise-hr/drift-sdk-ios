@@ -205,13 +205,11 @@ class ScheduleMeetingViewController: UIViewController {
                 self?.scheduleMeetingError()
             }
         }
-        
-        
-        
     }
     
     
     func scheduleMeetingError(){
+        SVProgressHUD.dismiss()
         let alert = UIAlertController(title: "Error", message: "Failed to schedule meeting", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Retry", style: .default, handler: { [weak self] (_) in
             self?.schedulePressed()
@@ -221,6 +219,7 @@ class ScheduleMeetingViewController: UIViewController {
     }
     
     func showAPIError(){
+        SVProgressHUD.dismiss()
         let alert = UIAlertController(title: "Error", message: "Failed to get calendar information", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
         present(alert, animated: true)
