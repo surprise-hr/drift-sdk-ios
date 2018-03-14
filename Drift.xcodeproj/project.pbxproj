@@ -19,7 +19,6 @@
 		6302051A1C52AC5100C02F5E /* DriftManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630205191C52AC5100C02F5E /* DriftManager.swift */; };
 		6302051C1C52AD7900C02F5E /* Embed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6302051B1C52AD7900C02F5E /* Embed.swift */; };
 		6302051E1C56739000C02F5E /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6302051D1C56739000C02F5E /* User.swift */; };
-		6306B51E1C5F91150003F9D3 /* NPSResponseAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6306B51D1C5F91150003F9D3 /* NPSResponseAttributes.swift */; };
 		6306F4211D6379CC00722D15 /* NewMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6306F41F1D6379CC00722D15 /* NewMessageView.swift */; };
 		6306F4221D6379CC00722D15 /* NewMessageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6306F4201D6379CC00722D15 /* NewMessageView.xib */; };
 		6306F42E1D63E68800722D15 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6306F42D1D63E68800722D15 /* UserManager.swift */; };
@@ -27,15 +26,8 @@
 		630E89651C57B99000195062 /* AnnouncementView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 630E89641C57B99000195062 /* AnnouncementView.xib */; };
 		630E89671C57B9AC00195062 /* AnnouncementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630E89661C57B9AC00195062 /* AnnouncementView.swift */; };
 		630E89691C57C77300195062 /* NibLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630E89681C57C77300195062 /* NibLoader.swift */; };
-		630E896D1C57E63300195062 /* NPSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630E896C1C57E63300195062 /* NPSView.swift */; };
-		630E896F1C57E64C00195062 /* NPSView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 630E896E1C57E64C00195062 /* NPSView.xib */; };
-		630E89711C57E90300195062 /* NPSButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630E89701C57E90300195062 /* NPSButton.swift */; };
 		631164F71C6124CE00DF9AD9 /* RequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631164F61C6124CE00DF9AD9 /* RequestTests.swift */; };
 		6311F3541C89D18100F1F438 /* APITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6311F3531C89D18100F1F438 /* APITests.swift */; };
-		6329CABC1C58E6830059C678 /* NPSContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6329CABB1C58E6830059C678 /* NPSContainerView.swift */; };
-		6329CABE1C58E68F0059C678 /* NPSContainerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6329CABD1C58E68F0059C678 /* NPSContainerView.xib */; };
-		6329CAC11C5933590059C678 /* NPSCommentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6329CAC01C5933590059C678 /* NPSCommentView.xib */; };
-		6329CAC31C59336E0059C678 /* NPSCommentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6329CAC21C59336E0059C678 /* NPSCommentView.swift */; };
 		6329CAC51C5A91310059C678 /* DriftDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6329CAC41C5A91310059C678 /* DriftDataStore.swift */; };
 		632E62492028B8DD001EA5EC /* ScheduleMeetingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632E62482028B8DD001EA5EC /* ScheduleMeetingViewController.swift */; };
 		632E624B2028B933001EA5EC /* ScheduleMeetingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 632E624A2028B933001EA5EC /* ScheduleMeetingViewController.xib */; };
@@ -50,7 +42,6 @@
 		63356A4B1C529C760064F652 /* AnnouncementAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63356A471C529C760064F652 /* AnnouncementAttributes.swift */; };
 		63356A4C1C529C760064F652 /* CTA.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63356A481C529C760064F652 /* CTA.swift */; };
 		63356A4D1C529C760064F652 /* Campaign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63356A491C529C760064F652 /* Campaign.swift */; };
-		63356A4E1C529C760064F652 /* NPSAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63356A4A1C529C760064F652 /* NPSAttributes.swift */; };
 		63356A541C52A0D20064F652 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63356A531C52A0D20064F652 /* UIKit.framework */; };
 		63359F9D1C774C22007321DA /* AnnouncementExpandedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63359F9C1C774C22007321DA /* AnnouncementExpandedView.swift */; };
 		63359F9F1C774C31007321DA /* AnnouncementExpandedView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63359F9E1C774C31007321DA /* AnnouncementExpandedView.xib */; };
@@ -67,8 +58,6 @@
 		635462E81EDF0F2B0012358E /* SocketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635462E71EDF0F2B0012358E /* SocketManager.swift */; };
 		635462EA1EDF204E0012358E /* SocketAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635462E91EDF204E0012358E /* SocketAuth.swift */; };
 		635977B1201F6B3500333774 /* ConversationInputTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635977B0201F6B3500333774 /* ConversationInputTextView.swift */; };
-		6362426A1C7FBCB400632F0E /* NPSCompleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636242691C7FBCB400632F0E /* NPSCompleteView.swift */; };
-		6362426C1C7FBCC300632F0E /* NPSCompleteView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6362426B1C7FBCC300632F0E /* NPSCompleteView.xib */; };
 		637E48FF1C9A08040067F105 /* LayerKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63C257381C9A00AE003C4C81 /* LayerKit.framework */; };
 		6387309A1C7E85EF00105867 /* TopController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638730991C7E85EF00105867 /* TopController.swift */; };
 		63BBABB41C7C9D850014768A /* ErrorManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBABB31C7C9D850014768A /* ErrorManager.swift */; };
@@ -153,7 +142,6 @@
 		630205191C52AC5100C02F5E /* DriftManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DriftManager.swift; path = Drift/Managers/DriftManager.swift; sourceTree = SOURCE_ROOT; };
 		6302051B1C52AD7900C02F5E /* Embed.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Embed.swift; path = Drift/Models/Embed.swift; sourceTree = SOURCE_ROOT; };
 		6302051D1C56739000C02F5E /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = User.swift; path = Drift/Models/User.swift; sourceTree = SOURCE_ROOT; };
-		6306B51D1C5F91150003F9D3 /* NPSResponseAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NPSResponseAttributes.swift; path = Drift/Models/NPSResponseAttributes.swift; sourceTree = SOURCE_ROOT; };
 		6306F41F1D6379CC00722D15 /* NewMessageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NewMessageView.swift; path = "Drift/UI/New Message View/NewMessageView.swift"; sourceTree = SOURCE_ROOT; };
 		6306F4201D6379CC00722D15 /* NewMessageView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = NewMessageView.xib; path = "Drift/UI/New Message View/NewMessageView.xib"; sourceTree = SOURCE_ROOT; };
 		6306F42D1D63E68800722D15 /* UserManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserManager.swift; path = Drift/Managers/UserManager.swift; sourceTree = SOURCE_ROOT; };
@@ -161,15 +149,8 @@
 		630E89641C57B99000195062 /* AnnouncementView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AnnouncementView.xib; path = Drift/UI/NotificationView/AnnouncementView.xib; sourceTree = SOURCE_ROOT; };
 		630E89661C57B9AC00195062 /* AnnouncementView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AnnouncementView.swift; path = Drift/UI/NotificationView/AnnouncementView.swift; sourceTree = SOURCE_ROOT; };
 		630E89681C57C77300195062 /* NibLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NibLoader.swift; path = Drift/UI/NibLoader.swift; sourceTree = SOURCE_ROOT; };
-		630E896C1C57E63300195062 /* NPSView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NPSView.swift; path = Drift/UI/NPS/NPSView.swift; sourceTree = SOURCE_ROOT; };
-		630E896E1C57E64C00195062 /* NPSView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = NPSView.xib; path = Drift/UI/NPS/NPSView.xib; sourceTree = SOURCE_ROOT; };
-		630E89701C57E90300195062 /* NPSButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NPSButton.swift; path = Drift/UI/NPS/NPSButton.swift; sourceTree = SOURCE_ROOT; };
 		631164F61C6124CE00DF9AD9 /* RequestTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RequestTests.swift; path = DriftTests/RequestTests.swift; sourceTree = SOURCE_ROOT; };
 		6311F3531C89D18100F1F438 /* APITests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = APITests.swift; path = DriftTests/APITests.swift; sourceTree = SOURCE_ROOT; };
-		6329CABB1C58E6830059C678 /* NPSContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NPSContainerView.swift; path = "Drift/UI/NPS Container View/NPSContainerView.swift"; sourceTree = SOURCE_ROOT; };
-		6329CABD1C58E68F0059C678 /* NPSContainerView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = NPSContainerView.xib; path = "Drift/UI/NPS Container View/NPSContainerView.xib"; sourceTree = SOURCE_ROOT; };
-		6329CAC01C5933590059C678 /* NPSCommentView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = NPSCommentView.xib; path = "Drift/UI/NPS Comment View/NPSCommentView.xib"; sourceTree = SOURCE_ROOT; };
-		6329CAC21C59336E0059C678 /* NPSCommentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NPSCommentView.swift; path = "Drift/UI/NPS Comment View/NPSCommentView.swift"; sourceTree = SOURCE_ROOT; };
 		6329CAC41C5A91310059C678 /* DriftDataStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DriftDataStore.swift; path = Drift/Managers/DriftDataStore.swift; sourceTree = SOURCE_ROOT; };
 		632E62482028B8DD001EA5EC /* ScheduleMeetingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ScheduleMeetingViewController.swift; path = "Drift/UI/Schedule Meeting/ScheduleMeetingViewController.swift"; sourceTree = SOURCE_ROOT; };
 		632E624A2028B933001EA5EC /* ScheduleMeetingViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ScheduleMeetingViewController.xib; path = "Drift/UI/Schedule Meeting/ScheduleMeetingViewController.xib"; sourceTree = SOURCE_ROOT; };
@@ -185,7 +166,6 @@
 		63356A471C529C760064F652 /* AnnouncementAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AnnouncementAttributes.swift; path = Drift/Models/AnnouncementAttributes.swift; sourceTree = SOURCE_ROOT; };
 		63356A481C529C760064F652 /* CTA.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CTA.swift; path = Drift/Models/CTA.swift; sourceTree = SOURCE_ROOT; };
 		63356A491C529C760064F652 /* Campaign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Campaign.swift; path = Drift/Models/Campaign.swift; sourceTree = SOURCE_ROOT; };
-		63356A4A1C529C760064F652 /* NPSAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NPSAttributes.swift; path = Drift/Models/NPSAttributes.swift; sourceTree = SOURCE_ROOT; };
 		63356A501C529DD80064F652 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = DriftTests/Info.plist; sourceTree = SOURCE_ROOT; };
 		63356A531C52A0D20064F652 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		63359F9C1C774C22007321DA /* AnnouncementExpandedView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AnnouncementExpandedView.swift; path = Drift/UI/NotificationView/AnnouncementExpandedView.swift; sourceTree = SOURCE_ROOT; };
@@ -204,8 +184,6 @@
 		635462E71EDF0F2B0012358E /* SocketManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SocketManager.swift; path = Drift/Managers/SocketManager.swift; sourceTree = SOURCE_ROOT; };
 		635462E91EDF204E0012358E /* SocketAuth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SocketAuth.swift; path = Drift/Models/SocketAuth.swift; sourceTree = SOURCE_ROOT; };
 		635977B0201F6B3500333774 /* ConversationInputTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ConversationInputTextView.swift; path = "Drift/UI/Conversation View/ConversationInputTextView.swift"; sourceTree = SOURCE_ROOT; };
-		636242691C7FBCB400632F0E /* NPSCompleteView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NPSCompleteView.swift; path = "Drift/UI/NPS Complete View/NPSCompleteView.swift"; sourceTree = SOURCE_ROOT; };
-		6362426B1C7FBCC300632F0E /* NPSCompleteView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = NPSCompleteView.xib; path = "Drift/UI/NPS Complete View/NPSCompleteView.xib"; sourceTree = SOURCE_ROOT; };
 		638730991C7E85EF00105867 /* TopController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TopController.swift; path = Drift/Helpers/TopController.swift; sourceTree = SOURCE_ROOT; };
 		63BBABB31C7C9D850014768A /* ErrorManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ErrorManager.swift; path = Drift/Managers/ErrorManager.swift; sourceTree = SOURCE_ROOT; };
 		63BBABB51C7CD6210014768A /* ColorHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ColorHelper.swift; path = Drift/Helpers/ColorHelper.swift; sourceTree = SOURCE_ROOT; };
@@ -312,11 +290,7 @@
 				6306F41E1D63798700722D15 /* New Message View */,
 				A85387181D4A8E8000C1D3C1 /* Conversation View */,
 				A80A64541D47779400A41A41 /* Conversation List View */,
-				636242681C7FBC9700632F0E /* NPS Complete View */,
 				2CF43EA61C7E056F008E6748 /* DriftImages.xcassets */,
-				6329CABF1C5933400059C678 /* NPS Comment View */,
-				6329CABA1C58E6540059C678 /* NPS ContainerView */,
-				630E896B1C57E60400195062 /* NPS */,
 				630E896A1C57E5F300195062 /* Announcement View */,
 				630E89681C57C77300195062 /* NibLoader.swift */,
 				2CF43EA21C7E045F008E6748 /* ColorPalette.swift */,
@@ -336,34 +310,6 @@
 			name = "Announcement View";
 			sourceTree = "<group>";
 		};
-		630E896B1C57E60400195062 /* NPS */ = {
-			isa = PBXGroup;
-			children = (
-				630E896C1C57E63300195062 /* NPSView.swift */,
-				630E896E1C57E64C00195062 /* NPSView.xib */,
-				630E89701C57E90300195062 /* NPSButton.swift */,
-			);
-			name = NPS;
-			sourceTree = "<group>";
-		};
-		6329CABA1C58E6540059C678 /* NPS ContainerView */ = {
-			isa = PBXGroup;
-			children = (
-				6329CABB1C58E6830059C678 /* NPSContainerView.swift */,
-				6329CABD1C58E68F0059C678 /* NPSContainerView.xib */,
-			);
-			name = "NPS ContainerView";
-			sourceTree = "<group>";
-		};
-		6329CABF1C5933400059C678 /* NPS Comment View */ = {
-			isa = PBXGroup;
-			children = (
-				6329CAC01C5933590059C678 /* NPSCommentView.xib */,
-				6329CAC21C59336E0059C678 /* NPSCommentView.swift */,
-			);
-			name = "NPS Comment View";
-			sourceTree = "<group>";
-		};
 		632E62472028B887001EA5EC /* Schedule Meeting */ = {
 			isa = PBXGroup;
 			children = (
@@ -380,11 +326,9 @@
 				63356A471C529C760064F652 /* AnnouncementAttributes.swift */,
 				63356A481C529C760064F652 /* CTA.swift */,
 				63356A491C529C760064F652 /* Campaign.swift */,
-				63356A4A1C529C760064F652 /* NPSAttributes.swift */,
 				6302051B1C52AD7900C02F5E /* Embed.swift */,
 				6302051D1C56739000C02F5E /* User.swift */,
 				63F95DBE1C5B8676003BCEE0 /* Auth.swift */,
-				6306B51D1C5F91150003F9D3 /* NPSResponseAttributes.swift */,
 				A80A64451D46655900A41A41 /* Inbox.swift */,
 				A80A64471D4665E500A41A41 /* Conversation.swift */,
 				A80A64491D46671B00A41A41 /* Message.swift */,
@@ -495,15 +439,6 @@
 				A8E705781EF2C77900BC1429 /* ReachabilityManager.swift */,
 			);
 			name = Core;
-			sourceTree = "<group>";
-		};
-		636242681C7FBC9700632F0E /* NPS Complete View */ = {
-			isa = PBXGroup;
-			children = (
-				636242691C7FBCB400632F0E /* NPSCompleteView.swift */,
-				6362426B1C7FBCC300632F0E /* NPSCompleteView.xib */,
-			);
-			name = "NPS Complete View";
 			sourceTree = "<group>";
 		};
 		74DE7736A181ADE78FB587A2 /* Frameworks */ = {
@@ -686,7 +621,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				630E896F1C57E64C00195062 /* NPSView.xib in Resources */,
 				2CF43EA71C7E056F008E6748 /* DriftImages.xcassets in Resources */,
 				A8E705861EF8192500BC1429 /* AttachmentCollectionViewCell.xib in Resources */,
 				633F2B65202C8D7200D675B7 /* MeetingMessageTableViewCell.xib in Resources */,
@@ -696,13 +630,10 @@
 				63359F9F1C774C31007321DA /* AnnouncementExpandedView.xib in Resources */,
 				A85387171D4A4F5100C1D3C1 /* ConversationListViewController.xib in Resources */,
 				A83E41671D50D20800B4EA35 /* MessageTableHeaderView.xib in Resources */,
-				6362426C1C7FBCC300632F0E /* NPSCompleteView.xib in Resources */,
 				A8F589A41D478F0A0043DB8D /* ConversationListTableViewCell.xib in Resources */,
 				A8E7057D1EF4054000BC1429 /* ConnectionBarView.xib in Resources */,
 				6306F4221D6379CC00722D15 /* NewMessageView.xib in Resources */,
-				6329CAC11C5933590059C678 /* NPSCommentView.xib in Resources */,
 				A8E705801EF80BC700BC1429 /* ConversationMessageTableViewCell.xib in Resources */,
-				6329CABE1C58E68F0059C678 /* NPSContainerView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -832,7 +763,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6329CABC1C58E6830059C678 /* NPSContainerView.swift in Sources */,
 				63BBABB61C7CD6210014768A /* ColorHelper.swift in Sources */,
 				635462E81EDF0F2B0012358E /* SocketManager.swift in Sources */,
 				A8E5A4741EF02FAB00113113 /* OpenHours.swift in Sources */,
@@ -846,7 +776,6 @@
 				63359F9D1C774C22007321DA /* AnnouncementExpandedView.swift in Sources */,
 				630205181C52A24E00C02F5E /* CampaignsManager.swift in Sources */,
 				A88682DD1EE982D600E396D8 /* EnrichedConversation.swift in Sources */,
-				630E896D1C57E63300195062 /* NPSView.swift in Sources */,
 				6306F4211D6379CC00722D15 /* NewMessageView.swift in Sources */,
 				6302051C1C52AD7900C02F5E /* Embed.swift in Sources */,
 				492F77EC1F55A72300A05094 /* Channel.swift in Sources */,
@@ -869,7 +798,6 @@
 				2CF43EA31C7E045F008E6748 /* ColorPalette.swift in Sources */,
 				63BBABB41C7C9D850014768A /* ErrorManager.swift in Sources */,
 				63EC66F12024F463003CB5FC /* DriftPreviewItem.swift in Sources */,
-				630E89711C57E90300195062 /* NPSButton.swift in Sources */,
 				635462E61EDF0C0B0012358E /* DriftAPIURLRouter.swift in Sources */,
 				A8E705871EF8192500BC1429 /* AttachmentCollectionViewCell.swift in Sources */,
 				63356A4C1C529C760064F652 /* CTA.swift in Sources */,
@@ -886,8 +814,6 @@
 				633F2B61202B707B00D675B7 /* AppointmentInformation.swift in Sources */,
 				6329CAC51C5A91310059C678 /* DriftDataStore.swift in Sources */,
 				492F77ED1F55A72300A05094 /* Presence.swift in Sources */,
-				6362426A1C7FBCB400632F0E /* NPSCompleteView.swift in Sources */,
-				6329CAC31C59336E0059C678 /* NPSCommentView.swift in Sources */,
 				A80A644A1D46671B00A41A41 /* Message.swift in Sources */,
 				630E89691C57C77300195062 /* NibLoader.swift in Sources */,
 				492F77F01F55A72300A05094 /* Socket.swift in Sources */,
@@ -898,12 +824,10 @@
 				A8C6ADED1D632CD10024CFDC /* ConversationEmptyStateView.swift in Sources */,
 				63356A4B1C529C760064F652 /* AnnouncementAttributes.swift in Sources */,
 				A83E41681D50D20800B4EA35 /* MessageTableHeaderView.swift in Sources */,
-				63356A4E1C529C760064F652 /* NPSAttributes.swift in Sources */,
 				A86A47251D50D53F008C59C0 /* DriftDateFormatter.swift in Sources */,
 				A82CCE0E1D4B731A0043D3C2 /* Attachment.swift in Sources */,
 				6302051E1C56739000C02F5E /* User.swift in Sources */,
 				A8E705791EF2C77900BC1429 /* ReachabilityManager.swift in Sources */,
-				6306B51E1C5F91150003F9D3 /* NPSResponseAttributes.swift in Sources */,
 				633F2B5F202B60A100D675B7 /* GoogleMeeting.swift in Sources */,
 				634EC1F52018BA670020DF97 /* ConversationInputAccessoryView.swift in Sources */,
 				635462E51EDF0C0B0012358E /* DriftAPIManager.swift in Sources */,

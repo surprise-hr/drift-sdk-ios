@@ -101,34 +101,6 @@ class DriftAPIManager: Alamofire.SessionManager {
         })
     }
     
-    class func recordNPS(_ conversationId: Int, authToken: String, response: NPSResponse){
-        var attributes: [String: Any] = [:]
-        
-        switch response{
-        case .dismissed:
-            attributes = ["dismissed":true]
-        case .numeric(let numeric):
-            attributes = ["numericResponse":numeric]
-        case .textAndNumeric(let numeric, let text):
-            attributes = ["numericResponse":numeric, "textResponse": text]
-        }
-        
-        let json: [String: Any] = [
-            "type": "NPS_RESPONSE",
-            "attributes": attributes
-        ]
-        
-        sharedManager.request(DriftConversationRouter.recordNPS(conversationId: conversationId, json: json)).responseJSON(completionHandler: { (result) -> Void in
-            
-            switch result.result {
-            case .success(let json):
-                LoggerManager.log("Record NPS Success: \(json)")
-            case .failure(let error):
-                LoggerManager.log("Record NPS Failure: \(error)")
-            }
-        })
-    }
-    
     class func markMessageAsRead(messageId: Int, completion: @escaping (_ result: Result<Bool>) -> ()){
         sharedManager.request(DriftConversation2Router.markMessageAsRead(messageId: messageId)).responseString { (result) in
             switch result.result{

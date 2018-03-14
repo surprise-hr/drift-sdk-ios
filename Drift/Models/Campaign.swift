@@ -12,13 +12,9 @@ class Campaign: Mappable {
     /**
         The type of message that the SDK can parse
         - Announcement: Announcement Campaign
-        - NPS: NPS Campaign
-        - NPS Response: Response to an NPS Campaign - Don't show NPS is conversation contains NPS Response
      */
     enum MessageType: String {
         case Announcement = "ANNOUNCEMENT"
-        case NPS = "NPS_QUESTION"
-        case NPSResponse = "NPS_RESPONSE"
     }
     
     var orgId: Int?
@@ -30,10 +26,7 @@ class Campaign: Mappable {
     var authorId: Int?
     var conversationId: Int?
     var viewerRecipientStatus: RecipientStatus?
-    
-    var npsAttributes: NPSAttributes?
     var announcementAttributes: AnnouncementAttributes?
-    var npsResponseAttributes: NPSResponseAttributes? 
     
     required convenience init?(map: Map) {
         if map.JSON["type"] as? String == nil || MessageType(rawValue: map.JSON["type"] as! String) == nil{
@@ -59,10 +52,6 @@ class Campaign: Mappable {
             switch messageType {
             case .Announcement:
                 announcementAttributes <- map["attributes"]
-            case .NPS:
-                npsAttributes         <- map["attributes"]
-            case .NPSResponse:
-                npsResponseAttributes <- map["attributes"]
             }
         }
     }
