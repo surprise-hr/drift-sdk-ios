@@ -19,7 +19,7 @@ class CampaignsManager {
                     campaigns.append(contentsOf: campaignWrapper.campaigns)
                 }
                 let filteredCampaigns = filtercampaigns(campaigns)
-                PresentationManager.sharedInstance.didRecieveCampaigns(filteredCampaigns.nps + filteredCampaigns.announcements)
+                PresentationManager.sharedInstance.didRecieveCampaigns(filteredCampaigns)
             case .failure(let error):
                 LoggerManager.didRecieveError(error)
             }
@@ -27,18 +27,15 @@ class CampaignsManager {
     }
     
     /**
-        This is responsible for filtering an array of campaigns into NPS and Announcements
+        This is responsible for filtering an array of campaigns into Announcements
         This will also filter out non presentable campaigns
         - parameter campaign: Array of non filtered campaigns
-        - returns: Tuple of NPS and Announcement Type Campaigns that are presentable in SDK
+        - returns: Announcement Type Campaigns that are presentable in SDK
     */
-    class func filtercampaigns(_ campaigns: [Campaign]) -> (nps: [Campaign], announcements: [Campaign]){
-        ///GET NPS or NPS_RESPONSE
+    class func filtercampaigns(_ campaigns: [Campaign]) -> [Campaign] {
         
-        ///DO Priority - Announcements before NPS, Latest first
+        ///DO Priority - Announcements, Latest first
         
-        var npsResponse: [Campaign] = []
-        var nps: [Campaign] = []
         var announcements: [Campaign] = []
         
         for campaign in campaigns {
@@ -46,10 +43,6 @@ class CampaignsManager {
             if campaign.viewerRecipientStatus != .Read {
                 switch campaign.messageType {
                     
-                case .some(.NPS):
-                    nps.append(campaign)
-                case .some(.NPSResponse):
-                    npsResponse.append(campaign)
                 case .some(.Announcement):
                     //Only show chat response announcements if we have an email
                     if let ctaType = campaign.announcementAttributes?.cta?.ctaType , ctaType == .ChatResponse{
@@ -67,16 +60,7 @@ class CampaignsManager {
             }
         }
         
-        let npsResponseIds = npsResponse.flatMap { $0.conversationId }
-        
-        nps = nps.filter {
-            if let conversationId = $0.conversationId {
-                return !npsResponseIds.contains(conversationId)
-            }
-            return false
-        }
-        
-        return (nps, announcements)
+        return announcements
     }
     
     class func markCampaignAsRead(_ messageId: Int) {

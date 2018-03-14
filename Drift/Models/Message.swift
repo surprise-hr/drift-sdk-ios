@@ -12,7 +12,6 @@ import ObjectMapper
 public enum ContentType: String{
     case Chat = "CHAT"
     case Annoucement = "ANNOUNCEMENT"
-    case NPS = "NPS_QUESTION"
     case Edit = "EDIT"
 }
 enum AuthorType: String{
