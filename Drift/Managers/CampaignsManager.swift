@@ -60,7 +60,7 @@ class CampaignsManager {
             }
         }
         
-        return (announcements)
+        return announcements
     }
     
     class func markCampaignAsRead(_ messageId: Int) {
