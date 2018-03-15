@@ -76,7 +76,6 @@ class ConversationViewController: UIViewController {
     var conversationId: Int?{
         didSet{
             conversationInputView.addButton.isEnabled = true
-            conversationInputView.textView.placeholder = "Message"
         }
     }
     
@@ -131,9 +130,9 @@ class ConversationViewController: UIViewController {
         conversationInputView.addButton.isEnabled = false
         conversationInputView.textView.font = UIFont(name: "Avenir-Book", size: 15)
         if let organizationName = DriftDataStore.sharedInstance.embed?.organizationName {
-            conversationInputView.textView.placeholder = "Message \(organizationName)"
+            conversationInputView.textView.placeholder = "Type your message to \(organizationName)..."
         }else{
-            conversationInputView.textView.placeholder = "Message"
+            conversationInputView.textView.placeholder = "Type your message..."
         }
         
         tableView.register(UINib(nibName: "ConversationMessageTableViewCell", bundle: Bundle(for: ConversationMessageTableViewCell.classForCoder())), forCellReuseIdentifier: "ConversationMessageTableViewCell")
@@ -165,6 +164,7 @@ class ConversationViewController: UIViewController {
         tableView.transform = CGAffineTransform(rotationAngle: CGFloat.pi)
         tableView.keyboardDismissMode = .interactive
         
+        tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 10))
         tableView.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: view.frame.width - 10)
         
         let dismissGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))

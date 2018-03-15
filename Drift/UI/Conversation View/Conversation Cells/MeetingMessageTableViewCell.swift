@@ -85,7 +85,7 @@ class MeetingMessageTableViewCell: UITableViewCell {
         UserManager.sharedInstance.userMetaDataForUserId(appointmentInformation.agentId, completion: { [weak self] (user) in
             
             if let user = user {
-                self?.scheduleMeetingAvatarView.setUpForAvatarURL(avatarUrl: user.avatarURL)
+                self?.scheduleMeetingAvatarView.setupForUser(user: user)
                 self?.scheduleTitleLabel.text = "Scheduled a Meeting with " + user.getUserName()
             }else{
                 self?.scheduleTitleLabel.text = "Scheduled Meeting"

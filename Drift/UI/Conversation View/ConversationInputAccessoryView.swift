@@ -63,7 +63,7 @@ class ConversationInputAccessoryView: UIView {
         addButton.translatesAutoresizingMaskIntoConstraints = false
         addButton.addTarget(self, action: #selector(didPressPlus), for: .touchUpInside)
         addButton.setImage(UIImage(named: "attachImage", in: Bundle(for: Drift.self), compatibleWith: nil), for: .normal)
-        addButton.tintColor = DriftDataStore.sharedInstance.generateBackgroundColor()
+        addButton.tintColor = ColorPalette.navyExtraDark
         return addButton
     }()
     
@@ -83,13 +83,13 @@ class ConversationInputAccessoryView: UIView {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.isEnabled = false
         button.setTitleColor(DriftDataStore.sharedInstance.generateBackgroundColor(), for: .normal)
-        button.setTitleColor(.lightGray, for: .disabled)
+        button.setTitleColor(ColorPalette.navyDark, for: .disabled)
         button.contentEdgeInsets = UIEdgeInsets(top: 3, left: 8, bottom: 3, right: 8)
         
-        button.titleLabel?.font = UIFont(name: "Avenir-Book", size: 14)!
+        button.titleLabel?.font = UIFont(name: "AvenirNext-DemiBold", size: 14)!
         button.layer.cornerRadius = 3
         button.layer.borderWidth = 1
-        button.layer.borderColor = DriftDataStore.sharedInstance.generateBackgroundColor().cgColor
+        button.layer.borderColor = ColorPalette.navyDark.cgColor
         return button
     }()
     
@@ -234,7 +234,7 @@ class ConversationInputAccessoryView: UIView {
         NSLayoutConstraint.activate([
             sendButton.trailingAnchor.constraint(equalTo: bottomContainerView.trailingAnchor, constant: -15),
             sendButton.bottomAnchor.constraint(equalTo: bottomContainerView.bottomAnchor, constant: -6),
-            sendButton.heightAnchor.constraint(equalToConstant: 25)
+            sendButton.heightAnchor.constraint(equalToConstant: 30)
         ])
         
         //Add textview, leading send, trailing add, top and bottom
@@ -306,6 +306,11 @@ class ConversationInputAccessoryView: UIView {
     
     func updateSendButton(enabled: Bool) {
         sendButton.isEnabled = enabled
+        if enabled {
+            sendButton.layer.borderColor = DriftDataStore.sharedInstance.generateBackgroundColor().cgColor
+        } else {
+            sendButton.layer.borderColor = ColorPalette.navyDark.cgColor
+        }
     }
     
     @objc func didPressSend(){

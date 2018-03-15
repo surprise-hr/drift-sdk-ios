@@ -128,7 +128,6 @@ enum DriftConversationRouter: URLRequestConvertible {
     case createConversation(data: [String: Any])
     
     case recordAnnouncement(conversationId: Int, json: [String: Any])
-    case recordNPS(conversationId: Int, json: [String: Any])
     
     var request: (method: Alamofire.HTTPMethod, path: String, parameters: [String: Any]?, encoding: ParameterEncoding){
         switch self {
@@ -145,8 +144,6 @@ enum DriftConversationRouter: URLRequestConvertible {
         case .createConversation(let data):
             return (.post, "messages", data, JSONEncoding.default)
         case .recordAnnouncement(let conversationId, let json):
-            return (.post, "conversations/\(conversationId)/messages", json, JSONEncoding.default)
-        case .recordNPS(let conversationId, let json):
             return (.post, "conversations/\(conversationId)/messages", json, JSONEncoding.default)
         }
     }

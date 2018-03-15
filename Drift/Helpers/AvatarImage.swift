@@ -97,12 +97,25 @@ import AlamofireImage
     }
     
     func setupForBot(embed: Embed?){
-        imageView.image = #imageLiteral(resourceName: "robot")
+        imageView.image = UIImage(named: "robot", in: Bundle(for: Drift.self), compatibleWith: nil)
         if let backgroundColorString = embed?.backgroundColorString {
             let color = UIColor(hexString: "#\(backgroundColorString)")
             imageView.backgroundColor = color
         }else{
             imageView.backgroundColor = ColorPalette.driftBlue
+        }
+    }
+    
+    func setupForUser(user: User?) {
+        if let user = user {
+            if user.bot {
+                setupForBot(embed: DriftDataStore.sharedInstance.embed)
+            } else {
+                setUpForAvatarURL(avatarUrl: user.avatarURL)
+            }
+        } else {
+            let placeholder = UIImage(named: "placeholderAvatar", in: Bundle(for: Drift.self), compatibleWith: nil)
+            self.imageView.image = placeholder
         }
     }
     

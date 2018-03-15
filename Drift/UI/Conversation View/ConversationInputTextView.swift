@@ -28,26 +28,21 @@ class ConversationInputTextView: UITextView {
     open let placeholderLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
-        label.textColor = .lightGray
-        label.text = "New Message"
+        label.textColor = ColorPalette.navyDark
+        label.text = "Type your message..."
         label.backgroundColor = .clear
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     /// The placeholder text that appears when there is no text. The default value is "New Message"
-    open var placeholder: String? = "New Message" {
+    open var placeholder: String? = "Type your message..." {
         didSet {
             placeholderLabel.text = placeholder
         }
     }
     
-    /// The placeholderLabel's textColor
-    open var placeholderTextColor: UIColor? = .lightGray {
-        didSet {
-            placeholderLabel.textColor = placeholderTextColor
-        }
-    }
+
     
     /// The font of the InputTextView. When set the placeholderLabel's font is also updated
     open override var font: UIFont! {

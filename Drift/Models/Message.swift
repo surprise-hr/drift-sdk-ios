@@ -12,7 +12,6 @@ import ObjectMapper
 public enum ContentType: String{
     case Chat = "CHAT"
     case Annoucement = "ANNOUNCEMENT"
-    case NPS = "NPS_QUESTION"
     case Edit = "EDIT"
 }
 enum AuthorType: String{
@@ -47,7 +46,7 @@ class Message: Mappable, Equatable, Hashable{
     var conversationId: Int!
     var requestId: Double = 0
     var sendStatus: SendStatus = SendStatus.Sent
-    var formattedBody: NSMutableAttributedString?
+    var formattedBody: NSAttributedString?
     var viewerRecipientStatus: RecipientStatus?
     var appointmentInformation: AppointmentInformation?
 
@@ -93,19 +92,8 @@ class Message: Mappable, Equatable, Hashable{
         scheduleMeetingFlow     <- map["attributes.scheduleMeetingFlow"]
 
         
-        do {
-            let htmlStringData = (body ?? "").data(using: String.Encoding.utf8)!
-            let attributedHTMLString = try NSMutableAttributedString(data: htmlStringData, options: [NSAttributedString.DocumentReadingOptionKey.documentType : NSAttributedString.DocumentType.html, NSAttributedString.DocumentReadingOptionKey.characterEncoding: String.Encoding.utf8.rawValue], documentAttributes: nil)
+        formattedBody = TextHelper.attributedTextForString(text: body ?? "")
 
-            if let font = UIFont(name: "AvenirNext-Regular", size: 16){
-                let paragraphStyle = NSMutableParagraphStyle()
-                paragraphStyle.paragraphSpacing = 0.0
-                attributedHTMLString.addAttributes([NSAttributedStringKey.font: font, NSAttributedStringKey.paragraphStyle: paragraphStyle], range: NSRange(location: 0, length: attributedHTMLString.length))
-                formattedBody = attributedHTMLString
-            }
-        }catch{
-            //Unable to format HTML body, in this scenario the raw html will be shown in the message cell
-        }
     }
 
 }
@@ -163,7 +151,7 @@ extension Array where Iterator.Element == Message
             fakeMessage.createdAt = date.addingTimeInterval(TimeInterval(-(index + 1)))
             fakeMessage.conversationId = message.conversationId
             fakeMessage.body = TextHelper.cleanString(body: preMessage.messageBody)
-//            fakeMessage.saveFormattedString()
+            fakeMessage.formattedBody = TextHelper.attributedTextForString(text: fakeMessage.body ?? "")
             fakeMessage.fakeMessage = true
             fakeMessage.preMessage = true
             fakeMessage.uuid = UUID().uuidString
