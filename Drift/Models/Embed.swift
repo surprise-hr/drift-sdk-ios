@@ -57,11 +57,10 @@ struct Embed: Mappable {
     
     init?(map: Map) {
         //These fields are required, without them we fail to init the object
-        if map["orgId"] == nil || map["orgId"] as? String == "" ||
-            map["id"] == nil || map["id"] as? String == "" ||
-            map["configuration.inboxId"] == nil || map["configuration.inboxId"] as? String == "" ||
-            map["configuration.authClientId"] == nil || map["configuration.authClientId"] as? String == "" ||
-            map["configuration.authClientId"] == nil || map["configuration.authClientId"] as? String == ""{
+        if map.JSON["orgId"] == nil || map.JSON["orgId"] as? String == "" ||
+            map.JSON["id"] == nil || map.JSON["id"] as? String == "" ||
+            map["configuration.inboxId"].currentValue == nil || map["configuration.inboxId"].currentValue as? String == "" ||
+            map["configuration.authClientId"].currentValue == nil || map["configuration.authClientId"].currentValue as? String == "" {
             return nil
         }
     }
@@ -90,7 +89,7 @@ struct Embed: Mappable {
         userListIds                <- map["configuration.theme.userList"]
     }
     
-    public func isOrgCurrentlyOpen() -> Bool {
+    func isOrgCurrentlyOpen() -> Bool {
         if widgetMode == .some(.manual) {
             if widgetStatus == .some(.on) {
                 return true
@@ -108,4 +107,27 @@ struct Embed: Mappable {
         }
     }
     
+    func getWelcomeMessageForUser() -> String? {
+        
+        if let welcomeMessage = welcomeMessage,  isOrgCurrentlyOpen() {
+            return welcomeMessage
+        }else if let awayMessage = awayMessage {
+            return awayMessage
+        }
+        return nil
+    }
+    
+    func getUserForWelcomeMessage() -> User? {
+        
+        if userListMode == .custom, let teamMember = users.filter({userListIds.contains($0.userId ?? -1)}).first{
+            return teamMember
+        }else{
+            if users.count > 0 {
+                return users[Int(arc4random_uniform(UInt32(users.count)))]
+            } else {
+                return nil
+            }
+        }
+        
+    }
 }

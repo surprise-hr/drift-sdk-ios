@@ -70,7 +70,6 @@ class ConversationListViewController: UIViewController {
             present(unableToAuthAlert, animated: true)
         }
         
-        
         setupEmptyState()
         tableView.tableFooterView = UIView(frame: CGRect.zero)
         tableView.delegate = self
@@ -126,7 +125,7 @@ class ConversationListViewController: UIViewController {
                     }
                 case .failure(let error):
                     SVProgressHUD.dismiss()
-                    LoggerManager.log("Unable to get conversations for endUser:  \(self.endUserId): \(error)")
+                    LoggerManager.log("Unable to get conversations for endUser:  \(self.endUserId ?? -1): \(error)")
                 }
                 
             }
@@ -135,7 +134,7 @@ class ConversationListViewController: UIViewController {
     }
     
     @objc func startNewConversation() {
-        let conversationViewController = ConversationViewController(conversationType: ConversationViewController.ConversationType.createConversation(authorId: endUserId))
+        let conversationViewController = ConversationViewController(conversationType: ConversationViewController.ConversationType.createConversation)
         navigationController?.show(conversationViewController, sender: self)
     }
     
@@ -156,7 +155,7 @@ extension ConversationListViewController: UITableViewDelegate, UITableViewDataSo
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ConversationListTableViewCell") as! ConversationListTableViewCell
-        cell.avatarImageView.image = UIImage(named: "placeholderAvatar", in: Bundle(for: Drift.self), compatibleWith: nil)
+
         let enrichedConversation = enrichedConversations[(indexPath as NSIndexPath).row]
         if let conversation = enrichedConversation.conversation {
             if enrichedConversation.unreadMessages > 0 {
@@ -170,10 +169,9 @@ extension ConversationListViewController: UITableViewDelegate, UITableViewDataSo
 
                 UserManager.sharedInstance.userMetaDataForUserId(assigneeId, completion: { (user) in
 
+                    cell.avatarImageView.setupForUser(user: user)
+
                     if let user = user {
-                        if let avatar = user.avatarURL {
-                            cell.avatarImageView.af_setImage(withURL: URL(string:avatar)!)
-                        }
                         if let creatorName = user.name {
                             cell.nameLabel.text = creatorName
                         }
@@ -184,18 +182,12 @@ extension ConversationListViewController: UITableViewDelegate, UITableViewDataSo
                 if authorId == endUserId {
                     
                     cell.nameLabel.text = "You"
-                    if let endUser = DriftDataStore.sharedInstance.auth?.enduser {
-                        if let avatar = endUser.avatarURL {
-                            cell.avatarImageView.af_setImage(withURL: URL(string: avatar)!)
-                        }
-                    }
+                    cell.avatarImageView.setupForUser(user: DriftDataStore.sharedInstance.auth?.enduser)
                 }else{
                     UserManager.sharedInstance.userMetaDataForUserId(authorId, completion: { (user) in
-                        
+                        cell.avatarImageView.setupForUser(user: user)
+
                         if let user = user {
-                            if let avatar = user.avatarURL {
-                                cell.avatarImageView.af_setImage(withURL: URL(string:avatar)!)
-                            }
                             if let creatorName = user.name {
                                 cell.nameLabel.text = creatorName
                             }

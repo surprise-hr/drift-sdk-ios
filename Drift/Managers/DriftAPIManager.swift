@@ -47,6 +47,26 @@ class DriftAPIManager: Alamofire.SessionManager {
         })
     }
     
+    class func getUserAvailability(_ userId: Int, completion: @escaping (Result<UserAvailability>) -> ()) {
+        sharedManager.request(DriftCustomerRouter.getUserAvailability(userId: userId)).responseJSON(completionHandler: { (result) -> Void in
+            completion(mapResponse(result))
+        })
+    }
+    
+    class func scheduleMeeting(_ userId: Int, conversationId:Int, timestamp: Double, completion: @escaping (Result<GoogleMeeting>) -> ()) {
+        sharedManager.request(DriftCustomerRouter.scheduleMeeting(userId: userId, conversationId: conversationId, timestamp: timestamp)).responseJSON(completionHandler: { (result) -> Void in
+            
+            if result.response?.statusCode == 200 {
+                LoggerManager.log("Scheduled Meeting Success: \(String(describing: result.result.value))")
+                completion(mapResponse(result))
+            } else {
+                LoggerManager.log("Scheduled Meeting Failure: \(String(describing: result.result.error))")
+                completion(.failure(DriftError.apiFailure))
+            }
+        })
+    }
+    
+    
     class func postIdentify(_ orgId: Int, userId: String, email: String, attributes: [String: Any]?, completion: @escaping (Result<User>) -> ()) {
         var params: [String: Any] = [
             "orgId": orgId,
@@ -77,34 +97,6 @@ class DriftAPIManager: Alamofire.SessionManager {
                 LoggerManager.log("Record Annouincment Success: \(json)")
             case .failure(let error):
                 LoggerManager.log("Record Announcement Failure: \(error)")
-            }
-        })
-    }
-    
-    class func recordNPS(_ conversationId: Int, authToken: String, response: NPSResponse){
-        var attributes: [String: Any] = [:]
-        
-        switch response{
-        case .dismissed:
-            attributes = ["dismissed":true]
-        case .numeric(let numeric):
-            attributes = ["numericResponse":numeric]
-        case .textAndNumeric(let numeric, let text):
-            attributes = ["numericResponse":numeric, "textResponse": text]
-        }
-        
-        let json: [String: Any] = [
-            "type": "NPS_RESPONSE",
-            "attributes": attributes
-        ]
-        
-        sharedManager.request(DriftConversationRouter.recordNPS(conversationId: conversationId, json: json)).responseJSON(completionHandler: { (result) -> Void in
-            
-            switch result.result {
-            case .success(let json):
-                LoggerManager.log("Record NPS Success: \(json)")
-            case .failure(let error):
-                LoggerManager.log("Record NPS Failure: \(error)")
             }
         })
     }
@@ -157,16 +149,34 @@ class DriftAPIManager: Alamofire.SessionManager {
         })
     }
     
-    class func postMessage(_ conversationId: Int, message: Message, authToken: String, completion: @escaping (_ result: Result<Message>) -> ()){
-        let json = message.toMessageJSON()
+    class func postMessage(_ conversationId: Int, messageRequest: MessageRequest, completion: @escaping (_ result: Result<Message>) -> ()){
+        let json = messageRequest.toJSON()
         
         sharedManager.request(DriftConversationRouter.postMessageToConversation(conversationId: conversationId, data: json)).responseJSON(completionHandler: { (result) -> Void in
             completion(mapResponse(result))
         })
     }
     
-    class func createConversation(_ body: String, authorId:Int?, authToken: String, completion: @escaping (_ result: Result<Message>) -> ()){
-        sharedManager.request(DriftConversationRouter.createConversation(body: body)).responseJSON(completionHandler: { (result) -> Void in
+    class func createConversation(_ body: String, welcomeUserId: Int?, welcomeMessage: String?, authToken: String, completion: @escaping (_ result: Result<Message>) -> ()){
+        
+        var data: [String: Any] = [:]
+        
+        data["body"] = body
+        
+        if let welcomeUserId = welcomeUserId, let welcomeMessage = welcomeMessage {
+            
+            let preMessage : [String: Any] = [
+                "body": welcomeMessage,
+                "sender": ["id":welcomeUserId]
+            ]
+
+            data["attributes"] = [
+                "preMessages": [preMessage],
+                "sentWelcomeMessage": true]
+            
+        }
+        
+        sharedManager.request(DriftConversationRouter.createConversation(data: data)).responseJSON(completionHandler: { (result) -> Void in
             completion(mapResponse(result))
         })
     }

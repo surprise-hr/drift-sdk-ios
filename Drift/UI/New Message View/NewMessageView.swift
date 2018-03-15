@@ -115,6 +115,10 @@ class NewMessageView: CampaignView {
             bottomConstant = -65.0
         }
         
+        if #available(iOS 11.0, *) {
+            bottomConstant = bottomConstant - window.safeAreaInsets.bottom
+        }
+        
         bottomConstraint = NSLayoutConstraint(item: self, attribute: .bottom, relatedBy: .equal, toItem: window, attribute: .bottom, multiplier: 1.0, constant: bottomConstant)
         
         window.addConstraint(bottomConstraint)

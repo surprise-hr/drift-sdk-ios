@@ -9,16 +9,11 @@
 
 import ObjectMapper
 
-enum ContentType: String{
+public enum ContentType: String{
     case Chat = "CHAT"
-    case NPS = "NPS_QUESTION"
     case Annoucement = "ANNOUNCEMENT"
+    case Edit = "EDIT"
 }
-
-enum Type: String{
-    case Chat = "CHAT"
-}
-
 enum AuthorType: String{
     case User = "USER"
     case EndUser = "END_USER"
@@ -43,19 +38,25 @@ class Message: Mappable, Equatable, Hashable{
     var body: String?
     var attachmentIds: [Int] = []
     var attachments: [Attachment] = []
-    var contentType = ContentType.Chat.rawValue
+    var contentType:ContentType = ContentType.Chat
     var createdAt = Date()
     var authorId: Int!
     var authorType: AuthorType!
-    var type: Type!
-    var context: Context?
     
     var conversationId: Int!
     var requestId: Double = 0
     var sendStatus: SendStatus = SendStatus.Sent
-    var formattedBody: NSMutableAttributedString?
+    var formattedBody: NSAttributedString?
     var viewerRecipientStatus: RecipientStatus?
+    var appointmentInformation: AppointmentInformation?
+
+    var presentSchedule: Int?
+    var scheduleMeetingFlow: Bool = false
+    var offerSchedule: Int = -1
     
+    var preMessages: [PreMessage] = []
+    var fakeMessage = false
+    var preMessage = false
     var hashValue: Int {
         return id
     }
@@ -65,11 +66,6 @@ class Message: Mappable, Equatable, Hashable{
             return nil
         }
         
-        if let body = map.JSON["body"] as? String, let attachments = map.JSON["attachments"] as? [Int]{
-            if body == "" && attachments.count == 0{
-                return nil
-            }
-        }
         self.init()
     }
     
@@ -79,62 +75,102 @@ class Message: Mappable, Equatable, Hashable{
         inboxId                 <- map["inboxId"]
         body                    <- map["body"]
         
-        if body != nil {
-            if let range = body!.range(of: "<p>", options: .caseInsensitive) {
-                body!.replaceSubrange(range, with: "")
-            }
-            
-            if let range = body!.range(of: "</p>", options: .backwards) {
-                body!.replaceSubrange(range, with: "")
-            }
-            
-            if let _ = body!.range(of: "<hr", options: .caseInsensitive) {
-                body = body!.replacingOccurrences(of: "<hr [^>]+>", with: "", options: String.CompareOptions.regularExpression, range: nil)
-            }
-            
-        }
+        body = TextHelper.cleanString(body: body ?? "")
+        
         
         attachmentIds           <- map["attachments"]
-        contentType             <- map["contentType"]
+        contentType             <- (map["contentType"], EnumTransform<ContentType>())
         createdAt               <- (map["createdAt"], DriftDateTransformer())
         authorId                <- map["authorId"]
         authorType              <- map["authorType"]
-        type                    <- map["type"]
         conversationId          <- map["conversationId"]
-        viewerRecipientStatus  <- map["viewerRecipientStatus"]
+        viewerRecipientStatus   <- map["viewerRecipientStatus"]
+        appointmentInformation  <- map["attributes.appointmentInfo"]
+        preMessages             <- map["attributes.preMessages"]
+        presentSchedule         <- map["attributes.presentSchedule"]
+        offerSchedule           <- map["attributes.offerSchedule"]
+        scheduleMeetingFlow     <- map["attributes.scheduleMeetingFlow"]
 
-        do {
-            let htmlStringData = (body ?? "").data(using: String.Encoding.utf8)!
-            let attributedHTMLString = try NSMutableAttributedString(data: htmlStringData, options: [NSAttributedString.DocumentReadingOptionKey.documentType : NSAttributedString.DocumentType.html, NSAttributedString.DocumentReadingOptionKey.characterEncoding: String.Encoding.utf8.rawValue], documentAttributes: nil)
+        
+        formattedBody = TextHelper.attributedTextForString(text: body ?? "")
 
-            if let font = UIFont(name: "AvenirNext-Regular", size: 16){
-                let paragraphStyle = NSMutableParagraphStyle()
-                paragraphStyle.paragraphSpacing = 0.0
-                attributedHTMLString.addAttributes([NSAttributedStringKey.font: font, NSAttributedStringKey.paragraphStyle: paragraphStyle], range: NSRange(location: 0, length: attributedHTMLString.length))
-                formattedBody = attributedHTMLString
-            }
-        }catch{
-            //Unable to format HTML body, in this scenario the raw html will be shown in the message cell
-        }
     }
 
-    open func toMessageJSON() -> [String: Any]{
+}
+
+extension Array where Iterator.Element == Message
+{
+    
+    mutating func sortMessagesForConversation() -> Array {
         
-        var json:[String : Any] = [
-            "body": body ?? "",
-            "contentType": contentType,
-            "type": type.rawValue,
-            "attachments": attachmentIds
-        ]
+        var output:[Message] = []
         
-        if let context = context {
-            json["context"] = context.toJSON()
+        let sorted = self.sorted(by: { $0.createdAt.compare($1.createdAt as Date) == .orderedAscending})
+        
+        for message in sorted {
+            
+            if message.preMessage {
+                //Ignore pre messages, we will recreate them
+                continue
+            }
+            
+            if !message.preMessages.isEmpty {
+                output.append(contentsOf: getMessagesFromPreMessages(message: message, preMessages: message.preMessages))
+            }
+            
+            if message.offerSchedule != -1 {
+                continue
+            }
+            
+            if let _ = message.appointmentInformation {
+                //Go backwards and remove the most recent message asking for an apointment
+                
+                output = output.map({
+                    
+                    if let _ = $0.presentSchedule {
+                        $0.presentSchedule = nil
+                    }
+                    return $0
+                })
+                
+            }
+            
+            output.append(message)
         }
         
-        return json
+        return output.sorted(by: { $0.createdAt.compare($1.createdAt as Date) == .orderedDescending})
+    }
+    
+    private func getMessagesFromPreMessages(message: Message, preMessages: [PreMessage]) -> [Message] {
+        
+        let date = message.createdAt
+        var output: [Message] = []
+        for (index, preMessage) in preMessages.enumerated() {
+            let fakeMessage = Message()
+            
+            fakeMessage.createdAt = date.addingTimeInterval(TimeInterval(-(index + 1)))
+            fakeMessage.conversationId = message.conversationId
+            fakeMessage.body = TextHelper.cleanString(body: preMessage.messageBody)
+            fakeMessage.formattedBody = TextHelper.attributedTextForString(text: fakeMessage.body ?? "")
+            fakeMessage.fakeMessage = true
+            fakeMessage.preMessage = true
+            fakeMessage.uuid = UUID().uuidString
+            
+            fakeMessage.sendStatus = .Sent
+            fakeMessage.contentType = ContentType.Chat
+            fakeMessage.authorType = AuthorType.User
+            
+            if let sender = preMessage.user {
+                fakeMessage.authorId = sender.userId
+                output.append(fakeMessage)
+            }
+        }
+        
+        return output
     }
     
 }
+
 
 func ==(lhs: Message, rhs: Message) -> Bool {
     return lhs.uuid == rhs.uuid

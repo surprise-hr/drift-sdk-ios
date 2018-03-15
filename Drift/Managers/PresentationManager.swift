@@ -43,10 +43,6 @@ class PresentationManager: PresentationManagerDelegate {
                 switch type {
                 case .Announcement:
                     self.showAnnouncementCampaign(firstCampaign, otherCampaigns: nextCampaigns)
-                case .NPS:
-                    self.showNPSCampaign(firstCampaign, otherCampaigns: nextCampaigns)
-                case .NPSResponse:
-                    ()
                 }
             }
         }
@@ -103,23 +99,6 @@ class PresentationManager: PresentationManagerDelegate {
         }
     }
     
-    func showNPSCampaign(_ campaign: Campaign, otherCampaigns: [Campaign]) {
-        if let npsContainer = NPSContainerView.fromNib() as? NPSContainerView, let npsView = NPSView.fromNib() as? NPSView , currentShownView == nil && !conversationIsPresenting(){
-            
-            if let window = UIApplication.shared.keyWindow {
-                currentShownView = npsContainer
-                npsContainer.delegate = self
-                npsContainer.campaign = campaign
-                npsView.campaign = campaign
-                npsView.otherCampaigns = otherCampaigns
-                npsContainer.showOnWindow(window)
-                npsContainer.popUpContainer(initialView: npsView)
-            }
-        }else{
-            LoggerManager.log("Error Loading Nib")
-        }
-    }
-    
     func conversationIsPresenting() -> Bool{
         if let topVC = TopController.viewController() , topVC.classForCoder == ConversationListViewController.classForCoder() || topVC.classForCoder == ConversationViewController.classForCoder(){
             return true
@@ -141,7 +120,7 @@ class PresentationManager: PresentationManagerDelegate {
     
     func showNewConversationVC(_ authorId: Int?) {
         if let topVC = TopController.viewController()  {
-            let navVC = ConversationViewController.navigationController(ConversationViewController.ConversationType.createConversation(authorId: authorId))
+            let navVC = ConversationViewController.navigationController(ConversationViewController.ConversationType.createConversation)
             topVC.present(navVC, animated: true, completion: nil)
         }
     }
@@ -157,8 +136,6 @@ class PresentationManager: PresentationManagerDelegate {
                 self.showExpandedAnnouncement(campaign)
             }
             CampaignResponseManager.recordAnnouncementResponse(campaign, response: announcementResponse)
-        case .nps(let npsResponse):
-            CampaignResponseManager.recordNPSResponse(campaign, response: npsResponse)
         }
     }
     
