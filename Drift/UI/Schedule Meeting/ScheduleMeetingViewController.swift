@@ -164,7 +164,7 @@ class ScheduleMeetingViewController: UIViewController {
         switch scheduleMode {
         case .day:
             ()
-        case .time(let day):
+        case .time(_):
             self.scheduleMode = .day
         case .confirm(let date):
             //hide table view
@@ -200,9 +200,9 @@ class ScheduleMeetingViewController: UIViewController {
             SVProgressHUD.dismiss()
  
             switch (result) {
-            case .success(let message):
+            case .success(_):
                 self?.delegate?.didDismissScheduleVC()
-            case .failure(let error):
+            case .failure(_):
                 
                 self?.scheduleMeetingError()
             }
@@ -274,7 +274,7 @@ extension ScheduleMeetingViewController: UITableViewDataSource, UITableViewDeleg
         switch scheduleMode {
         case .day:
             scheduleMode = .time(date: days[indexPath.row])
-        case .time(let date):
+        case .time(_):
             scheduleMode = .confirm(date: times[indexPath.row])
         default:
             ()

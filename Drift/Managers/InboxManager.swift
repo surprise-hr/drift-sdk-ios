@@ -30,33 +30,33 @@ class InboxManager {
         }
     }
     
-    func postMessage(_ messageReques: MessageRequest, conversationId: Int, completion:@escaping (_ message: Message?, _ requestId: Double) -> ()){
+    func postMessage(_ messageRequest: MessageRequest, conversationId: Int, completion:@escaping (_ message: Message?, _ requestId: Double) -> ()){
 
-        DriftAPIManager.postMessage(conversationId, messageRequest: messageReques) { (result) in
+        DriftAPIManager.postMessage(conversationId, messageRequest: messageRequest) { (result) in
             switch result{
             case .success(let returnedMessage):
-                completion(returnedMessage, messageReques.requestId)
+                completion(returnedMessage, messageRequest.requestId)
             case .failure:
                 LoggerManager.log("Unable to post message for conversationId: \(conversationId)")
-                completion(nil, messageReques.requestId)
+                completion(nil, messageRequest.requestId)
             }
         }
     }
     
     
-    func createConversation(_ messageReques: MessageRequest, welcomeMessageUser: User?, welcomeMessage: String?, completion:@escaping (_ message: Message?, _ requestId: Double) -> ()){
+    func createConversation(_ messageRequest: MessageRequest, welcomeMessageUser: User?, welcomeMessage: String?, completion:@escaping (_ message: Message?, _ requestId: Double) -> ()){
         guard let auth = DriftDataStore.sharedInstance.auth?.accessToken else {
             LoggerManager.log("No Auth Token for Recording")
             return
         }
         
-        DriftAPIManager.createConversation(messageReques.body ?? "", welcomeUserId: welcomeMessageUser?.userId, welcomeMessage: welcomeMessage, authToken: auth) { (result) in
+        DriftAPIManager.createConversation(messageRequest.body , welcomeUserId: welcomeMessageUser?.userId, welcomeMessage: welcomeMessage, authToken: auth) { (result) in
             switch result{
             case .success(let returnedMessage):
-                completion(returnedMessage, messageReques.requestId)
+                completion(returnedMessage, messageRequest.requestId)
             case .failure:
                 LoggerManager.log("Unable to create conversation")
-                completion(nil, messageReques.requestId)
+                completion(nil, messageRequest.requestId)
             }
         }
     }

@@ -57,10 +57,10 @@ class DriftAPIManager: Alamofire.SessionManager {
         sharedManager.request(DriftCustomerRouter.scheduleMeeting(userId: userId, conversationId: conversationId, timestamp: timestamp)).responseJSON(completionHandler: { (result) -> Void in
             
             if result.response?.statusCode == 200 {
-                LoggerManager.log("Scheduled Meeting Success: \(result.result.value)")
+                LoggerManager.log("Scheduled Meeting Success: \(String(describing: result.result.value))")
                 completion(mapResponse(result))
             } else {
-                LoggerManager.log("Scheduled Meeting Failure: \(result.result.error)")
+                LoggerManager.log("Scheduled Meeting Failure: \(String(describing: result.result.error))")
                 completion(.failure(DriftError.apiFailure))
             }
         })

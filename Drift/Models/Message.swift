@@ -134,7 +134,7 @@ extension Array where Iterator.Element == Message
                 continue
             }
             
-            if let appointmentInformation = message.appointmentInformation {
+            if let _ = message.appointmentInformation {
                 //Go backwards and remove the most recent message asking for an apointment
                 
                 output = output.map({

@@ -446,7 +446,7 @@ class ConversationViewController: UIViewController {
 extension ConversationViewController: ConversationInputAccessoryViewDelegate {
     
     func didPressView() {
-        if let scheduleVC = scheduleMeetingVC {
+        if let _ = scheduleMeetingVC {
             didDismissScheduleVC()
         }
     }

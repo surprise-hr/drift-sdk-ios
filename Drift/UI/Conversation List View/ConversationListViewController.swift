@@ -125,7 +125,7 @@ class ConversationListViewController: UIViewController {
                     }
                 case .failure(let error):
                     SVProgressHUD.dismiss()
-                    LoggerManager.log("Unable to get conversations for endUser:  \(self.endUserId): \(error)")
+                    LoggerManager.log("Unable to get conversations for endUser:  \(self.endUserId ?? -1): \(error)")
                 }
                 
             }
