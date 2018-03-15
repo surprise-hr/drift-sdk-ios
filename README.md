@@ -6,7 +6,6 @@ DriftSDK is the official Drift SDK written in Swift enabling you to both send an
 
 
 # Features:
-- Send NPS to your customers
 - Send Product announcements to your customers
 - Create conversations from your app
 - View past conversations from your app.
@@ -18,7 +17,7 @@ DriftSDK is the official Drift SDK written in Swift enabling you to both send an
 DriftSDK can be added to your project using CocoaPods by adding the following line to your `Podfile`:
 
 ```ruby
-pod 'Drift', '~> 1.2.6'
+pod 'Drift', '~> 2.0'
 ```
 
 ## Registering
