@@ -52,7 +52,7 @@ class CampaignsManager {
                         continue
                     }
                     
-                    if !activeCampaignIds.contains(campaignId) {
+                    if !DriftManager.sharedInstance.showArchivedCampaigns && !activeCampaignIds.contains(campaignId) {
                         LoggerManager.log("Not showing campaign as not currently active in embed")
                         continue
                     }

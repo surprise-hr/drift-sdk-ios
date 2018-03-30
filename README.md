@@ -58,6 +58,21 @@ or in ObjC
 
 Thats it. Your good to go!!
 
+# Archived Campaigns
+
+Once a campaign is delivered to a user it will keep showing to a user until it is dismissed or completed. This happens even when the campaign is inactive or archived. If you would like to only show active campaign you can enable this by passing false to showArchivedCampaignsForEndUser during setup
+
+```Swift
+  Drift.showArchivedCampaignsForEndUser(false)
+```
+
+or in ObjC
+
+```objectivec
+  [Drift showArchivedCampaignsForEndUser:NO];
+```
+
+
 # Messaging
 
 A user can begin a conversation in response to a campaign or by presenting the conversations list

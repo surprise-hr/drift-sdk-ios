@@ -53,6 +53,17 @@ open class Drift: NSObject {
     }
     
     /**
+     
+     This allows you to force that only active campaigns will be shown to users and not inactive or archived campaigns
+
+     - parameter debug: A Bool indicating if archived campaigns should shown to the user
+     
+     */
+    @objc open class func showArchivedCampaignsForEndUser(_ show:Bool) {
+        DriftManager.showArchivedCampaigns(show)
+    }
+    
+    /**
 
      This will show a list of Drift conversations for the current user
      
