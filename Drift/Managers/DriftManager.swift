@@ -71,7 +71,7 @@ class DriftManager: NSObject {
         DriftDataStore.sharedInstance.setUserId(userId)
         DriftDataStore.sharedInstance.setEmail(email)
         
-        guard let orgId = DriftDataStore.sharedInstance.embed?.orgId else {
+        guard let embed = DriftDataStore.sharedInstance.embed else {
             LoggerManager.log("No Embed, not registering user - Waiting for Embeds to complete")
             DriftManager.sharedInstance.registerInfo = (userId, email, attrs)
             return
@@ -79,14 +79,14 @@ class DriftManager: NSObject {
         
         DriftManager.sharedInstance.registerInfo = nil
     
-        DriftAPIManager.postIdentify(orgId, userId: userId, email: email, attributes: nil) { (result) -> () in
+        DriftAPIManager.postIdentify(embed.orgId, userId: userId, email: email, attributes: nil) { (result) -> () in
             getAuth(email, userId: userId) { (auth) in
                 if let auth = auth {
                     self.setupSocket(auth.accessToken)
                     
                     if let userId = auth.enduser?.userId {
                         ConversationsManager.checkForConversations(userId: userId)
-                        CampaignsManager.checkForCampaigns(userId: userId)
+                        CampaignsManager.checkForCampaigns(userId: userId, embed: embed)
                         completion?(userId)
                     }
                 }
@@ -132,9 +132,9 @@ class DriftManager: NSObject {
         if let user = DriftDataStore.sharedInstance.auth?.enduser, let orgId = user.orgId, let userId = user.externalId, let email = user.email {
             DriftAPIManager.postIdentify(orgId, userId: userId, email: email, attributes: nil) { (result) -> () in }
             
-            if let userId = user.userId {
+            if let userId = user.userId, let embed = DriftDataStore.sharedInstance.embed {
                 ConversationsManager.checkForConversations(userId: userId)
-                CampaignsManager.checkForCampaigns(userId: userId)
+                CampaignsManager.checkForCampaigns(userId: userId, embed: embed)
             }
         }else{
             if let embedId = DriftDataStore.sharedInstance.embed?.embedId, let userId = DriftDataStore.sharedInstance.userId, let userEmail = DriftDataStore.sharedInstance.userEmail {

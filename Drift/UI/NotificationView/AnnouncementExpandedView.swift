@@ -12,7 +12,7 @@ import MessageUI
 
 class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
     
-    var campaign: Campaign! {
+    var campaign: CampaignMessage! {
         didSet{
             setupForCampaign()
         }
