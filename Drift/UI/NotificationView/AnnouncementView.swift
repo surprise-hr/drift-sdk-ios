@@ -24,12 +24,12 @@ class AnnouncementView: CampaignView {
     
     var bottomConstraint: NSLayoutConstraint!
     
-    var campaign: Campaign! {
+    var campaign: CampaignMessage! {
         didSet{
             setUpForCampaign()
         }
     }
-    var otherCampaigns: [Campaign] = []
+    var otherCampaigns: [CampaignMessage] = []
     
     override func awakeFromNib() {
         super.awakeFromNib()

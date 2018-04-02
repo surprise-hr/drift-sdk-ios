@@ -55,6 +55,9 @@ struct Embed: Mappable {
     var userListMode: UserListMode = .random
     var userListIds: [Int] = []
     
+    
+    var activeCampaigns: [Campaign] = []
+    
     init?(map: Map) {
         //These fields are required, without them we fail to init the object
         if map.JSON["orgId"] == nil || map.JSON["orgId"] as? String == "" ||
@@ -87,6 +90,8 @@ struct Embed: Mappable {
         userListMode         <- map["configuration.theme.userListMode"]
         users                    <- map["configuration.team"]
         userListIds                <- map["configuration.theme.userList"]
+        
+        activeCampaigns     <- map["configuration.campaigns"]
     }
     
     func isOrgCurrentlyOpen() -> Bool {

@@ -10,7 +10,7 @@ import ObjectMapper
 
 class CampaignWrapper: Mappable {
    
-    var campaigns: [Campaign]!
+    var campaigns: [CampaignMessage]!
     
     required convenience init?(map: Map) {
         self.init()

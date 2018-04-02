@@ -18,7 +18,7 @@ enum AnnouncementResponse: String {
 
 class CampaignResponseManager {
     
-    class func recordAnnouncementResponse(_ campaign: Campaign, response: AnnouncementResponse){
+    class func recordAnnouncementResponse(_ campaign: CampaignMessage, response: AnnouncementResponse){
         
         LoggerManager.log("Recording Announcement Response:\(response) \(String(describing: campaign.conversationId)) ")
 

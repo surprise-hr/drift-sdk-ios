@@ -9,7 +9,7 @@
 import UIKit
 
 protocol PresentationManagerDelegate:class {
-    func campaignDidFinishWithResponse(_ view: CampaignView, campaign: Campaign, response: CampaignResponse)
+    func campaignDidFinishWithResponse(_ view: CampaignView, campaign: CampaignMessage, response: CampaignResponse)
     func messageViewDidFinish(_ view: CampaignView)
 }
 
@@ -21,7 +21,7 @@ class PresentationManager: PresentationManagerDelegate {
     
     init () {}
     
-    func didRecieveCampaigns(_ campaigns: [Campaign]) {
+    func didRecieveCampaigns(_ campaigns: [CampaignMessage]) {
         ///Show latest first
         let sortedCampaigns = campaigns.sorted {
             
@@ -32,7 +32,7 @@ class PresentationManager: PresentationManagerDelegate {
             }
         }
         
-        var nextCampaigns = [Campaign]()
+        var nextCampaigns = [CampaignMessage]()
         
         if campaigns.count > 1 {
             nextCampaigns = Array(sortedCampaigns.dropFirst())
@@ -77,7 +77,7 @@ class PresentationManager: PresentationManagerDelegate {
         }
     }
     
-    func showAnnouncementCampaign(_ campaign: Campaign, otherCampaigns:[Campaign]) {
+    func showAnnouncementCampaign(_ campaign: CampaignMessage, otherCampaigns:[CampaignMessage]) {
         if let announcementView = AnnouncementView.fromNib() as? AnnouncementView , currentShownView == nil && !conversationIsPresenting() {
             
             if let window = UIApplication.shared.keyWindow {
@@ -90,7 +90,7 @@ class PresentationManager: PresentationManagerDelegate {
         }
     }
     
-    func showExpandedAnnouncement(_ campaign: Campaign) {
+    func showExpandedAnnouncement(_ campaign: CampaignMessage) {
         if let announcementView = AnnouncementExpandedView.fromNib() as? AnnouncementExpandedView, let window = UIApplication.shared.keyWindow , !conversationIsPresenting() {
             currentShownView = announcementView
             announcementView.campaign = campaign
@@ -127,7 +127,7 @@ class PresentationManager: PresentationManagerDelegate {
     
     ///Presentation Delegate
     
-    func campaignDidFinishWithResponse(_ view: CampaignView, campaign: Campaign, response: CampaignResponse) {
+    func campaignDidFinishWithResponse(_ view: CampaignView, campaign: CampaignMessage, response: CampaignResponse) {
         view.hideFromWindow()
         currentShownView = nil
         switch response {

@@ -17,7 +17,7 @@ DriftSDK is the official Drift SDK written in Swift enabling you to both send an
 DriftSDK can be added to your project using CocoaPods by adding the following line to your `Podfile`:
 
 ```ruby
-pod 'Drift', '~> 2.0'
+pod 'Drift', '~> 2.1'
 ```
 
 ## Registering
@@ -57,6 +57,21 @@ or in ObjC
 ```
 
 Thats it. Your good to go!!
+
+# Archived Campaigns
+
+Once a campaign is delivered to a user it will keep showing to a user until it is dismissed or completed. This happens even when the campaign is inactive or archived. If you would like to only show active campaign you can enable this by passing false to showArchivedCampaignsForEndUser during setup
+
+```Swift
+  Drift.showArchivedCampaignsForEndUser(false)
+```
+
+or in ObjC
+
+```objectivec
+  [Drift showArchivedCampaignsForEndUser:NO];
+```
+
 
 # Messaging
 
