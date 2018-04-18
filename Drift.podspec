@@ -18,5 +18,4 @@ Pod::Spec.new do |spec|
   spec.dependency 'ObjectMapper', '~> 3.0'
   spec.dependency 'AlamofireImage', '~> 3.0'
   spec.dependency 'SVProgressHUD', '~> 2.0'
-  spec.swift_version = '4.1'
 end
