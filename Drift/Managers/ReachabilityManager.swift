@@ -9,7 +9,7 @@
 import Foundation
 import Alamofire
 
-public extension Notification.Name {
+extension Notification.Name {
     static let driftNetworkStatusReachable = Notification.Name("drift-sdk-new-network-reachable")
     static let driftNetworkStatusNotReachable = Notification.Name("drift-sdk-new-network-not-reachable")
     static let driftNetworkStatusUnknown = Notification.Name("drift-sdk-new-network-unknown")
