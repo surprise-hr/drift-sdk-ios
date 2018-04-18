@@ -25,7 +25,7 @@ class SocketManager {
     
     static var sharedInstance: SocketManager = {
         let socketManager = SocketManager()
-        NotificationCenter.default.addObserver(socketManager, selector: #selector(SocketManager.networkDidBecomeReachable), name: NSNotification.Name.networkStatusReachable, object: nil)
+        NotificationCenter.default.addObserver(socketManager, selector: #selector(SocketManager.networkDidBecomeReachable), name: NSNotification.Name.driftNetworkStatusReachable, object: nil)
         return socketManager
     }()
     
