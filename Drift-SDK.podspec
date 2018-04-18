@@ -20,7 +20,7 @@ Pod::Spec.new do |spec|
   spec.dependency 'SVProgressHUD', '~> 2.0'
 
   spec.pod_target_xcconfig = {
-    'SWIFT_VERSION' => '4.0',
+    'SWIFT_VERSION' => '4.1',
   }
 
 end
