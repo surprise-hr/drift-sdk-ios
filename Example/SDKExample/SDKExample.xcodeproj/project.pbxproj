@@ -100,7 +100,6 @@
 				635462C91EDC37DC0012358E /* Frameworks */,
 				635462CA1EDC37DC0012358E /* Resources */,
 				E034E4D29B56F9385181FD05 /* [CP] Embed Pods Frameworks */,
-				EE59166253BDA74A6B09C86E /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -205,21 +204,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SDKExample/Pods-SDKExample-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		EE59166253BDA74A6B09C86E /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SDKExample/Pods-SDKExample-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
