@@ -72,4 +72,12 @@ open class Drift: NSObject {
         DriftManager.showConversations()
     }
     
+    /**
+     
+     This will show create viewcontroller with option for back arrow to
+     
+     */
+    @objc open class func showCreateConversation() {
+        DriftManager.showCreateConversation()
+    }
 }
