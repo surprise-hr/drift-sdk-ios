@@ -173,6 +173,10 @@ class DriftManager: NSObject {
         }
     }
     
+    class func showCreateConversation(){
+        PresentationManager.sharedInstance.showNewConversationVC()
+    }
+    
     class func showConversations(){
         if let endUserId = DriftDataStore.sharedInstance.auth?.enduser?.userId{
             PresentationManager.sharedInstance.showConversationList(endUserId: endUserId)

@@ -242,7 +242,7 @@ class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
             
             switch cta.ctaType {
             case .some(.ChatResponse):
-                PresentationManager.sharedInstance.showNewConversationVC(campaign.authorId)
+                PresentationManager.sharedInstance.showNewConversationVC()
             case .some(.LinkToURL):
                 if let url = cta.urlLink {
                     presentURL(url as URL)

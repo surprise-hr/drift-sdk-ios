@@ -17,7 +17,7 @@ DriftSDK is the official Drift SDK written in Swift enabling you to both send an
 DriftSDK can be added to your project using CocoaPods by adding the following line to your `Podfile`:
 
 ```ruby
-pod 'Drift', '~> 2.1.1'
+pod 'Drift', '~> 2.2'
 ```
 
 ## Registering
@@ -85,6 +85,18 @@ or in ObjC
 
 ```objectivec
   [Drift showConversations];
+```
+
+You can also go directly to create a conversation using
+
+```Swift
+  Drift.showCreateConversation()
+```
+
+or in ObjC
+
+```objectivec
+  [Drift showCreateConversation];
 ```
 
 Thats it. Your good to go!!
