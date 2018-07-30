@@ -259,9 +259,11 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
             
             if attachment.isImage(){
                 self.setupForAttachmentStyle(attachmentStyle: .single)
-                let url = attachment.generatePublicPreviewURL() ?? attachment.generatePublicURL()
-                self.attachmentImageView.startAnimating()
-                self.attachmentImageView.af_setImage(withURL: url, placeholderImage: UIImage(named: "imagePlaceholder"))
+                if let urlRequest = attachment.getAttachmentURL(accessToken: DriftDataStore.sharedInstance.auth?.accessToken) {
+                    self.attachmentImageView.af_setImage(withURLRequest: urlRequest, placeholderImage: UIImage(named: "imagePlaceholder"))
+                } else {
+                    self.attachmentImageView.image = #imageLiteral(resourceName: "imagePlaceholder")
+                }
             }else{
                 self.setupForAttachmentStyle(attachmentStyle: .multiple)
             }
