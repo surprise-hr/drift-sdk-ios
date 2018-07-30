@@ -13,6 +13,7 @@ class PreMessage: Mappable {
     
     var messageBody: String = ""
     var user: User?
+    var userId: Int?
     
     required init?(map: Map) {
         
@@ -21,5 +22,6 @@ class PreMessage: Mappable {
     func mapping(map: Map) {
         messageBody     <- map["body"]
         user            <- map["sender"]
+        userId          <- map["sender.id"]
     }
 }

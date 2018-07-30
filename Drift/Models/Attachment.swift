@@ -7,6 +7,7 @@
 //
 
 import ObjectMapper
+import Alamofire
 
 class Attachment: Mappable, Hashable{
     var id = 0
@@ -41,15 +42,11 @@ class Attachment: Mappable, Hashable{
         return (mimeType.lowercased() ==  "image/jpeg") || (mimeType.lowercased() ==  "image/png") || (mimeType.lowercased() ==  "image/gif") || (mimeType.lowercased() ==  "image/jpg")
     }
     
-    open func generatePublicURL() -> URL {
-        return URL(string:"https://conversation.api.driftt.com/attachments/public/" + publicId + "/data")!
-    }
-    
-    open func generatePublicPreviewURL() -> URL? {
-        if let url = publicPreviewURL{
-            return URL(string: url)
-        }
-        return nil
+    open func getAttachmentURL(accessToken: String?) -> URLRequest? {
+        let headers: HTTPHeaders = [
+            "Authorization": "bearer \(accessToken ?? "")"
+        ]
+        return try? URLRequest(url: URL(string: "https://conversation.api.drift.com/attachments/\(id)/data")!, method: .get, headers: headers)
     }
     
 }

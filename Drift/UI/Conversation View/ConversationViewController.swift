@@ -283,7 +283,7 @@ class ConversationViewController: UIViewController {
             
             if let embed = DriftDataStore.sharedInstance.embed {
       
-                emptyState.messageLabel.text = embed.getWelcomeMessageForUser() ?? ""
+                emptyState.messageLabel.text = embed.getWelcomeMessageForUser()
                 
                 welcomeUser = embed.getUserForWelcomeMessage()
                 if let welcomeUser = welcomeUser {
