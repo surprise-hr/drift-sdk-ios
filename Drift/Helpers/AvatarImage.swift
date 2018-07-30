@@ -49,7 +49,7 @@ class AvatarView: UIView {
         
         self.addSubview(initialsLabel)
         imageView.contentMode = .scaleAspectFill
-        imageView.backgroundColor = UIColor.red
+        imageView.backgroundColor = UIColor.clear
         layer.masksToBounds = true
         layer.borderWidth = 0
         layer.borderColor = UIColor(white: 0, alpha: 0.1).cgColor

@@ -165,12 +165,13 @@ extension ConversationListViewController: UITableViewDelegate, UITableViewDataSo
                 cell.unreadCountLabel.isHidden = true
             }
             
-            if let assigneeId = conversation.assigneeId , assigneeId != 0{
-
-                UserManager.sharedInstance.userMetaDataForUserId(assigneeId, completion: { (user) in
-
+            
+            if let lastMessageAuthorId = enrichedConversation.lastAgentMessage?.authorId ?? enrichedConversation.lastMessage?.preMessages.first?.userId {
+                
+                UserManager.sharedInstance.userMetaDataForUserId(lastMessageAuthorId, completion: { (user) in
+                    
                     cell.avatarImageView.setupForUser(user: user)
-
+                    
                     if let user = user {
                         if let creatorName = user.name {
                             cell.nameLabel.text = creatorName
@@ -178,22 +179,9 @@ extension ConversationListViewController: UITableViewDelegate, UITableViewDataSo
                     }
                 })
                 
-            }else if let authorId = enrichedConversation.lastMessage?.authorId , authorId != 0{
-                if authorId == endUserId {
-                    
-                    cell.nameLabel.text = "You"
-                    cell.avatarImageView.setupForUser(user: DriftDataStore.sharedInstance.auth?.enduser)
-                }else{
-                    UserManager.sharedInstance.userMetaDataForUserId(authorId, completion: { (user) in
-                        cell.avatarImageView.setupForUser(user: user)
-
-                        if let user = user {
-                            if let creatorName = user.name {
-                                cell.nameLabel.text = creatorName
-                            }
-                        }
-                    })
-                }
+            } else {
+                cell.avatarImageView.imageView.image = UIImage(named: "placeholderAvatar", in: Bundle(for: Drift.self), compatibleWith: nil)
+                cell.nameLabel.text = "Unknown User"
             }
             
             if let preview = conversation.preview, preview != ""{
