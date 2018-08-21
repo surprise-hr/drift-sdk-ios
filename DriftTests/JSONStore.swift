@@ -20,7 +20,7 @@ class JSONStore {
 
     let test = "\"https://js.driftt.com/include/u4r5t7h6w6h5-dev.js\""
     
-    static let embedJSONCorrect = "{\r\n  \"id\": \"y7hy72e542gx\",\r\n  \"url\": \"https://js.driftt.com/include/y7hy72e542gx.js\",\r\n  \"snippet\": \"\",\r\n  \"orgId\": 68,\r\n  \"verified\": false,\r\n  \"configuration\": {\r\n    \"inboxId\": 77,\r\n    \"refreshRate\": 300000,\r\n    \"layerAppId\": \"15806ab6-607f-11e5-817e-98d908000a42\",\r\n    \"inboxEmailAddress\": null,\r\n    \"authClientId\": \"6mx25hy22pgpbc\",\r\n    \"redirectUri\": \"https://app.driftt.com/\",\r\n    \"organizationName\": \"8bytes\",\r\n    \"theme\": {\r\n      \"backgroundColor\": \"2D88F3\",\r\n      \"foregroundColor\": \"FFFFFF\",\r\n      \"logoUrl\": null\r\n    },\r\n    \"chatEnabled\": true,\r\n    \"leadChatEnabled\": false,\r\n    \"enabled\": true,\r\n    \"showBranding\": true,\r\n    \"campaigns\": []\r\n  }\r\n}"
+    static let embedJSONCorrect = "{\r\n  \"id\": \"y7hy72e542gx\",\r\n  \"url\": \"https://js.driftt.com/include/y7hy72e542gx.js\",\r\n  \"snippet\": \"\",\r\n  \"orgId\": 68,\r\n  \"verified\": false,\r\n  \"configuration\": {\r\n    \"inboxId\": 77,\r\n    \"refreshRate\": 300000,\r\n    \"layerAppId\": \"15806ab6-607f-11e5-817e-98d908000a42\",\r\n    \"inboxEmailAddress\": null,\r\n    \"authClientId\": \"6mx25hy22pgpbc\",\r\n    \"redirectUri\": \"https://app.drift.com/\",\r\n    \"organizationName\": \"8bytes\",\r\n    \"theme\": {\r\n      \"backgroundColor\": \"2D88F3\",\r\n      \"foregroundColor\": \"FFFFFF\",\r\n      \"logoUrl\": null\r\n    },\r\n    \"chatEnabled\": true,\r\n    \"leadChatEnabled\": false,\r\n    \"enabled\": true,\r\n    \"showBranding\": true,\r\n    \"campaigns\": []\r\n  }\r\n}"
     
     static let embedJSONNoOrgId = "{\r\n  \"id\": \"u4r5t7h6w6h5-dev\",\r\n  \"url\": \"https://js.driftt.com/include/u4r5t7h6w6h5-dev.js\",\r\n  \"orgId\": null,\r\n  \"verified\": false,\r\n  \"configuration\": {\r\n    \"inboxId\": 1,\r\n    \"refreshRate\": 300000,\r\n    \"layerAppId\": \"158066ce-607f-11e5-92d4-98d908000a42\",\r\n    \"authClientId\": \"su9c9zfvdkcfr6\",\r\n    \"redirectUri\": \"https://start.stage.driftt.com\",\r\n    \"organizationName\": \"Driftt Staging\",\r\n    \"theme\": {\r\n      \"backgroundColor\": \"2D88F3\",\r\n      \"foregroundColor\": \"48B1D8\",\r\n      \"logoUrl\": \"https://s3.amazonaws.com/customer-api-org-logos-dev/1/dbc08f540ef37f1e657ea0585a2d9c37\"\r\n    },\r\n    \"chatEnabled\": false,\r\n    \"leadChatEnabled\": false,\r\n    \"enabled\": false\r\n  }\r\n}"
 
@@ -35,10 +35,10 @@ class JSONStore {
     static let campaignOrganiserJSONEmptyURL = "[\r\n  {\r\n    \"id\": 10,\r\n    \"name\": \"Eoin O\'Connell\",\r\n    \"avatarUrl\": \"\"\r\n  }\r\n]"
     static let campaignOrganiserJSONInvalidURL = "[\r\n  {\r\n    \"id\": 10,\r\n    \"name\": \"Eoin O\'Connell\",\r\n    \"avatarUrl\": \"test \"\r\n  }\r\n]"
 
-    class func convertStringToDictionary(text: String) -> [String:AnyObject]? {
-        if let data = text.dataUsingEncoding(NSUTF8StringEncoding) {
+    class func convertStringToDictionary(text: String) -> [String:Any]? {
+        if let data = text.data(using: String.Encoding.utf8) {
             do {
-                return try NSJSONSerialization.JSONObjectWithData(data, options: []) as? [String:AnyObject]
+                return try JSONSerialization.jsonObject(with: data, options: []) as? [String:Any]
             } catch let error as NSError {
                 print(error)
             }
@@ -46,10 +46,10 @@ class JSONStore {
         return nil
     }
     
-    class func convertStringToDictionaryArray(text: String) -> [[String:AnyObject]]? {
-        if let data = text.dataUsingEncoding(NSUTF8StringEncoding) {
+    class func convertStringToDictionaryArray(text: String) -> [[String:Any]]? {
+        if let data = text.data(using: String.Encoding.utf8) {
             do {
-                return try NSJSONSerialization.JSONObjectWithData(data, options: []) as? [[String:AnyObject]]
+                return try JSONSerialization.jsonObject(with: data, options: []) as? [[String:Any]]
             } catch let error as NSError {
                 print(error)
             }

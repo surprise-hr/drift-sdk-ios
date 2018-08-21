@@ -60,7 +60,7 @@ struct Embed: Mappable {
     
     init?(map: Map) {
         //These fields are required, without them we fail to init the object
-        if map.JSON["orgId"] == nil || map.JSON["orgId"] as? String == "" ||
+        if map.JSON["orgId"] as? NSNull != nil || map.JSON["orgId"] == nil || map.JSON["orgId"] as? String == "" ||
             map.JSON["id"] == nil || map.JSON["id"] as? String == "" ||
             map["configuration.inboxId"].currentValue == nil || map["configuration.inboxId"].currentValue as? String == "" ||
             map["configuration.authClientId"].currentValue == nil || map["configuration.authClientId"].currentValue as? String == "" {

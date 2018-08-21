@@ -26,18 +26,18 @@ class APITests: XCTestCase {
     
     func testAuth() {
         
-        let expectation = expectationWithDescription("API Will call Auth")
+        let testExpectation = expectation(description: "API Will call Auth")
         
-        let embed = Mapper<Embed>().map(JSONStore.convertStringToDictionary(JSONStore.embedJSONCorrect)!)
+        let embed = Mapper<Embed>().map(JSON: JSONStore.convertStringToDictionary(text: JSONStore.embedJSONCorrect)!)
 
         XCTAssertNotNil(embed)
         DriftDataStore.sharedInstance.setEmbed(embed!)
         
-        DriftManager.getAuth("eoin@8bytes.ie", userId: "7") { (success) -> () in
-            expectation.fulfill()
+        DriftManager.getAuth("eoin+app@8bytes.ie", userId: "123743810") { (success) -> () in
+            testExpectation.fulfill()
         }
         
-        waitForExpectationsWithTimeout(10) { (_) -> Void in
+        waitForExpectations(timeout: 10) { (_) -> Void in
             XCTAssertNotNil(DriftDataStore.sharedInstance.auth)
         }
     }
@@ -45,13 +45,13 @@ class APITests: XCTestCase {
     
     func testEmbed(){
         
-        let expectation = expectationWithDescription("API Will call Embed")
+        let testExpectation = expectation(description: "API Will call Embed")
 
         DriftManager.getEmbedData("u4r5t7h6w6h5-dev") { (success) -> () in
-            expectation.fulfill()
+            testExpectation.fulfill()
         }
         
-        waitForExpectationsWithTimeout(10) { (_) -> Void in
+        waitForExpectations(timeout: 10) { (_) -> Void in
             XCTAssertNotNil(DriftDataStore.sharedInstance.embed)
         }
         
