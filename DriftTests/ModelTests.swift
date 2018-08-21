@@ -30,8 +30,8 @@ class ModelTests: XCTestCase {
     }
     
     func testEmbed(){
-//        XCTAssertNotNil(Mapper<Embed>().map(JSON: JSONStore.convertStringToDictionary(text: JSONStore.embedJSONCorrect)!), "Embed Did not Map For correct JSON")
+        XCTAssertNotNil(Mapper<Embed>().map(JSON: JSONStore.convertStringToDictionary(text: JSONStore.embedJSONCorrect)!), "Embed Did not Map For correct JSON")
         XCTAssertNil(Mapper<Embed>().map(JSON: JSONStore.convertStringToDictionary(text: JSONStore.embedJSONNoOrgId)!), "Embed Mapped embed with no orgId")
-//        XCTAssertNil(Mapper<Embed>().map(JSON: JSONStore.convertStringToDictionary(text: JSONStore.embedJSONEmptyOrgId)!), "Embed Mapped embed with string org Id")
+        XCTAssertNil(Mapper<Embed>().map(JSON: JSONStore.convertStringToDictionary(text: JSONStore.embedJSONEmptyOrgId)!), "Embed Mapped embed with string org Id")
     }
 }
