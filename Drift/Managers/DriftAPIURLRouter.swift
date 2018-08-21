@@ -54,7 +54,6 @@ enum DriftRouter: URLRequestConvertible {
 
 enum DriftCustomerRouter: URLRequestConvertible {
     
-    case getLayerToken(data: [String: Any])
     case getAuth(email: String, userId: String, redirectURL: String, orgId: Int, clientId: String)
     case getUser(orgId: Int, userId: Int)
     case getEndUser(endUserId: Int)
@@ -63,8 +62,6 @@ enum DriftCustomerRouter: URLRequestConvertible {
     
     var request: (method: Alamofire.HTTPMethod, path: String, parameters: [String: Any]?, encoding: ParameterEncoding){
         switch self {
-        case .getLayerToken(let data):
-            return (.post, "layer/token", data, JSONEncoding.default)
         case .getAuth(let email, let userId, let redirectURL, let orgId, let clientId):
             
             let params: [String : Any] = [

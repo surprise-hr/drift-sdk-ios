@@ -23,21 +23,15 @@ class ModelTests: XCTestCase {
     }
     
     func testAuth() {
-        XCTAssertNotNil(Mapper<Auth>().map(JSONStore.convertStringToDictionary(JSONStore.correctAuthJSON)!), "Auth Did not Map For correct JSON")
-        XCTAssertNil(Mapper<Auth>().map(JSONStore.convertStringToDictionary(JSONStore.incompleteAuthJSON)!), "Auth mapped incorrect JSON")
-        XCTAssertNil(Mapper<Auth>().map(JSONStore.convertStringToDictionary(JSONStore.authJSONEmptyAccessToken)!), "Auth mapped incorrect JSON when access token is empty String")
-        XCTAssertNotNil(Mapper<Auth>().map(JSONStore.convertStringToDictionary(JSONStore.authJSONNoUser)!), "Auth mapping failed when no user")
+        XCTAssertNotNil(Mapper<Auth>().map(JSON: JSONStore.convertStringToDictionary(text: JSONStore.correctAuthJSON)!), "Auth Did not Map For correct JSON")
+        XCTAssertNil(Mapper<Auth>().map(JSON: JSONStore.convertStringToDictionary(text: JSONStore.incompleteAuthJSON)!), "Auth mapped incorrect JSON")
+        XCTAssertNil(Mapper<Auth>().map(JSON: JSONStore.convertStringToDictionary(text: JSONStore.authJSONEmptyAccessToken)!), "Auth mapped incorrect JSON when access token is empty String")
+        XCTAssertNotNil(Mapper<Auth>().map(JSON: JSONStore.convertStringToDictionary(text: JSONStore.authJSONNoUser)!), "Auth mapping failed when no user")
     }
     
     func testEmbed(){
-        XCTAssertNotNil(Mapper<Embed>().map(JSONStore.convertStringToDictionary(JSONStore.embedJSONCorrect)!), "Embed Did not Map For correct JSON")
-        XCTAssertNil(Mapper<Embed>().map(JSONStore.convertStringToDictionary(JSONStore.embedJSONNoOrgId)!), "Embed Mapped embed with no orgId")
-        XCTAssertNil(Mapper<Embed>().map(JSONStore.convertStringToDictionary(JSONStore.embedJSONEmptyOrgId)!), "Embed Mapped embed with string org Id")
+        XCTAssertNotNil(Mapper<Embed>().map(JSON: JSONStore.convertStringToDictionary(text: JSONStore.embedJSONCorrect)!), "Embed Did not Map For correct JSON")
+        XCTAssertNil(Mapper<Embed>().map(JSON: JSONStore.convertStringToDictionary(text: JSONStore.embedJSONNoOrgId)!), "Embed Mapped embed with no orgId")
+        XCTAssertNil(Mapper<Embed>().map(JSON: JSONStore.convertStringToDictionary(text: JSONStore.embedJSONEmptyOrgId)!), "Embed Mapped embed with string org Id")
     }
-    
-    func testCampaignOrganizer() {
-        XCTAssertNotNil(Mapper<CampaignOrganizer>().mapArray(JSONStore.convertStringToDictionaryArray(JSONStore.campaignOrganiserJSONCorrect)!)!.first, "")
-        XCTAssertNotNil(Mapper<CampaignOrganizer>().mapArray(JSONStore.convertStringToDictionaryArray(JSONStore.campaignOrganiserJSONEmptyURL)!)!.first, "")
-    }
-    
 }
