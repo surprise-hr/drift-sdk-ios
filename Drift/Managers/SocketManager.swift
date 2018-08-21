@@ -37,7 +37,7 @@ class SocketManager {
             socket.disconnect()
         }
         
-        socket = Socket(url: URL(string: "wss://chat.api.drift.com/ws/websocket")!, params: ["session_token": socketAuth.sessionToken])
+        socket = Socket(url: getSocketEndpoint(orgId: socketAuth.orgId), params: ["session_token": socketAuth.sessionToken])
         socket?.enableLogging = DriftManager.sharedInstance.debug
         socket!.onConnect =  {
             self.didConnect()
@@ -76,6 +76,14 @@ class SocketManager {
             willReconnect()
             socket?.connect()
         }
+    }
+    
+    open func getSocketEndpoint(orgId: Int) -> URL{
+        return URL(string:"wss://\(orgId)-\(computeShardId(orgId: orgId)).chat.api.drift.com/ws/websocket")!
+    }
+    
+    func computeShardId(orgId: Int) -> Int{
+        return orgId % 50 //WS_NUM_SHARDS
     }
     
     func willReconnect() {

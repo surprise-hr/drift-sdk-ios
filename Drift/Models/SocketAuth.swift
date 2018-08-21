@@ -13,6 +13,7 @@ class SocketAuth: Mappable {
     
     var sessionToken: String = ""
     var userId: String = ""
+    var orgId: Int = -1
     
     required convenience init?(map: Map) {
         self.init()
@@ -21,6 +22,7 @@ class SocketAuth: Mappable {
     func mapping(map: Map) {
         userId          <- map["user_id"]
         sessionToken    <- map["session_token"]
+        orgId           <- map["org_id"]
     }
     
 }
