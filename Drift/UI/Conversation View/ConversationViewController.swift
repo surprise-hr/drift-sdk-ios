@@ -88,7 +88,7 @@ class ConversationViewController: UIViewController {
         let vc = ConversationViewController(conversationType: conversationType)
         let navVC = UINavigationController(rootViewController: vc)
         
-        let leftButton = UIBarButtonItem(image: UIImage(named: "closeIcon", in: Bundle(for: Drift.self), compatibleWith: nil), style: UIBarButtonItemStyle.plain, target:vc, action: #selector(ConversationViewController.dismissVC))
+        let leftButton = UIBarButtonItem(image: UIImage(named: "closeIcon", in: Bundle(for: Drift.self), compatibleWith: nil), style: UIBarButtonItem.Style.plain, target:vc, action: #selector(ConversationViewController.dismissVC))
         leftButton.tintColor = DriftDataStore.sharedInstance.generateForegroundColor()
         vc.navigationItem.leftBarButtonItem  = leftButton
 
@@ -104,7 +104,7 @@ class ConversationViewController: UIViewController {
         super.viewDidLoad()
         tableView = UITableView(frame: view.frame, style: .plain)
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 150
         view.addSubview(tableView)
         
@@ -142,12 +142,12 @@ class ConversationViewController: UIViewController {
         if let navVC = navigationController {
             navVC.navigationBar.barTintColor = DriftDataStore.sharedInstance.generateBackgroundColor()
             navVC.navigationBar.tintColor = DriftDataStore.sharedInstance.generateForegroundColor()
-            navVC.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: DriftDataStore.sharedInstance.generateForegroundColor(), NSAttributedStringKey.font: UIFont(name: "AvenirNext-Medium", size: 16)!]
+            navVC.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: DriftDataStore.sharedInstance.generateForegroundColor(), NSAttributedString.Key.font: UIFont(name: "AvenirNext-Medium", size: 16)!]
             navigationItem.title = "Conversation"
         }
         
-        NotificationCenter.default.addObserver(self, selector: #selector(ConversationViewController.didOpen), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(ConversationViewController.rotated), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(ConversationViewController.didOpen), name: UIApplication.willEnterForegroundNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(ConversationViewController.rotated), name: UIDevice.orientationDidChangeNotification, object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(ConversationViewController.didReceiveNewMessage), name: .driftOnNewMessageReceived, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(ConversationViewController.connectionStatusDidUpdate), name: .driftSocketStatusUpdated, object: nil)
@@ -198,7 +198,7 @@ class ConversationViewController: UIViewController {
         // Hack to prevent animation of the contentInset after viewDidAppear
         if isFirstLayout {
             defer { isFirstLayout = false }
-            NotificationCenter.default.addObserver(self, selector: #selector(keyboardFrameWillChange(notification:)), name: Notification.Name.UIKeyboardWillChangeFrame, object: nil)
+            NotificationCenter.default.addObserver(self, selector: #selector(keyboardFrameWillChange(notification:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
 
             tableView.contentInset.top = keyboardOffsetFrame.height
 
@@ -211,7 +211,7 @@ class ConversationViewController: UIViewController {
     }
     
     @objc func keyboardFrameWillChange(notification: Notification) {
-        let endFrame = notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? CGRect
+        let endFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect
         
         keyboardFrame = endFrame ?? .zero
         
@@ -324,7 +324,7 @@ class ConversationViewController: UIViewController {
     }
     
     @objc func rotated() {
-        if UIDeviceOrientationIsLandscape(UIDevice.current.orientation) {
+        if UIDevice.current.orientation.isLandscape {
             if UIDevice.current.userInterfaceIdiom == .phone {
                 emptyState.avatarImageView.isHidden = true
                 if emptyState.isHidden == false && emptyState.alpha == 1.0 && max(UIScreen.main.bounds.size.width, UIScreen.main.bounds.size.height) <= 568.0{
@@ -334,7 +334,7 @@ class ConversationViewController: UIViewController {
 
         }
         
-        if UIDeviceOrientationIsPortrait(UIDevice.current.orientation) {
+        if UIDevice.current.orientation.isPortrait {
             emptyState.avatarImageView.isHidden = false
             if emptyState.isHidden == true && emptyState.alpha == 1.0 && UIDevice.current.userInterfaceIdiom == .phone && max(UIScreen.main.bounds.size.width, UIScreen.main.bounds.size.height) <= 568.0{
                 emptyState.isHidden = false
@@ -621,7 +621,7 @@ extension ConversationViewController: ScheduleMeetingViewControllerDelegate {
         }) { (_) in
             
             self.scheduleMeetingVC?.view.removeFromSuperview()
-            self.scheduleMeetingVC?.removeFromParentViewController()
+            self.scheduleMeetingVC?.removeFromParent()
             
             self.scheduleMeetingVC = nil
         }
@@ -646,7 +646,7 @@ extension ConversationViewController: ConversationCellDelegate {
         
         let presentVC = ScheduleMeetingViewController(userId: userId, conversationId: conversationId, delegate: self)
         
-        addChildViewController(presentVC)
+        addChild(presentVC)
         presentVC.view.alpha = 0
         view.addSubview(presentVC.view)
         
@@ -657,7 +657,7 @@ extension ConversationViewController: ConversationCellDelegate {
             presentVC.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         
-        presentVC.didMove(toParentViewController: self)
+        presentVC.didMove(toParent: self)
         
         scheduleMeetingVC = presentVC
         
@@ -689,8 +689,8 @@ extension ConversationViewController: ConversationCellDelegate {
                     }
                 }
             case .failure:
-                let alert = UIAlertController(title: "Unable to preview file", message: "This file cannot be previewed", preferredStyle: UIAlertControllerStyle.alert)
-                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+                let alert = UIAlertController(title: "Unable to preview file", message: "This file cannot be previewed", preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
                 self.present(alert, animated: true, completion: nil)
                 LoggerManager.log("Unable to preview file with mimeType: \(attachment.mimeType)")
             }
@@ -733,11 +733,12 @@ extension ConversationViewController: UIImagePickerControllerDelegate, UINavigat
         picker.dismiss(animated: true, completion: nil)
     }
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+
         picker.dismiss(animated: true, completion: nil)
 
-        if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
-            if let imageRep = UIImageJPEGRepresentation(image, 0.2){
+        if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+            if let imageRep = image.jpegData(compressionQuality: 0.2){
                 let newAttachment = Attachment()
                 newAttachment.data = imageRep
                 newAttachment.conversationId = conversationId!
@@ -750,8 +751,8 @@ extension ConversationViewController: UIImagePickerControllerDelegate, UINavigat
                         let messageRequest = MessageRequest(body: "", attachmentIds: [attachment.id])
                         self.generateFakeMessageAndSend(messageRequest)
                     case .failure:
-                        let alert = UIAlertController(title: "Unable to upload file", message: nil, preferredStyle: UIAlertControllerStyle.alert)
-                        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+                        let alert = UIAlertController(title: "Unable to upload file", message: nil, preferredStyle: UIAlertController.Style.alert)
+                        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
                         self.present(alert, animated: true, completion: nil)
                         LoggerManager.log("Unable to upload file with mimeType: \(newAttachment.mimeType)")
                     }

@@ -61,7 +61,7 @@ open class TextHelper {
             let font = UIFont(name: "AvenirNext-Regular", size: 16)!
             let paragraphStyle = NSMutableParagraphStyle()
             paragraphStyle.paragraphSpacing = 0.0
-            attributedHTMLString.addAttributes([NSAttributedStringKey.font: font, NSAttributedStringKey.paragraphStyle: paragraphStyle], range: NSRange(location: 0, length: attributedHTMLString.length))
+            attributedHTMLString.addAttributes([NSAttributedString.Key.font: font, NSAttributedString.Key.paragraphStyle: paragraphStyle], range: NSRange(location: 0, length: attributedHTMLString.length))
             return attributedHTMLString
             
         }catch{

@@ -75,7 +75,7 @@ class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
             let background = DriftDataStore.sharedInstance.generateBackgroundColor()
             let foreground = DriftDataStore.sharedInstance.generateForegroundColor()
             ctaButton.backgroundColor = background
-            ctaButton.setTitleColor(foreground, for: UIControlState())
+            ctaButton.setTitleColor(foreground, for: UIControl.State())
         }
     }
     @IBOutlet weak var ctaHeightConstraint: NSLayoutConstraint!
@@ -87,7 +87,7 @@ class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
     override func showOnWindow(_ window: UIWindow) {
         window.addSubview(self)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(AnnouncementExpandedView.didRotate), name: NSNotification.Name.UIApplicationDidChangeStatusBarOrientation, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(AnnouncementExpandedView.didRotate), name: UIApplication.didChangeStatusBarOrientationNotification, object: nil)
         
         translatesAutoresizingMaskIntoConstraints = false
         
@@ -140,7 +140,7 @@ class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
         closeButton.tintColor = ColorPalette.grayColor
         
         window.setNeedsUpdateConstraints()
-        UIView.animate(withDuration: 0.4, delay: 0.5, usingSpringWithDamping: 0.8, initialSpringVelocity: 1, options: UIViewAnimationOptions.curveEaseIn, animations: { () -> Void in
+        UIView.animate(withDuration: 0.4, delay: 0.5, usingSpringWithDamping: 0.8, initialSpringVelocity: 1, options: UIView.AnimationOptions.curveEaseIn, animations: { () -> Void in
             window.layoutIfNeeded()
             self.containerView.transform = CGAffineTransform(scaleX: 1, y: 1)
             self.backgroundColor = UIColor(white: 0, alpha: 0.5)
@@ -189,9 +189,9 @@ class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
     func setupForCampaign() {
         if let cta = campaign.announcementAttributes?.cta {
             if let copy = cta.copy {
-                ctaButton.setTitle(copy, for: UIControlState())
+                ctaButton.setTitle(copy, for: UIControl.State())
             }else{
-                ctaButton.setTitle("Find Out More", for: UIControlState())
+                ctaButton.setTitle("Find Out More", for: UIControl.State())
             }
         }else{
             ctaButton.isHidden = true
