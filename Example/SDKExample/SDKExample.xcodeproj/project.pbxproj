@@ -122,7 +122,6 @@
 				TargetAttributes = {
 					635462CB1EDC37DC0012358E = {
 						CreatedOnToolsVersion = 8.3.2;
-						DevelopmentTeam = 4RHF652DV6;
 						LastSwiftMigration = 1000;
 						ProvisioningStyle = Automatic;
 					};
@@ -358,7 +357,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 4RHF652DV6;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = SDKExample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.drift.SDKExample;
@@ -375,7 +374,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 4RHF652DV6;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = SDKExample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.drift.SDKExample;
