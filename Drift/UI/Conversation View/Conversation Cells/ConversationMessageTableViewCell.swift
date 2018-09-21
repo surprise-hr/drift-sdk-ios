@@ -163,7 +163,7 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
             
             if let formattedString = message.formattedBody {
                 let finalString = NSMutableAttributedString(attributedString: formattedString)
-                finalString.addAttribute(NSAttributedStringKey.foregroundColor, value: textColor, range: NSMakeRange(0, finalString.length))
+                finalString.addAttribute(NSAttributedString.Key.foregroundColor, value: textColor, range: NSMakeRange(0, finalString.length))
                 
                 messageTextView.attributedText = finalString
             } else {

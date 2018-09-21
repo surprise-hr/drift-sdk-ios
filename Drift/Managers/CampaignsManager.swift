@@ -36,7 +36,7 @@ class CampaignsManager {
         
         ///DO Priority - Announcements, Latest first
         
-        let activeCampaignIds: [Int] = embed.activeCampaigns.flatMap({ $0.id })
+        let activeCampaignIds: [Int] = embed.activeCampaigns.compactMap({ $0.id })
         
         var announcements: [CampaignMessage] = []
         

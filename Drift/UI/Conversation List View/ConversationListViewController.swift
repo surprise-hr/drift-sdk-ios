@@ -28,16 +28,16 @@ class ConversationListViewController: UIViewController {
         let vc = ConversationListViewController()
         vc.endUserId = endUserId
         let navVC = UINavigationController(rootViewController: vc)
-        let leftButton = UIBarButtonItem(image: UIImage(named: "closeIcon", in: Bundle(for: Drift.self), compatibleWith: nil), style: UIBarButtonItemStyle.plain, target:vc, action: #selector(ConversationListViewController.dismissVC))
+        let leftButton = UIBarButtonItem(image: UIImage(named: "closeIcon", in: Bundle(for: Drift.self), compatibleWith: nil), style: UIBarButtonItem.Style.plain, target:vc, action: #selector(ConversationListViewController.dismissVC))
         leftButton.tintColor = DriftDataStore.sharedInstance.generateForegroundColor()
         
-        let rightButton = UIBarButtonItem(image:  UIImage(named: "newChatIcon", in: Bundle(for: Drift.self), compatibleWith: nil), style: UIBarButtonItemStyle.plain, target: vc, action: #selector(ConversationListViewController.startNewConversation))
+        let rightButton = UIBarButtonItem(image:  UIImage(named: "newChatIcon", in: Bundle(for: Drift.self), compatibleWith: nil), style: UIBarButtonItem.Style.plain, target: vc, action: #selector(ConversationListViewController.startNewConversation))
         rightButton.tintColor = DriftDataStore.sharedInstance.generateForegroundColor()
         
-        navVC.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: DriftDataStore.sharedInstance.generateForegroundColor()]
+        navVC.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: DriftDataStore.sharedInstance.generateForegroundColor()]
         navVC.navigationBar.barTintColor = DriftDataStore.sharedInstance.generateBackgroundColor()
         navVC.navigationBar.tintColor = DriftDataStore.sharedInstance.generateForegroundColor()
-        navVC.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: DriftDataStore.sharedInstance.generateForegroundColor(), NSAttributedStringKey.font: UIFont(name: "AvenirNext-Medium", size: 16)!]
+        navVC.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: DriftDataStore.sharedInstance.generateForegroundColor(), NSAttributedString.Key.font: UIFont(name: "AvenirNext-Medium", size: 16)!]
         
         vc.navigationItem.leftBarButtonItem  = leftButton
         vc.navigationItem.rightBarButtonItem = rightButton
@@ -53,7 +53,7 @@ class ConversationListViewController: UIViewController {
         super.viewDidLoad()
         
         let unableToAuthAlert = UIAlertController(title: "Unable to connect to chat", message: "Please try again later", preferredStyle: .alert)
-        unableToAuthAlert.addAction(UIAlertAction.init(title: "OK", style: UIAlertActionStyle.cancel, handler: { (action) in
+        unableToAuthAlert.addAction(UIAlertAction.init(title: "OK", style: UIAlertAction.Style.cancel, handler: { (action) in
             self.dismissVC()
         }))
 
@@ -74,7 +74,7 @@ class ConversationListViewController: UIViewController {
         tableView.tableFooterView = UIView(frame: CGRect.zero)
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 90
         tableView.separatorColor = UIColor(white: 0, alpha: 0.05)
         tableView.separatorInset = .zero
@@ -89,10 +89,10 @@ class ConversationListViewController: UIViewController {
         tvc.refreshControl = refreshControl
         
         //Ensure that the back button title is not being shown
-        navigationItem.backBarButtonItem = UIBarButtonItem(title: " ", style: UIBarButtonItemStyle.plain, target: nil, action: nil)
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: " ", style: UIBarButtonItem.Style.plain, target: nil, action: nil)
         navigationItem.title = "Conversations"
         
-        NotificationCenter.default.addObserver(self, selector: #selector(getConversations), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(getConversations), name: UIApplication.willEnterForegroundNotification, object: nil)
     }
     
     deinit {
@@ -142,7 +142,7 @@ class ConversationListViewController: UIViewController {
         emptyStateButton.clipsToBounds = true
         emptyStateButton.layer.cornerRadius = 3.0
         emptyStateButton.backgroundColor = DriftDataStore.sharedInstance.generateBackgroundColor()
-        emptyStateButton.setTitleColor(DriftDataStore.sharedInstance.generateForegroundColor(), for: UIControlState())
+        emptyStateButton.setTitleColor(DriftDataStore.sharedInstance.generateForegroundColor(), for: UIControl.State())
     }
     
     @IBAction func emptyStateButtonPressed(_ sender: AnyObject) {

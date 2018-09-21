@@ -51,8 +51,8 @@ class AnnouncementView: CampaignView {
         let foreground = DriftDataStore.sharedInstance.generateForegroundColor()
 
         bottomButtonColourView.backgroundColor = background
-        dismissButton.setTitleColor(foreground, for: UIControlState())
-        openButton.setTitleColor(foreground, for: UIControlState())
+        dismissButton.setTitleColor(foreground, for: UIControl.State())
+        openButton.setTitleColor(foreground, for: UIControl.State())
         
         if let announcement = campaign.announcementAttributes {
             titleLabel.text = announcement.title ?? ""
@@ -123,7 +123,7 @@ class AnnouncementView: CampaignView {
         window.setNeedsUpdateConstraints()
         
         
-        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 1, options: UIViewAnimationOptions.curveEaseOut, animations: { () -> Void in
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 1, options: UIView.AnimationOptions.curveEaseOut, animations: { () -> Void in
             window.layoutIfNeeded()
         }, completion:nil)
     }
@@ -131,7 +131,7 @@ class AnnouncementView: CampaignView {
     override func hideFromWindow() {
         bottomConstraint.constant = 130
         setNeedsLayout()
-        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 1, options: UIViewAnimationOptions.curveEaseIn, animations: { () -> Void in
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 1, options: UIView.AnimationOptions.curveEaseIn, animations: { () -> Void in
             self.backgroundColor = UIColor(white: 1, alpha: 0.5)
             self.layoutIfNeeded()
         }, completion: nil)

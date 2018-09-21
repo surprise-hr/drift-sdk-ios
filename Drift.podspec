@@ -12,7 +12,7 @@ Pod::Spec.new do |spec|
   spec.source = { git: "https://github.com/Driftt/drift-sdk-ios.git", tag: "#{spec.version}", submodules: false }
   spec.source_files = "Drift/**/*.{h,swift}"
   spec.resources = ['Drift/**/*.xib','Drift/**/*.xcassets']
-  spec.swift_version = '4.1'
+  spec.swift_version = '4.2'
 
   spec.dependency 'Starscream'
   spec.dependency 'ObjectMapper', '~> 3.0'

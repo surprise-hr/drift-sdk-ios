@@ -28,7 +28,7 @@ class UserAvailability: Mappable {
     func slotsForDays() -> [Date] {
 
         
-        let days: [Date] = (slots ?? []).flatMap({
+        let days: [Date] = (slots ?? []).compactMap({
             let components = Calendar.current.dateComponents([.year, .month, .day], from: $0)
             return Calendar.current.date(from: components)
         })
