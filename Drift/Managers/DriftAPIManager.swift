@@ -23,8 +23,8 @@ class DriftAPIManager: Alamofire.SessionManager {
         })
     }
     
-    class func getSocketAuth(accessToken: String, completion: @escaping (Result<SocketAuth>) -> ()) {
-        sharedManager.request(DriftRouter.getSocketData(accessToken: accessToken)).responseJSON(completionHandler: { (result) -> Void in
+    class func getSocketAuth(orgId: Int, accessToken: String, completion: @escaping (Result<SocketAuth>) -> ()) {
+        sharedManager.request(DriftRouter.getSocketData(orgId: orgId, accessToken: accessToken)).responseJSON(completionHandler: { (result) -> Void in
             completion(mapResponse(result))
         })
     }

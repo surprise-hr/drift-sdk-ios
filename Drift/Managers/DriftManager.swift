@@ -87,7 +87,7 @@ class DriftManager: NSObject {
         DriftAPIManager.postIdentify(embed.orgId, userId: userId, email: email, attributes: nil) { (result) -> () in
             getAuth(email, userId: userId) { (auth) in
                 if let auth = auth {
-                    self.setupSocket(auth.accessToken)
+                    self.setupSocket(auth.accessToken, orgId: embed.orgId)
                     
                     if let userId = auth.enduser?.userId {
                         ConversationsManager.checkForConversations(userId: userId)
@@ -161,8 +161,8 @@ class DriftManager: NSObject {
     /**
      Once we have a userId from Auth - Start Layer Auth Handoff to Layer Manager
     */
-    fileprivate class func setupSocket(_ accessToken: String) {
-        DriftAPIManager.getSocketAuth(accessToken: accessToken) { (result) in
+    fileprivate class func setupSocket(_ accessToken: String, orgId: Int) {
+        DriftAPIManager.getSocketAuth(orgId: orgId, accessToken: accessToken) { (result) in
             switch result {
             case .success(let socketAuth):
                 LoggerManager.log(socketAuth.sessionToken)
