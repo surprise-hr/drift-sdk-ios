@@ -35,25 +35,25 @@ class DriftAPIManager: Alamofire.SessionManager {
         })
     }
     
-    class func getUser(_ userId: Int, orgId: Int, authToken:String, completion: @escaping (Result<[User]>) -> ()) {
+    class func getUser(_ userId: Int64, orgId: Int, authToken:String, completion: @escaping (Result<[User]>) -> ()) {
         sharedManager.request(DriftCustomerRouter.getUser(orgId: orgId, userId: userId)).responseJSON(completionHandler: { (result) -> Void in
             completion(mapResponse(result))
         })
     }
     
-    class func getEndUser(_ endUserId: Int, authToken:String, completion: @escaping (Result<User>) -> ()){
+    class func getEndUser(_ endUserId: Int64, authToken:String, completion: @escaping (Result<User>) -> ()){
         sharedManager.request(DriftCustomerRouter.getEndUser(endUserId: endUserId)).responseJSON(completionHandler: { (result) -> Void in
             completion(mapResponse(result))
         })
     }
     
-    class func getUserAvailability(_ userId: Int, completion: @escaping (Result<UserAvailability>) -> ()) {
+    class func getUserAvailability(_ userId: Int64, completion: @escaping (Result<UserAvailability>) -> ()) {
         sharedManager.request(DriftCustomerRouter.getUserAvailability(userId: userId)).responseJSON(completionHandler: { (result) -> Void in
             completion(mapResponse(result))
         })
     }
     
-    class func scheduleMeeting(_ userId: Int, conversationId:Int, timestamp: Double, completion: @escaping (Result<GoogleMeeting>) -> ()) {
+    class func scheduleMeeting(_ userId: Int64, conversationId:Int, timestamp: Double, completion: @escaping (Result<GoogleMeeting>) -> ()) {
         sharedManager.request(DriftCustomerRouter.scheduleMeeting(userId: userId, conversationId: conversationId, timestamp: timestamp)).responseJSON(completionHandler: { (result) -> Void in
             
             if result.response?.statusCode == 200 {
@@ -125,19 +125,19 @@ class DriftAPIManager: Alamofire.SessionManager {
         
     }
     
-    class func getCampaigns(_ endUserId: Int, completion: @escaping (_ result: Result<[CampaignWrapper]>) -> ()){
+    class func getCampaigns(_ endUserId: Int64, completion: @escaping (_ result: Result<[CampaignWrapper]>) -> ()){
         sharedManager.request(DriftConversationRouter.getCampaignsForEndUser(endUserId: endUserId)).responseJSON { (result) in
             completion(mapResponse(result))
         }
     }
     
-    class func getEnrichedConversations(_ endUserId: Int, completion: @escaping (_ result: Result<[EnrichedConversation]>) -> ()){
+    class func getEnrichedConversations(_ endUserId: Int64, completion: @escaping (_ result: Result<[EnrichedConversation]>) -> ()){
         sharedManager.request(DriftConversationRouter.getEnrichedConversationsForEndUser(endUserId: endUserId)).responseJSON { (result) in
             completion(mapResponse(result))
         }
     }
     
-    class func getConversations(_ endUserId: Int, completion: @escaping (_ result: Result<[Conversation]>) -> ()){
+    class func getConversations(_ endUserId: Int64, completion: @escaping (_ result: Result<[Conversation]>) -> ()){
         sharedManager.request(DriftConversationRouter.getConversationsForEndUser(endUserId: endUserId)).responseJSON(completionHandler: { (result) -> Void in
             completion(mapResponse(result))
         })
@@ -157,7 +157,7 @@ class DriftAPIManager: Alamofire.SessionManager {
         })
     }
     
-    class func createConversation(_ body: String, welcomeUserId: Int?, welcomeMessage: String?, authToken: String, completion: @escaping (_ result: Result<Message>) -> ()){
+    class func createConversation(_ body: String, welcomeUserId: Int64?, welcomeMessage: String?, authToken: String, completion: @escaping (_ result: Result<Message>) -> ()){
         
         var data: [String: Any] = [:]
         

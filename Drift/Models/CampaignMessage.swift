@@ -23,7 +23,7 @@ class CampaignMessage: Mappable {
     var messageType: MessageType!
     var createdAt: Date?
     var bodyText: String?
-    var authorId: Int?
+    var authorId: Int64?
     var conversationId: Int?
     var viewerRecipientStatus: RecipientStatus?
     var announcementAttributes: AnnouncementAttributes?

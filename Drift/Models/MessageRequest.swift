@@ -19,7 +19,7 @@ class MessageRequest {
     var googleMeeting: GoogleMeeting?
     var userAvailability: UserAvailability?
     var conversationId: Int?
-    var meetingUserId: Int?
+    var meetingUserId: Int64?
     var meetingTimeSlot:Date?
     
     init (body: String, contentType: ContentType = .Chat, attachmentIds: [Int] = []) {
@@ -28,7 +28,7 @@ class MessageRequest {
         self.attachments = attachmentIds
     }
     
-    init(googleMeeting: GoogleMeeting, userAvailability: UserAvailability, meetingUserId: Int, conversationId: Int, timeSlot: Date) {
+    init(googleMeeting: GoogleMeeting, userAvailability: UserAvailability, meetingUserId: Int64, conversationId: Int, timeSlot: Date) {
         self.body = ""
         self.type = .Chat
         self.googleMeeting = googleMeeting
@@ -100,7 +100,7 @@ class MessageRequest {
         return json
     }
     
-    func generateFakeMessage(conversationId:Int, userId: Int) -> Message {
+    func generateFakeMessage(conversationId:Int, userId: Int64) -> Message {
         
         let message = Message()
         message.authorId = userId

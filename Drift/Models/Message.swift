@@ -40,7 +40,7 @@ class Message: Mappable, Equatable, Hashable{
     var attachments: [Attachment] = []
     var contentType:ContentType = ContentType.Chat
     var createdAt = Date()
-    var authorId: Int!
+    var authorId: Int64!
     var authorType: AuthorType!
     
     var conversationId: Int!
@@ -50,7 +50,7 @@ class Message: Mappable, Equatable, Hashable{
     var viewerRecipientStatus: RecipientStatus?
     var appointmentInformation: AppointmentInformation?
 
-    var presentSchedule: Int?
+    var presentSchedule: Int64?
     var scheduleMeetingFlow: Bool = false
     var offerSchedule: Int = -1
     

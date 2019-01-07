@@ -13,7 +13,7 @@ import SVProgressHUD
 
 
 protocol ConversationCellDelegate: class{
-    func presentScheduleOfferingForUserId(userId: Int)
+    func presentScheduleOfferingForUserId(userId: Int64)
     func attachmentSelected(_ attachment: Attachment, sender: AnyObject)
 }
 
@@ -631,7 +631,7 @@ extension ConversationViewController: ScheduleMeetingViewControllerDelegate {
 
 extension ConversationViewController: ConversationCellDelegate {
     
-    func presentScheduleOfferingForUserId(userId: Int) {
+    func presentScheduleOfferingForUserId(userId: Int64) {
         
         dismissKeyboard()
         

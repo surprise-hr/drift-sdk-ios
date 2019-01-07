@@ -53,7 +53,7 @@ struct Embed: Mappable {
     var users: [User] = []
     
     var userListMode: UserListMode = .random
-    var userListIds: [Int] = []
+    var userListIds: [Int64] = []
     
     
     var activeCampaigns: [Campaign] = []

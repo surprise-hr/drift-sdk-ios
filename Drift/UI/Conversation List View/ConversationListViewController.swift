@@ -22,9 +22,9 @@ class ConversationListViewController: UIViewController {
     var dateFormatter = DriftDateFormatter()
     var refreshControl: UIRefreshControl!
     
-    var endUserId: Int?
+    var endUserId: Int64?
     
-    class func navigationController(endUserId: Int? = nil) -> UINavigationController {
+    class func navigationController(endUserId: Int64? = nil) -> UINavigationController {
         let vc = ConversationListViewController()
         vc.endUserId = endUserId
         let navVC = UINavigationController(rootViewController: vc)

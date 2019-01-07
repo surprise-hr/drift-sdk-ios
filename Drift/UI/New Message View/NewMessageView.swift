@@ -53,7 +53,7 @@ class NewMessageView: CampaignView {
         dismissButton.setTitleColor(foreground, for: UIControl.State())
         openButton.setTitleColor(foreground, for: UIControl.State())
         
-        var userId: Int?
+        var userId: Int64?
         if otherConversations.isEmpty {
             //Setup for latest message in conversation
             notificationContainer.isHidden = true

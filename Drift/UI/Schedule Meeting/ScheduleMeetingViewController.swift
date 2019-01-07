@@ -65,7 +65,7 @@ class ScheduleMeetingViewController: UIViewController {
     var scheduleMode: ScheduleMode = .day
     var userAvailability: UserAvailability?
     
-    var userId: Int!
+    var userId: Int64!
     var conversationId: Int!
 
     weak var delegate: ScheduleMeetingViewControllerDelegate?
@@ -73,7 +73,7 @@ class ScheduleMeetingViewController: UIViewController {
     var days: [Date] = []
     var times: [Date] = []
     
-    convenience init(userId: Int, conversationId: Int, delegate: ScheduleMeetingViewControllerDelegate) {
+    convenience init(userId: Int64, conversationId: Int, delegate: ScheduleMeetingViewControllerDelegate) {
         self.init(nibName: "ScheduleMeetingViewController", bundle: Bundle(for: ScheduleMeetingViewController.classForCoder()))
         self.userId = userId
         self.conversationId = conversationId
@@ -108,7 +108,7 @@ class ScheduleMeetingViewController: UIViewController {
         delegate?.didDismissScheduleVC()
     }
     
-    func updateForUserId(userId: Int) {
+    func updateForUserId(userId: Int64) {
         self.userId = userId
         SVProgressHUD.show()
         DriftAPIManager.getUserAvailability(userId) { [weak self] (result) in
