@@ -72,7 +72,7 @@ class DriftManager: NSObject {
     /**
      Gets Auth for user - Calls Identify if new user
     */
-    class func registerUser(_ userId: String, email: String, attrs: [String: AnyObject]? = nil, completion: ((Int?)->())? = nil){
+    class func registerUser(_ userId: String, email: String, attrs: [String: AnyObject]? = nil, completion: ((Int64?)->())? = nil){
         DriftDataStore.sharedInstance.setUserId(userId)
         DriftDataStore.sharedInstance.setEmail(email)
         

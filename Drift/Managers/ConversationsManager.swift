@@ -10,7 +10,7 @@ import Foundation
 
 class ConversationsManager {
     
-    class func checkForConversations(userId: Int) {
+    class func checkForConversations(userId: Int64) {
         DriftAPIManager.getEnrichedConversations(userId) { (result) in
             switch result {
             case .success(let conversations):

@@ -176,7 +176,7 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
         }
     }
     
-    func getUser(_ userId: Int) {
+    func getUser(_ userId: Int64) {
         if let authorType = message?.authorType , authorType == .User {
             UserManager.sharedInstance.userMetaDataForUserId(userId, completion: { (user) in
                 

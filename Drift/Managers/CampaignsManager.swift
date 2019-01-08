@@ -10,7 +10,7 @@ import Foundation
 
 class CampaignsManager {
 
-    class func checkForCampaigns(userId: Int, embed: Embed) {
+    class func checkForCampaigns(userId: Int64, embed: Embed) {
         DriftAPIManager.getCampaigns(userId) { (result) in
             switch result {
             case .success(let campaignWrappers):

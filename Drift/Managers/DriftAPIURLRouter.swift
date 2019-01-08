@@ -59,10 +59,10 @@ enum DriftRouter: URLRequestConvertible {
 enum DriftCustomerRouter: URLRequestConvertible {
     
     case getAuth(email: String, userId: String, redirectURL: String, orgId: Int, clientId: String)
-    case getUser(orgId: Int, userId: Int)
-    case getEndUser(endUserId: Int)
-    case getUserAvailability(userId: Int)
-    case scheduleMeeting(userId: Int, conversationId: Int, timestamp: Double)
+    case getUser(orgId: Int, userId: Int64)
+    case getEndUser(endUserId: Int64)
+    case getUserAvailability(userId: Int64)
+    case scheduleMeeting(userId: Int64, conversationId: Int, timestamp: Double)
     
     var request: (method: Alamofire.HTTPMethod, path: String, parameters: [String: Any]?, encoding: ParameterEncoding){
         switch self {
@@ -120,10 +120,10 @@ enum DriftCustomerRouter: URLRequestConvertible {
 
 enum DriftConversationRouter: URLRequestConvertible {
     
-    case getCampaignsForEndUser(endUserId: Int)
+    case getCampaignsForEndUser(endUserId: Int64)
     
-    case getEnrichedConversationsForEndUser(endUserId: Int)
-    case getConversationsForEndUser(endUserId: Int)
+    case getEnrichedConversationsForEndUser(endUserId: Int64)
+    case getConversationsForEndUser(endUserId: Int64)
     case getMessagesForConversation(conversationId: Int)
     case postMessageToConversation(conversationId: Int, data: [String: Any])
     case createConversation(data: [String: Any])

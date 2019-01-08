@@ -21,7 +21,7 @@ class Conversation: Mappable, Equatable{
     
     var inboxId: Int!
     var displayId: Int!
-    var endUserId: Int!
+    var endUserId: Int64!
     var assigneeId: Int?
     var status: ConversationStatus!
     var subject: String?

@@ -13,7 +13,7 @@ class PreMessage: Mappable {
     
     var messageBody: String = ""
     var user: User?
-    var userId: Int?
+    var userId: Int64?
     
     required init?(map: Map) {
         

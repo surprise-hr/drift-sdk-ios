@@ -17,7 +17,7 @@ class AppointmentInformation: Mappable{
     
     var availabilitySlot = Date()
     var slotDuration = -1
-    var agentId = -1
+    var agentId: Int64 = -1
     var conversationId = -1
     var endUserTimeZone: String?
     var agentTimeZone: String?

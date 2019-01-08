@@ -10,7 +10,7 @@ import ObjectMapper
 ///User obect - Attached to Auth and used to make sure user has not changed during app close
 class User: Mappable, Equatable {
     
-    var userId: Int?
+    var userId: Int64?
     var orgId: Int?
     var email: String?
     var name: String?
