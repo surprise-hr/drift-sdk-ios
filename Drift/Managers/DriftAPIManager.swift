@@ -14,6 +14,21 @@ class DriftAPIManager: Alamofire.SessionManager {
     static let sharedManager: DriftAPIManager = {
         let configuration = URLSessionConfiguration.default
         let manager = DriftAPIManager(configuration: configuration)
+        
+        if let info = Bundle.main.infoDictionary {
+            let verion = info["CFBundleShortVersionString"] as? String ?? "Unknown"
+            let identifer = info["CFBundleIdentifier"] as? String ?? "Unknown"
+            let build = info["CFBundleVersion"] as? String ?? "Unknown"
+            let osName = UIDevice.current.systemName
+            let osVersion = UIDevice.current.systemVersion
+            let alamofireVersion: String = {
+                guard let afInfo = Bundle(for: SessionManager.self).infoDictionary,let build = afInfo["CFBundleShortVersionString"] else { return "Unknown" }
+                return "Alamofire/\(build)"
+            }()
+            
+            let userAgent = "Drift-SDK/\(verion) (\(identifer); build:\(build); \(osName) \(osVersion)) \(alamofireVersion)"
+            configuration.httpAdditionalHeaders = ["User-Agent": userAgent]
+        }
         return manager
     }()
     
