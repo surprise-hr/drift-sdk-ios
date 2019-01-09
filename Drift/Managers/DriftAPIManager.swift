@@ -13,8 +13,6 @@ class DriftAPIManager: Alamofire.SessionManager {
     
     static let sharedManager: DriftAPIManager = {
         let configuration = URLSessionConfiguration.default
-        var defaultHeaders =  Alamofire.SessionManager.defaultHTTPHeaders
-        
         if let info = Bundle.main.infoDictionary {
             let verion = info["CFBundleShortVersionString"] as? String ?? "Unknown"
             let identifer = info["CFBundleIdentifier"] as? String ?? "Unknown"
@@ -27,6 +25,7 @@ class DriftAPIManager: Alamofire.SessionManager {
             }()
             
             let userAgent = "Drift-SDK/\(verion) (\(identifer); build:\(build); \(osName) \(osVersion)) \(alamofireVersion)"
+            var defaultHeaders =  Alamofire.SessionManager.defaultHTTPHeaders
             defaultHeaders["User-Agent"] = userAgent
             configuration.httpAdditionalHeaders = defaultHeaders
         }
