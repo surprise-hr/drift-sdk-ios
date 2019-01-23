@@ -93,6 +93,8 @@ class ConversationListViewController: UIViewController {
         navigationItem.title = "Conversations"
         
         NotificationCenter.default.addObserver(self, selector: #selector(getConversations), name: UIApplication.willEnterForegroundNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didReceiveNewMessage), name: .driftOnNewMessageReceived, object: nil)
+
     }
     
     deinit {
@@ -136,6 +138,10 @@ class ConversationListViewController: UIViewController {
     @objc func startNewConversation() {
         let conversationViewController = ConversationViewController(conversationType: ConversationViewController.ConversationType.createConversation)
         navigationController?.show(conversationViewController, sender: self)
+    }
+    
+    @objc func didReceiveNewMessage(){
+        getConversations()
     }
     
     func setupEmptyState() {
