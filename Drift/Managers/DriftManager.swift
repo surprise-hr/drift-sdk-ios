@@ -16,7 +16,7 @@ class DriftManager: NSObject {
     var showArchivedCampaigns = true
     var directoryURL: URL?
     ///Used to store register data while we wait for embed to finish in case where register and embed is called together
-    private var registerInfo: (userId: String, email: String, attrs: [String: AnyObject]?)?
+    private var registerInfo: (userId: String, email: String?, userJwt: String?, attrs: [String: AnyObject]?)?
 
     fileprivate override init(){
         super.init()
@@ -50,7 +50,7 @@ class DriftManager: NSObject {
         getEmbedData(embedId) { (success) in
             //If we have pending register data go in register flow - If register called before embeds is complete
             if let registerInfo = DriftManager.sharedInstance.registerInfo , success {
-                DriftManager.registerUser(registerInfo.userId, email: registerInfo.email, attrs: registerInfo.attrs, completion: { userId in
+                DriftManager.registerUser(registerInfo.userId, email: registerInfo.email, userJwt: registerInfo.userJwt, attrs: registerInfo.attrs, completion: { userId in
                     if userId != nil{
                         completion?(success)
                         return
@@ -72,20 +72,20 @@ class DriftManager: NSObject {
     /**
      Gets Auth for user - Calls Identify if new user
     */
-    class func registerUser(_ userId: String, email: String, attrs: [String: AnyObject]? = nil, completion: ((Int64?)->())? = nil){
+    class func registerUser(_ userId: String, email: String?, userJwt: String?, attrs: [String: AnyObject]? = nil, completion: ((Int64?)->())? = nil){
         DriftDataStore.sharedInstance.setUserId(userId)
         DriftDataStore.sharedInstance.setEmail(email)
         
         guard let embed = DriftDataStore.sharedInstance.embed else {
             LoggerManager.log("No Embed, not registering user - Waiting for Embeds to complete")
-            DriftManager.sharedInstance.registerInfo = (userId, email, attrs)
+            DriftManager.sharedInstance.registerInfo = (userId, email, userJwt, attrs)
             return
         }
         
         DriftManager.sharedInstance.registerInfo = nil
     
-        DriftAPIManager.postIdentify(embed.orgId, userId: userId, email: email, attributes: nil) { (result) -> () in
-            getAuth(email, userId: userId) { (auth) in
+        DriftAPIManager.postIdentify(embed.orgId, userId: userId, email: email, userJwt: userJwt, attributes: nil) { (result) -> () in
+            getAuth(email, userId: userId, userJwt: userJwt) { (auth) in
                 if let auth = auth {
                     self.setupSocket(auth.accessToken, orgId: embed.orgId)
                     
@@ -112,10 +112,10 @@ class DriftManager: NSObject {
      - parameter userId: User Id from app data base
      - returns: completion with success bool
     */
-    class func getAuth(_ email: String, userId: String, completion: @escaping (_ success: Auth?) -> ()) {
+    class func getAuth(_ email: String?, userId: String, userJwt: String?, completion: @escaping (_ success: Auth?) -> ()) {
         
         if let orgId = DriftDataStore.sharedInstance.embed?.orgId, let clientId = DriftDataStore.sharedInstance.embed?.clientId, let redirURI = DriftDataStore.sharedInstance.embed?.redirectUri {
-            DriftAPIManager.getAuth(email, userId: userId, redirectURL: redirURI, orgId: orgId, clientId: clientId, completion: { (result) -> () in
+            DriftAPIManager.getAuth(email, userId: userId, userJwt: userJwt, redirectURL: redirURI, orgId: orgId, clientId: clientId, completion: { (result) -> () in
                 switch result {
                 case .success(let auth):
                     DriftDataStore.sharedInstance.setAuth(auth)
@@ -135,7 +135,7 @@ class DriftManager: NSObject {
     */
     @objc func didEnterForeground(){
         if let user = DriftDataStore.sharedInstance.auth?.enduser, let orgId = user.orgId, let userId = user.externalId, let email = user.email {
-            DriftAPIManager.postIdentify(orgId, userId: userId, email: email, attributes: nil) { (result) -> () in }
+            DriftAPIManager.postIdentify(orgId, userId: userId, email: email, userJwt: DriftDataStore.sharedInstance.userJwt, attributes: nil) { (result) -> () in }
             
             if let userId = user.userId, let embed = DriftDataStore.sharedInstance.embed {
                 ConversationsManager.checkForConversations(userId: userId)
