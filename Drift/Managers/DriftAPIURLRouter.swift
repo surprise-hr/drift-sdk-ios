@@ -69,14 +69,16 @@ enum DriftCustomerRouter: URLRequestConvertible {
         case .getAuth(let email, let userId, let userJwt, let redirectURL, let orgId, let clientId):
             
              var params: [String : Any] = [
-                
-                "email": email ,
                 "org_id": orgId,
                 "user_id": userId,
                 "grant_type": "sdk",
                 "redirect_uri":redirectURL,
                 "client_id": clientId
             ]
+             
+             if let email = email {
+                params["email"] = email
+             }
             
             if let userJwt = userJwt {
                 params["userJwt"] = userJwt
