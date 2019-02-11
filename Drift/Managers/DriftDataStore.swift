@@ -16,11 +16,14 @@ class DriftDataStore {
     static let driftEmbedCacheString = "DriftSDKEmbedJSONCache"
     static let driftUserIdCacheString = "DriftSDKUserIdCache"
     static let driftUserEmailCacheString = "DriftSDKUserEmailCache"
+    static let driftUserJwtCacheString = "DriftSDKUserJWTCache"
 
     fileprivate (set) var auth: Auth?
     fileprivate (set) var embed: Embed?
     fileprivate (set) var userId: String?
     fileprivate (set) var userEmail: String?
+    fileprivate (set) var userJwt: String?
+
     
     static var sharedInstance: DriftDataStore = {
         let store = DriftDataStore()
@@ -43,8 +46,13 @@ class DriftDataStore {
         saveData()
     }
 
-    func setEmail(_ email: String) {
+    func setEmail(_ email: String?) {
         self.userEmail = email
+        saveData()
+    }
+    
+    func setUserJwt(_ userJwt: String?) {
+        self.userJwt = userJwt
         saveData()
     }
     
@@ -77,6 +85,9 @@ class DriftDataStore {
         if let userEmail = userDefs.string(forKey: DriftDataStore.driftUserEmailCacheString) {
             self.userEmail = userEmail
         }
+        
+        self.userJwt = userDefs.string(forKey: DriftDataStore.driftUserJwtCacheString)
+    
     }
     
     func saveData(){
@@ -100,6 +111,8 @@ class DriftDataStore {
             userDefs.set(userEmail, forKey: DriftDataStore.driftUserEmailCacheString)
         }
         
+        userDefs.set(userJwt, forKey: DriftDataStore.driftUserJwtCacheString)
+        
         userDefs.synchronize()
         
         DriftDataStore.sharedInstance = self
@@ -109,6 +122,7 @@ class DriftDataStore {
         let userDefs = UserDefaults.standard
         userDefs.removeObject(forKey: DriftDataStore.driftAuthCacheString)
         userDefs.removeObject(forKey: DriftDataStore.driftEmbedCacheString)
+        userDefs.removeObject(forKey: DriftDataStore.driftUserJwtCacheString)
         userDefs.synchronize()
         auth = nil
         userId = nil

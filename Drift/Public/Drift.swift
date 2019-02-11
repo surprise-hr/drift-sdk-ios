@@ -29,8 +29,8 @@ open class Drift: NSObject {
      - Parameter userId: The User id from your database. Will be the same as on driftt.
      
     */
-    @objc open class func registerUser(_ userId: String, email: String) {
-        DriftManager.registerUser(userId, email: email, attrs: nil)
+    @objc open class func registerUser(_ userId: String, email: String? = nil, userJwt: String? = nil) {
+        DriftManager.registerUser(userId, email: email, userJwt: userJwt, attrs: nil)
     }
     
     /**
