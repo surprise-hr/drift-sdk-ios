@@ -23,7 +23,7 @@ class Conversation: Mappable, Equatable{
     var displayId: Int!
     var endUserId: Int64!
     var assigneeId: Int?
-    var status: ConversationStatus!
+    var status: ConversationStatus?
     var subject: String?
     var preview: String?
     var updatedAt = Date()
@@ -44,6 +44,7 @@ class Conversation: Mappable, Equatable{
         subject     <- map["subject"]
         preview     <- map["preview"]
         updatedAt   <- (map["updatedAt"], DriftDateTransformer())
+        status      <- (map["status"], EnumTransform<ConversationStatus>())
         uuid        <- map["uuid"]
         orgId       <- map["orgId"]
         type        <- map["type"]

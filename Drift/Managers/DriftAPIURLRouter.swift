@@ -123,7 +123,6 @@ enum DriftConversationRouter: URLRequestConvertible {
     case getCampaignsForEndUser(endUserId: Int64)
     
     case getEnrichedConversationsForEndUser(endUserId: Int64)
-    case getConversationsForEndUser(endUserId: Int64)
     case getMessagesForConversation(conversationId: Int)
     case postMessageToConversation(conversationId: Int, data: [String: Any])
     case createConversation(data: [String: Any])
@@ -136,8 +135,6 @@ enum DriftConversationRouter: URLRequestConvertible {
             return (.get, "conversations/end_users/\(endUserId)/campaigns", nil, URLEncoding.default)
         case .getEnrichedConversationsForEndUser(let endUserId):
             return (.get, "conversations/end_users/\(endUserId)/extra", nil, URLEncoding.default)
-        case .getConversationsForEndUser(let endUserId):
-            return (.get, "conversations/end_users/\(endUserId)", nil, URLEncoding.default)
         case .getMessagesForConversation(let conversationId):
             return (.get, "conversations/\(conversationId)/messages", nil, URLEncoding.default)
         case .postMessageToConversation(let conversationId, let data):

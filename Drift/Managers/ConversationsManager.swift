@@ -14,7 +14,7 @@ class ConversationsManager {
         DriftAPIManager.getEnrichedConversations(userId) { (result) in
             switch result {
             case .success(let conversations):
-                let conversationsToShow = conversations.filter({$0.unreadMessages > 0})
+                let conversationsToShow = conversations.filter({$0.unreadMessages > 0 && $0.conversation.status != nil})
                 PresentationManager.sharedInstance.didRecieveNewMessages(conversationsToShow)
             case .failure(let error):
                 LoggerManager.didRecieveError(error)
