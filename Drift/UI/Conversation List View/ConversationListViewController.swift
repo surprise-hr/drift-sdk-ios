@@ -120,7 +120,12 @@ class ConversationListViewController: UIViewController {
                 SVProgressHUD.dismiss()
                 switch result{
                 case .success(let enrichedConversationsResult):
-                    self.enrichedConversations = enrichedConversationsResult.filter({ $0.conversation.status != nil })
+                    
+                    if DriftManager.sharedInstance.automatedMessages {
+                       self.enrichedConversations = enrichedConversationsResult
+                    } else {
+                        self.enrichedConversations = enrichedConversationsResult.filter({ $0.conversation.status != nil })
+                    }
                     self.tableView.reloadData()
                     if self.enrichedConversations.count == 0{
                         self.emptyStateView.isHidden = false
