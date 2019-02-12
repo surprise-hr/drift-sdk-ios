@@ -32,8 +32,8 @@ class DriftAPIManager: Alamofire.SessionManager {
         return DriftAPIManager(configuration: configuration)
     }()
     
-    class func getAuth(_ email: String, userId: String, redirectURL: String, orgId: Int, clientId: String, completion: @escaping (Result<Auth>) -> ()) {
-        sharedManager.request(DriftCustomerRouter.getAuth(email: email, userId: userId, redirectURL: redirectURL, orgId: orgId, clientId: clientId)).responseJSON(completionHandler: { (response) -> Void in
+    class func getAuth(_ email: String?, userId: String, userJwt: String?, redirectURL: String, orgId: Int, clientId: String, completion: @escaping (Result<Auth>) -> ()) {
+        sharedManager.request(DriftCustomerRouter.getAuth(email: email, userId: userId, userJwt:userJwt, redirectURL: redirectURL, orgId: orgId, clientId: clientId)).responseJSON(completionHandler: { (response) -> Void in
             completion(mapResponse(response))
         })
     }
@@ -82,12 +82,16 @@ class DriftAPIManager: Alamofire.SessionManager {
     }
     
     
-    class func postIdentify(_ orgId: Int, userId: String, email: String, attributes: [String: Any]?, completion: @escaping (Result<User>) -> ()) {
+    class func postIdentify(_ orgId: Int, userId: String, email: String?, userJwt: String?, attributes: [String: Any]?, completion: @escaping (Result<User>) -> ()) {
         var params: [String: Any] = [
             "orgId": orgId,
             "userId": userId,
             "attributes": ["email": email]
         ]
+        
+        if let userJwt = userJwt {
+            params["signedIdentity"] = userJwt
+        }
         
         if var attributes = attributes {
             attributes["email"] = email
