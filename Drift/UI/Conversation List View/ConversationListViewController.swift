@@ -121,9 +121,11 @@ class ConversationListViewController: UIViewController {
                 switch result{
                 case .success(let enrichedConversationsResult):
                     
-                    if DriftManager.sharedInstance.automatedMessages {
+                    if DriftManager.sharedInstance.shouldShowAutomatedMessages {
+                        //Show all conversations
                        self.enrichedConversations = enrichedConversationsResult
                     } else {
+                        //Filter out conversations we dont have a status for (Automated is BulkSent)
                         self.enrichedConversations = enrichedConversationsResult.filter({ $0.conversation.status != nil })
                     }
                     self.tableView.reloadData()

@@ -13,7 +13,7 @@ class DriftManager: NSObject {
     
     static var sharedInstance: DriftManager = DriftManager()
     var debug: Bool = false
-    var automatedMessages: Bool = true
+    var shouldShowAutomatedMessages: Bool = true
     var showArchivedCampaigns = true
     var directoryURL: URL?
     ///Used to store register data while we wait for embed to finish in case where register and embed is called together
@@ -71,7 +71,7 @@ class DriftManager: NSObject {
     }
     
     class func showAutomatedMessages(_ show: Bool) {
-        sharedInstance.automatedMessages = show
+        sharedInstance.shouldShowAutomatedMessages = show
     }
     
     /**
