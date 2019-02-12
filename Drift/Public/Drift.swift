@@ -80,4 +80,16 @@ open class Drift: NSObject {
     @objc open class func showCreateConversation() {
         DriftManager.showCreateConversation()
     }
+    
+    /**
+     
+     This allows you to filter out automated messages and only show messages the end user has interacted with
+     This will stop automated messages on the web showing up in the app.
+     
+     - parameter debug: A Bool indicating if automated conversations should be shown - Default true
+     
+     */
+    @objc open class func showAutomatedMessages(_ show: Bool) {
+        DriftManager.showAutomatedMessages(show)
+    }
 }

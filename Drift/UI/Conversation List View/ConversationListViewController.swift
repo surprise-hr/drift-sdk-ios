@@ -119,8 +119,15 @@ class ConversationListViewController: UIViewController {
                 self.refreshControl.endRefreshing()
                 SVProgressHUD.dismiss()
                 switch result{
-                case .success(let enrichedConversations):
-                    self.enrichedConversations = enrichedConversations
+                case .success(let enrichedConversationsResult):
+                    
+                    if DriftManager.sharedInstance.shouldShowAutomatedMessages {
+                        //Show all conversations
+                       self.enrichedConversations = enrichedConversationsResult
+                    } else {
+                        //Filter out conversations we dont have a status for (Automated is BulkSent)
+                        self.enrichedConversations = enrichedConversationsResult.filter({ $0.conversation.status != nil })
+                    }
                     self.tableView.reloadData()
                     if self.enrichedConversations.count == 0{
                         self.emptyStateView.isHidden = false
@@ -162,7 +169,7 @@ extension ConversationListViewController: UITableViewDelegate, UITableViewDataSo
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ConversationListTableViewCell") as! ConversationListTableViewCell
 
-        let enrichedConversation = enrichedConversations[(indexPath as NSIndexPath).row]
+        let enrichedConversation = enrichedConversations[indexPath.row]
         if let conversation = enrichedConversation.conversation {
             if enrichedConversation.unreadMessages > 0 {
                 cell.unreadCountLabel.isHidden = false
@@ -210,7 +217,7 @@ extension ConversationListViewController: UITableViewDelegate, UITableViewDataSo
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let enrichedConversation = enrichedConversations[(indexPath as NSIndexPath).row]
+        let enrichedConversation = enrichedConversations[indexPath.row]
         let conversationViewController = ConversationViewController(conversationType: .continueConversation(conversationId: enrichedConversation.conversation.id))
         navigationController?.show(conversationViewController, sender: self)
     }
