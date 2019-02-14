@@ -31,7 +31,7 @@ class Attachment: Mappable, Hashable{
     }
     
     var hashValue: Int {
-        return Int(truncatingIfNeeded: id)
+        return "\(id)".hashValue
     }
     
     required convenience init?(map: Map) {

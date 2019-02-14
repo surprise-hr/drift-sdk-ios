@@ -58,7 +58,7 @@ class Message: Mappable, Equatable, Hashable{
     var fakeMessage = false
     var preMessage = false
     var hashValue: Int {
-        return Int(truncatingIfNeeded: id)
+        return "\(id)".hashValue
     }
     
     required convenience init?(map: Map) {
