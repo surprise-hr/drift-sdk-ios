@@ -21,13 +21,13 @@ class ConversationViewController: UIViewController {
     
     enum ConversationType {
         case createConversation
-        case continueConversation(conversationId: Int)
+        case continueConversation(conversationId: Int64)
     }
     
     lazy var emptyState = ConversationEmptyStateView.drift_fromNib() as! ConversationEmptyStateView
     var messages: [Message] = []
-    var attachments: [Int: Attachment] = [:]
-    var attachmentIds: Set<Int> = []
+    var attachments: [Int64: Attachment] = [:]
+    var attachmentIds: Set<Int64> = []
     var previewItem: DriftPreviewItem?
     var dateFormatter: DriftDateFormatter = DriftDateFormatter()
     var connectionBarView: ConnectionBarView = ConnectionBarView.drift_fromNib() as! ConnectionBarView
@@ -73,7 +73,7 @@ class ConversationViewController: UIViewController {
         }
     }
 
-    var conversationId: Int?{
+    var conversationId: Int64?{
         didSet{
             conversationInputView.addButton.isEnabled = true
         }
@@ -357,7 +357,7 @@ class ConversationViewController: UIViewController {
         }
     }
     
-    func getMessages(_ conversationId: Int){
+    func getMessages(_ conversationId: Int64){
         SVProgressHUD.show()
         DriftAPIManager.getMessages(conversationId, authToken: DriftDataStore.sharedInstance.auth!.accessToken) { (result) in
             SVProgressHUD.dismiss()
@@ -396,7 +396,7 @@ class ConversationViewController: UIViewController {
         }
     }
     
-    func postMessageToConversation(_ conversationId: Int, messageRequest: MessageRequest) {
+    func postMessageToConversation(_ conversationId: Int64, messageRequest: MessageRequest) {
         InboxManager.sharedInstance.postMessage(messageRequest, conversationId: conversationId) { [weak self] (message, requestId) in
             if let index = self?.messages.index(where: { (message) -> Bool in
                 if message.requestId == messageRequest.requestId{

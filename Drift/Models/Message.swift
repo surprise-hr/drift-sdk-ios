@@ -32,18 +32,18 @@ enum RecipientStatus: String {
 }
 
 class Message: Mappable, Equatable, Hashable{
-    var id: Int!
+    var id: Int64!
     var uuid: String?
     var inboxId: Int!
     var body: String?
-    var attachmentIds: [Int] = []
+    var attachmentIds: [Int64] = []
     var attachments: [Attachment] = []
     var contentType:ContentType = ContentType.Chat
     var createdAt = Date()
     var authorId: Int64!
     var authorType: AuthorType!
     
-    var conversationId: Int!
+    var conversationId: Int64!
     var requestId: Double = 0
     var sendStatus: SendStatus = SendStatus.Sent
     var formattedBody: NSAttributedString?
@@ -52,13 +52,13 @@ class Message: Mappable, Equatable, Hashable{
 
     var presentSchedule: Int64?
     var scheduleMeetingFlow: Bool = false
-    var offerSchedule: Int = -1
+    var offerSchedule: Int64 = -1
     
     var preMessages: [PreMessage] = []
     var fakeMessage = false
     var preMessage = false
     var hashValue: Int {
-        return id
+        return Int(truncatingIfNeeded: id)
     }
     
     required convenience init?(map: Map) {

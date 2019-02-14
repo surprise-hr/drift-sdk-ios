@@ -13,22 +13,22 @@ class MessageRequest {
 
     var body: String = ""
     var type:ContentType = .Chat
-    var attachments: [Int] = []
+    var attachments: [Int64] = []
     var requestId: Double = Date().timeIntervalSince1970
 
     var googleMeeting: GoogleMeeting?
     var userAvailability: UserAvailability?
-    var conversationId: Int?
+    var conversationId: Int64?
     var meetingUserId: Int64?
     var meetingTimeSlot:Date?
     
-    init (body: String, contentType: ContentType = .Chat, attachmentIds: [Int] = []) {
+    init (body: String, contentType: ContentType = .Chat, attachmentIds: [Int64] = []) {
         self.body = TextHelper.wrapTextInHTML(text: body)
         self.type = contentType
         self.attachments = attachmentIds
     }
     
-    init(googleMeeting: GoogleMeeting, userAvailability: UserAvailability, meetingUserId: Int64, conversationId: Int, timeSlot: Date) {
+    init(googleMeeting: GoogleMeeting, userAvailability: UserAvailability, meetingUserId: Int64, conversationId: Int64, timeSlot: Date) {
         self.body = ""
         self.type = .Chat
         self.googleMeeting = googleMeeting
@@ -100,7 +100,7 @@ class MessageRequest {
         return json
     }
     
-    func generateFakeMessage(conversationId:Int, userId: Int64) -> Message {
+    func generateFakeMessage(conversationId:Int64, userId: Int64) -> Message {
         
         let message = Message()
         message.authorId = userId

@@ -68,7 +68,7 @@ class DriftAPIManager: Alamofire.SessionManager {
         })
     }
     
-    class func scheduleMeeting(_ userId: Int64, conversationId:Int, timestamp: Double, completion: @escaping (Result<GoogleMeeting>) -> ()) {
+    class func scheduleMeeting(_ userId: Int64, conversationId: Int64, timestamp: Double, completion: @escaping (Result<GoogleMeeting>) -> ()) {
         sharedManager.request(DriftCustomerRouter.scheduleMeeting(userId: userId, conversationId: conversationId, timestamp: timestamp)).responseJSON(completionHandler: { (result) -> Void in
             
             if result.response?.statusCode == 200 {
@@ -104,7 +104,7 @@ class DriftAPIManager: Alamofire.SessionManager {
     }
     
     
-    class func recordAnnouncement(_ conversationId: Int, authToken: String, response: AnnouncementResponse) {
+    class func recordAnnouncement(_ conversationId: Int64, authToken: String, response: AnnouncementResponse) {
         let json: [String: Any] = [
             "type": "CONVERSATION_EVENT",
             "conversationEvent": ["type": response.rawValue]
@@ -120,7 +120,7 @@ class DriftAPIManager: Alamofire.SessionManager {
         })
     }
     
-    class func markMessageAsRead(messageId: Int, completion: @escaping (_ result: Result<Bool>) -> ()){
+    class func markMessageAsRead(messageId: Int64, completion: @escaping (_ result: Result<Bool>) -> ()){
         sharedManager.request(DriftConversation2Router.markMessageAsRead(messageId: messageId)).responseString { (result) in
             switch result.result{
             case .success(_):
@@ -132,7 +132,7 @@ class DriftAPIManager: Alamofire.SessionManager {
         
     }
     
-    class func markConversationAsRead(messageId: Int, completion: @escaping (_ result: Result<Bool>) -> ()){
+    class func markConversationAsRead(messageId: Int64, completion: @escaping (_ result: Result<Bool>) -> ()){
         sharedManager.request(DriftConversation2Router.markConversationAsRead(messageId: messageId)).responseString { (result) in
             switch result.result{
             case .success(_):
@@ -156,13 +156,13 @@ class DriftAPIManager: Alamofire.SessionManager {
         }
     }
         
-    class func getMessages(_ conversationId: Int, authToken: String, completion: @escaping (_ result: Result<[Message]>) -> ()){
+    class func getMessages(_ conversationId: Int64, authToken: String, completion: @escaping (_ result: Result<[Message]>) -> ()){
         sharedManager.request(DriftConversationRouter.getMessagesForConversation(conversationId: conversationId)).responseJSON(completionHandler: { (result) -> Void in
             completion(mapResponse(result))
         })
     }
     
-    class func postMessage(_ conversationId: Int, messageRequest: MessageRequest, completion: @escaping (_ result: Result<Message>) -> ()){
+    class func postMessage(_ conversationId: Int64, messageRequest: MessageRequest, completion: @escaping (_ result: Result<Message>) -> ()){
         let json = messageRequest.toJSON()
         
         sharedManager.request(DriftConversationRouter.postMessageToConversation(conversationId: conversationId, data: json)).responseJSON(completionHandler: { (result) -> Void in
@@ -219,7 +219,7 @@ class DriftAPIManager: Alamofire.SessionManager {
         }) .resume()
     }
     
-    class func getAttachmentsMetaData(_ attachmentIds: [Int], authToken: String, completion: @escaping (_ result: Result<[Attachment]>) -> ()){
+    class func getAttachmentsMetaData(_ attachmentIds: [Int64], authToken: String, completion: @escaping (_ result: Result<[Attachment]>) -> ()){
         
         guard let url = URLStore.getAttachmentsURL(attachmentIds, authToken: authToken) else {
             LoggerManager.log("Failed in Get Attachment Metadata URL Creation")
@@ -330,11 +330,11 @@ class URLStore{
         return URL(string: "https://conversation.api.drift.com/attachments?access_token=\(authToken)")
     }
     
-    class func downloadAttachmentURL(_ attachmentId: Int, authToken: String) -> URL? {
+    class func downloadAttachmentURL(_ attachmentId: Int64, authToken: String) -> URL? {
         return URL(string: "https://conversation.api.drift.com/attachments/\(attachmentId)/data?access_token=\(authToken)")
     }
     
-    class func getAttachmentsURL(_ attachmentIds: [Int], authToken: String) -> URL? {
+    class func getAttachmentsURL(_ attachmentIds: [Int64], authToken: String) -> URL? {
         var params = ""
         for id in attachmentIds{
             params += "&id=\(id)"

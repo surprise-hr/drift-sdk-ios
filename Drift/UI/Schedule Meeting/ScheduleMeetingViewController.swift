@@ -66,14 +66,14 @@ class ScheduleMeetingViewController: UIViewController {
     var userAvailability: UserAvailability?
     
     var userId: Int64!
-    var conversationId: Int!
+    var conversationId: Int64!
 
     weak var delegate: ScheduleMeetingViewControllerDelegate?
     
     var days: [Date] = []
     var times: [Date] = []
     
-    convenience init(userId: Int64, conversationId: Int, delegate: ScheduleMeetingViewControllerDelegate) {
+    convenience init(userId: Int64, conversationId: Int64, delegate: ScheduleMeetingViewControllerDelegate) {
         self.init(nibName: "ScheduleMeetingViewController", bundle: Bundle(for: ScheduleMeetingViewController.classForCoder()))
         self.userId = userId
         self.conversationId = conversationId

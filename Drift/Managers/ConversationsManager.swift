@@ -29,7 +29,7 @@ class ConversationsManager {
         }
     }
     
-    class func markMessageAsRead(_ messageId: Int) {
+    class func markMessageAsRead(_ messageId: Int64) {
         DriftAPIManager.markConversationAsRead(messageId: messageId) { (result) in
             switch result {
             case .success:
