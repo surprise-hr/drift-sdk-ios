@@ -18,13 +18,13 @@ class CampaignMessage: Mappable {
     }
     
     var orgId: Int?
-    var id: Int?
+    var id: Int64?
     var uuid: String?
     var messageType: MessageType!
     var createdAt: Date?
     var bodyText: String?
     var authorId: Int64?
-    var conversationId: Int?
+    var conversationId: Int64?
     var viewerRecipientStatus: RecipientStatus?
     var announcementAttributes: AnnouncementAttributes?
     

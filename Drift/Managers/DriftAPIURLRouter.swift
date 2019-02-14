@@ -62,7 +62,7 @@ enum DriftCustomerRouter: URLRequestConvertible {
     case getUser(orgId: Int, userId: Int64)
     case getEndUser(endUserId: Int64)
     case getUserAvailability(userId: Int64)
-    case scheduleMeeting(userId: Int64, conversationId: Int, timestamp: Double)
+    case scheduleMeeting(userId: Int64, conversationId: Int64, timestamp: Double)
     
     var request: (method: Alamofire.HTTPMethod, path: String, parameters: [String: Any]?, encoding: ParameterEncoding){
         switch self {
@@ -129,11 +129,11 @@ enum DriftConversationRouter: URLRequestConvertible {
     case getCampaignsForEndUser(endUserId: Int64)
     
     case getEnrichedConversationsForEndUser(endUserId: Int64)
-    case getMessagesForConversation(conversationId: Int)
-    case postMessageToConversation(conversationId: Int, data: [String: Any])
+    case getMessagesForConversation(conversationId: Int64)
+    case postMessageToConversation(conversationId: Int64, data: [String: Any])
     case createConversation(data: [String: Any])
     
-    case recordAnnouncement(conversationId: Int, json: [String: Any])
+    case recordAnnouncement(conversationId: Int64, json: [String: Any])
     
     var request: (method: Alamofire.HTTPMethod, path: String, parameters: [String: Any]?, encoding: ParameterEncoding){
         switch self {
@@ -173,8 +173,8 @@ enum DriftConversationRouter: URLRequestConvertible {
 
 enum DriftConversation2Router: URLRequestConvertible {
     
-    case markMessageAsRead(messageId: Int)
-    case markConversationAsRead(messageId: Int)
+    case markMessageAsRead(messageId: Int64)
+    case markConversationAsRead(messageId: Int64)
     
     var request: (method: Alamofire.HTTPMethod, path: String, parameters: [String: Any]?, encoding: ParameterEncoding){
         switch self {
@@ -206,8 +206,8 @@ enum DriftConversation2Router: URLRequestConvertible {
 
 struct ScheduleEncoding: ParameterEncoding {
     private let timestamp: Double
-    private let conversationId: Int
-    init(conversationId: Int, timestamp:Double) {
+    private let conversationId: Int64
+    init(conversationId: Int64, timestamp:Double) {
         self.timestamp = timestamp
         self.conversationId = conversationId
     }

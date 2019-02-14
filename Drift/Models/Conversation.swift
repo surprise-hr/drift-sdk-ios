@@ -15,14 +15,14 @@ enum ConversationStatus: String{
 }
 
 class Conversation: Mappable, Equatable{
-    var id: Int!
+    var id: Int64!
     var orgId: Int!
     var uuid: String?
     
     var inboxId: Int!
     var displayId: Int!
     var endUserId: Int64!
-    var assigneeId: Int?
+    var assigneeId: Int64?
     var status: ConversationStatus?
     var subject: String?
     var preview: String?

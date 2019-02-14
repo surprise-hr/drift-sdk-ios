@@ -76,7 +76,7 @@ class CampaignsManager {
         return announcements
     }
     
-    class func markCampaignAsRead(_ messageId: Int) {
+    class func markCampaignAsRead(_ messageId: Int64) {
         DriftAPIManager.markMessageAsRead(messageId: messageId) { (result) in
             switch result {
             case .success:

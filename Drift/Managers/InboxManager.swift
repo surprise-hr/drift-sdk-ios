@@ -13,7 +13,7 @@ class InboxManager {
     let pageSize = 30
     
     
-    func getMessages(_ conversationId: Int, completion:@escaping (_ messages: [Message]?) -> ()){
+    func getMessages(_ conversationId: Int64, completion:@escaping (_ messages: [Message]?) -> ()){
         guard let auth = DriftDataStore.sharedInstance.auth?.accessToken else {
             LoggerManager.log("No Auth Token for Recording")
             return
@@ -30,7 +30,7 @@ class InboxManager {
         }
     }
     
-    func postMessage(_ messageRequest: MessageRequest, conversationId: Int, completion:@escaping (_ message: Message?, _ requestId: Double) -> ()){
+    func postMessage(_ messageRequest: MessageRequest, conversationId: Int64, completion:@escaping (_ message: Message?, _ requestId: Double) -> ()){
 
         DriftAPIManager.postMessage(conversationId, messageRequest: messageRequest) { (result) in
             switch result{

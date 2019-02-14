@@ -10,12 +10,12 @@ import ObjectMapper
 import Alamofire
 
 class Attachment: Mappable, Hashable{
-    var id = 0
+    var id: Int64 = 0
     var fileName = ""
     var size = 0
     var data = Data()
     var mimeType = ""
-    var conversationId = 0
+    var conversationId: Int64 = 0
     var publicId = ""
     var publicPreviewURL: String?
     
@@ -31,7 +31,7 @@ class Attachment: Mappable, Hashable{
     }
     
     var hashValue: Int {
-        return id
+        return Int(truncatingIfNeeded: id)
     }
     
     required convenience init?(map: Map) {

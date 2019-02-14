@@ -111,7 +111,7 @@ class PresentationManager: PresentationManagerDelegate {
         TopController.viewController()?.present(conversationListController, animated: true, completion: nil)
     }
     
-    func showConversationVC(_ conversationId: Int) {
+    func showConversationVC(_ conversationId: Int64) {
         if let topVC = TopController.viewController()  {
             let navVC = ConversationViewController.navigationController(ConversationViewController.ConversationType.continueConversation(conversationId: conversationId))
             topVC.present(navVC, animated: true, completion: nil)
