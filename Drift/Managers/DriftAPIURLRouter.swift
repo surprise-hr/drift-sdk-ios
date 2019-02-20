@@ -81,7 +81,7 @@ enum DriftCustomerRouter: URLRequestConvertible {
              }
             
             if let userJwt = userJwt {
-                params["userJwt"] = userJwt
+                params["jwt"] = userJwt
             }
             
             return (.post, "oauth/token", params, URLEncoding.default)
