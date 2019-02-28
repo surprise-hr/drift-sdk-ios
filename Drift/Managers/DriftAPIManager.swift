@@ -165,7 +165,7 @@ class DriftAPIManager: Alamofire.SessionManager {
     class func postMessage(_ conversationId: Int64, messageRequest: MessageRequest, completion: @escaping (_ result: Result<Message>) -> ()){
         let json = messageRequest.toJSON()
         
-        sharedManager.request(DriftConversationRouter.postMessageToConversation(conversationId: conversationId, data: json)).responseJSON(completionHandler: { (result) -> Void in
+        sharedManager.request(DriftMessagingRouter.postMessageToConversation(conversationId: conversationId, message: json)).responseJSON(completionHandler: { (result) -> Void in
             completion(mapResponse(result))
         })
     }
@@ -189,7 +189,7 @@ class DriftAPIManager: Alamofire.SessionManager {
             
         }
         
-        sharedManager.request(DriftConversationRouter.createConversation(data: data)).responseJSON(completionHandler: { (result) -> Void in
+        sharedManager.request(DriftMessagingRouter.createConversation(data: data)).responseJSON(completionHandler: { (result) -> Void in
             completion(mapResponse(result))
         })
     }
