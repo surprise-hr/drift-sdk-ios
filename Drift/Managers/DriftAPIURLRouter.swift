@@ -12,6 +12,7 @@ enum APIBase: String {
     case Customer = "https://customer.api.drift.com/"
     case Conversation = "https://conversation.api.drift.com/"
     case Conversation2 = "https://conversation2.api.drift.com/"
+    case Messaging = "https://messaging.api.drift.com/"
 }
 
 
@@ -130,8 +131,6 @@ enum DriftConversationRouter: URLRequestConvertible {
     
     case getEnrichedConversationsForEndUser(endUserId: Int64)
     case getMessagesForConversation(conversationId: Int64)
-    case postMessageToConversation(conversationId: Int64, data: [String: Any])
-    case createConversation(data: [String: Any])
     
     case recordAnnouncement(conversationId: Int64, json: [String: Any])
     
@@ -143,10 +142,6 @@ enum DriftConversationRouter: URLRequestConvertible {
             return (.get, "conversations/end_users/\(endUserId)/extra", nil, URLEncoding.default)
         case .getMessagesForConversation(let conversationId):
             return (.get, "conversations/\(conversationId)/messages", nil, URLEncoding.default)
-        case .postMessageToConversation(let conversationId, let data):
-            return (.post, "conversations/\(conversationId)/messages", data, JSONEncoding.default)
-        case .createConversation(let data):
-            return (.post, "messages", data, JSONEncoding.default)
         case .recordAnnouncement(let conversationId, let json):
             return (.post, "conversations/\(conversationId)/messages", json, JSONEncoding.default)
         }
@@ -201,6 +196,37 @@ enum DriftConversation2Router: URLRequestConvertible {
         return req
     }
     
+}
+
+enum DriftMessagingRouter: URLRequestConvertible {
+    case createConversation(data: [String: Any])
+    case postMessageToConversation(conversationId: Int64, message: [String: Any])
+    
+    var request: (method: Alamofire.HTTPMethod, path: String, parameters: [String: Any]?, encoding: ParameterEncoding){
+        switch self {
+        case .createConversation(let data):
+            return (.post, "messages", data, JSONEncoding.default)
+        case .postMessageToConversation(let conversationId, let json):
+            return (.post, "conversations/\(conversationId)/messages", json, JSONEncoding.default)
+        }
+    }
+    
+    func asURLRequest() throws -> URLRequest {
+        
+        var components = URLComponents(string: APIBase.Messaging.rawValue)
+        if let accessToken = DriftDataStore.sharedInstance.auth?.accessToken{
+            let authItem = URLQueryItem(name: "access_token", value: accessToken)
+            components?.queryItems = [authItem]
+        }
+        var urlRequest = URLRequest(url: (components?.url!.appendingPathComponent(request.path))!)
+        urlRequest.httpMethod = request.method.rawValue
+        let encoding = request.encoding
+        var req = try encoding.encode(urlRequest, with: request.parameters)
+        
+        req.url = URL(string: (req.url?.absoluteString.replacingOccurrences(of: "%5B%5D=", with: "="))!)
+        
+        return req
+    }
 }
 
 
