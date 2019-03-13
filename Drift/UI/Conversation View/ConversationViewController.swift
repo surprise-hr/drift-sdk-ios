@@ -433,7 +433,7 @@ class ConversationViewController: UIViewController {
     }
     
     func failedToCreateConversation(){
-        let alert = UIAlertController(title: "Error", message: "Faield to start conversation", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Error", message: "Failed to start conversation", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Retry", style: .default, handler: { (_) in
             self.didPressRightButton()
         }))
