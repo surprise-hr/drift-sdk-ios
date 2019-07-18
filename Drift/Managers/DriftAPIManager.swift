@@ -200,7 +200,10 @@ class DriftAPIManager: Alamofire.SessionManager {
             return
         }
         
-        sharedManager.session.dataTask(with: url, completionHandler: { (data, response, error) in
+        var request = URLRequest(url: url)
+        request.setValue("bearer \(authToken)", forHTTPHeaderField: "Authorization")
+        
+        sharedManager.session.dataTask(with: request) { (data, response, error) in
             if let response = response as? HTTPURLResponse {
                 LoggerManager.log("API Complete: \(response.statusCode) \(response.url?.path ?? "")")
             }
@@ -216,7 +219,7 @@ class DriftAPIManager: Alamofire.SessionManager {
             }else{
                 completion(.failure(DriftError.apiFailure))
             }
-        }) .resume()
+        } .resume()
     }
     
     class func getAttachmentsMetaData(_ attachmentIds: [Int64], authToken: String, completion: @escaping (_ result: Result<[Attachment]>) -> ()){
@@ -331,7 +334,7 @@ class URLStore{
     }
     
     class func downloadAttachmentURL(_ attachmentId: Int64, authToken: String) -> URL? {
-        return URL(string: "https://conversation.api.drift.com/attachments/\(attachmentId)/data?access_token=\(authToken)")
+        return URL(string: "https://conversation.api.drift.com/attachments/\(attachmentId)/data?")
     }
     
     class func getAttachmentsURL(_ attachmentIds: [Int64], authToken: String) -> URL? {
