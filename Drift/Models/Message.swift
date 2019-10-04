@@ -105,7 +105,7 @@ extension Array where Iterator.Element == Message
         
         var output:[Message] = []
         
-        let sorted = self.sorted(by: { $0.createdAt.compare($1.createdAt as Date) == .orderedAscending})
+        let sorted = self.sorted(by: { $0.createdAt.compare($1.createdAt) == .orderedAscending})
         
         for message in sorted {
             
@@ -138,7 +138,7 @@ extension Array where Iterator.Element == Message
             output.append(message)
         }
         
-        return output.sorted(by: { $0.createdAt.compare($1.createdAt as Date) == .orderedDescending})
+        return output.sorted(by: { $0.createdAt.compare($1.createdAt) == .orderedDescending})
     }
     
     private func getMessagesFromPreMessages(message: Message, preMessages: [PreMessage]) -> [Message] {

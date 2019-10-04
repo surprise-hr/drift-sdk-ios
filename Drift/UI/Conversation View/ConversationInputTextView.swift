@@ -25,7 +25,7 @@ class ConversationInputTextView: UITextView {
     }
     
     /// A UILabel that holds the InputTextView's placeholder text
-    open let placeholderLabel: UILabel = {
+    public let placeholderLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
         label.textColor = ColorPalette.navyDark

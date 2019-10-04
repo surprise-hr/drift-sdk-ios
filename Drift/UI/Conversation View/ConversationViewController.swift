@@ -87,7 +87,7 @@ class ConversationViewController: UIViewController {
     class func navigationController(_ conversationType: ConversationType) -> UINavigationController {
         let vc = ConversationViewController(conversationType: conversationType)
         let navVC = UINavigationController(rootViewController: vc)
-        
+        navVC.modalPresentationStyle = .fullScreen
         let leftButton = UIBarButtonItem(image: UIImage(named: "closeIcon", in: Bundle(for: Drift.self), compatibleWith: nil), style: UIBarButtonItem.Style.plain, target:vc, action: #selector(ConversationViewController.dismissVC))
         leftButton.tintColor = DriftDataStore.sharedInstance.generateForegroundColor()
         vc.navigationItem.leftBarButtonItem  = leftButton
@@ -97,6 +97,7 @@ class ConversationViewController: UIViewController {
     
     convenience init(conversationType: ConversationType) {
         self.init()
+        self.modalPresentationStyle = .fullScreen
         self.conversationType = conversationType
     }
 
@@ -398,7 +399,7 @@ class ConversationViewController: UIViewController {
     
     func postMessageToConversation(_ conversationId: Int64, messageRequest: MessageRequest) {
         InboxManager.sharedInstance.postMessage(messageRequest, conversationId: conversationId) { [weak self] (message, requestId) in
-            if let index = self?.messages.index(where: { (message) -> Bool in
+            if let index = self?.messages.firstIndex(where: { (message) -> Bool in
                 if message.requestId == messageRequest.requestId{
                     return true
                 }
@@ -594,7 +595,7 @@ extension ConversationViewController {
             return
         }
         
-        if let index = messages.index(of: message){
+        if let index = messages.firstIndex(of: message){
             messages[index] = message
         
             tableView!.reloadRows(at: [IndexPath(row: index, section: 0)], with: .bottom)
