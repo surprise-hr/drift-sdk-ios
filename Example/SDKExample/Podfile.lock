@@ -1,21 +1,21 @@
 PODS:
-  - Alamofire (4.8.1)
-  - AlamofireImage (3.5.0):
+  - Alamofire (4.8.2)
+  - AlamofireImage (3.5.2):
     - Alamofire (~> 4.8)
-  - Drift (2.2.8):
+  - Drift (2.2.9):
     - AlamofireImage (~> 3.0)
     - ObjectMapper (~> 3.0)
     - Starscream
     - SVProgressHUD (~> 2.0)
-  - ObjectMapper (3.4.2)
-  - Starscream (3.0.6)
+  - ObjectMapper (3.5.1)
+  - Starscream (3.1.0)
   - SVProgressHUD (2.2.5)
 
 DEPENDENCIES:
   - Drift (from `../../Drift.podspec`)
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  https://github.com/CocoaPods/Specs.git:
     - Alamofire
     - AlamofireImage
     - ObjectMapper
@@ -27,13 +27,13 @@ EXTERNAL SOURCES:
     :path: "../../Drift.podspec"
 
 SPEC CHECKSUMS:
-  Alamofire: 16ce2c353fb72865124ddae8a57c5942388f4f11
-  AlamofireImage: 1aea346f4dda2f6c67622fa5a89fcbb80d79cc16
-  Drift: b121a3b5c612f1722e22b66593721a8b49d3925d
-  ObjectMapper: 0d4402610f4e468903ae64629eec4784531e5c51
-  Starscream: ef3ece99d765eeccb67de105bfa143f929026cf5
+  Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
+  AlamofireImage: 63cfe3baf1370be6c498149687cf6db3e3b00999
+  Drift: 9a93977dfdc3f9f9bacb7cfd872e5d9ba0075c19
+  ObjectMapper: 70187b8941977c62ccfb423caf6b50be405cabf0
+  Starscream: 08172b481e145289c4930cb567230fb55897cfa4
   SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
 
 PODFILE CHECKSUM: 32c3227aad917f1ee3b890bb8103e9fbb3085801
 
-COCOAPODS: 1.6.0
+COCOAPODS: 1.8.0
