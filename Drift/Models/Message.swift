@@ -74,10 +74,7 @@ class Message: Mappable, Equatable, Hashable{
         uuid                    <- map["uuid"]
         inboxId                 <- map["inboxId"]
         body                    <- map["body"]
-        
-        body = TextHelper.cleanString(body: body ?? "")
-        
-        
+            
         attachmentIds           <- map["attachments"]
         contentType             <- (map["contentType"], EnumTransform<ContentType>())
         createdAt               <- (map["createdAt"], DriftDateTransformer())
@@ -150,7 +147,7 @@ extension Array where Iterator.Element == Message
             
             fakeMessage.createdAt = date.addingTimeInterval(TimeInterval(-(index + 1)))
             fakeMessage.conversationId = message.conversationId
-            fakeMessage.body = TextHelper.cleanString(body: preMessage.messageBody)
+            fakeMessage.body = preMessage.messageBody
             fakeMessage.formattedBody = TextHelper.attributedTextForString(text: fakeMessage.body ?? "")
             fakeMessage.fakeMessage = true
             fakeMessage.preMessage = true

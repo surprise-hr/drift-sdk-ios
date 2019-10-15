@@ -9,30 +9,7 @@
 import UIKit
 
 open class TextHelper {
-    
-    open class func cleanString(body: String) -> String {
-        
-        var output = body
-        
-        output = output.trimmingCharacters(in: .whitespacesAndNewlines)
-        
-        if let _ = output.range(of: "<hr", options: .caseInsensitive) {
-            output = output.replacingOccurrences(of: "<hr [^>]+>", with: "", options: String.CompareOptions.regularExpression, range: nil)
-        }
-        
-        output = output.replacingOccurrences(of: "<p>", with: "")
-        output = output.replacingOccurrences(of: "</p>", with: "<br />")
-        
-        
-        if (output.hasSuffix("<br />")) {
-            if let range = output.range(of: "<br />", options: .backwards) {
-                output.replaceSubrange(range, with: "")
-            }
-        }
-        
-        return output
-    }
-        
+            
     open class func attributedTextForString(text: String) -> NSAttributedString {
         
         guard let htmlStringData = text.data(using: String.Encoding.utf8) else {
