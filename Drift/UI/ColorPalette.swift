@@ -35,6 +35,13 @@ struct ColorPalette {
         }
     }()
     
+    static let placeholderColor: UIColor = {
+        if #available(iOS 13.0, *) {
+            return UIColor.placeholderText
+        } else {
+            return UIColor(red:0.6, green:0.6, blue:0.6, alpha:1.00)
+        }
+    }()
     
     static let navyDark: UIColor = {
         if #available(iOS 13.0, *) {

@@ -83,13 +83,13 @@ class ConversationInputAccessoryView: UIView {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.isEnabled = false
         button.setTitleColor(DriftDataStore.sharedInstance.generateBackgroundColor(), for: .normal)
-        button.setTitleColor(ColorPalette.navyDark, for: .disabled)
+        button.setTitleColor(ColorPalette.subtitleTextColor, for: .disabled)
         button.contentEdgeInsets = UIEdgeInsets(top: 3, left: 8, bottom: 3, right: 8)
         
         button.titleLabel?.font = UIFont(name: "AvenirNext-DemiBold", size: 14)!
         button.layer.cornerRadius = 3
         button.layer.borderWidth = 1
-        button.layer.borderColor = ColorPalette.navyDark.cgColor
+        button.layer.borderColor = ColorPalette.subtitleTextColor.cgColor
         return button
     }()
     
@@ -309,7 +309,7 @@ class ConversationInputAccessoryView: UIView {
         if enabled {
             sendButton.layer.borderColor = DriftDataStore.sharedInstance.generateBackgroundColor().cgColor
         } else {
-            sendButton.layer.borderColor = ColorPalette.navyDark.cgColor
+            sendButton.layer.borderColor = ColorPalette.subtitleTextColor.cgColor
         }
     }
     
