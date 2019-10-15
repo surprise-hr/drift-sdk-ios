@@ -1,9 +1,9 @@
 PODS:
-  - Alamofire (4.8.2)
+  - Alamofire (4.9.0)
   - AlamofireImage (3.5.2):
     - Alamofire (~> 4.8)
   - ObjectMapper (3.5.1)
-  - Starscream (3.1.0)
+  - Starscream (3.1.1)
   - SVProgressHUD (2.2.5)
 
 DEPENDENCIES:
@@ -21,10 +21,10 @@ SPEC REPOS:
     - SVProgressHUD
 
 SPEC CHECKSUMS:
-  Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
+  Alamofire: afc3e7c6db61476cb45cdd23fed06bad03bbc321
   AlamofireImage: 63cfe3baf1370be6c498149687cf6db3e3b00999
   ObjectMapper: 70187b8941977c62ccfb423caf6b50be405cabf0
-  Starscream: 08172b481e145289c4930cb567230fb55897cfa4
+  Starscream: 4bb2f9942274833f7b4d296a55504dcfc7edb7b0
   SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
 
 PODFILE CHECKSUM: 5cd6762538ec86bebccfa509ce9d675e6af606db

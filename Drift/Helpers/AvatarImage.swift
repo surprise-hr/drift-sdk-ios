@@ -53,7 +53,7 @@ class AvatarView: UIView {
         layer.masksToBounds = true
         layer.borderWidth = 0
         layer.borderColor = UIColor(white: 0, alpha: 0.1).cgColor
-        backgroundColor = ColorPalette.grayColor
+        backgroundColor = ColorPalette.subtitleTextColor
         initialsLabel.isHidden = true
         
         setUpCorners()
