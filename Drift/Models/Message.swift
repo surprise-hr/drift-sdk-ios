@@ -101,7 +101,7 @@ class Message: Mappable, Equatable, Hashable{
 extension Array where Iterator.Element == Message
 {
     
-    mutating func sortMessagesForConversation() -> Array {
+    func sortMessagesForConversation() -> Array {
         
         var output:[Message] = []
         
