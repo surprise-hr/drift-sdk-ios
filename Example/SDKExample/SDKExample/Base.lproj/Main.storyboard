@@ -27,6 +27,7 @@
                                 </connections>
                             </button>
                         </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="qOR-Q2-DKK" secondAttribute="bottom" constant="20" id="Xuv-Sc-tGZ"/>
                             <constraint firstItem="qOR-Q2-DKK" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="10" id="ucm-RL-bol"/>

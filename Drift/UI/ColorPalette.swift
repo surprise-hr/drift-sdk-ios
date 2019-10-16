@@ -43,6 +43,23 @@ struct ColorPalette {
         }
     }()
     
+    static let borderColor: UIColor = {
+        if #available(iOS 13.0, *) {
+            return UIColor.opaqueSeparator.withAlphaComponent(0.4)
+        } else {
+            return UIColor(white: 0, alpha: 0.4)
+        }
+    }()
+    
+    
+    static let dividerColor: UIColor = {
+       if #available(iOS 13.0, *) {
+           return UIColor.separator
+       } else {
+           return UIColor(white: 0, alpha: 0.05)
+       }
+    }()
+    
     static let navyDark: UIColor = {
         if #available(iOS 13.0, *) {
             return UIColor.label

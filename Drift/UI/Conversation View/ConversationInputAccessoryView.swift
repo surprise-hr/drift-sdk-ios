@@ -43,8 +43,7 @@ class ConversationInputAccessoryView: UIView {
     var lineView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor(red:0.88, green:0.93, blue:0.96, alpha:1.0)
-        view.alpha = 0.6
+        view.backgroundColor = ColorPalette.borderColor
         return view
     }()
     
