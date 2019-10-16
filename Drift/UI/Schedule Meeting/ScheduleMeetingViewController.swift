@@ -90,6 +90,7 @@ class ScheduleMeetingViewController: UIViewController {
         
         containerView.layer.cornerRadius = 6
         containerView.clipsToBounds = true
+        containerView.backgroundColor = ColorPalette.shadowViewBackgroundCoor
         
         shadowView.layer.shadowColor = UIColor.black.cgColor
         shadowView.layer.shadowOffset = CGSize(width: 0, height: 2)
