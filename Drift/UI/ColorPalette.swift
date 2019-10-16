@@ -35,6 +35,14 @@ struct ColorPalette {
         }
     }()
     
+    static let lighterBackgroundCoor: UIColor = {
+        if #available(iOS 13.0, *) {
+            return UIColor.secondarySystemBackground
+        } else {
+            return UIColor(red:0.88, green:0.93, blue:0.96, alpha:1.00)
+        }
+    }()
+    
     static let placeholderColor: UIColor = {
         if #available(iOS 13.0, *) {
             return UIColor.placeholderText
@@ -59,25 +67,7 @@ struct ColorPalette {
            return UIColor(white: 0, alpha: 0.05)
        }
     }()
-    
-    static let navyDark: UIColor = {
-        if #available(iOS 13.0, *) {
-            return UIColor.label
-        } else {
-            return UIColor(red:0.46, green:0.58, blue:0.65, alpha:1.00)
-        }
-       
-    }()
-    
-    static let navyLight: UIColor = {
-        if #available(iOS 13.0, *) {
-            return UIColor.label
-        } else {
-            return UIColor(red:0.88, green:0.93, blue:0.96, alpha:1.00)
-        }
         
-    }()
-    
     static let navyMedium: UIColor = {
         if #available(iOS 13.0, *) {
             return UIColor.label
