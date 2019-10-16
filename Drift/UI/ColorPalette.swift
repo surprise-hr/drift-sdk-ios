@@ -69,7 +69,7 @@ struct ColorPalette {
         if #available(iOS 13.0, *) {
             return UIColor.opaqueSeparator.withAlphaComponent(0.4)
         } else {
-            return UIColor(white: 0, alpha: 0.4)
+            return UIColor(white: 0, alpha: 0.2)
         }
     }()
     
@@ -78,7 +78,7 @@ struct ColorPalette {
        if #available(iOS 13.0, *) {
            return UIColor.separator
        } else {
-           return UIColor(white: 0, alpha: 0.05)
+           return UIColor(white: 0, alpha: 0.25)
        }
     }()
             
