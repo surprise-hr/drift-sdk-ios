@@ -105,6 +105,7 @@ class MessageRequest {
         let message = Message()
         message.authorId = userId
         message.body = body
+        message.formattedBody = TextHelper.attributedTextForString(text: body)
         message.uuid = UUID().uuidString
         message.contentType = type
         message.fakeMessage = true

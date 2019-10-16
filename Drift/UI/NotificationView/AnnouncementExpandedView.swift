@@ -84,6 +84,7 @@ class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
     @IBOutlet weak var containerBottomConstraint: NSLayoutConstraint!
     
     
+    
     override func showOnWindow(_ window: UIWindow) {
         window.addSubview(self)
         
@@ -101,9 +102,12 @@ class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
         containerView.transform = CGAffineTransform(scaleX: 0.00001, y: 0.00001)
         window.layoutIfNeeded()
         
-        campaignCreatorNameLabel.textColor = ColorPalette.grayColor
-        campaignCreatorCompanyLabel.textColor = ColorPalette.grayColor
+        campaignCreatorNameLabel.textColor = ColorPalette.subtitleTextColor
+        campaignCreatorCompanyLabel.textColor = ColorPalette.subtitleTextColor
+        announcementTitleLabel.textColor = ColorPalette.titleTextColor
+        announcementInfoTextView.textColor = ColorPalette.subtitleTextColor
         
+        containerView.backgroundColor = ColorPalette.shadowViewBackgroundColor
         containerView.clipsToBounds = true
         containerView.layer.cornerRadius = 4
         
@@ -118,18 +122,18 @@ class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
         
         if scrollView.contentSize.height > scrollView.frame.size.height{
             gradient.colors = [
-                UIColor.white.cgColor,
-                UIColor.white.cgColor,
-                UIColor.white.cgColor,
+                ColorPalette.backgroundColor.cgColor,
+                ColorPalette.backgroundColor.cgColor,
+                ColorPalette.backgroundColor.cgColor,
                 UIColor.clear.cgColor
             ]
             scrollView.isScrollEnabled = true
         }else{
             gradient.colors = [
-                UIColor.white.cgColor,
-                UIColor.white.cgColor,
-                UIColor.white.cgColor,
-                UIColor.white.cgColor
+                ColorPalette.backgroundColor.cgColor,
+                ColorPalette.backgroundColor.cgColor,
+                ColorPalette.backgroundColor.cgColor,
+                ColorPalette.backgroundColor.cgColor
             ]
             scrollView.isScrollEnabled = false
         }
@@ -137,7 +141,7 @@ class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
         gradient.locations = [0, 0.2, 0.8, 1.0]
         scrollViewContainer.layer.mask = gradient
         
-        closeButton.tintColor = ColorPalette.grayColor
+        closeButton.tintColor = ColorPalette.subtitleTextColor
         
         window.setNeedsUpdateConstraints()
         UIView.animate(withDuration: 0.4, delay: 0.5, usingSpringWithDamping: 0.8, initialSpringVelocity: 1, options: UIView.AnimationOptions.curveEaseIn, animations: { () -> Void in
@@ -165,22 +169,22 @@ class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
         if scrollView.contentOffset.y >= scrollView.contentSize.height - scrollView.frame.size.height{
             gradient.colors = [
                 UIColor.clear.cgColor,
-                UIColor.white.cgColor,
-                UIColor.white.cgColor,
-                UIColor.white.cgColor
+                ColorPalette.backgroundColor.cgColor,
+                ColorPalette.backgroundColor.cgColor,
+                ColorPalette.backgroundColor.cgColor
             ]
         }else if scrollView.contentOffset.y > 0{
             gradient.colors = [
                 UIColor.clear.cgColor,
-                UIColor.white.cgColor,
-                UIColor.white.cgColor,
+                ColorPalette.backgroundColor.cgColor,
+                ColorPalette.backgroundColor.cgColor,
                 UIColor.clear.cgColor
             ]
         }else if scrollView.contentOffset.y <= 0{
             gradient.colors = [
-                UIColor.white.cgColor,
-                UIColor.white.cgColor,
-                UIColor.white.cgColor,
+                ColorPalette.backgroundColor.cgColor,
+                ColorPalette.backgroundColor.cgColor,
+                ColorPalette.backgroundColor.cgColor,
                 UIColor.clear.cgColor
             ]
         }

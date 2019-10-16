@@ -15,10 +15,10 @@ class MessageTableHeaderView: UIView {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        headerLabel.textColor = ColorPalette.navyDark
-        backgroundColor = UIColor.white
+        headerLabel.textColor = ColorPalette.titleTextColor
+        backgroundColor = ColorPalette.backgroundColor
 
-        barView.colors = [UIColor.white, ColorPalette.navyMedium, ColorPalette.navyMedium, UIColor.white]
+        barView.colors = [ColorPalette.backgroundColor, ColorPalette.subtitleTextColor, ColorPalette.subtitleTextColor, ColorPalette.backgroundColor]
         barView.locations = [0, 0.3, 0.7, 1.0]
         barView.direction = .horizontal
     }

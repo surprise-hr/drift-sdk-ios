@@ -55,7 +55,7 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        timeLabel.textColor = ColorPalette.navyDark
+        timeLabel.textColor = ColorPalette.titleTextColor
         nameLabel.isUserInteractionEnabled = true
         messageTextView.textContainer.lineFragmentPadding = 0
         messageTextView.textContainerInset = UIEdgeInsets.zero
@@ -63,17 +63,17 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
         attachmentsCollectionView.register(UINib.init(nibName: "AttachmentCollectionViewCell", bundle: Bundle(for: AttachmentCollectionViewCell.classForCoder())), forCellWithReuseIdentifier: "AttachmentCollectionViewCell")
         attachmentsCollectionView.dataSource = self
         attachmentsCollectionView.delegate = self
-        attachmentsCollectionView.backgroundColor = UIColor.white
+        attachmentsCollectionView.backgroundColor = UIColor.clear
         
         
         scheduleMeetingBorderView.layer.borderWidth = 1
-        scheduleMeetingBorderView.layer.borderColor = UIColor(white: 0, alpha: 0.1).cgColor
+        scheduleMeetingBorderView.layer.borderColor = ColorPalette.borderColor.cgColor
         scheduleMeetingBorderView.layer.cornerRadius = 3
         
         scheduleMeetingButton.layer.cornerRadius = 3
         scheduleMeetingButton.backgroundColor = DriftDataStore.sharedInstance.generateBackgroundColor()
         scheduleMeetingButton.setTitleColor(DriftDataStore.sharedInstance.generateForegroundColor(), for: .normal)
-        loadingContainerView.backgroundColor = UIColor(white: 0, alpha: 0.4)
+        loadingContainerView.backgroundColor = ColorPalette.borderColor
         loadingContainerView.layer.cornerRadius = 6
         loadingContainerView.clipsToBounds = true
         loadingContainerView.alpha = 0
@@ -139,24 +139,24 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
             
             switch message.sendStatus{
             case .Sent:
-                textColor = .black
+                textColor = ColorPalette.titleTextColor
                 avatarView.alpha = 1.0
-                nameLabel.textColor = .black
-                timeLabel.textColor = ColorPalette.navyDark
+                nameLabel.textColor = ColorPalette.titleTextColor
+                timeLabel.textColor = ColorPalette.subtitleTextColor
                 timeLabel.text = dateFormatter.createdAtStringFromDate(message.createdAt)
             case .Pending:
-                textColor = ColorPalette.navyDark
+                textColor = ColorPalette.subtitleTextColor
                 timeLabel.text = "Sending..."
-                timeLabel.textColor = ColorPalette.navyDark
+                timeLabel.textColor = ColorPalette.subtitleTextColor
                 avatarView.alpha = 0.7
-                nameLabel.textColor = ColorPalette.navyDark
+                nameLabel.textColor = ColorPalette.subtitleTextColor
             case .Failed:
-                nameLabel.textColor = ColorPalette.navyMedium
-                textColor = ColorPalette.navyMedium
+                nameLabel.textColor = ColorPalette.subtitleTextColor
+                textColor = ColorPalette.subtitleTextColor
                 timeLabel.text = "Failed to send"
-                timeLabel.textColor = ColorPalette.navyMedium
+                timeLabel.textColor = ColorPalette.subtitleTextColor
                 avatarView.alpha = 0.7
-                nameLabel.textColor = ColorPalette.navyDark
+                nameLabel.textColor = ColorPalette.titleTextColor
             }
             
             messageTextView.textColor = textColor
@@ -287,7 +287,7 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
     func setTimeLabel(date: Date) {
         let formatter = DateFormatter()
         formatter.dateFormat = "hh:mm a"
-        timeLabel.textColor = ColorPalette.navyDark
+        timeLabel.textColor = ColorPalette.subtitleTextColor
         timeLabel.text = formatter.string(from: date)
     }
     

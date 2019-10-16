@@ -44,6 +44,11 @@ class AnnouncementView: CampaignView {
         shadowView.layer.shadowOpacity = 0.2
         shadowView.layer.shadowRadius = 2
         shadowView.layer.cornerRadius = 6
+        
+        containerView.backgroundColor = ColorPalette.shadowViewBackgroundColor
+        titleLabel.textColor = ColorPalette.titleTextColor
+        infoLabel.textColor = ColorPalette.subtitleTextColor
+        
     }
     
     func setUpForCampaign() {

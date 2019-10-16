@@ -28,7 +28,7 @@ class ConversationInputTextView: UITextView {
     public let placeholderLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
-        label.textColor = ColorPalette.navyDark
+        label.textColor = ColorPalette.placeholderColor
         label.text = "Type your message..."
         label.backgroundColor = .clear
         label.translatesAutoresizingMaskIntoConstraints = false

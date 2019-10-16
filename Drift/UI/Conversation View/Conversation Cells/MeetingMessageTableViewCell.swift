@@ -31,26 +31,26 @@ class MeetingMessageTableViewCell: UITableViewCell {
     
     @IBOutlet weak var timeLabel: UILabel! {
         didSet{
-            timeLabel.textColor = ColorPalette.navyExtraDark
+            timeLabel.textColor = ColorPalette.subtitleTextColor
         }
     }
     
     @IBOutlet weak var dateLabel: UILabel! {
         didSet{
-            dateLabel.textColor = ColorPalette.navyExtraDark
+            dateLabel.textColor = ColorPalette.subtitleTextColor
         }
     }
     
     @IBOutlet weak var timezoneLabel: UILabel! {
         didSet{
-            timezoneLabel.textColor = ColorPalette.navyExtraDark
+            timezoneLabel.textColor = ColorPalette.subtitleTextColor
         }
     }
     
     
     @IBOutlet weak var scheduleTitleLabel: UILabel! {
         didSet{
-            scheduleTitleLabel.textColor = ColorPalette.navyExtraDark
+            scheduleTitleLabel.textColor = ColorPalette.titleTextColor
         }
     }
     @IBOutlet weak var scheduleMeetingAvatarView: AvatarView!
@@ -59,7 +59,13 @@ class MeetingMessageTableViewCell: UITableViewCell {
         didSet{
             borderView.layer.cornerRadius = 3
             borderView.layer.borderWidth = 1
-            borderView.layer.borderColor = ColorPalette.navyMedium.cgColor
+            borderView.layer.borderColor = ColorPalette.dividerColor.cgColor
+        }
+    }
+    
+    @IBOutlet weak var dividerView: UIView! {
+        didSet{
+            dividerView.backgroundColor = ColorPalette.dividerColor
         }
     }
     

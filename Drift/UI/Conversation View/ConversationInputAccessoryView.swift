@@ -22,7 +22,7 @@ class ConversationInputAccessoryView: UIView {
     var backgroundView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .white
+        view.backgroundColor = ColorPalette.shadowViewBackgroundColor
         return view
     }()
     
@@ -43,8 +43,7 @@ class ConversationInputAccessoryView: UIView {
     var lineView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor(red:0.88, green:0.93, blue:0.96, alpha:1.0)
-        view.alpha = 0.6
+        view.backgroundColor = ColorPalette.borderColor
         return view
     }()
     
@@ -63,7 +62,7 @@ class ConversationInputAccessoryView: UIView {
         addButton.translatesAutoresizingMaskIntoConstraints = false
         addButton.addTarget(self, action: #selector(didPressPlus), for: .touchUpInside)
         addButton.setImage(UIImage(named: "attachImage", in: Bundle(for: Drift.self), compatibleWith: nil), for: .normal)
-        addButton.tintColor = ColorPalette.navyExtraDark
+        addButton.tintColor = ColorPalette.titleTextColor
         return addButton
     }()
     
@@ -83,13 +82,13 @@ class ConversationInputAccessoryView: UIView {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.isEnabled = false
         button.setTitleColor(DriftDataStore.sharedInstance.generateBackgroundColor(), for: .normal)
-        button.setTitleColor(ColorPalette.navyDark, for: .disabled)
+        button.setTitleColor(ColorPalette.subtitleTextColor, for: .disabled)
         button.contentEdgeInsets = UIEdgeInsets(top: 3, left: 8, bottom: 3, right: 8)
         
         button.titleLabel?.font = UIFont(name: "AvenirNext-DemiBold", size: 14)!
         button.layer.cornerRadius = 3
         button.layer.borderWidth = 1
-        button.layer.borderColor = ColorPalette.navyDark.cgColor
+        button.layer.borderColor = ColorPalette.subtitleTextColor.cgColor
         return button
     }()
     
@@ -309,7 +308,7 @@ class ConversationInputAccessoryView: UIView {
         if enabled {
             sendButton.layer.borderColor = DriftDataStore.sharedInstance.generateBackgroundColor().cgColor
         } else {
-            sendButton.layer.borderColor = ColorPalette.navyDark.cgColor
+            sendButton.layer.borderColor = ColorPalette.subtitleTextColor.cgColor
         }
     }
     

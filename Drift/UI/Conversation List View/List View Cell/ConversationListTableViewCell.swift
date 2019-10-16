@@ -18,10 +18,10 @@ class ConversationListTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        nameLabel.textColor = ColorPalette.darkPrimaryColor
+        nameLabel.textColor = ColorPalette.titleTextColor
         selectionStyle = .none
-        messageLabel.textColor = ColorPalette.grayColor
-        updatedAtLabel.textColor = ColorPalette.grayColor
+        messageLabel.textColor = ColorPalette.subtitleTextColor
+        updatedAtLabel.textColor = ColorPalette.subtitleTextColor
         avatarImageView.layer.masksToBounds = true
         avatarImageView.contentMode = .scaleAspectFill
         avatarImageView.layer.cornerRadius = 3

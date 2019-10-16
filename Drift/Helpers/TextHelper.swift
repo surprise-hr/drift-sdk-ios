@@ -9,46 +9,7 @@
 import UIKit
 
 open class TextHelper {
-    
-    open class func cleanString(body: String) -> String {
-        
-        var output = body
-        
-        output = output.trimmingCharacters(in: .whitespacesAndNewlines)
-        
-        if let _ = output.range(of: "<hr", options: .caseInsensitive) {
-            output = output.replacingOccurrences(of: "<hr [^>]+>", with: "", options: String.CompareOptions.regularExpression, range: nil)
-        }
-        
-        output = output.replacingOccurrences(of: "<p>", with: "")
-        output = output.replacingOccurrences(of: "</p>", with: "<br />")
-        
-        
-        if (output.hasSuffix("<br />")) {
-            if let range = output.range(of: "<br />", options: .backwards) {
-                output.replaceSubrange(range, with: "")
-            }
-        }
-        
-        return output
-    }
-    
-    open class func cleanStringIncludingParagraphBreaks(body: String) -> String {
-        var output = body
-        output = cleanString(body: output)
-        output = output.replacingOccurrences(of: "<p><br></p>", with: "")
-        return output
-    }
-    
-    open class func flattenString(text: String) -> String{
-        var output = text
-        output = output.replacingOccurrences(of: "\n", with: "")
-        output = output.replacingOccurrences(of: "<p>", with: " ")
-        output = output.replacingOccurrences(of: "</p>", with: " ")
-        output = output.replacingOccurrences(of: "<br>", with: " ")
-        return output
-    }
-    
+            
     open class func attributedTextForString(text: String) -> NSAttributedString {
         
         guard let htmlStringData = text.data(using: String.Encoding.utf8) else {
@@ -72,7 +33,9 @@ open class TextHelper {
     
     open class func wrapTextInHTML(text: String) -> String {
         
-        let strippedString = text.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression, range: nil)
+        let whiteSpaceEscaped = text.trimmingCharacters(in: .whitespaces)
+        
+        let strippedString = whiteSpaceEscaped.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression, range: nil)
         
         let detector =  try! NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue)
         
@@ -101,7 +64,7 @@ open class TextHelper {
             }
         }
         
-        newStr = newStr.replacingOccurrences(of: "\n", with: "<br>")
+        newStr = newStr.replacingOccurrences(of: "\n", with: "<br />")
         return newStr
     }
 }

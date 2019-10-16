@@ -124,8 +124,7 @@ class ConversationViewController: UIViewController {
             dimmingView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
             ])
 
-        
-        tableView.backgroundColor = .white
+        tableView.backgroundColor = ColorPalette.backgroundColor
         tableView.separatorStyle = .none
         
         conversationInputView.addButton.isEnabled = false
@@ -317,7 +316,7 @@ class ConversationViewController: UIViewController {
                 label.textAlignment = .center
                 label.text = "We're ⚡️ by Drift"
                 label.font = UIFont(name: "Avenir-Book", size: 14)
-                label.textColor = ColorPalette.grayColor
+                label.textColor = ColorPalette.subtitleTextColor
                 label.transform = tableView.transform
                 tableView.tableHeaderView = label
             }
