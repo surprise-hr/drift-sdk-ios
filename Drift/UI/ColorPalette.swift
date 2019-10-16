@@ -43,6 +43,20 @@ struct ColorPalette {
         }
     }()
     
+    static let shadowViewBackgroundCoor: UIColor = {
+        if #available(iOS 13.0, *) {
+            return UIColor.init { (collection) -> UIColor in
+                if collection.userInterfaceStyle == .dark {
+                    return UIColor.secondarySystemBackground
+                } else {
+                    return UIColor.white
+                }
+            }
+        } else {
+            return UIColor.white
+        }
+    }()
+    
     static let placeholderColor: UIColor = {
         if #available(iOS 13.0, *) {
             return UIColor.placeholderText

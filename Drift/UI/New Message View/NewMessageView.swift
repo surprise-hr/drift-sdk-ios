@@ -37,12 +37,17 @@ class NewMessageView: CampaignView {
         userImageView.contentMode = .scaleAspectFill
         containerView.clipsToBounds = true
         containerView.layer.cornerRadius = 5
+        containerView.backgroundColor = ColorPalette.shadowViewBackgroundCoor
         notificationContainer.isHidden = true
         shadowView.layer.shadowColor = UIColor.black.cgColor
         shadowView.layer.shadowOffset = CGSize(width: 0, height: 2)
         shadowView.layer.shadowOpacity = 0.2
         shadowView.layer.shadowRadius = 2
         shadowView.layer.cornerRadius = 6
+        
+        titleLabel.textColor = ColorPalette.titleTextColor
+        infoLabel.textColor = ColorPalette.subtitleTextColor
+        
     }
     
     func setupForConversation() {
