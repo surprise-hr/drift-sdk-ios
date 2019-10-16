@@ -50,7 +50,7 @@ class MeetingMessageTableViewCell: UITableViewCell {
     
     @IBOutlet weak var scheduleTitleLabel: UILabel! {
         didSet{
-            scheduleTitleLabel.textColor = ColorPalette.navyExtraDark
+            scheduleTitleLabel.textColor = ColorPalette.titleTextColor
         }
     }
     @IBOutlet weak var scheduleMeetingAvatarView: AvatarView!

@@ -81,24 +81,7 @@ struct ColorPalette {
            return UIColor(white: 0, alpha: 0.05)
        }
     }()
-        
-    static let navyMedium: UIColor = {
-        if #available(iOS 13.0, *) {
-            return UIColor.label
-        } else {
-            return UIColor(red:0.71, green:0.82, blue:0.88, alpha:1.00)
-        }
-    }()
-    
-    static let navyExtraDark: UIColor = {
-        if #available(iOS 13.0, *) {
-            return UIColor.label
-        } else {
-            return UIColor(red:0.22, green:0.31, blue:0.35, alpha:1.00)
-        }
-        
-    }()
-    
+            
     static let driftBlue = UIColor(red:0.00, green:0.46, blue:1.00, alpha:1.00)
     static let driftGreen = UIColor(red:0.07, green:0.80, blue:0.43, alpha:1.00)
 }

@@ -62,7 +62,7 @@ class ConversationInputAccessoryView: UIView {
         addButton.translatesAutoresizingMaskIntoConstraints = false
         addButton.addTarget(self, action: #selector(didPressPlus), for: .touchUpInside)
         addButton.setImage(UIImage(named: "attachImage", in: Bundle(for: Drift.self), compatibleWith: nil), for: .normal)
-        addButton.tintColor = ColorPalette.navyExtraDark
+        addButton.tintColor = ColorPalette.titleTextColor
         return addButton
     }()
     

@@ -152,7 +152,7 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
                 nameLabel.textColor = ColorPalette.subtitleTextColor
             case .Failed:
                 nameLabel.textColor = ColorPalette.subtitleTextColor
-                textColor = ColorPalette.navyMedium
+                textColor = ColorPalette.subtitleTextColor
                 timeLabel.text = "Failed to send"
                 timeLabel.textColor = ColorPalette.subtitleTextColor
                 avatarView.alpha = 0.7
