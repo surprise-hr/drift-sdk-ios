@@ -22,7 +22,7 @@ class ConversationInputAccessoryView: UIView {
     var backgroundView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = ColorPalette.shadowViewBackgroundCoor
+        view.backgroundColor = ColorPalette.shadowViewBackgroundColor
         return view
     }()
     

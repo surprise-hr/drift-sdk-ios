@@ -45,7 +45,7 @@ class AnnouncementView: CampaignView {
         shadowView.layer.shadowRadius = 2
         shadowView.layer.cornerRadius = 6
         
-        containerView.backgroundColor = ColorPalette.shadowViewBackgroundCoor
+        containerView.backgroundColor = ColorPalette.shadowViewBackgroundColor
         titleLabel.textColor = ColorPalette.titleTextColor
         infoLabel.textColor = ColorPalette.subtitleTextColor
         

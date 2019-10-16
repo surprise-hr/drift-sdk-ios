@@ -35,7 +35,7 @@ struct ColorPalette {
         }
     }()
     
-    static let lighterBackgroundCoor: UIColor = {
+    static let lighterBackgroundColor: UIColor = {
         if #available(iOS 13.0, *) {
             return UIColor.secondarySystemBackground
         } else {
@@ -43,7 +43,7 @@ struct ColorPalette {
         }
     }()
     
-    static let shadowViewBackgroundCoor: UIColor = {
+    static let shadowViewBackgroundColor: UIColor = {
         if #available(iOS 13.0, *) {
             return UIColor.init { (collection) -> UIColor in
                 if collection.userInterfaceStyle == .dark {

@@ -107,7 +107,7 @@ class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
         announcementTitleLabel.textColor = ColorPalette.titleTextColor
         announcementInfoTextView.textColor = ColorPalette.subtitleTextColor
         
-        containerView.backgroundColor = ColorPalette.shadowViewBackgroundCoor
+        containerView.backgroundColor = ColorPalette.shadowViewBackgroundColor
         containerView.clipsToBounds = true
         containerView.layer.cornerRadius = 4
         

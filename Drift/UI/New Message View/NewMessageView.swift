@@ -37,7 +37,7 @@ class NewMessageView: CampaignView {
         userImageView.contentMode = .scaleAspectFill
         containerView.clipsToBounds = true
         containerView.layer.cornerRadius = 5
-        containerView.backgroundColor = ColorPalette.shadowViewBackgroundCoor
+        containerView.backgroundColor = ColorPalette.shadowViewBackgroundColor
         notificationContainer.isHidden = true
         shadowView.layer.shadowColor = UIColor.black.cgColor
         shadowView.layer.shadowOffset = CGSize(width: 0, height: 2)
