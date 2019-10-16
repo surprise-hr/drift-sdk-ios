@@ -84,6 +84,7 @@ class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
     @IBOutlet weak var containerBottomConstraint: NSLayoutConstraint!
     
     
+    
     override func showOnWindow(_ window: UIWindow) {
         window.addSubview(self)
         
@@ -103,7 +104,10 @@ class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
         
         campaignCreatorNameLabel.textColor = ColorPalette.subtitleTextColor
         campaignCreatorCompanyLabel.textColor = ColorPalette.subtitleTextColor
+        announcementTitleLabel.textColor = ColorPalette.titleTextColor
+        announcementInfoTextView.textColor = ColorPalette.subtitleTextColor
         
+        containerView.backgroundColor = ColorPalette.shadowViewBackgroundCoor
         containerView.clipsToBounds = true
         containerView.layer.cornerRadius = 4
         
@@ -118,18 +122,18 @@ class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
         
         if scrollView.contentSize.height > scrollView.frame.size.height{
             gradient.colors = [
-                UIColor.white.cgColor,
-                UIColor.white.cgColor,
-                UIColor.white.cgColor,
+                ColorPalette.backgroundColor.cgColor,
+                ColorPalette.backgroundColor.cgColor,
+                ColorPalette.backgroundColor.cgColor,
                 UIColor.clear.cgColor
             ]
             scrollView.isScrollEnabled = true
         }else{
             gradient.colors = [
-                UIColor.white.cgColor,
-                UIColor.white.cgColor,
-                UIColor.white.cgColor,
-                UIColor.white.cgColor
+                ColorPalette.backgroundColor.cgColor,
+                ColorPalette.backgroundColor.cgColor,
+                ColorPalette.backgroundColor.cgColor,
+                ColorPalette.backgroundColor.cgColor
             ]
             scrollView.isScrollEnabled = false
         }
@@ -165,22 +169,22 @@ class AnnouncementExpandedView: CampaignView, UIScrollViewDelegate {
         if scrollView.contentOffset.y >= scrollView.contentSize.height - scrollView.frame.size.height{
             gradient.colors = [
                 UIColor.clear.cgColor,
-                UIColor.white.cgColor,
-                UIColor.white.cgColor,
-                UIColor.white.cgColor
+                ColorPalette.backgroundColor.cgColor,
+                ColorPalette.backgroundColor.cgColor,
+                ColorPalette.backgroundColor.cgColor
             ]
         }else if scrollView.contentOffset.y > 0{
             gradient.colors = [
                 UIColor.clear.cgColor,
-                UIColor.white.cgColor,
-                UIColor.white.cgColor,
+                ColorPalette.backgroundColor.cgColor,
+                ColorPalette.backgroundColor.cgColor,
                 UIColor.clear.cgColor
             ]
         }else if scrollView.contentOffset.y <= 0{
             gradient.colors = [
-                UIColor.white.cgColor,
-                UIColor.white.cgColor,
-                UIColor.white.cgColor,
+                ColorPalette.backgroundColor.cgColor,
+                ColorPalette.backgroundColor.cgColor,
+                ColorPalette.backgroundColor.cgColor,
                 UIColor.clear.cgColor
             ]
         }

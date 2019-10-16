@@ -51,8 +51,6 @@ class AvatarView: UIView {
         imageView.contentMode = .scaleAspectFill
         imageView.backgroundColor = UIColor.clear
         layer.masksToBounds = true
-        layer.borderWidth = 0
-        layer.borderColor = UIColor(white: 0, alpha: 0.1).cgColor
         backgroundColor = ColorPalette.subtitleTextColor
         initialsLabel.isHidden = true
         
