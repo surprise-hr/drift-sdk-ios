@@ -12,7 +12,9 @@ open class TextHelper {
             
     open class func attributedTextForString(text: String) -> NSAttributedString {
         
-        guard let htmlStringData = text.data(using: String.Encoding.utf8) else {
+        let sanitizedText = sanitizeHTMLString(text)
+        
+        guard let htmlStringData = sanitizedText.data(using: String.Encoding.utf8) else {
             return NSAttributedString(string: text)
         }
         
@@ -30,6 +32,21 @@ open class TextHelper {
             return NSAttributedString(string: text)
         }
     }
+    
+    private class func sanitizeHTMLString(_ text: String) -> String {
+        
+        var response = text
+
+        let range = response.startIndex..<response.endIndex
+        let newRange = NSRange(range, in: response)
+        
+        if let regex = try? NSRegularExpression(pattern: "<img[^>]+\\>", options: .caseInsensitive) {
+            response = regex.stringByReplacingMatches(in: response, options: [], range: newRange, withTemplate: "")
+        }
+        
+        return response
+    }
+    
     
     open class func wrapTextInHTML(text: String) -> String {
         
