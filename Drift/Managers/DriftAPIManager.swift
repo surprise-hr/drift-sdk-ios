@@ -103,23 +103,6 @@ class DriftAPIManager: Alamofire.SessionManager {
         })
     }
     
-    
-    class func recordAnnouncement(_ conversationId: Int64, authToken: String, response: AnnouncementResponse) {
-        let json: [String: Any] = [
-            "type": "CONVERSATION_EVENT",
-            "conversationEvent": ["type": response.rawValue]
-        ]
-    
-        sharedManager.request(DriftConversationRouter.recordAnnouncement(conversationId: conversationId, json: json)).responseJSON(completionHandler: { (result) -> Void in
-            switch result.result {
-            case .success(let json):
-                LoggerManager.log("Record Annouincment Success: \(json)")
-            case .failure(let error):
-                LoggerManager.log("Record Announcement Failure: \(error)")
-            }
-        })
-    }
-    
     class func markMessageAsRead(messageId: Int64, completion: @escaping (_ result: Result<Bool>) -> ()){
         sharedManager.request(DriftConversation2Router.markMessageAsRead(messageId: messageId)).responseString { (result) in
             switch result.result{
@@ -143,13 +126,7 @@ class DriftAPIManager: Alamofire.SessionManager {
         }
         
     }
-    
-    class func getCampaigns(_ endUserId: Int64, completion: @escaping (_ result: Result<[CampaignWrapper]>) -> ()){
-        sharedManager.request(DriftConversationRouter.getCampaignsForEndUser(endUserId: endUserId)).responseJSON { (result) in
-            completion(mapResponse(result))
-        }
-    }
-    
+        
     class func getEnrichedConversations(_ endUserId: Int64, completion: @escaping (_ result: Result<[EnrichedConversation]>) -> ()){
         sharedManager.request(DriftConversationRouter.getEnrichedConversationsForEndUser(endUserId: endUserId)).responseJSON { (result) in
             completion(mapResponse(result))

@@ -126,24 +126,16 @@ enum DriftCustomerRouter: URLRequestConvertible {
 }
 
 enum DriftConversationRouter: URLRequestConvertible {
-    
-    case getCampaignsForEndUser(endUserId: Int64)
-    
+        
     case getEnrichedConversationsForEndUser(endUserId: Int64)
     case getMessagesForConversation(conversationId: Int64)
-    
-    case recordAnnouncement(conversationId: Int64, json: [String: Any])
-    
+        
     var request: (method: Alamofire.HTTPMethod, path: String, parameters: [String: Any]?, encoding: ParameterEncoding){
         switch self {
-        case .getCampaignsForEndUser(endUserId: let endUserId):
-            return (.get, "conversations/end_users/\(endUserId)/campaigns", nil, URLEncoding.default)
         case .getEnrichedConversationsForEndUser(let endUserId):
             return (.get, "conversations/end_users/\(endUserId)/extra", nil, URLEncoding.default)
         case .getMessagesForConversation(let conversationId):
             return (.get, "conversations/\(conversationId)/messages", nil, URLEncoding.default)
-        case .recordAnnouncement(let conversationId, let json):
-            return (.post, "conversations/\(conversationId)/messages", json, JSONEncoding.default)
         }
     }
     
