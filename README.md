@@ -2,14 +2,17 @@ Drift
 ============
 [![CocoaPods](https://img.shields.io/cocoapods/v/Drift.svg)](https://github.com/Driftt/drift-sdk-ios)
 
-DriftSDK is the official Drift SDK written in Swift enabling you to both send announcements and collect vital NPS responses all within the app!
+DriftSDK is the official Drift SDK written in Swift!
 
 
 # Features:
-- Send Product announcements to your customers
 - Create conversations from your app
 - View past conversations from your app.
 
+
+# Requirements:
+- Xcode 11.0+
+- Swift 5+
 
 # Getting Setup
 
@@ -17,12 +20,12 @@ DriftSDK is the official Drift SDK written in Swift enabling you to both send an
 DriftSDK can be added to your project using CocoaPods by adding the following line to your `Podfile`:
 
 ```ruby
-pod 'Drift', '~> 2.2.11'
+pod 'Drift', '~> 2.3.0'
 ```
 
 ## Registering
 
-To get started with the Drift iOS SDK you need an embed ID from your Drift settings page. This can be accessed [here](https://app.drift.com/settings/livechat) by looking after the drift.load method in the Javascript SDK.
+To use the Drift iOS SDK you need an embed ID from your Drift settings page. This can be accessed [here](https://app.drift.com/settings/livechat) by looking after the drift.load method in the Javascript SDK.
 
 In your AppDelegate `didFinishLaunchingWithOptions` call:
 ```Swift
@@ -57,21 +60,6 @@ or in ObjC
 ```
 
 Thats it. Your good to go!!
-
-# Archived Campaigns
-
-Once a campaign is delivered to a user it will keep showing to a user until it is dismissed or completed. This happens even when the campaign is inactive or archived. If you would like to only show active campaign you can enable this by passing false to showArchivedCampaignsForEndUser during setup
-
-```Swift
-  Drift.showArchivedCampaignsForEndUser(false)
-```
-
-or in ObjC
-
-```objectivec
-  [Drift showArchivedCampaignsForEndUser:NO];
-```
-
 
 # Messaging
 

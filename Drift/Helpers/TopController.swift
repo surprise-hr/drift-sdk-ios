@@ -30,6 +30,8 @@ class TopController {
             return viewController(top)
         }else if let tabController = topController as? UITabBarController, let current = tabController.selectedViewController {
             return viewController(current)
+        }else if let splitVC = topController as? UISplitViewController, let detail = splitVC.viewControllers.last {
+            return viewController(detail)
         }else if let presented = topController as? UIAlertController {
             return presented.presentingViewController
         }

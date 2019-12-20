@@ -14,7 +14,6 @@ class DriftManager: NSObject {
     static var sharedInstance: DriftManager = DriftManager()
     var debug: Bool = false
     var shouldShowAutomatedMessages: Bool = true
-    var showArchivedCampaigns = true
     var directoryURL: URL?
     ///Used to store register data while we wait for embed to finish in case where register and embed is called together
     private var registerInfo: (userId: String, email: String?, userJwt: String?, attrs: [String: AnyObject]?)?
@@ -61,11 +60,7 @@ class DriftManager: NSObject {
             }
         }
     }
-    
-    class func showArchivedCampaigns(_ show: Bool) {
-        sharedInstance.showArchivedCampaigns = show
-    }
-    
+        
     class func debugMode(_ debug:Bool){
         sharedInstance.debug = debug
     }
@@ -96,7 +91,6 @@ class DriftManager: NSObject {
                     
                     if let userId = auth.enduser?.userId {
                         ConversationsManager.checkForConversations(userId: userId)
-                        CampaignsManager.checkForCampaigns(userId: userId, embed: embed)
                         completion?(userId)
                     }
                 }
@@ -144,7 +138,6 @@ class DriftManager: NSObject {
             
             if let userId = user.userId, let embed = DriftDataStore.sharedInstance.embed {
                 ConversationsManager.checkForConversations(userId: userId)
-                CampaignsManager.checkForCampaigns(userId: userId, embed: embed)
             }
         }else{
             if let embedId = DriftDataStore.sharedInstance.embed?.embedId, let userId = DriftDataStore.sharedInstance.userId, let userEmail = DriftDataStore.sharedInstance.userEmail {
