@@ -26,8 +26,6 @@ class ConversationViewController: UIViewController {
     
     lazy var emptyState = ConversationEmptyStateView.drift_fromNib() as! ConversationEmptyStateView
     var messages: [Message] = []
-    var attachments: [Int64: Attachment] = [:]
-    var attachmentIds: Set<Int64> = []
     var previewItem: DriftPreviewItem?
     var dateFormatter: DriftDateFormatter = DriftDateFormatter()
     var connectionBarView: ConnectionBarView = ConnectionBarView.drift_fromNib() as! ConnectionBarView
@@ -359,16 +357,18 @@ class ConversationViewController: UIViewController {
     
     func getMessages(_ conversationId: Int64){
         SVProgressHUD.show()
-        DriftAPIManager.getMessages(conversationId, authToken: DriftDataStore.sharedInstance.auth!.accessToken) { (result) in
-            SVProgressHUD.dismiss()
+        DriftAPIManager.getMessages(conversationId, authToken: DriftDataStore.sharedInstance.auth!.accessToken) { [weak self] (result) in
             switch result{
             case .success(var messages):
-                self.messages = messages.sortMessagesForConversation()
-                self.markConversationRead()
-                self.tableView.reloadData()
+                self?.messages = messages.sortMessagesForConversation()
+                self?.messages.forEach({ $0.formatHTMLBody() })
+                self?.markConversationRead()
+                self?.tableView.reloadData()
             case .failure:
                 LoggerManager.log("Unable to get messages for conversationId: \(conversationId)")
             }
+            //Hide loader after we have parsed HTML and loaded tableview
+            SVProgressHUD.dismiss()
         }
     }
     
@@ -567,13 +567,13 @@ extension ConversationViewController : UITableViewDelegate, UITableViewDataSourc
             alert.addAction(UIAlertAction(title:"Retry Send", style: .default, handler: { (_) -> Void in
                 message.sendStatus = .Pending
                 self.messages[indexPath.row] = message
-                self.tableView!.reloadRows(at: [indexPath], with: .none)
+                self.tableView.reloadRows(at: [indexPath], with: .none)
                 let messageRequest = MessageRequest(body: message.body ?? "", contentType: message.contentType)
                 self.postMessageToConversation(message.conversationId, messageRequest: messageRequest)
             }))
             alert.addAction(UIAlertAction(title:"Delete Message", style: .destructive, handler: { (_) -> Void in
-                self.messages.remove(at: self.messages.count-indexPath.row-1)
-                self.tableView!.deleteRows(at: [indexPath as IndexPath], with: .none)
+                self.messages.remove(at: indexPath.row)
+                self.tableView.deleteRows(at: [indexPath], with: .none)
             }))
             
             present(alert, animated: true, completion: nil)
@@ -587,7 +587,7 @@ extension ConversationViewController {
         if let id = message.id{
             ConversationsManager.markMessageAsRead(id)
         }
-        
+        message.formatHTMLBody()
         //User created message with appointment information should be allowed through
         if message.authorId == DriftDataStore.sharedInstance.auth?.enduser?.userId && message.contentType == .Chat && message.appointmentInformation == nil && !message.fakeMessage{
             print("Ignoring own message")
@@ -597,7 +597,7 @@ extension ConversationViewController {
         if let index = messages.firstIndex(of: message){
             messages[index] = message
         
-            tableView!.reloadRows(at: [IndexPath(row: index, section: 0)], with: .bottom)
+            tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .bottom)
         }else{
             messages.insert(message, at: 0)
             let messagesCount = messages.count

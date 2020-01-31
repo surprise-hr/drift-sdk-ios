@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import ObjectMapper
 
 class MessageRequest {
 
@@ -64,20 +63,6 @@ class MessageRequest {
             let meetingTimeSlot = meetingTimeSlot,
             let conversationId = conversationId,
             let agentTimeZone = userAvailability?.timezone{
-            
-            
-            /*
- 
-             "id": "vojjqq8qub2sgaqk40ukbj9fbs",
-             "url": "https://www.google.com/calendar/event?eid=dm9qanFxOHF1YjJzZ2FxazQwdWtiajlmYnMgc2FtbWllc2tpQG0",
-             "availabilitySlot": 1518880500000,
-             "slotDuration": 45,
-             "agentId": 11890,
-             "conversationId": 110522,
-             "endUserTimeZone": "America/New_York",
-             "agentTimeZone": "America/North_Dakota/New_Salem"
-             
-            */
             
             let apointment: [String: Any] = [
                 "id":googleMeetingId,
