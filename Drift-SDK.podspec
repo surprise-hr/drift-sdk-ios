@@ -14,7 +14,7 @@ Pod::Spec.new do |spec|
   spec.resources = ['Drift/**/*.xib','Drift/**/*.xcassets']
   spec.swift_version = '5.0'
 
-  spec.dependency 'Starscream'
+  spec.dependency 'Starscream', '3.1.1'
   spec.dependency 'ObjectMapper', '~> 3.0'
   spec.dependency 'AlamofireImage', '~> 3.0'
   spec.dependency 'SVProgressHUD', '~> 2.0'
