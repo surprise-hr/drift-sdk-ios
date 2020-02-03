@@ -38,7 +38,7 @@ class SocketManager {
             socket.disconnect()
         }
         
-        socket = Socket(url: getSocketEndpoint(orgId: socketAuth.orgId), params: ["session_token": socketAuth.sessionToken])
+        socket = Socket(url: getSocketEndpoint(orgId: socketAuth.orgId), params: ["session_token": socketAuth.sessionToken], callbackQueue: socketResponseQueue)
         socket?.enableLogging = DriftManager.sharedInstance.debug
         socket!.onConnect =  {
             self.didConnect()
@@ -84,24 +84,32 @@ class SocketManager {
     }
     
     func computeShardId(orgId: Int) -> Int{
-        return orgId % 50 //WS_NUM_SHARDS
+        return orgId % 50
     }
     
     func willReconnect() {
-        NotificationCenter.default.post(name: .driftSocketStatusUpdated, object: self, userInfo: ["connectionStatus": ConnectionStatus.connecting])
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .driftSocketStatusUpdated, object: self, userInfo: ["connectionStatus": ConnectionStatus.connecting])
+        }
     }
     
     func didConnect() {
-        NotificationCenter.default.post(name: .driftSocketStatusUpdated, object: self, userInfo: ["connectionStatus": ConnectionStatus.connected])
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .driftSocketStatusUpdated, object: self, userInfo: ["connectionStatus": ConnectionStatus.connected])
+        }
     }
     
     func didDisconnect() {
-        NotificationCenter.default.post(name: .driftSocketStatusUpdated, object: self, userInfo: ["connectionStatus": ConnectionStatus.disconnected])
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .driftSocketStatusUpdated, object: self, userInfo: ["connectionStatus": ConnectionStatus.disconnected])
+        }
     }
     
     func didRecieveNewMessage(message: Message) {
-        PresentationManager.sharedInstance.didRecieveNewMessage(message)
-        NotificationCenter.default.post(name: .driftOnNewMessageReceived, object: self, userInfo: ["message": message])
+        DispatchQueue.main.async {
+            PresentationManager.sharedInstance.didRecieveNewMessage(message)
+            NotificationCenter.default.post(name: .driftOnNewMessageReceived, object: self, userInfo: ["message": message])
+        }
     }
     
 }
