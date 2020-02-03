@@ -11,7 +11,7 @@ import Alamofire
 import ObjectMapper
 
 extension Notification.Name {
-        static let driftOnNewMessageReceived = Notification.Name("drift-sdk-new-message-received")
+    static let driftOnNewMessageReceived = Notification.Name("drift-sdk-new-message-received")
     static let driftSocketStatusUpdated = Notification.Name("drift-sdk-socket-status-updated")
 }
 
@@ -40,7 +40,7 @@ class SocketManager {
         
         socket = Socket(url: getSocketEndpoint(orgId: socketAuth.orgId), params: ["session_token": socketAuth.sessionToken], callbackQueue: socketResponseQueue)
         socket?.enableLogging = DriftManager.sharedInstance.debug
-        socket!.onConnect =  {
+        socket?.onConnect =  {
             self.didConnect()
             let channel = self.socket?.channel("user:\(socketAuth.userId)")
             

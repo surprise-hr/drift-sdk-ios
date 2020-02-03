@@ -19,22 +19,7 @@ class AvatarView: UIView {
     
     var imageView = UIImageView()
     var initialsLabel = UILabel()
-    
-    var wiggleAnimation: CAKeyframeAnimation{
-        let wiggleAnimation = CAKeyframeAnimation(keyPath: "transform")
-        let wobbleAngle: CGFloat = 0.06
         
-        let valLeft = NSValue(caTransform3D: CATransform3DMakeRotation(wobbleAngle, 0, 0, 1))
-        let valRight = NSValue(caTransform3D: CATransform3DMakeRotation(-wobbleAngle, 0, 0, 1))
-        
-        wiggleAnimation.values = [valLeft, valRight]
-        wiggleAnimation.autoreverses = true
-        wiggleAnimation.duration = 0.125
-        wiggleAnimation.repeatCount = Float.infinity
-        
-        return wiggleAnimation
-    }
-    
     override func awakeFromNib() {
         super.awakeFromNib()
         imageView.isUserInteractionEnabled = true
@@ -69,7 +54,6 @@ class AvatarView: UIView {
  
                 imageView.backgroundColor = UIColor.clear
                 imageView.isHidden = false
-                imageView.layer.add(wiggleAnimation, forKey: "wiggle")
                 
                 let placeholder = UIImage(named: "placeholderAvatar", in: Bundle(for: Drift.self), compatibleWith: nil)
                 
