@@ -36,7 +36,7 @@ final class Socket {
     // MARK: - Initialisation
     
     public init(url: URL, params: [String: String]? = nil) {
-        heartbeatQueue = DispatchQueue(label: "com.ecksd.birdsong.hbqueue", attributes: [])
+        heartbeatQueue = DispatchQueue(label: "com.drift.sdk.hbqueue", attributes: [])
         socket = WebSocket(url: buildURL(url, params: params))
         socket.delegate = self
     }
