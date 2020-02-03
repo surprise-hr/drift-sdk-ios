@@ -82,12 +82,6 @@ class Message: Mappable, Equatable {
     }
     
     func formatHTMLBody() {
-        if !Thread.isMainThread {
-            
-            print("HTML Parsing not on main thread, bad news ahead...")
-            
-        }
-        
         if formattedBody == nil {
             formattedBody = TextHelper.attributedTextForString(text: body ?? "")
         }
