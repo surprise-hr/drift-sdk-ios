@@ -569,6 +569,7 @@ extension ConversationViewController : UITableViewDelegate, UITableViewDataSourc
                 self.messages[indexPath.row] = message
                 self.tableView.reloadRows(at: [indexPath], with: .none)
                 let messageRequest = MessageRequest(body: message.body ?? "", contentType: message.contentType)
+                messageRequest.requestId = message.requestId
                 self.postMessageToConversation(message.conversationId, messageRequest: messageRequest)
             }))
             alert.addAction(UIAlertAction(title:"Delete Message", style: .destructive, handler: { (_) -> Void in
