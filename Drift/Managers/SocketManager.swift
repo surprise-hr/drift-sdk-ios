@@ -30,7 +30,8 @@ class SocketManager {
     }()
     
     var socket: Socket?
-    
+    let socketResponseQueue = DispatchQueue(label: "com.drift.sdk.socket.response")
+
     func connectToSocket(socketAuth: SocketAuth) {
         ReachabilityManager.sharedInstance.start()
         if let socket = socket {
