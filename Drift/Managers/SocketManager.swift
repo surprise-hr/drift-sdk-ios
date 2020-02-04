@@ -11,7 +11,7 @@ import Alamofire
 import ObjectMapper
 
 extension Notification.Name {
-        static let driftOnNewMessageReceived = Notification.Name("drift-sdk-new-message-received")
+    static let driftOnNewMessageReceived = Notification.Name("drift-sdk-new-message-received")
     static let driftSocketStatusUpdated = Notification.Name("drift-sdk-socket-status-updated")
 }
 
@@ -30,16 +30,17 @@ class SocketManager {
     }()
     
     var socket: Socket?
-    
+    let socketResponseQueue = DispatchQueue(label: "com.drift.sdk.socket.response")
+
     func connectToSocket(socketAuth: SocketAuth) {
         ReachabilityManager.sharedInstance.start()
         if let socket = socket {
             socket.disconnect()
         }
         
-        socket = Socket(url: getSocketEndpoint(orgId: socketAuth.orgId), params: ["session_token": socketAuth.sessionToken])
+        socket = Socket(url: getSocketEndpoint(orgId: socketAuth.orgId), params: ["session_token": socketAuth.sessionToken], callbackQueue: socketResponseQueue)
         socket?.enableLogging = DriftManager.sharedInstance.debug
-        socket!.onConnect =  {
+        socket?.onConnect =  {
             self.didConnect()
             let channel = self.socket?.channel("user:\(socketAuth.userId)")
             
@@ -83,24 +84,32 @@ class SocketManager {
     }
     
     func computeShardId(orgId: Int) -> Int{
-        return orgId % 50 //WS_NUM_SHARDS
+        return orgId % 50
     }
     
     func willReconnect() {
-        NotificationCenter.default.post(name: .driftSocketStatusUpdated, object: self, userInfo: ["connectionStatus": ConnectionStatus.connecting])
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .driftSocketStatusUpdated, object: self, userInfo: ["connectionStatus": ConnectionStatus.connecting])
+        }
     }
     
     func didConnect() {
-        NotificationCenter.default.post(name: .driftSocketStatusUpdated, object: self, userInfo: ["connectionStatus": ConnectionStatus.connected])
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .driftSocketStatusUpdated, object: self, userInfo: ["connectionStatus": ConnectionStatus.connected])
+        }
     }
     
     func didDisconnect() {
-        NotificationCenter.default.post(name: .driftSocketStatusUpdated, object: self, userInfo: ["connectionStatus": ConnectionStatus.disconnected])
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .driftSocketStatusUpdated, object: self, userInfo: ["connectionStatus": ConnectionStatus.disconnected])
+        }
     }
     
     func didRecieveNewMessage(message: Message) {
-        PresentationManager.sharedInstance.didRecieveNewMessage(message)
-        NotificationCenter.default.post(name: .driftOnNewMessageReceived, object: self, userInfo: ["message": message])
+        DispatchQueue.main.async {
+            PresentationManager.sharedInstance.didRecieveNewMessage(message)
+            NotificationCenter.default.post(name: .driftOnNewMessageReceived, object: self, userInfo: ["message": message])
+        }
     }
     
 }

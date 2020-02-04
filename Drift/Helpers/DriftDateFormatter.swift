@@ -17,7 +17,7 @@ class DriftDateFormatter: DateFormatter {
     
     func updatedAtStringFromDate(_ date: Date) -> String{
         let now = Date()
-        if (Calendar.current as NSCalendar).component(.day, from: date) != (Calendar.current as NSCalendar).component(.day, from: now){
+        if Calendar.current.component(.day, from: date) != Calendar.current.component(.day, from: now){
             dateStyle = .short
         }else{
             dateFormat = "H:mm a"
@@ -27,7 +27,7 @@ class DriftDateFormatter: DateFormatter {
     
     func headerStringFromDate(_ date: Date) -> String{
         let now = Date()
-        if (Calendar.current as NSCalendar).component(.day, from: date) != (Calendar.current as NSCalendar).component(.day, from: now){
+        if Calendar.current.component(.day, from: date) != Calendar.current.component(.day, from: now){
             dateFormat = "MMMM d"
         }else{
             return "Today"

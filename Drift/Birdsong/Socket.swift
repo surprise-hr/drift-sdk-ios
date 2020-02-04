@@ -35,27 +35,11 @@ final class Socket {
     
     // MARK: - Initialisation
     
-    public init(url: URL, params: [String: String]? = nil) {
-        heartbeatQueue = DispatchQueue(label: "com.ecksd.birdsong.hbqueue", attributes: [])
+    init(url: URL, params: [String: String]? = nil, callbackQueue: DispatchQueue) {
+        heartbeatQueue = DispatchQueue(label: "com.drift.sdk.hbqueue", attributes: [])
         socket = WebSocket(url: buildURL(url, params: params))
         socket.delegate = self
-    }
-    
-    convenience init(url: String, params: [String: String]? = nil) {
-        if let parsedURL = URL(string: url) {
-            self.init(url: parsedURL, params: params)
-        }
-        else {
-            print("[Birdsong] Invalid URL in init. Defaulting to localhost URL.")
-            self.init()
-        }
-    }
-    
-    convenience init(prot: String = "http", host: String = "localhost", port: Int = 4000,
-                            path: String = "socket", transport: String = "websocket",
-                            params: [String: String]? = nil, selfSignedSSL: Bool = false) {
-        let url = "\(prot)://\(host):\(port)/\(path)/\(transport)"
-        self.init(url: url, params: params)
+        socket.callbackQueue = callbackQueue
     }
     
     // MARK: - Connection

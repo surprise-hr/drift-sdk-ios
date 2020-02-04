@@ -25,13 +25,8 @@ enum SendStatus: String{
     case Failed = "FAILED"
 }
 
-enum RecipientStatus: String {
-    case Sent = "Sent"
-    case Delivered = "Delivered"
-    case Read = "Read"
-}
 
-class Message: Mappable, Equatable, Hashable{
+class Message: Mappable, Equatable {
     var id: Int64!
     var uuid: String?
     var inboxId: Int!
@@ -47,7 +42,6 @@ class Message: Mappable, Equatable, Hashable{
     var requestId: Double = 0
     var sendStatus: SendStatus = SendStatus.Sent
     var formattedBody: NSAttributedString?
-    var viewerRecipientStatus: RecipientStatus?
     var appointmentInformation: AppointmentInformation?
 
     var presentSchedule: Int64?
@@ -57,9 +51,7 @@ class Message: Mappable, Equatable, Hashable{
     var preMessages: [PreMessage] = []
     var fakeMessage = false
     var preMessage = false
-    var hashValue: Int {
-        return "\(id)".hashValue
-    }
+
     
     required convenience init?(map: Map) {
         if map.JSON["contentType"] as? String == nil || ContentType(rawValue: map.JSON["contentType"] as! String) == nil{
@@ -81,16 +73,18 @@ class Message: Mappable, Equatable, Hashable{
         authorId                <- map["authorId"]
         authorType              <- map["authorType"]
         conversationId          <- map["conversationId"]
-        viewerRecipientStatus   <- map["viewerRecipientStatus"]
         appointmentInformation  <- map["attributes.appointmentInfo"]
         preMessages             <- map["attributes.preMessages"]
         presentSchedule         <- map["attributes.presentSchedule"]
         offerSchedule           <- map["attributes.offerSchedule"]
         scheduleMeetingFlow     <- map["attributes.scheduleMeetingFlow"]
-
         
-        formattedBody = TextHelper.attributedTextForString(text: body ?? "")
-
+    }
+    
+    func formatHTMLBody() {
+        if formattedBody == nil {
+            formattedBody = TextHelper.attributedTextForString(text: body ?? "")
+        }
     }
 
 }
@@ -98,7 +92,7 @@ class Message: Mappable, Equatable, Hashable{
 extension Array where Iterator.Element == Message
 {
     
-    func sortMessagesForConversation() -> Array {
+    func sortMessagesForConversation() -> Array<Message> {
         
         var output:[Message] = []
         
@@ -148,7 +142,6 @@ extension Array where Iterator.Element == Message
             fakeMessage.createdAt = date.addingTimeInterval(TimeInterval(-(index + 1)))
             fakeMessage.conversationId = message.conversationId
             fakeMessage.body = preMessage.messageBody
-            fakeMessage.formattedBody = TextHelper.attributedTextForString(text: fakeMessage.body ?? "")
             fakeMessage.fakeMessage = true
             fakeMessage.preMessage = true
             fakeMessage.uuid = UUID().uuidString
