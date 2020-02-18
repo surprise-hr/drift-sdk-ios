@@ -171,8 +171,8 @@ class DriftManager: NSObject {
         }
     }
     
-    class func showCreateConversation(){
-        PresentationManager.sharedInstance.showNewConversationVC()
+    class func showCreateConversation(initialMessage: String? = nil){
+        PresentationManager.sharedInstance.showNewConversationVC(initialMessage: initialMessage)
     }
     
     class func showConversations(){

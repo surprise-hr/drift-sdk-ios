@@ -40,6 +40,7 @@ class ConversationViewController: UIViewController {
     var welcomeUser: User?
     
     var conversationInputView: ConversationInputAccessoryView = ConversationInputAccessoryView()
+    var initialCreateConversationMessage: String?
     
     var tableView: UITableView!
     var ignoreKeyboardChanges = false
@@ -82,8 +83,8 @@ class ConversationViewController: UIViewController {
         return CGRect(origin: inputFrame.origin, size: CGSize(width: inputFrame.width, height: inputFrame.height))
     }
  
-    class func navigationController(_ conversationType: ConversationType) -> UINavigationController {
-        let vc = ConversationViewController(conversationType: conversationType)
+    class func navigationController(_ conversationType: ConversationType, initialMessage: String? = nil) -> UINavigationController {
+        let vc = ConversationViewController(conversationType: conversationType, initialMessage: initialMessage)
         let navVC = UINavigationController(rootViewController: vc)
         navVC.modalPresentationStyle = .fullScreen
         let leftButton = UIBarButtonItem(image: UIImage(named: "closeIcon", in: Bundle(for: Drift.self), compatibleWith: nil), style: UIBarButtonItem.Style.plain, target:vc, action: #selector(ConversationViewController.dismissVC))
@@ -93,10 +94,11 @@ class ConversationViewController: UIViewController {
         return navVC
     }
     
-    convenience init(conversationType: ConversationType) {
+    convenience init(conversationType: ConversationType, initialMessage: String? = nil) {
         self.init()
         self.modalPresentationStyle = .fullScreen
         self.conversationType = conversationType
+        self.initialCreateConversationMessage = initialMessage
     }
 
     override func viewDidLoad() {
@@ -183,6 +185,10 @@ class ConversationViewController: UIViewController {
             connectionBarView.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor),
             connectionBarHeightConstraint
         ])
+        
+        if let initialMessage = initialCreateConversationMessage {
+            conversationInputView.setText(text: initialMessage)
+        }
         
         didOpen()
     }
@@ -419,14 +425,14 @@ class ConversationViewController: UIViewController {
     
     func createConversationWithMessage(_ messageRequest: MessageRequest) {
         SVProgressHUD.show()
-        InboxManager.sharedInstance.createConversation(messageRequest, welcomeMessageUser: welcomeUser, welcomeMessage: DriftDataStore.sharedInstance.embed?.getWelcomeMessageForUser()) { (message, requestId) in
+        InboxManager.sharedInstance.createConversation(messageRequest, welcomeMessageUser: welcomeUser, welcomeMessage: DriftDataStore.sharedInstance.embed?.getWelcomeMessageForUser()) { [weak self] (message, requestId) in
             if let message = message{
-                self.conversationType = ConversationType.continueConversation(conversationId: message.conversationId)
-                self.didOpen()
+                self?.conversationType = ConversationType.continueConversation(conversationId: message.conversationId)
+                self?.didOpen()
             }else{
                 SVProgressHUD.dismiss()
-                self.failedToCreateConversation()
-                self.conversationInputView.textView.text = messageRequest.body
+                self?.failedToCreateConversation()
+                self?.conversationInputView.setText(text: messageRequest.body)
             }
             
         }

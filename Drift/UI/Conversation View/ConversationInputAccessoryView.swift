@@ -161,6 +161,11 @@ class ConversationInputAccessoryView: UIView {
         }
     }
     
+    func setText(text: String) {
+        textView.text = text
+        textViewDidChange(textView)
+    }
+    
     @objc func didPressView(){
         delegate?.didPressView()
     }

@@ -68,10 +68,10 @@ class PresentationManager: PresentationManagerDelegate {
         }
     }
     
-    func showNewConversationVC() {
+    func showNewConversationVC(initialMessage: String? = nil) {
         if let topVC = TopController.viewController()  {
-            let navVC = ConversationViewController.navigationController(ConversationViewController.ConversationType.createConversation)
-            topVC.present(navVC, animated: true, completion: nil)
+            let navVC = ConversationViewController.navigationController(ConversationViewController.ConversationType.createConversation, initialMessage: initialMessage)
+            topVC.present(navVC, animated: true)
         }
     }
     
