@@ -65,9 +65,11 @@ open class Drift: NSObject {
      
      This will show create viewcontroller with option for back arrow to
      
+     - parameter initialMessage: A String indicating the initial text to be in the text entry field for create conversation - Default nil
+     
      */
-    @objc open class func showCreateConversation() {
-        DriftManager.showCreateConversation()
+    @objc open class func showCreateConversation(initialMessage: String? = nil) {
+        DriftManager.showCreateConversation(initialMessage: initialMessage)
     }
     
     /**
