@@ -8,7 +8,6 @@
 
 import UIKit
 import AlamofireImage
-//import SVProgressHUD
 
 class ConversationListViewController: UIViewController {
     
@@ -16,6 +15,16 @@ class ConversationListViewController: UIViewController {
    
     @IBOutlet weak var emptyStateView: UIView!
     @IBOutlet weak var emptyStateButton: UIButton!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView! {
+        didSet {
+            if #available(iOS 13.0, *) {
+                activityIndicator.style = .large
+            } else {
+                activityIndicator.style = .gray
+            }
+            activityIndicator.hidesWhenStopped = true
+        }
+    }
     
     var enrichedConversations: [EnrichedConversation] = []
     var users: [User] = []
@@ -89,6 +98,8 @@ class ConversationListViewController: UIViewController {
         refreshControl.addTarget(self, action: #selector(ConversationListViewController.getConversations), for: .valueChanged)
         tvc.refreshControl = refreshControl
         
+        activityIndicator.color = DriftDataStore.sharedInstance.generateBackgroundColor()
+        
         //Ensure that the back button title is not being shown
         navigationItem.backBarButtonItem = UIBarButtonItem(title: " ", style: UIBarButtonItem.Style.plain, target: nil, action: nil)
         navigationItem.title = "Conversations"
@@ -104,38 +115,38 @@ class ConversationListViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         if enrichedConversations.count == 0{
-//            SVProgressHUD.show()
+            activityIndicator.startAnimating()
+            
         }
         getConversations()
     }
     
     @objc func dismissVC() {
-//        SVProgressHUD.dismiss()
+        activityIndicator.stopAnimating()
         dismiss(animated: true, completion: nil)
     }
     
     @objc func getConversations() {
         if let endUserId = endUserId{
-            DriftAPIManager.getEnrichedConversations(endUserId) { (result) in
-                self.refreshControl.endRefreshing()
-//                SVProgressHUD.dismiss()
+            DriftAPIManager.getEnrichedConversations(endUserId) { [weak self] (result) in
+                self?.refreshControl.endRefreshing()
+                self?.activityIndicator.stopAnimating()
                 switch result{
                 case .success(let enrichedConversationsResult):
                     
                     if DriftManager.sharedInstance.shouldShowAutomatedMessages {
                         //Show all conversations
-                       self.enrichedConversations = enrichedConversationsResult
+                       self?.enrichedConversations = enrichedConversationsResult
                     } else {
                         //Filter out conversations we dont have a status for (Automated is BulkSent)
-                        self.enrichedConversations = enrichedConversationsResult.filter({ $0.conversation.status != nil })
+                        self?.enrichedConversations = enrichedConversationsResult.filter({ $0.conversation.status != nil })
                     }
-                    self.tableView.reloadData()
-                    if self.enrichedConversations.count == 0{
-                        self.emptyStateView.isHidden = false
+                    self?.tableView.reloadData()
+                    if self?.enrichedConversations.count == 0{
+                        self?.emptyStateView.isHidden = false
                     }
                 case .failure(let error):
-//                    SVProgressHUD.dismiss()
-                    LoggerManager.log("Unable to get conversations for endUser:  \(self.endUserId ?? -1): \(error)")
+                    LoggerManager.log("Unable to get conversations for endUser:  \(self?.endUserId ?? -1): \(error)")
                 }
                 
             }
