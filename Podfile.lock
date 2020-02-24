@@ -9,11 +9,11 @@ PODS:
 DEPENDENCIES:
   - AlamofireImage (~> 3.3)
   - ObjectMapper (~> 3.0)
-  - Starscream (~> 3.0)
+  - Starscream (= 3.1.1)
   - SVProgressHUD (~> 2.0)
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  https://github.com/CocoaPods/Specs.git:
     - Alamofire
     - AlamofireImage
     - ObjectMapper
@@ -27,6 +27,6 @@ SPEC CHECKSUMS:
   Starscream: 4bb2f9942274833f7b4d296a55504dcfc7edb7b0
   SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
 
-PODFILE CHECKSUM: 5cd6762538ec86bebccfa509ce9d675e6af606db
+PODFILE CHECKSUM: 8eace257a3ae5d71f64f22f46fb4a5470b5ab0d8
 
-COCOAPODS: 1.7.5
+COCOAPODS: 1.8.4
