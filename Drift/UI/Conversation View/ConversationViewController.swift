@@ -9,7 +9,7 @@
 import UIKit
 import QuickLook
 import ObjectMapper
-import SVProgressHUD
+//import SVProgressHUD
 
 
 protocol ConversationCellDelegate: class{
@@ -362,7 +362,7 @@ class ConversationViewController: UIViewController {
     }
     
     func getMessages(_ conversationId: Int64){
-        SVProgressHUD.show()
+//        SVProgressHUD.show()
         DriftAPIManager.getMessages(conversationId, authToken: DriftDataStore.sharedInstance.auth!.accessToken) { [weak self] (result) in
             switch result{
             case .success(var messages):
@@ -374,7 +374,7 @@ class ConversationViewController: UIViewController {
                 LoggerManager.log("Unable to get messages for conversationId: \(conversationId)")
             }
             //Hide loader after we have parsed HTML and loaded tableview
-            SVProgressHUD.dismiss()
+//            SVProgressHUD.dismiss()
         }
     }
     
@@ -424,13 +424,13 @@ class ConversationViewController: UIViewController {
     }
     
     func createConversationWithMessage(_ messageRequest: MessageRequest) {
-        SVProgressHUD.show()
+//        SVProgressHUD.show()
         InboxManager.sharedInstance.createConversation(messageRequest, welcomeMessageUser: welcomeUser, welcomeMessage: DriftDataStore.sharedInstance.embed?.getWelcomeMessageForUser()) { [weak self] (message, requestId) in
             if let message = message{
                 self?.conversationType = ConversationType.continueConversation(conversationId: message.conversationId)
                 self?.didOpen()
             }else{
-                SVProgressHUD.dismiss()
+//                SVProgressHUD.dismiss()
                 self?.failedToCreateConversation()
                 self?.conversationInputView.setText(text: messageRequest.body)
             }
@@ -674,10 +674,10 @@ extension ConversationViewController: ConversationCellDelegate {
     }
     
     func attachmentSelected(_ attachment: Attachment, sender: AnyObject) {
-        SVProgressHUD.show()
+//        SVProgressHUD.show()
         DriftAPIManager.downloadAttachmentFile(attachment, authToken: (DriftDataStore.sharedInstance.auth?.accessToken)!) { (result) in
             DispatchQueue.main.async {
-                SVProgressHUD.dismiss()
+//                SVProgressHUD.dismiss()
             }
             switch result{
             case .success(let tempFileURL):

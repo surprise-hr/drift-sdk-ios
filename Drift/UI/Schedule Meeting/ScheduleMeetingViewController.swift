@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import SVProgressHUD
+//import SVProgressHUD
 
 protocol ScheduleMeetingViewControllerDelegate: class {
     func didDismissScheduleVC()
@@ -111,9 +111,9 @@ class ScheduleMeetingViewController: UIViewController {
     
     func updateForUserId(userId: Int64) {
         self.userId = userId
-        SVProgressHUD.show()
+//        SVProgressHUD.show()
         DriftAPIManager.getUserAvailability(userId) { [weak self] (result) in
-            SVProgressHUD.dismiss()
+//            SVProgressHUD.dismiss()
             switch result {
             case .success(let userAvailability):
                 self?.userAvailability = userAvailability
@@ -181,7 +181,7 @@ class ScheduleMeetingViewController: UIViewController {
             return
         }
         
-        SVProgressHUD.show()
+//        SVProgressHUD.show()
         DriftAPIManager.scheduleMeeting(userId, conversationId: conversationId, timestamp: date.timeIntervalSince1970*1000) { [weak self] (result) in
             
             switch result {
@@ -197,7 +197,7 @@ class ScheduleMeetingViewController: UIViewController {
         
         let messageRequest = MessageRequest(googleMeeting: googleMeeting, userAvailability: userAvailability, meetingUserId: userId, conversationId: conversationId, timeSlot: slotDate)
         DriftAPIManager.postMessage(conversationId, messageRequest: messageRequest) { [weak self] (result) in
-            SVProgressHUD.dismiss()
+//            SVProgressHUD.dismiss()
  
             switch (result) {
             case .success(_):
@@ -211,7 +211,7 @@ class ScheduleMeetingViewController: UIViewController {
     
     
     func scheduleMeetingError(){
-        SVProgressHUD.dismiss()
+//        SVProgressHUD.dismiss()
         let alert = UIAlertController(title: "Error", message: "Failed to schedule meeting", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Retry", style: .default, handler: { [weak self] (_) in
             self?.schedulePressed()
@@ -221,7 +221,7 @@ class ScheduleMeetingViewController: UIViewController {
     }
     
     func showAPIError(){
-        SVProgressHUD.dismiss()
+//        SVProgressHUD.dismiss()
         let alert = UIAlertController(title: "Error", message: "Failed to get calendar information", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
         present(alert, animated: true)

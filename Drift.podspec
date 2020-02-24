@@ -17,5 +17,4 @@ Pod::Spec.new do |spec|
   spec.dependency 'Starscream', '3.1.1'
   spec.dependency 'ObjectMapper', '~> 3.0'
   spec.dependency 'AlamofireImage', '~> 3.0'
-  spec.dependency 'SVProgressHUD', '~> 2.0'
 end

@@ -8,7 +8,7 @@
 
 import UIKit
 import AlamofireImage
-import SVProgressHUD
+//import SVProgressHUD
 
 class ConversationListViewController: UIViewController {
     
@@ -104,13 +104,13 @@ class ConversationListViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         if enrichedConversations.count == 0{
-            SVProgressHUD.show()
+//            SVProgressHUD.show()
         }
         getConversations()
     }
     
     @objc func dismissVC() {
-        SVProgressHUD.dismiss()
+//        SVProgressHUD.dismiss()
         dismiss(animated: true, completion: nil)
     }
     
@@ -118,7 +118,7 @@ class ConversationListViewController: UIViewController {
         if let endUserId = endUserId{
             DriftAPIManager.getEnrichedConversations(endUserId) { (result) in
                 self.refreshControl.endRefreshing()
-                SVProgressHUD.dismiss()
+//                SVProgressHUD.dismiss()
                 switch result{
                 case .success(let enrichedConversationsResult):
                     
@@ -134,7 +134,7 @@ class ConversationListViewController: UIViewController {
                         self.emptyStateView.isHidden = false
                     }
                 case .failure(let error):
-                    SVProgressHUD.dismiss()
+//                    SVProgressHUD.dismiss()
                     LoggerManager.log("Unable to get conversations for endUser:  \(self.endUserId ?? -1): \(error)")
                 }
                 
