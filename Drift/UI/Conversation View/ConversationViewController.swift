@@ -9,8 +9,6 @@
 import UIKit
 import QuickLook
 import ObjectMapper
-//import SVProgressHUD
-
 
 protocol ConversationCellDelegate: class{
     func presentScheduleOfferingForUserId(userId: Int64)
@@ -50,6 +48,26 @@ class ConversationViewController: UIViewController {
         view.backgroundColor = UIColor(white: 0, alpha: 0.5)
         view.alpha = 0
         return view
+    }()
+    
+    var loadingOverlayView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor(white: 0, alpha: 0.3)
+        view.alpha = 0
+        return view
+    }()
+    
+    var activityIndicator: UIActivityIndicatorView = {
+        let style: UIActivityIndicatorView.Style
+        if #available(iOS 13.0, *) {
+            style = .large
+        } else {
+            style = .gray
+        }
+        let activityIndicator = UIActivityIndicatorView(style: style)
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        return activityIndicator
     }()
     
     var scheduleMeetingVC: ScheduleMeetingViewController?
@@ -123,9 +141,25 @@ class ConversationViewController: UIViewController {
             dimmingView.topAnchor.constraint(equalTo: view.topAnchor),
             dimmingView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
             ])
+        
+        view.addSubview(loadingOverlayView)
+        NSLayoutConstraint.activate([
+            loadingOverlayView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            loadingOverlayView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            loadingOverlayView.topAnchor.constraint(equalTo: view.topAnchor),
+            loadingOverlayView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            ])
+        
+        loadingOverlayView.addSubview(activityIndicator)
+        NSLayoutConstraint.activate([
+            activityIndicator.centerYAnchor.constraint(equalTo: loadingOverlayView.centerYAnchor),
+            activityIndicator.centerXAnchor.constraint(equalTo: loadingOverlayView.centerXAnchor)
+            ])
 
         tableView.backgroundColor = ColorPalette.backgroundColor
         tableView.separatorStyle = .none
+        
+        activityIndicator.color = DriftDataStore.sharedInstance.generateBackgroundColor()
         
         conversationInputView.addButton.isEnabled = false
         conversationInputView.textView.font = UIFont(name: "Avenir-Book", size: 15)
@@ -362,10 +396,10 @@ class ConversationViewController: UIViewController {
     }
     
     func getMessages(_ conversationId: Int64){
-//        SVProgressHUD.show()
+        showLoader()
         DriftAPIManager.getMessages(conversationId, authToken: DriftDataStore.sharedInstance.auth!.accessToken) { [weak self] (result) in
             switch result{
-            case .success(var messages):
+            case .success(let messages):
                 self?.messages = messages.sortMessagesForConversation()
                 self?.messages.forEach({ $0.formatHTMLBody() })
                 self?.markConversationRead()
@@ -374,7 +408,7 @@ class ConversationViewController: UIViewController {
                 LoggerManager.log("Unable to get messages for conversationId: \(conversationId)")
             }
             //Hide loader after we have parsed HTML and loaded tableview
-//            SVProgressHUD.dismiss()
+            self?.hideLoader()
         }
     }
     
@@ -424,13 +458,13 @@ class ConversationViewController: UIViewController {
     }
     
     func createConversationWithMessage(_ messageRequest: MessageRequest) {
-//        SVProgressHUD.show()
+        showLoader()
         InboxManager.sharedInstance.createConversation(messageRequest, welcomeMessageUser: welcomeUser, welcomeMessage: DriftDataStore.sharedInstance.embed?.getWelcomeMessageForUser()) { [weak self] (message, requestId) in
             if let message = message{
                 self?.conversationType = ConversationType.continueConversation(conversationId: message.conversationId)
                 self?.didOpen()
             }else{
-//                SVProgressHUD.dismiss()
+                self?.hideLoader()
                 self?.failedToCreateConversation()
                 self?.conversationInputView.setText(text: messageRequest.body)
             }
@@ -447,6 +481,22 @@ class ConversationViewController: UIViewController {
         present(alert, animated: true)
     }
     
+    func showLoader() {
+        conversationInputView.isUserInteractionEnabled = false
+        activityIndicator.startAnimating()
+        UIView.animate(withDuration: 0.2) { [weak self] in
+            self?.loadingOverlayView.alpha = 1
+        }
+    }
+    
+    func hideLoader() {
+        UIView.animate(withDuration: 0.2, animations: { [weak self] in
+            self?.loadingOverlayView.alpha = 0
+        }) { [weak self] (success) in
+            self?.activityIndicator.stopAnimating()
+            self?.conversationInputView.isUserInteractionEnabled = true
+        }
+    }
 }
 
 extension ConversationViewController: ConversationInputAccessoryViewDelegate {
@@ -674,32 +724,29 @@ extension ConversationViewController: ConversationCellDelegate {
     }
     
     func attachmentSelected(_ attachment: Attachment, sender: AnyObject) {
-//        SVProgressHUD.show()
-        DriftAPIManager.downloadAttachmentFile(attachment, authToken: (DriftDataStore.sharedInstance.auth?.accessToken)!) { (result) in
+        showLoader()
+        DriftAPIManager.downloadAttachmentFile(attachment, authToken: (DriftDataStore.sharedInstance.auth?.accessToken)!) { [weak self] (result) in
             DispatchQueue.main.async {
-//                SVProgressHUD.dismiss()
-            }
-            switch result{
-            case .success(let tempFileURL):
-                if attachment.isImage(){
-                    DispatchQueue.main.async {
-                        self.previewItem = DriftPreviewItem(url: tempFileURL, title: attachment.fileName)
-                        self.qlController.dataSource = self
-                        self.qlController.reloadData()
-                        self.present(self.qlController, animated: true, completion:nil)
+                self?.hideLoader()
+                guard let strongSelf = self else { return }
+                switch result{
+                case .success(let tempFileURL):
+                    if attachment.isImage(){
+                        self?.previewItem = DriftPreviewItem(url: tempFileURL, title: attachment.fileName)
+                        self?.qlController.dataSource = self
+                        self?.qlController.reloadData()
+                        self?.present(strongSelf.qlController, animated: true)
+                    }else{
+                        self?.interactionController.url = tempFileURL
+                        self?.interactionController.name = attachment.fileName
+                        self?.interactionController.presentOptionsMenu(from: CGRect.zero, in: strongSelf.view, animated: true)
                     }
-                }else{
-                    DispatchQueue.main.async {
-                        self.interactionController.url = tempFileURL
-                        self.interactionController.name = attachment.fileName
-                        self.interactionController.presentOptionsMenu(from: CGRect.zero, in: self.view, animated: true)
-                    }
+                case .failure:
+                    let alert = UIAlertController(title: "Unable to preview file", message: "This file cannot be previewed", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                    self?.present(alert, animated: true)
+                    LoggerManager.log("Unable to preview file with mimeType: \(attachment.mimeType)")
                 }
-            case .failure:
-                let alert = UIAlertController(title: "Unable to preview file", message: "This file cannot be previewed", preferredStyle: UIAlertController.Style.alert)
-                alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
-                LoggerManager.log("Unable to preview file with mimeType: \(attachment.mimeType)")
             }
         }
     }
