@@ -6,8 +6,6 @@
 //  Copyright © 2018 Drift. All rights reserved.
 //
 
-import UIKit
-
 class MessageRequest {
 
     var body: String = ""

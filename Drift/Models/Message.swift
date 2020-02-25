@@ -73,6 +73,7 @@ class Message: Mappable, Equatable {
         authorId                <- map["authorId"]
         authorType              <- map["authorType"]
         conversationId          <- map["conversationId"]
+        
         appointmentInformation  <- map["attributes.appointmentInfo"]
         preMessages             <- map["attributes.preMessages"]
         presentSchedule         <- map["attributes.presentSchedule"]
