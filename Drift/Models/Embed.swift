@@ -8,91 +8,38 @@
 
 import ObjectMapper
 
-enum WidgetStatus: String{
+enum WidgetStatus: String, Codable{
     case on = "ON"
     case away = "AWAY"
 }
 
-enum WidgetMode: String{
+enum WidgetMode: String, Codable{
     case manual = "MANUAL"
     case auto   = "AUTO"
 }
 
-enum UserListMode: String{
+enum UserListMode: String, Codable{
     case random = "RANDOM"
     case custom   = "CUSTOM"
 }
 
 ///Embed - The organisation specific data used to customise the SDK for each organization
-struct Embed: Mappable {
+struct Embed: Codable {
     
     var orgId: Int!
     var embedId: String!
-    var inboxId: Int!
-    
-    var clientId: String!
-    var redirectUri: String!
-    
-    var backgroundColor: String?
-    var foregroundColor: String?
-    var welcomeMessage: String = "How can we help out? We are here for you!"
-    var awayMessage: String = "We’re not currently online right now but if you leave a message, we’ll get back to you as soon as possible!"
+    var configuration: EmbedConfiguration?
 
-    var organizationName: String?
-    
-    var inboxEmailAddress: String?
-    var refreshRate: Int?
-    
-    var widgetStatus: WidgetStatus = .on
-    
-    var widgetMode: WidgetMode = .manual
-    
-    var openHours: [OpenHours] = []
-    var timeZoneString: String?
-    var backgroundColorString: String?
-    var users: [User] = []
-    
-    var userListMode: UserListMode = .random
-    var userListIds: [Int64] = []
-    
-        
-    init?(map: Map) {
-        //These fields are required, without them we fail to init the object
-        if map.JSON["orgId"] as? NSNull != nil || map.JSON["orgId"] == nil || map.JSON["orgId"] as? String == "" ||
-            map.JSON["id"] == nil || map.JSON["id"] as? String == "" ||
-            map["configuration.inboxId"].currentValue == nil || map["configuration.inboxId"].currentValue as? String == "" ||
-            map["configuration.authClientId"].currentValue == nil || map["configuration.authClientId"].currentValue as? String == "" {
-            return nil
-        }
+
+    enum CodingKeys: String, CodingKey {
+        case orgId          = "orgId"
+        case embedId        = "id"
+        case configuration  = "configuration"
     }
-    
-    mutating func mapping(map: Map) {
-        orgId               <- map["orgId"]
-        embedId             <- map["id"]
-        inboxId             <- map["configuration.inboxId"]
-        clientId            <- map["configuration.authClientId"]
-        redirectUri         <- map["configuration.redirectUri"]
-        backgroundColor     <- map["configuration.theme.backgroundColor"]
-        foregroundColor     <- map["configuration.theme.foregroundColor"]
-        welcomeMessage      <- map["configuration.theme.welcomeMessage"]
-        awayMessage         <- map["configuration.theme.awayMessage"]
-        organizationName    <- map["configuration.organizationName"]
-        inboxEmailAddress   <- map["configuration.inboxEmailAddress"]
-        refreshRate         <- map["configuration.refreshRate"]
         
-        widgetStatus         <- map["configuration.widgetStatus"]
-        widgetMode           <- map["configuration.widgetMode"]
-        timeZoneString          <- map["configuration.theme.timezone"]
-        backgroundColorString   <- map["configuration.theme.backgroundColor"]
-        openHours               <- map["configuration.theme.openHours"]
-        userListMode         <- map["configuration.theme.userListMode"]
-        users                    <- map["configuration.team"]
-        userListIds                <- map["configuration.theme.userList"]
-    }
-    
     func isOrgCurrentlyOpen() -> Bool {
-        if widgetMode == .some(.manual) {
-            if widgetStatus == .some(.on) {
+        if configuration?.widgetMode == .some(.manual) {
+            if configuration?.widgetStatus == .some(.on) {
                 return true
             }else{
                 return false
@@ -100,8 +47,8 @@ struct Embed: Mappable {
         }else{
             //Use open hours
             
-            if let timezone = TimeZone(identifier: timeZoneString ?? "") {
-                return openHours.areWeCurrentlyOpen(date: Date(), timeZone: timezone)
+            if let timezone = TimeZone(identifier: configuration?.theme?.timeZoneString ?? "") {
+                return configuration?.theme?.openHours.areWeCurrentlyOpen(date: Date(), timeZone: timezone) ?? false
             }else{
                 return false
             }
@@ -111,15 +58,18 @@ struct Embed: Mappable {
     func getWelcomeMessageForUser() -> String {
         
         if isOrgCurrentlyOpen() {
-            return welcomeMessage
+            return configuration?.theme?.welcomeMessage ?? "How can we help out? We are here for you!"
         }else {
-            return awayMessage
+            return configuration?.theme?.awayMessage ?? "We’re not currently online right now but if you leave a message, we’ll get back to you as soon as possible!"
         }
     }
     
     func getUserForWelcomeMessage() -> User? {
         
-        if userListMode == .custom, let teamMember = users.filter({userListIds.contains($0.userId ?? -1)}).first{
+        let users = configuration?.users ?? []
+        let userListIds = configuration?.theme?.userListIds ?? []
+        
+        if configuration?.theme?.userListMode == .custom, let teamMember = users.filter({ userListIds.contains($0.userId ?? -1) }).first{
             return teamMember
         }else{
             if users.count > 0 {
@@ -129,5 +79,55 @@ struct Embed: Mappable {
             }
         }
         
+    }
+}
+
+struct EmbedConfiguration: Codable {
+    
+    var inboxId: Int!
+    var clientId: String!
+    var redirectUri: String!
+    var organizationName: String?
+    var inboxEmailAddress: String?
+    var refreshRate: Int?
+    var widgetStatus: WidgetStatus = .on
+    var widgetMode: WidgetMode = .manual
+    var users: [User] = []
+    var theme: EmbedTheme?
+            
+    enum CodingKeys: String, CodingKey {
+        case inboxId            = "inboxId"
+        case clientId           = "authClientId"
+        case redirectUri        = "redirectUri"
+        case organizationName   = "organizationName"
+        case inboxEmailAddress  = "inboxEmailAddress"
+        case refreshRate        = "refreshRate"
+        case widgetStatus       = "widgetStatus"
+        case widgetMode         = "widgetMode"
+        case users              = "team"
+        case theme              = "theme"
+    }
+}
+
+struct EmbedTheme: Codable {
+    
+    var backgroundColor: String?
+    var foregroundColor: String?
+    var welcomeMessage: String?
+    var awayMessage: String?
+    var timeZoneString: String?
+    var openHours: [OpenHours] = []
+    var userListMode: UserListMode = .random
+    var userListIds: [Int64] = []
+    
+    enum CodingKeys: String, CodingKey {
+            case backgroundColor        = "backgroundColor"
+            case foregroundColor        = "foregroundColor"
+            case welcomeMessage         = "welcomeMessage"
+            case awayMessage            = "awayMessage"
+            case timeZoneString         = "timezone"
+            case openHours              = "openHours"
+            case userListMode           = "userListMode"
+            case userListIds            = "userList"
     }
 }

@@ -8,9 +8,9 @@
 
 import ObjectMapper
 
-class OpenHours: Mappable {
+class OpenHours: Mappable, Codable {
 
-    enum Weekday: String{
+    enum Weekday: String {
         case monday     = "MONDAY"
         case tuesday    = "TUESDAY"
         case wednesday  = "WEDNESDAY"
@@ -65,6 +65,12 @@ class OpenHours: Mappable {
         dayOfWeek       <- map["dayOfWeek"]
     }
     
+    enum CodingKeys: String, CodingKey {
+            case opens      = "opens"
+            case closes     = "closes"
+            case dayOfWeek  = "dayOfWeek"
+            
+    }
     
     func populateTimeForTimezone(timezone: TimeZone) -> (open: Date?, close: Date?) {
     

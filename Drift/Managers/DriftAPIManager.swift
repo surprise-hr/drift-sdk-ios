@@ -51,10 +51,11 @@ class DriftAPIManager: Alamofire.Session {
         })
     }
 
-    class func getEmbeds(_ embedId: String, refreshRate: Int?, completion: @escaping (Result<Embed>) -> ()){
-        sharedManager.request(DriftRouter.getEmbed(embedId: embedId, refreshRate: refreshRate)).responseJSON(completionHandler: { (result) -> Void in
-            completion(mapResponse(result))
-        })
+    class func getEmbeds(_ embedId: String, refreshRate: Int?, completion: @escaping (Swift.Result<Embed, AFError>) -> ()){
+        sharedManager.request(DriftRouter.getEmbed(embedId: embedId,
+                                                   refreshRate: refreshRate)).responseDecodable(completionHandler: { (response: DataResponse<Embed, AFError>) in
+                                                    completion(response.result)
+                                                   })
     }
     
     class func getUser(_ userId: Int64, orgId: Int, authToken:String, completion: @escaping (Result<[User]>) -> ()) {

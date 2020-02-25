@@ -68,16 +68,14 @@ class DriftDataStore {
             LoggerManager.log("Failed to load auth")
         }
         
-        if let data = userDefs.string(forKey: DriftDataStore.driftEmbedCacheString), let json = convertStringToDictionary(data) {
-            let tempEmbed = Mapper<Embed>().map(JSON: json)
-            
-            if let embed = tempEmbed {
-                self.embed = embed
-            }else{
-                LoggerManager.log("Failed to load embed")
-            }
+        if let jsonString = userDefs.string(forKey: DriftDataStore.driftEmbedCacheString),
+            let data = jsonString.data(using: .utf8),
+            let embed = try? decoder.decode(Embed.self, from: data) {
+            self.embed = embed
+        } else {
+            LoggerManager.log("Failed to load embed")
         }
-        
+                
         if let userId = userDefs.string(forKey: DriftDataStore.driftUserIdCacheString) {
             self.userId = userId
         }
@@ -92,15 +90,19 @@ class DriftDataStore {
     
     func saveData(){
         let userDefs = UserDefaults.standard
-        
-        if let embed = embed, let json = convertDictionaryToString(embed.toJSON() as [String : AnyObject]) {
+        let encoder = JSONEncoder()
+
+        if let embed = embed,
+            let data = try? encoder.encode(embed),
+            let json = String(data: data, encoding: .utf8) {
             userDefs.set(json, forKey: DriftDataStore.driftEmbedCacheString)
-        }else{
+        } else {
             LoggerManager.log("Failed to save embed")
         }
-        let encoder = JSONEncoder()
-        
-        if let auth = auth, let data = try? encoder.encode(auth), let json = String(data: data, encoding: .utf8) {
+            
+        if let auth = auth,
+            let data = try? encoder.encode(auth),
+            let json = String(data: data, encoding: .utf8) {
             userDefs.set(json, forKey: DriftDataStore.driftAuthCacheString)
         }
         
@@ -163,14 +165,14 @@ class DriftDataStore {
 extension DriftDataStore{
     
     func generateBackgroundColor() -> UIColor {
-        if let backgroundColor = embed?.backgroundColor {
+        if let backgroundColor = embed?.configuration?.theme?.backgroundColor {
             return UIColor(hexString: backgroundColor)
         }
         return UIColor(red:0.54, green:0.4, blue:1, alpha:1)
     }
     
     func generateForegroundColor() -> UIColor {
-        if let foregroundColor = embed?.foregroundColor {
+        if let foregroundColor = embed?.configuration?.theme?.foregroundColor {
             return UIColor(hexString: foregroundColor)
         }
         return UIColor(red:0.54, green:0.4, blue:1, alpha:1)

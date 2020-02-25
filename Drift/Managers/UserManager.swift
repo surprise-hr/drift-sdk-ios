@@ -18,7 +18,7 @@ class UserManager {
     func userMetaDataForUserId(_ userId: Int64, completion: @escaping (_ user: User?) -> ()) {
         if let user = userCache[userId] {
             completion(user)
-        }else if let user = DriftDataStore.sharedInstance.embed?.users.filter({$0.userId == userId}).first {
+        }else if let user = DriftDataStore.sharedInstance.embed?.configuration?.users.filter({$0.userId == userId}).first {
             completion(user)
         }else{
             
