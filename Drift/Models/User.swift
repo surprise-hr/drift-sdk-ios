@@ -8,7 +8,7 @@
 
 import ObjectMapper
 ///User obect - Attached to Auth and used to make sure user has not changed during app close
-class User: Mappable, Equatable {
+class User: Mappable, Equatable, Codable {
     
     var userId: Int64?
     var orgId: Int?
@@ -34,6 +34,17 @@ class User: Mappable, Equatable {
     func getUserName() -> String{
         return name ?? email ?? "No Name Set"
     }
+    
+    enum CodingKeys: String, CodingKey {       
+        case userId = "id"
+        case email = "email"
+        case orgId = "orgId"
+        case name = "name"
+        case externalId = "externalId"
+        case avatarURL = "avatarUrl"
+        case bot = "bot"
+    }
+    
 }
 
 func ==(lhs: User, rhs: User) -> Bool {

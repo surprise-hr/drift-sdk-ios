@@ -58,14 +58,14 @@ class DriftDataStore {
     
     func loadData(){
         let userDefs = UserDefaults.standard
-        
-        if let data = userDefs.string(forKey: DriftDataStore.driftAuthCacheString), let json = convertStringToDictionary(data) {
-            let tempAuth = Auth(JSON: json)
-            if let auth =  tempAuth{
-                self.auth = auth
-            }else{
-                LoggerManager.log("Failed to load auth")
-            }
+        let decoder = JSONDecoder()
+
+        if let jsonString = userDefs.string(forKey: DriftDataStore.driftAuthCacheString),
+            let data = jsonString.data(using: .utf8),
+            let auth = try? decoder.decode(Auth.self, from: data) {
+            self.auth = auth
+        } else {
+            LoggerManager.log("Failed to load auth")
         }
         
         if let data = userDefs.string(forKey: DriftDataStore.driftEmbedCacheString), let json = convertStringToDictionary(data) {
@@ -98,8 +98,9 @@ class DriftDataStore {
         }else{
             LoggerManager.log("Failed to save embed")
         }
+        let encoder = JSONEncoder()
         
-        if let auth = auth, let json = convertDictionaryToString( auth.toJSON() as [String : AnyObject]) {
+        if let auth = auth, let data = try? encoder.encode(auth), let json = String(data: data, encoding: .utf8) {
             userDefs.set(json, forKey: DriftDataStore.driftAuthCacheString)
         }
         

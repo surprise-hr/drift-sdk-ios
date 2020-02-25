@@ -189,7 +189,7 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
             })
             
         }else {
-            if let endUser = DriftDataStore.sharedInstance.auth?.enduser {
+            if let endUser = DriftDataStore.sharedInstance.auth?.endUser {
                 avatarView.setupForUser(user: endUser)
                             
                 if let creatorName = endUser.name {
@@ -262,7 +262,7 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
 
                 self.setupForAttachmentStyle(attachmentStyle: .single)
                 if let urlRequest = attachment.getAttachmentURL(accessToken: DriftDataStore.sharedInstance.auth?.accessToken) {
-                    self.attachmentImageView.af_setImage(withURLRequest: urlRequest, placeholderImage: placeholder)
+                    self.attachmentImageView.af.setImage(withURLRequest: urlRequest, placeholderImage: placeholder)
                 } else {
                     self.attachmentImageView.image = placeholder
                 }

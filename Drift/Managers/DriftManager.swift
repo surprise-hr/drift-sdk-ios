@@ -89,7 +89,7 @@ class DriftManager: NSObject {
                 if let auth = auth {
                     self.setupSocket(auth.accessToken, orgId: embed.orgId)
                     
-                    if let userId = auth.enduser?.userId {
+                    if let userId = auth.endUser?.userId {
                         ConversationsManager.checkForConversations(userId: userId)
                         completion?(userId)
                     }
@@ -133,7 +133,7 @@ class DriftManager: NSObject {
         Called when app is opened from background - Refresh Identify if logged in
     */
     @objc func didEnterForeground(){
-        if let user = DriftDataStore.sharedInstance.auth?.enduser, let orgId = user.orgId, let userId = user.externalId, let email = user.email {
+        if let user = DriftDataStore.sharedInstance.auth?.endUser, let orgId = user.orgId, let userId = user.externalId, let email = user.email {
             DriftAPIManager.postIdentify(orgId, userId: userId, email: email, userJwt: DriftDataStore.sharedInstance.userJwt, attributes: nil) { (result) -> () in }
             
             if let userId = user.userId {
@@ -176,7 +176,7 @@ class DriftManager: NSObject {
     }
     
     class func showConversations(){
-        if let endUserId = DriftDataStore.sharedInstance.auth?.enduser?.userId{
+        if let endUserId = DriftDataStore.sharedInstance.auth?.endUser?.userId{
             PresentationManager.sharedInstance.showConversationList(endUserId: endUserId)
         }else{
             PresentationManager.sharedInstance.showConversationList(endUserId: nil)

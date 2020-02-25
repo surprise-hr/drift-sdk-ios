@@ -331,7 +331,7 @@ class ConversationViewController: UIViewController {
                         emptyState.avatarImageView.backgroundColor = DriftDataStore.sharedInstance.generateBackgroundColor()
                         
                     } else if let avatarURLString = welcomeUser.avatarURL, let avatarURL = URL(string: avatarURLString) {
-                        emptyState.avatarImageView.af_setImage(withURL: avatarURL)
+                        emptyState.avatarImageView.af.setImage(withURL: avatarURL)
                     }
                 } else {
                     emptyState.avatarImageView.image = nil
@@ -431,7 +431,7 @@ class ConversationViewController: UIViewController {
         case .createConversation:
             createConversationWithMessage(messageRequest)
         case .continueConversation(let conversationId):
-            newMessage(messageRequest.generateFakeMessage(conversationId: conversationId, userId: DriftDataStore.sharedInstance.auth?.enduser?.userId ?? -1))
+            newMessage(messageRequest.generateFakeMessage(conversationId: conversationId, userId: DriftDataStore.sharedInstance.auth?.endUser?.userId ?? -1))
             postMessageToConversation(conversationId, messageRequest: messageRequest)
         }
     }
@@ -646,7 +646,7 @@ extension ConversationViewController {
         }
         message.formatHTMLBody()
         //User created message with appointment information should be allowed through
-        if message.authorId == DriftDataStore.sharedInstance.auth?.enduser?.userId && message.contentType == .Chat && message.appointmentInformation == nil && !message.fakeMessage{
+        if message.authorId == DriftDataStore.sharedInstance.auth?.endUser?.userId && message.contentType == .Chat && message.appointmentInformation == nil && !message.fakeMessage{
             print("Ignoring own message")
             return
         }

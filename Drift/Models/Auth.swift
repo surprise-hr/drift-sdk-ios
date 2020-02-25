@@ -6,24 +6,13 @@
 //  Copyright © 2016 Drift. All rights reserved.
 //
 
-import UIKit
-import ObjectMapper
-
-struct Auth: Mappable {
+struct Auth: Codable {
     
-    var accessToken: String!
-    var enduser: User?
+    var accessToken: String
+    var endUser: User?
     
-    init?(map: Map) {
-        //These fields are required, without them we fail to init the object
-        if map["accessToken"].currentValue == nil || map["accessToken"].currentValue as? String == ""{
-            return nil
-        }
+    enum CodingKeys: String, CodingKey {
+        case accessToken = "accessToken"
+        case endUser = "endUser"
     }
-    
-    mutating func mapping(map: Map) {
-        accessToken <- map["accessToken"]
-        enduser     <- map["endUser"]
-    }
-    
 }

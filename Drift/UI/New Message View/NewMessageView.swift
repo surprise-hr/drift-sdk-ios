@@ -98,7 +98,7 @@ class NewMessageView: CampaignView {
             UserManager.sharedInstance.userMetaDataForUserId(userId, completion: { (user) in
                 if let user = user {
                     if let avatar = user.avatarURL, let url = URL(string: avatar) {
-                        self.userImageView.af_setImage(withURL: url)
+                        self.userImageView.af.setImage(withURL: url)
                     }
                     self.titleLabel.text = user.name ?? "New Message"
                 }
@@ -161,7 +161,7 @@ class NewMessageView: CampaignView {
         if otherConversations.isEmpty {
             PresentationManager.sharedInstance.showConversationVC(message.conversationId)
         }else{
-            if let endUserId = DriftDataStore.sharedInstance.auth?.enduser?.userId{
+            if let endUserId = DriftDataStore.sharedInstance.auth?.endUser?.userId{
                 PresentationManager.sharedInstance.showConversationList(endUserId: endUserId)
             }
         }

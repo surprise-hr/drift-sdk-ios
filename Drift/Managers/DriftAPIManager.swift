@@ -27,21 +27,26 @@ class DriftAPIManager: Alamofire.Session {
                 guard let afInfo = Bundle(for: Session.self).infoDictionary, let build = afInfo["CFBundleShortVersionString"] as? String else { return "Unknown" }
                 return "Alamofire/\(build)"
             }()
-            print("Drift Version: \(driftVersion)")
             let userAgent = "Drift-SDK/\(driftVersion) (\(identifer); build:\(build); \(osName) \(osVersion)) \(alamofireVersion)"
             configuration.httpAdditionalHeaders?["User-Agent"] = userAgent
         }
         return DriftAPIManager(configuration: configuration)
     }()
     
-    class func getAuth(_ email: String?, userId: String, userJwt: String?, redirectURL: String, orgId: Int, clientId: String, completion: @escaping (Result<Auth>) -> ()) {
-        sharedManager.request(DriftCustomerRouter.getAuth(email: email, userId: userId, userJwt:userJwt, redirectURL: redirectURL, orgId: orgId, clientId: clientId)).responseJSON(completionHandler: { (response) -> Void in
-            completion(mapResponse(response))
-        })
+    class func getAuth(_ email: String?, userId: String, userJwt: String?, redirectURL: String, orgId: Int, clientId: String, completion: @escaping (Swift.Result<Auth, AFError>) -> ()) {
+        sharedManager.request(DriftCustomerRouter.getAuth(email: email,
+                                                          userId: userId,
+                                                          userJwt:userJwt,
+                                                          redirectURL: redirectURL,
+                                                          orgId: orgId,
+                                                          clientId: clientId)).responseDecodable(completionHandler: { (response: DataResponse<Auth, AFError>) in
+                                                            completion(response.result)
+                                                          })
     }
     
     class func getSocketAuth(orgId: Int, accessToken: String, completion: @escaping (Result<SocketAuth>) -> ()) {
-        sharedManager.request(DriftRouter.getSocketData(orgId: orgId, accessToken: accessToken)).responseJSON(completionHandler: { (result) -> Void in
+        sharedManager.request(DriftRouter.getSocketData(orgId: orgId,
+                                                        accessToken: accessToken)).responseJSON(completionHandler: { (result) -> Void in
             completion(mapResponse(result))
         })
     }
