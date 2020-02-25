@@ -20,10 +20,10 @@ class ReachabilityManager {
     let networkReachabilityManager = Alamofire.NetworkReachabilityManager(host: "www.apple.com")
     
     func start() {        
-        networkReachabilityManager?.listener = { status in
+        networkReachabilityManager?.startListening(onUpdatePerforming: { status in
             
             switch status {
-            case .reachable(.wwan), .reachable(.ethernetOrWiFi):
+            case .reachable(.cellular), .reachable(.ethernetOrWiFi):
                 LoggerManager.log("Network status became reachable")
                 NotificationCenter.default.post(name: .driftNetworkStatusReachable, object: self, userInfo: nil)
             case .notReachable:
@@ -33,9 +33,6 @@ class ReachabilityManager {
                 LoggerManager.log("Network Status became unknown")
                 NotificationCenter.default.post(name: .driftNetworkStatusUnknown, object: self, userInfo: nil)
             }
-        }
-        
-        networkReachabilityManager?.startListening()
+        })
     }
-    
 }

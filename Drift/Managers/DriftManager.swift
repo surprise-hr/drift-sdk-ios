@@ -136,7 +136,7 @@ class DriftManager: NSObject {
         if let user = DriftDataStore.sharedInstance.auth?.enduser, let orgId = user.orgId, let userId = user.externalId, let email = user.email {
             DriftAPIManager.postIdentify(orgId, userId: userId, email: email, userJwt: DriftDataStore.sharedInstance.userJwt, attributes: nil) { (result) -> () in }
             
-            if let userId = user.userId, let embed = DriftDataStore.sharedInstance.embed {
+            if let userId = user.userId {
                 ConversationsManager.checkForConversations(userId: userId)
             }
         }else{

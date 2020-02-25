@@ -1,16 +1,16 @@
 PODS:
-  - Alamofire (4.9.1)
-  - AlamofireImage (3.6.0):
-    - Alamofire (~> 4.9)
+  - Alamofire (5.0.2)
+  - AlamofireImage (4.0.1):
+    - Alamofire (< 6.0.0, >= 5.0.2)
   - Drift (2.3.1):
-    - AlamofireImage (~> 3.0)
+    - AlamofireImage (~> 4.0)
     - ObjectMapper (~> 3.0)
     - Starscream (= 3.1.1)
   - ObjectMapper (3.5.1)
   - Starscream (3.1.1)
 
 DEPENDENCIES:
-  - AlamofireImage (~> 3.3)
+  - AlamofireImage (~> 4.0)
   - Drift (from `.`)
   - ObjectMapper (~> 3.0)
   - Starscream (= 3.1.1)
@@ -27,12 +27,12 @@ EXTERNAL SOURCES:
     :path: "."
 
 SPEC CHECKSUMS:
-  Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
-  AlamofireImage: be9963c6582d68b39e89191f64c82a7d7bf40fdd
-  Drift: 6108d9ae992d74df976fad5da6996ea79249719e
+  Alamofire: 3ba7a4db18b4f62c4a1c0e1cb39d7f3d52e10ada
+  AlamofireImage: a8a5289046ac46b4d0183bcf73ce12ce30564cb7
+  Drift: 22deaebd2e0eaf87615449fc1039a647dae1aafa
   ObjectMapper: 70187b8941977c62ccfb423caf6b50be405cabf0
   Starscream: 4bb2f9942274833f7b4d296a55504dcfc7edb7b0
 
-PODFILE CHECKSUM: 2442ad7405506f5ba9aeca57bd7bc68b9e89e618
+PODFILE CHECKSUM: 1e6246ac018d99621aabeec56995c50cd44119cf
 
 COCOAPODS: 1.8.4

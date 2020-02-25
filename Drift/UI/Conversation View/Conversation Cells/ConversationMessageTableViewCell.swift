@@ -238,13 +238,13 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
                     setupForAttachmentStyle(attachmentStyle: .multiple)
                 }
                 
-                DriftAPIManager.getAttachmentsMetaData(message.attachmentIds, authToken: (DriftDataStore.sharedInstance.auth?.accessToken)!, completion: { (result) in
+                DriftAPIManager.getAttachmentsMetaData(message.attachmentIds, authToken: (DriftDataStore.sharedInstance.auth?.accessToken)!, completion: { [weak self] (result) in
                     switch result{
                     case .success(let attachments):
                         message.attachments.append(contentsOf: attachments)
-                        self.displayAttachments(attachments: attachments)
+                        self?.displayAttachments(attachments: attachments)
                     case .failure:
-                        LoggerManager.log("Failed to get attachment metadata for message: \(message.id)")
+                        LoggerManager.log("Failed to get attachment metadata for message: \(message.id ?? -1)")
                     }
                 })
             }

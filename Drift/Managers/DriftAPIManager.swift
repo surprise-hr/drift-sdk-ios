@@ -9,25 +9,27 @@ import Foundation
 import ObjectMapper
 import Alamofire
 
-class DriftAPIManager: Alamofire.SessionManager {
+class DriftAPIManager: Alamofire.Session {
     
     static let sharedManager: DriftAPIManager = {
-        let configuration = URLSessionConfiguration.default
+        let configuration = URLSessionConfiguration.af.default
         if let info = Bundle.main.infoDictionary {
-            let verion = info["CFBundleShortVersionString"] as? String ?? "Unknown"
+            let driftVersion: String = {
+                guard let afInfo = Bundle(for: Drift.self).infoDictionary, let build = afInfo["CFBundleShortVersionString"] as? String else { return "Unknown" }
+                return build
+            }()
+            
             let identifer = info["CFBundleIdentifier"] as? String ?? "Unknown"
             let build = info["CFBundleVersion"] as? String ?? "Unknown"
             let osName = UIDevice.current.systemName
             let osVersion = UIDevice.current.systemVersion
             let alamofireVersion: String = {
-                guard let afInfo = Bundle(for: SessionManager.self).infoDictionary,let build = afInfo["CFBundleShortVersionString"] else { return "Unknown" }
+                guard let afInfo = Bundle(for: Session.self).infoDictionary, let build = afInfo["CFBundleShortVersionString"] as? String else { return "Unknown" }
                 return "Alamofire/\(build)"
             }()
-            
-            let userAgent = "Drift-SDK/\(verion) (\(identifer); build:\(build); \(osName) \(osVersion)) \(alamofireVersion)"
-            var defaultHeaders =  Alamofire.SessionManager.defaultHTTPHeaders
-            defaultHeaders["User-Agent"] = userAgent
-            configuration.httpAdditionalHeaders = defaultHeaders
+            print("Drift Version: \(driftVersion)")
+            let userAgent = "Drift-SDK/\(driftVersion) (\(identifer); build:\(build); \(osName) \(osVersion)) \(alamofireVersion)"
+            configuration.httpAdditionalHeaders?["User-Agent"] = userAgent
         }
         return DriftAPIManager(configuration: configuration)
     }()
@@ -72,10 +74,10 @@ class DriftAPIManager: Alamofire.SessionManager {
         sharedManager.request(DriftCustomerRouter.scheduleMeeting(userId: userId, conversationId: conversationId, timestamp: timestamp)).responseJSON(completionHandler: { (result) -> Void in
             
             if result.response?.statusCode == 200 {
-                LoggerManager.log("Scheduled Meeting Success: \(String(describing: result.result.value))")
+                LoggerManager.log("Scheduled Meeting Success: \(String(describing: try? result.result.get()))")
                 completion(mapResponse(result))
             } else {
-                LoggerManager.log("Scheduled Meeting Failure: \(String(describing: result.result.error))")
+                LoggerManager.log("Scheduled Meeting Failure: \(String(describing: result.response?.statusCode))")
                 completion(.failure(DriftError.apiFailure))
             }
         })
@@ -271,7 +273,7 @@ class DriftAPIManager: Alamofire.SessionManager {
     }
     
     //Maps response to result T using ObjectMapper JSON parsing
-    fileprivate class func mapResponse<T: Mappable>(_ result: DataResponse<Any>) -> Result<T> {
+    fileprivate class func mapResponse<T: Mappable>(_ result: DataResponse<Any, AFError>) -> Result<T> {
         
         switch result.result {
         case .success(let res):
@@ -288,7 +290,7 @@ class DriftAPIManager: Alamofire.SessionManager {
     }
     
     //Maps response to result [T] using ObjectMapper JSON parsing
-    fileprivate class func mapResponse<T: Mappable>(_ result: DataResponse<Any>) -> Result<[T]> {
+    fileprivate class func mapResponse<T: Mappable>(_ result: DataResponse<Any, AFError>) -> Result<[T]> {
         
         switch result.result {
         case .success(let res):

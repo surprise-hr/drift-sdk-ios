@@ -215,8 +215,8 @@
                                 <constraint firstItem="m2d-r3-Wgr" firstAttribute="leading" secondItem="Xa8-6o-eOd" secondAttribute="leading" constant="15" id="yDf-i9-Ldz"/>
                             </constraints>
                         </view>
-                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="0iy-6X-iKH">
-                            <rect key="frame" x="131.5" y="245.5" width="37" height="37"/>
+                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="0iy-6X-iKH">
+                            <rect key="frame" x="140" y="254" width="20" height="20"/>
                         </activityIndicatorView>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

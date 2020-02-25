@@ -28,9 +28,20 @@ extension UIView {
         let bundle = Bundle(for: self)
 
         let nib = UINib(nibName: name, bundle: bundle)
+//        let nib = UINib(nibName: name, bundle: Bundle.drift_getResourcesBundle())
         view = nib.instantiate(withOwner: self, options: nil)[0] as? T
         
         return view
     }
     
+}
+
+extension Bundle {
+   static func drift_getResourcesBundle() -> Bundle? {
+    let bundle = Bundle(for: Drift.self)
+      guard let resourcesBundleUrl = bundle.resourceURL?.appendingPathComponent("DriftResources.bundle") else {
+         return nil
+      }
+      return Bundle(url: resourcesBundleUrl)
+   }
 }

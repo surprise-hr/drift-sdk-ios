@@ -1,9 +1,9 @@
-platform :ios, '9.0'
+platform :ios, '10.0'
 use_frameworks!
 
 target 'Drift-SDK' do
     pod 'ObjectMapper', '~> 3.0'
-    pod 'AlamofireImage', '~> 3.3'
+    pod 'AlamofireImage', '~> 4.0'
     pod 'Starscream', '3.1.1'
 end
 

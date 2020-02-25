@@ -9,7 +9,7 @@
 import ObjectMapper
 import Alamofire
 
-class Attachment: Mappable, Hashable{
+class Attachment: Mappable {
     var id: Int64 = 0
     var fileName = ""
     var size = 0
@@ -29,11 +29,7 @@ class Attachment: Mappable, Hashable{
         publicId            <- map["publicId"]
         publicPreviewURL    <- map["publicPreviewUrl"]
     }
-    
-    var hashValue: Int {
-        return "\(id)".hashValue
-    }
-    
+        
     required convenience init?(map: Map) {
         self.init()
     }
