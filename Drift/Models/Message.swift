@@ -17,7 +17,7 @@ enum AuthorType: String, Codable{
     case EndUser = "END_USER"
 }
 
-enum SendStatus: String, Codable{
+enum SendStatus: String {
     case Sent = "SENT"
     case Pending = "PENDING"
     case Failed = "FAILED"
@@ -25,36 +25,35 @@ enum SendStatus: String, Codable{
 
 class Message: Equatable {
     let id: Int64
-    var uuid: String?
+    let uuid: String?
     let inboxId: Int
-    var body: String?
-    var attachmentIds: [Int64] = []
+    let body: String?
+    let attachmentIds: [Int64] = []
     var attachments: [Attachment] = []
     let contentType: ContentType
-    var createdAt = Date()
-    var authorId: Int64
-    var authorType: AuthorType
+    let createdAt: Date
+    let authorId: Int64
+    let authorType: AuthorType
     
     let conversationId: Int64
     var sendStatus: SendStatus = SendStatus.Sent
     var formattedBody: NSAttributedString?
-    var appointmentInformation: AppointmentInformation?
+    let appointmentInformation: AppointmentInformation?
 
     var presentSchedule: Int64?
-    var scheduleMeetingFlow: Bool = false
-    var offerSchedule: Int64 = -1
+    let scheduleMeetingFlow: Bool = false
+    let offerSchedule: Int64 = -1
     
-    var preMessages: [PreMessage] = []
-    var requestId: Double = 0
-    var fakeMessage = false
-    var preMessage = false
+    let preMessages: [PreMessage] = []
+    let requestId: Double = 0
+    let fakeMessage = false
+    let preMessage = false
 
     init(id: Int64,
     uuid: String?,
     inboxId: Int,
     body: String?,
     attachmentIds: [Int64],
-    attachments: [Attachment],
     contentType:ContentType,
     createdAt: Date,
     authorId: Int64,
@@ -62,10 +61,25 @@ class Message: Equatable {
     conversationId: Int64,
     appointmentInformation: AppointmentInformation?,
     presentSchedule: Int64?,
-    scheduleMeetingFlow: Bool = false,
-    offerSchedule: Int64 = -1,
+    scheduleMeetingFlow: Bool,
+    offerSchedule: Int64,
     preMessages: [PreMessage]) {
         
+        self.id = id
+        self.uuid = uuid
+        self.inboxId = inboxId
+        self.body = body
+        self.attachmentIds = attachmentIds
+        self.contentType = contentType
+        self.createdAt = createdAt
+        self.authorId = authorId
+        self.authorType = authorType
+        self.conversationId = conversationId
+        self.appointmentInformation = appointmentInformation
+        self.presentSchedule = presentSchedule
+        self.scheduleMeetingFlow = scheduleMeetingFlow
+        self.offerSchedule = offerSchedule
+        self.preMessages = preMessages
     }
     
     func formatHTMLBody() {
@@ -83,7 +97,6 @@ class MessageDTO: Codable, DTO {
     var inboxId: Int?
     var body: String?
     var attachmentIds: [Int64]?
-    var attachments: [AttachmentDTO]?
     var contentType:ContentType?
     var createdAt: Date?
     var authorId: Int64?
@@ -95,9 +108,27 @@ class MessageDTO: Codable, DTO {
         
     func mapToObject() -> Message? {
         
-        guard let contentType = contentType else { return nil }
+        guard let contentType = contentType,
+            let id = id,
+            let inboxId = inboxId,
+            let authorType = authorType,
+            let conversationId = conversationId else { return nil }
         
-        return Message(
+        return Message(id: id,
+                       uuid: uuid,
+                       inboxId: inboxId,
+                       body: body,
+                       attachmentIds: attachmentIds ?? [],
+                       contentType: contentType,
+                       createdAt: createdAt ?? Date(),
+                       authorId: authorId ?? -1,
+                       authorType: authorType,
+                       conversationId: conversationId,
+                       appointmentInformation: attributes?.appointmentInformation?.mapToObject(),
+                       presentSchedule: attributes?.presentSchedule,
+                       scheduleMeetingFlow: attributes?.scheduleMeetingFlow ?? false,
+                       offerSchedule: attributes?.offerSchedule ?? -1,
+                       preMessages: attributes?.preMessages?.compactMap({$0.mapToObject()}) ?? [])
     }
     
     enum CodingKeys: String, CodingKey {
@@ -179,21 +210,36 @@ extension Array where Iterator.Element == Message
         let date = message.createdAt
         var output: [Message] = []
         for (index, preMessage) in preMessages.enumerated() {
-            let fakeMessage = Message()
             
-            fakeMessage.createdAt = date.addingTimeInterval(TimeInterval(-(index + 1)))
-            fakeMessage.conversationId = message.conversationId
-            fakeMessage.body = preMessage.messageBody
-            fakeMessage.fakeMessage = true
-            fakeMessage.preMessage = true
-            fakeMessage.uuid = UUID().uuidString
-            
-            fakeMessage.sendStatus = .Sent
-            fakeMessage.contentType = ContentType.Chat
-            fakeMessage.authorType = AuthorType.User
-            
-            if let sender = preMessage.user {
-                fakeMessage.authorId = sender.userId
+            if let authorId = preMessage.user?.userId {
+                
+                let fakeMessage = Message(id: -1,
+                                          uuid: UUID().uuidString,
+                                          inboxId: message.inboxId,
+                                          body: preMessage.messageBody,
+                                          attachmentIds: [],
+                                          contentType: .Chat,
+                                          createdAt: date.addingTimeInterval(TimeInterval(-(index + 1))),
+                                          authorId: authorId,
+                                          authorType: .User,
+                                          conversationId: message.conversationId,
+                                          appointmentInformation: nil,
+                                          presentSchedule: <#T##Int64?#>,
+                                          scheduleMeetingFlow: <#T##Bool#>,
+                                          offerSchedule: <#T##Int64#>,
+                                          preMessages: <#T##[PreMessage]#>)
+                
+//                fakeMessage.createdAt = date.addingTimeInterval(TimeInterval(-(index + 1)))
+//                fakeMessage.conversationId = message.conversationId
+//                fakeMessage.body = preMessage.messageBody
+//                fakeMessage.fakeMessage = true
+//                fakeMessage.preMessage = true
+//                fakeMessage.uuid = UUID().uuidString
+//
+//                fakeMessage.sendStatus = .Sent
+//                fakeMessage.contentType = ContentType.Chat
+//                fakeMessage.authorType = AuthorType.User
+                
                 output.append(fakeMessage)
             }
         }
