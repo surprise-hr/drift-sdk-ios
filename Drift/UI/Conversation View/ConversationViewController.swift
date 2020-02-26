@@ -163,7 +163,7 @@ class ConversationViewController: UIViewController {
         
         conversationInputView.addButton.isEnabled = false
         conversationInputView.textView.font = UIFont(name: "Avenir-Book", size: 15)
-        if let organizationName = DriftDataStore.sharedInstance.embed?.configuration?.organizationName {
+        if let organizationName = DriftDataStore.sharedInstance.embed?.organizationName {
             conversationInputView.textView.placeholder = "Type your message to \(organizationName)..."
         }else{
             conversationInputView.textView.placeholder = "Type your message..."

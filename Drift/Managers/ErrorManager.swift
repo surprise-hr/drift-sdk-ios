@@ -12,6 +12,7 @@ enum DriftError: Error {
     case authFailure
     case embedFailure
     case dataCreationFailure
+    case dataSerializationError
 }
 
 class LoggerManager {

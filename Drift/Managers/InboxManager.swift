@@ -6,8 +6,6 @@
 //  Copyright © 2016 Drift. All rights reserved.
 //
 
-import ObjectMapper
-
 class InboxManager {
     static let sharedInstance: InboxManager = InboxManager()
     let pageSize = 30

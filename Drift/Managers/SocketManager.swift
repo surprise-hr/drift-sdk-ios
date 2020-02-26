@@ -6,8 +6,6 @@
 //  Copyright © 2017 Drift. All rights reserved.
 //
 
-import UIKit
-import Alamofire
 import ObjectMapper
 
 extension Notification.Name {

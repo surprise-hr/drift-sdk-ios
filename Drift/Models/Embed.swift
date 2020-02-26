@@ -6,8 +6,6 @@
 //  Copyright © 2016 Drift. All rights reserved.
 //
 
-import ObjectMapper
-
 enum WidgetStatus: String, Codable{
     case on = "ON"
     case away = "AWAY"
@@ -24,22 +22,34 @@ enum UserListMode: String, Codable{
 }
 
 ///Embed - The organisation specific data used to customise the SDK for each organization
+///Codable for caching
 struct Embed: Codable {
     
-    var orgId: Int!
-    var embedId: String!
-    var configuration: EmbedConfiguration?
+    let orgId: Int
+    let embedId: String
 
-
-    enum CodingKeys: String, CodingKey {
-        case orgId          = "orgId"
-        case embedId        = "id"
-        case configuration  = "configuration"
-    }
+    let inboxId: Int
+    let clientId: String
+    let redirectUri: String
+    let organizationName: String?
+    let inboxEmailAddress: String?
+    let refreshRate: Int?
+    let widgetStatus: WidgetStatus
+    let widgetMode: WidgetMode
+    let users: [User]
+    
+    let backgroundColor: String?
+    let foregroundColor: String?
+    let welcomeMessage: String?
+    let awayMessage: String?
+    let timeZoneString: String?
+    let openHours: [OpenHours]
+    let userListMode: UserListMode
+    let userListIds: [Int64]
         
     func isOrgCurrentlyOpen() -> Bool {
-        if configuration?.widgetMode == .some(.manual) {
-            if configuration?.widgetStatus == .some(.on) {
+        if widgetMode == .some(.manual) {
+            if widgetStatus == .some(.on) {
                 return true
             }else{
                 return false
@@ -47,8 +57,8 @@ struct Embed: Codable {
         }else{
             //Use open hours
             
-            if let timezone = TimeZone(identifier: configuration?.theme?.timeZoneString ?? "") {
-                return configuration?.theme?.openHours.areWeCurrentlyOpen(date: Date(), timeZone: timezone) ?? false
+            if let timezone = TimeZone(identifier: timeZoneString ?? "") {
+                return openHours.areWeCurrentlyOpen(date: Date(), timeZone: timezone)
             }else{
                 return false
             }
@@ -58,18 +68,16 @@ struct Embed: Codable {
     func getWelcomeMessageForUser() -> String {
         
         if isOrgCurrentlyOpen() {
-            return configuration?.theme?.welcomeMessage ?? "How can we help out? We are here for you!"
+            return welcomeMessage ?? "How can we help out? We are here for you!"
         }else {
-            return configuration?.theme?.awayMessage ?? "We’re not currently online right now but if you leave a message, we’ll get back to you as soon as possible!"
+            return awayMessage ?? "We’re not currently online right now but if you leave a message, we’ll get back to you as soon as possible!"
         }
     }
     
     func getUserForWelcomeMessage() -> User? {
         
-        let users = configuration?.users ?? []
-        let userListIds = configuration?.theme?.userListIds ?? []
         
-        if configuration?.theme?.userListMode == .custom, let teamMember = users.filter({ userListIds.contains($0.userId ?? -1) }).first{
+        if userListMode == .custom, let teamMember = users.filter({ userListIds.contains($0.userId ?? -1) }).first{
             return teamMember
         }else{
             if users.count > 0 {
@@ -82,17 +90,67 @@ struct Embed: Codable {
     }
 }
 
+///Embed - The organisation specific data used to customise the SDK for each organization
+struct EmbedDTO: Codable, DTO {
+    
+    typealias DataObject = Embed
+    
+    var orgId: Int?
+    var embedId: String?
+    var configuration: EmbedConfiguration?
+
+
+    enum CodingKeys: String, CodingKey {
+        case orgId          = "orgId"
+        case embedId        = "id"
+        case configuration  = "configuration"
+    }
+ 
+    func mapToObject() -> Embed? {
+        guard let orgId = orgId,
+            let id = embedId,
+            let inboxId = configuration?.inboxId,
+            let authClientId = configuration?.clientId,
+            let redirectURI = configuration?.redirectUri else {
+                return nil
+        }
+        
+        
+        return Embed(orgId: orgId,
+                     embedId: id,
+                     inboxId: inboxId,
+                     clientId: authClientId,
+                     redirectUri: redirectURI,
+                     organizationName: configuration?.organizationName,
+                     inboxEmailAddress: configuration?.inboxEmailAddress,
+                     refreshRate: configuration?.refreshRate,
+                     widgetStatus: configuration?.widgetStatus ?? .on,
+                     widgetMode: configuration?.widgetMode ?? .manual,
+                     users: configuration?.users?.compactMap({ $0.mapToObject() }) ?? [],
+                     backgroundColor: configuration?.theme?.backgroundColor,
+                     foregroundColor: configuration?.theme?.foregroundColor,
+                     welcomeMessage: configuration?.theme?.welcomeMessage,
+                     awayMessage: configuration?.theme?.awayMessage,
+                     timeZoneString: configuration?.theme?.timeZoneString,
+                     openHours: configuration?.theme?.openHours ?? [],
+                     userListMode: configuration?.theme?.userListMode ?? .random,
+                     userListIds: configuration?.theme?.userListIds ?? [])
+        
+    }
+    
+}
+
 struct EmbedConfiguration: Codable {
     
-    var inboxId: Int!
-    var clientId: String!
-    var redirectUri: String!
+    var inboxId: Int?
+    var clientId: String?
+    var redirectUri: String?
     var organizationName: String?
     var inboxEmailAddress: String?
     var refreshRate: Int?
-    var widgetStatus: WidgetStatus = .on
-    var widgetMode: WidgetMode = .manual
-    var users: [User] = []
+    var widgetStatus: WidgetStatus?
+    var widgetMode: WidgetMode?
+    var users: [UserDTO]?
     var theme: EmbedTheme?
             
     enum CodingKeys: String, CodingKey {
@@ -116,9 +174,9 @@ struct EmbedTheme: Codable {
     var welcomeMessage: String?
     var awayMessage: String?
     var timeZoneString: String?
-    var openHours: [OpenHours] = []
-    var userListMode: UserListMode = .random
-    var userListIds: [Int64] = []
+    var openHours: [OpenHours]?
+    var userListMode: UserListMode?
+    var userListIds: [Int64]?
     
     enum CodingKeys: String, CodingKey {
             case backgroundColor        = "backgroundColor"

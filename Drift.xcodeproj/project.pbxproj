@@ -16,6 +16,7 @@
 		483E2FFB24040D32000E57AE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 483E2FF924040D32000E57AE /* Main.storyboard */; };
 		483E2FFD24040D34000E57AE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 483E2FFC24040D34000E57AE /* Assets.xcassets */; };
 		483E300024040D34000E57AE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 483E2FFE24040D34000E57AE /* LaunchScreen.storyboard */; };
+		487EB4532406AAE500A3E1D8 /* DTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487EB4522406AAE500A3E1D8 /* DTO.swift */; };
 		492F77EC1F55A72300A05094 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492F77E71F55A72300A05094 /* Channel.swift */; };
 		492F77ED1F55A72300A05094 /* Presence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492F77E81F55A72300A05094 /* Presence.swift */; };
 		492F77EE1F55A72300A05094 /* Push.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492F77E91F55A72300A05094 /* Push.swift */; };
@@ -130,6 +131,7 @@
 		483E2FFC24040D34000E57AE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		483E2FFF24040D34000E57AE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		483E300124040D34000E57AE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		487EB4522406AAE500A3E1D8 /* DTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DTO.swift; path = Drift/Models/DTO.swift; sourceTree = SOURCE_ROOT; };
 		492F77E71F55A72300A05094 /* Channel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Channel.swift; path = Drift/Birdsong/Channel.swift; sourceTree = SOURCE_ROOT; };
 		492F77E81F55A72300A05094 /* Presence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Presence.swift; path = Drift/Birdsong/Presence.swift; sourceTree = SOURCE_ROOT; };
 		492F77E91F55A72300A05094 /* Push.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Push.swift; path = Drift/Birdsong/Push.swift; sourceTree = SOURCE_ROOT; };
@@ -335,6 +337,7 @@
 				632E624E202A1C08001EA5EC /* MessageRequest.swift */,
 				633F2B5E202B60A100D675B7 /* GoogleMeeting.swift */,
 				633F2B60202B707B00D675B7 /* AppointmentInformation.swift */,
+				487EB4522406AAE500A3E1D8 /* DTO.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -793,6 +796,7 @@
 				633920D51C62879100C3A3C2 /* CampaignView.swift in Sources */,
 				635977B1201F6B3500333774 /* ConversationInputTextView.swift in Sources */,
 				2CF43EA31C7E045F008E6748 /* ColorPalette.swift in Sources */,
+				487EB4532406AAE500A3E1D8 /* DTO.swift in Sources */,
 				63BBABB41C7C9D850014768A /* ErrorManager.swift in Sources */,
 				63EC66F12024F463003CB5FC /* DriftPreviewItem.swift in Sources */,
 				635462E61EDF0C0B0012358E /* DriftAPIURLRouter.swift in Sources */,

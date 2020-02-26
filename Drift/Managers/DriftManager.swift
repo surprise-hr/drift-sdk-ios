@@ -113,7 +113,7 @@ class DriftManager: NSObject {
     */
     class func getAuth(_ email: String?, userId: String, userJwt: String?, completion: @escaping (_ success: Auth?) -> ()) {
         
-        if let orgId = DriftDataStore.sharedInstance.embed?.orgId, let clientId = DriftDataStore.sharedInstance.embed?.configuration?.clientId, let redirURI = DriftDataStore.sharedInstance.embed?.configuration?.redirectUri {
+        if let orgId = DriftDataStore.sharedInstance.embed?.orgId, let clientId = DriftDataStore.sharedInstance.embed?.clientId, let redirURI = DriftDataStore.sharedInstance.embed?.redirectUri {
             DriftAPIManager.getAuth(email, userId: userId, userJwt: userJwt, redirectURL: redirURI, orgId: orgId, clientId: clientId, completion: { (result) -> () in
                 switch result {
                 case .success(let auth):
@@ -185,7 +185,7 @@ class DriftManager: NSObject {
     }
     
     class func getEmbedData(_ embedId: String, completion: @escaping (_ success: Bool) -> ()){
-        let refresh = DriftDataStore.sharedInstance.embed?.configuration?.refreshRate
+        let refresh = DriftDataStore.sharedInstance.embed?.refreshRate
         DriftAPIManager.getEmbeds(embedId, refreshRate: refresh) { (result) -> () in
             
             switch result {

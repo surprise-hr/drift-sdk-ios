@@ -33,46 +33,46 @@ class DriftAPIManager: Alamofire.Session {
         return DriftAPIManager(configuration: configuration)
     }()
     
-    class func getAuth(_ email: String?, userId: String, userJwt: String?, redirectURL: String, orgId: Int, clientId: String, completion: @escaping (Swift.Result<Auth, AFError>) -> ()) {
+    class func getAuth(_ email: String?, userId: String, userJwt: String?, redirectURL: String, orgId: Int, clientId: String, completion: @escaping (Swift.Result<Auth, Error>) -> ()) {
         sharedManager.request(DriftCustomerRouter.getAuth(email: email,
                                                           userId: userId,
                                                           userJwt:userJwt,
                                                           redirectURL: redirectURL,
                                                           orgId: orgId,
-                                                          clientId: clientId)).responseDecodable(completionHandler: { (response: DataResponse<Auth, AFError>) in
-                                                            completion(response.result)
+                                                          clientId: clientId)).responseDecodable(completionHandler: { (response: DataResponse<AuthDTO, AFError>) in
+                                                            completion(mapResponse(response))
                                                           })
     }
     
-    class func getSocketAuth(orgId: Int, accessToken: String, completion: @escaping (Result<SocketAuth>) -> ()) {
+    class func getSocketAuth(orgId: Int, accessToken: String, completion: @escaping (Swift.Result<SocketAuth, Error>) -> ()) {
         sharedManager.request(DriftRouter.getSocketData(orgId: orgId,
-                                                        accessToken: accessToken)).responseJSON(completionHandler: { (result) -> Void in
-            completion(mapResponse(result))
-        })
+                                                        accessToken: accessToken)).responseDecodable(completionHandler: { (response: DataResponse<SocketAuthDTO, AFError>) in
+                                                            completion(mapResponse(response))
+                                                        })
     }
 
-    class func getEmbeds(_ embedId: String, refreshRate: Int?, completion: @escaping (Swift.Result<Embed, AFError>) -> ()){
+    class func getEmbeds(_ embedId: String, refreshRate: Int?, completion: @escaping (Swift.Result<Embed, Error>) -> ()){
         sharedManager.request(DriftRouter.getEmbed(embedId: embedId,
-                                                   refreshRate: refreshRate)).responseDecodable(completionHandler: { (response: DataResponse<Embed, AFError>) in
-                                                    completion(response.result)
+                                                   refreshRate: refreshRate)).responseDecodable(completionHandler: { (response: DataResponse<EmbedDTO, AFError>) in
+                                                    completion(mapResponse(response))
                                                    })
     }
     
-    class func getUser(_ userId: Int64, orgId: Int, authToken:String, completion: @escaping (Result<[User]>) -> ()) {
-        sharedManager.request(DriftCustomerRouter.getUser(orgId: orgId, userId: userId)).responseJSON(completionHandler: { (result) -> Void in
-            completion(mapResponse(result))
+    class func getUser(_ userId: Int64, orgId: Int, authToken:String, completion: @escaping (Swift.Result<[User], Error>) -> ()) {
+        sharedManager.request(DriftCustomerRouter.getUser(orgId: orgId, userId: userId)).responseDecodable(completionHandler: { (response: DataResponse<[UserDTO], AFError>) in
+            completion(mapResponseArr(response))
         })
     }
     
-    class func getEndUser(_ endUserId: Int64, authToken:String, completion: @escaping (Result<User>) -> ()){
-        sharedManager.request(DriftCustomerRouter.getEndUser(endUserId: endUserId)).responseJSON(completionHandler: { (result) -> Void in
-            completion(mapResponse(result))
+    class func getEndUser(_ endUserId: Int64, authToken:String, completion: @escaping (Swift.Result<User, Error>) -> ()){
+        sharedManager.request(DriftCustomerRouter.getEndUser(endUserId: endUserId)).responseDecodable(completionHandler: { (response: DataResponse<UserDTO, AFError>) in
+            completion(mapResponse(response))
         })
     }
     
     class func getUserAvailability(_ userId: Int64, completion: @escaping (Result<UserAvailability>) -> ()) {
         sharedManager.request(DriftCustomerRouter.getUserAvailability(userId: userId)).responseJSON(completionHandler: { (result) -> Void in
-            completion(mapResponse(result))
+            completion(mapMapperResponse(result))
         })
     }
     
@@ -81,7 +81,7 @@ class DriftAPIManager: Alamofire.Session {
             
             if result.response?.statusCode == 200 {
                 LoggerManager.log("Scheduled Meeting Success: \(String(describing: try? result.result.get()))")
-                completion(mapResponse(result))
+                completion(mapMapperResponse(result))
             } else {
                 LoggerManager.log("Scheduled Meeting Failure: \(String(describing: result.response?.statusCode))")
                 completion(.failure(DriftError.apiFailure))
@@ -90,7 +90,7 @@ class DriftAPIManager: Alamofire.Session {
     }
     
     
-    class func postIdentify(_ orgId: Int, userId: String, email: String?, userJwt: String?, attributes: [String: Any]?, completion: @escaping (Result<User>) -> ()) {
+    class func postIdentify(_ orgId: Int, userId: String, email: String?, userJwt: String?, attributes: [String: Any]?, completion: @escaping (Swift.Result<User, Error>) -> ()) {
         var params: [String: Any] = [
             "orgId": orgId,
             "userId": userId,
@@ -106,8 +106,8 @@ class DriftAPIManager: Alamofire.Session {
             params["attributes"] = attributes
         }
         
-        sharedManager.request(DriftRouter.postIdentify(params: params)).responseJSON(completionHandler: { (result) -> Void in
-            completion(mapResponse(result))
+        sharedManager.request(DriftRouter.postIdentify(params: params)).responseDecodable(completionHandler: { (response: DataResponse<UserDTO, AFError>) in
+            completion(mapResponse(response))
         })
     }
     
@@ -137,13 +137,13 @@ class DriftAPIManager: Alamofire.Session {
         
     class func getEnrichedConversations(_ endUserId: Int64, completion: @escaping (_ result: Result<[EnrichedConversation]>) -> ()){
         sharedManager.request(DriftConversationRouter.getEnrichedConversationsForEndUser(endUserId: endUserId)).responseJSON { (result) in
-            completion(mapResponse(result))
+            completion(mapMapperResponse(result))
         }
     }
         
     class func getMessages(_ conversationId: Int64, authToken: String, completion: @escaping (_ result: Result<[Message]>) -> ()){
         sharedManager.request(DriftConversationRouter.getMessagesForConversation(conversationId: conversationId)).responseJSON(completionHandler: { (result) -> Void in
-            completion(mapResponse(result))
+            completion(mapMapperResponse(result))
         })
     }
     
@@ -151,7 +151,7 @@ class DriftAPIManager: Alamofire.Session {
         let json = messageRequest.toJSON()
         
         sharedManager.request(DriftMessagingRouter.postMessageToConversation(conversationId: conversationId, message: json)).responseJSON(completionHandler: { (result) -> Void in
-            completion(mapResponse(result))
+            completion(mapMapperResponse(result))
         })
     }
     
@@ -175,7 +175,7 @@ class DriftAPIManager: Alamofire.Session {
         }
         
         sharedManager.request(DriftMessagingRouter.createConversation(data: data)).responseJSON(completionHandler: { (result) -> Void in
-            completion(mapResponse(result))
+            completion(mapMapperResponse(result))
         })
     }
     
@@ -215,7 +215,7 @@ class DriftAPIManager: Alamofire.Session {
         }
         
         sharedManager.request(URLRequest(url: url)).responseJSON(completionHandler: { (result) in
-            completion(mapResponse(result))
+            completion(mapMapperResponse(result))
         })
     }
     
@@ -278,8 +278,48 @@ class DriftAPIManager: Alamofire.Session {
         }) .resume()
     }
     
+    //Maps response to result T using Codable JSON parsing
+    fileprivate class func mapResponse<T: DTO>(_ response: DataResponse<T, AFError>) -> Swift.Result<T.DataObject, Error> {
+        
+        switch response.result {
+        case .success(let dto):
+            if let obj = dto.mapToObject() {
+                return .success(obj)
+            } else {
+                return .failure(DriftError.dataSerializationError)
+            }
+        case .failure(let error):
+            return .failure(error)
+        }
+    }
+    
+    //Maps response array to result T using Codable JSON parsing
+    fileprivate class func mapResponseArr<T: DTO>(_ response: DataResponse<[T], AFError>) -> Swift.Result<[T.DataObject], Error> {
+        
+        switch response.result {
+        case .success(let dto):
+            //if dto is empty return empty maping
+            if dto.isEmpty {
+                return .success([])
+            } else {
+                //If dto not empty parse and then if empty return error
+                let objArr = dto.compactMap({$0.mapToObject()})
+                
+                if objArr.isEmpty {
+                    //Parse Error
+                    return .failure(DriftError.dataSerializationError)
+                } else {
+                    return .success(objArr)
+                }
+            }
+        case .failure(let error):
+            return .failure(error)
+        }
+    }
+    
+    
     //Maps response to result T using ObjectMapper JSON parsing
-    fileprivate class func mapResponse<T: Mappable>(_ result: DataResponse<Any, AFError>) -> Result<T> {
+    fileprivate class func mapMapperResponse<T: Mappable>(_ result: DataResponse<Any, AFError>) -> Result<T> {
         
         switch result.result {
         case .success(let res):
@@ -296,7 +336,7 @@ class DriftAPIManager: Alamofire.Session {
     }
     
     //Maps response to result [T] using ObjectMapper JSON parsing
-    fileprivate class func mapResponse<T: Mappable>(_ result: DataResponse<Any, AFError>) -> Result<[T]> {
+    fileprivate class func mapMapperResponse<T: Mappable>(_ result: DataResponse<Any, AFError>) -> Result<[T]> {
         
         switch result.result {
         case .success(let res):

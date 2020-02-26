@@ -6,9 +6,6 @@
 //  Copyright © 2016 Drift. All rights reserved.
 //
 
-import UIKit
-import ObjectMapper
-
 ///Datastore for caching Embed and Auth object between app opens
 class DriftDataStore {
 
@@ -165,14 +162,14 @@ class DriftDataStore {
 extension DriftDataStore{
     
     func generateBackgroundColor() -> UIColor {
-        if let backgroundColor = embed?.configuration?.theme?.backgroundColor {
+        if let backgroundColor = embed?.backgroundColor {
             return UIColor(hexString: backgroundColor)
         }
         return UIColor(red:0.54, green:0.4, blue:1, alpha:1)
     }
     
     func generateForegroundColor() -> UIColor {
-        if let foregroundColor = embed?.configuration?.theme?.foregroundColor {
+        if let foregroundColor = embed?.foregroundColor {
             return UIColor(hexString: foregroundColor)
         }
         return UIColor(red:0.54, green:0.4, blue:1, alpha:1)

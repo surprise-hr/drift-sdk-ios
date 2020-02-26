@@ -6,9 +6,7 @@
 //  Copyright © 2017 Drift. All rights reserved.
 //
 
-import ObjectMapper
-
-class OpenHours: Mappable, Codable {
+class OpenHours: Codable {
 
     enum Weekday: String {
         case monday     = "MONDAY"
@@ -54,22 +52,11 @@ class OpenHours: Mappable, Codable {
     var opens:     String?
     var closes:    String?
     var dayOfWeek: String?
-    
-    required convenience init?(map: Map) {
-        self.init()
-    }
-    
-    func mapping(map: Map) {
-        opens           <- map["opens"]
-        closes          <- map["closes"]
-        dayOfWeek       <- map["dayOfWeek"]
-    }
-    
+        
     enum CodingKeys: String, CodingKey {
-            case opens      = "opens"
-            case closes     = "closes"
-            case dayOfWeek  = "dayOfWeek"
-            
+        case opens      = "opens"
+        case closes     = "closes"
+        case dayOfWeek  = "dayOfWeek"
     }
     
     func populateTimeForTimezone(timezone: TimeZone) -> (open: Date?, close: Date?) {

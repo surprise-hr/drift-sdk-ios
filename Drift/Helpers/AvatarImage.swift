@@ -80,7 +80,7 @@ class AvatarView: UIView {
     
     func setupForBot(embed: Embed?){
         imageView.image = UIImage(named: "robot", in: Bundle(for: Drift.self), compatibleWith: nil)
-        if let backgroundColorString = embed?.configuration?.theme?.backgroundColor {
+        if let backgroundColorString = embed?.backgroundColor {
             let color = UIColor(hexString: "#\(backgroundColorString)")
             imageView.backgroundColor = color
         }else{
