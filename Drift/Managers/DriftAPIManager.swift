@@ -76,20 +76,20 @@ class DriftAPIManager: Alamofire.Session {
         })
     }
     
-    class func getUserAvailability(_ userId: Int64, completion: @escaping (Result<UserAvailability>) -> ()) {
-        sharedManager.request(DriftCustomerRouter.getUserAvailability(userId: userId)).responseJSON(completionHandler: { (result) -> Void in
-            completion(mapMapperResponse(result))
+    class func getUserAvailability(_ userId: Int64, completion: @escaping (Swift.Result<UserAvailability, Error>) -> ()) {
+        sharedManager.request(DriftCustomerRouter.getUserAvailability(userId: userId)).driftResponseDecodable(completionHandler: { (response: DataResponse<UserAvailabilityDTO, AFError>) in
+            completion(mapResponse(response))
         })
     }
     
-    class func scheduleMeeting(_ userId: Int64, conversationId: Int64, timestamp: Double, completion: @escaping (Result<GoogleMeeting>) -> ()) {
-        sharedManager.request(DriftCustomerRouter.scheduleMeeting(userId: userId, conversationId: conversationId, timestamp: timestamp)).responseJSON(completionHandler: { (result) -> Void in
-            
-            if result.response?.statusCode == 200 {
-                LoggerManager.log("Scheduled Meeting Success: \(String(describing: try? result.result.get()))")
-                completion(mapMapperResponse(result))
+    class func scheduleMeeting(_ userId: Int64, conversationId: Int64, timestamp: Double, completion: @escaping (Swift.Result<GoogleMeeting, Error>) -> ()) {
+        sharedManager.request(DriftCustomerRouter.scheduleMeeting(userId: userId, conversationId: conversationId, timestamp: timestamp)).driftResponseDecodable(completionHandler: { (response: DataResponse<GoogleMeetingDTO, AFError>) in
+          
+            if response.response?.statusCode == 200 {
+                LoggerManager.log("Scheduled Meeting Success: \(String(describing: response.value))")
+                completion(mapResponse(response))
             } else {
-                LoggerManager.log("Scheduled Meeting Failure: \(String(describing: result.response?.statusCode))")
+                LoggerManager.log("Scheduled Meeting Failure: \(String(describing: response.response?.statusCode))")
                 completion(.failure(DriftError.apiFailure))
             }
         })

@@ -6,11 +6,16 @@
 //  Copyright © 2018 Drift. All rights reserved.
 //
 
-import UIKit
-import ObjectMapper
+struct GoogleMeeting {
+    let startTime:Date?
+    let endTime:Date?
+    let meetingId: String?
+    let meetingURL: String?
+}
 
-class GoogleMeeting: Mappable {
-
+class GoogleMeetingDTO: Codable, DTO {
+   
+    typealias DataObject = GoogleMeeting
     
     var startTime:Date?
     var endTime:Date?
@@ -18,17 +23,18 @@ class GoogleMeeting: Mappable {
     var meetingURL: String?
     
     
-    
-    required convenience init?(map: Map) {
-        self.init()
+    enum CodingKeys: String, CodingKey {
+        case startTime     = "start"
+        case endTime       = "end"
+        case meetingId     = "id"
+        case meetingURL    = "url"
+
     }
-    
-    open func mapping(map: Map) {
-                
-        startTime           <- (map["start"], DriftDateTransformer())
-        endTime             <- (map["end"], DriftDateTransformer())
-        meetingId           <- map["id"]
-        meetingURL          <- map["url"]
+
+    func mapToObject() -> GoogleMeeting? {
+        return GoogleMeeting(startTime: startTime,
+                             endTime: endTime,
+                             meetingId: meetingId,
+                             meetingURL: meetingURL)
     }
-    
 }

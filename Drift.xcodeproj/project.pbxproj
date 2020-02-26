@@ -78,7 +78,6 @@
 		A8BC1BAD1DDCB0DE0049968E /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8BC1BAC1DDCB0DE0049968E /* GradientView.swift */; };
 		A8C6ADED1D632CD10024CFDC /* ConversationEmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C6ADEC1D632CD10024CFDC /* ConversationEmptyStateView.swift */; };
 		A8C6ADEF1D632CED0024CFDC /* ConversationEmptyStateView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A8C6ADEE1D632CED0024CFDC /* ConversationEmptyStateView.xib */; };
-		A8DECB341DF9AE5F00CE008D /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8DECB331DF9AE5F00CE008D /* Context.swift */; };
 		A8DECB361DF9B5BF00CE008D /* UIDevice+ModelName.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8DECB351DF9B5BF00CE008D /* UIDevice+ModelName.swift */; };
 		A8E5A4741EF02FAB00113113 /* OpenHours.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E5A4721EF02FAB00113113 /* OpenHours.swift */; };
 		A8E705771EF28D6C00BC1429 /* OpenHoursHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E705761EF28D6C00BC1429 /* OpenHoursHelpers.swift */; };
@@ -199,7 +198,6 @@
 		A8BC1BAC1DDCB0DE0049968E /* GradientView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GradientView.swift; path = Drift/Helpers/GradientView.swift; sourceTree = SOURCE_ROOT; };
 		A8C6ADEC1D632CD10024CFDC /* ConversationEmptyStateView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConversationEmptyStateView.swift; path = "Drift/UI/Conversation View/ConversationEmptyStateView.swift"; sourceTree = SOURCE_ROOT; };
 		A8C6ADEE1D632CED0024CFDC /* ConversationEmptyStateView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ConversationEmptyStateView.xib; path = "Drift/UI/Conversation View/ConversationEmptyStateView.xib"; sourceTree = SOURCE_ROOT; };
-		A8DECB331DF9AE5F00CE008D /* Context.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Context.swift; path = Drift/Models/Context.swift; sourceTree = SOURCE_ROOT; };
 		A8DECB351DF9B5BF00CE008D /* UIDevice+ModelName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIDevice+ModelName.swift"; path = "Drift/Helpers/UIDevice+ModelName.swift"; sourceTree = SOURCE_ROOT; };
 		A8E5A4721EF02FAB00113113 /* OpenHours.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OpenHours.swift; path = Drift/Models/OpenHours.swift; sourceTree = SOURCE_ROOT; };
 		A8E705761EF28D6C00BC1429 /* OpenHoursHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OpenHoursHelpers.swift; path = Drift/Models/OpenHoursHelpers.swift; sourceTree = SOURCE_ROOT; };
@@ -330,7 +328,6 @@
 				A80A64471D4665E500A41A41 /* Conversation.swift */,
 				A80A64491D46671B00A41A41 /* Message.swift */,
 				A82CCE0D1D4B731A0043D3C2 /* Attachment.swift */,
-				A8DECB331DF9AE5F00CE008D /* Context.swift */,
 				635462E91EDF204E0012358E /* SocketAuth.swift */,
 				A88682DC1EE982D600E396D8 /* EnrichedConversation.swift */,
 				632EC9482023307400761E72 /* PreMessage.swift */,
@@ -786,7 +783,6 @@
 				492F77EC1F55A72300A05094 /* Channel.swift in Sources */,
 				A80A64421D46534D00A41A41 /* DriftDateTransformer.swift in Sources */,
 				492F77EF1F55A72300A05094 /* Response.swift in Sources */,
-				A8DECB341DF9AE5F00CE008D /* Context.swift in Sources */,
 				A8F589A31D478F0A0043DB8D /* ConversationListTableViewCell.swift in Sources */,
 				A8BC1BAD1DDCB0DE0049968E /* GradientView.swift in Sources */,
 				A8E705831EF815C500BC1429 /* AvatarImage.swift in Sources */,
