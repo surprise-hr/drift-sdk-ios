@@ -55,7 +55,7 @@ class DriftDataStore {
     
     func loadData(){
         let userDefs = UserDefaults.standard
-        let decoder = JSONDecoder()
+        let decoder = DriftAPIManager.jsonDecoder()
 
         if let jsonString = userDefs.string(forKey: DriftDataStore.driftAuthCacheString),
             let data = jsonString.data(using: .utf8),

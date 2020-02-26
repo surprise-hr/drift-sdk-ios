@@ -33,39 +33,45 @@ class DriftAPIManager: Alamofire.Session {
         return DriftAPIManager(configuration: configuration)
     }()
     
+    class func jsonDecoder() -> JSONDecoder {
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .millisecondsSince1970
+        return decoder
+    }
+    
     class func getAuth(_ email: String?, userId: String, userJwt: String?, redirectURL: String, orgId: Int, clientId: String, completion: @escaping (Swift.Result<Auth, Error>) -> ()) {
         sharedManager.request(DriftCustomerRouter.getAuth(email: email,
                                                           userId: userId,
                                                           userJwt:userJwt,
                                                           redirectURL: redirectURL,
                                                           orgId: orgId,
-                                                          clientId: clientId)).responseDecodable(completionHandler: { (response: DataResponse<AuthDTO, AFError>) in
+                                                          clientId: clientId)).driftResponseDecodable(completionHandler: { (response: DataResponse<AuthDTO, AFError>) in
                                                             completion(mapResponse(response))
                                                           })
     }
     
     class func getSocketAuth(orgId: Int, accessToken: String, completion: @escaping (Swift.Result<SocketAuth, Error>) -> ()) {
         sharedManager.request(DriftRouter.getSocketData(orgId: orgId,
-                                                        accessToken: accessToken)).responseDecodable(completionHandler: { (response: DataResponse<SocketAuthDTO, AFError>) in
+                                                        accessToken: accessToken)).driftResponseDecodable(completionHandler: { (response: DataResponse<SocketAuthDTO, AFError>) in
                                                             completion(mapResponse(response))
                                                         })
     }
 
     class func getEmbeds(_ embedId: String, refreshRate: Int?, completion: @escaping (Swift.Result<Embed, Error>) -> ()){
         sharedManager.request(DriftRouter.getEmbed(embedId: embedId,
-                                                   refreshRate: refreshRate)).responseDecodable(completionHandler: { (response: DataResponse<EmbedDTO, AFError>) in
+                                                   refreshRate: refreshRate)).driftResponseDecodable(completionHandler: { (response: DataResponse<EmbedDTO, AFError>) in
                                                     completion(mapResponse(response))
                                                    })
     }
     
     class func getUser(_ userId: Int64, orgId: Int, authToken:String, completion: @escaping (Swift.Result<[User], Error>) -> ()) {
-        sharedManager.request(DriftCustomerRouter.getUser(orgId: orgId, userId: userId)).responseDecodable(completionHandler: { (response: DataResponse<[UserDTO], AFError>) in
+        sharedManager.request(DriftCustomerRouter.getUser(orgId: orgId, userId: userId)).driftResponseDecodable(completionHandler: { (response: DataResponse<[UserDTO], AFError>) in
             completion(mapResponseArr(response))
         })
     }
     
     class func getEndUser(_ endUserId: Int64, authToken:String, completion: @escaping (Swift.Result<User, Error>) -> ()){
-        sharedManager.request(DriftCustomerRouter.getEndUser(endUserId: endUserId)).responseDecodable(completionHandler: { (response: DataResponse<UserDTO, AFError>) in
+        sharedManager.request(DriftCustomerRouter.getEndUser(endUserId: endUserId)).driftResponseDecodable(completionHandler: { (response: DataResponse<UserDTO, AFError>) in
             completion(mapResponse(response))
         })
     }
@@ -106,7 +112,7 @@ class DriftAPIManager: Alamofire.Session {
             params["attributes"] = attributes
         }
         
-        sharedManager.request(DriftRouter.postIdentify(params: params)).responseDecodable(completionHandler: { (response: DataResponse<UserDTO, AFError>) in
+        sharedManager.request(DriftRouter.postIdentify(params: params)).driftResponseDecodable(completionHandler: { (response: DataResponse<UserDTO, AFError>) in
             completion(mapResponse(response))
         })
     }
@@ -214,7 +220,7 @@ class DriftAPIManager: Alamofire.Session {
             return
         }
         
-        sharedManager.request(URLRequest(url: url)).responseDecodable(completionHandler: { (response: DataResponse<[AttachmentDTO], AFError>) in
+        sharedManager.request(URLRequest(url: url)).driftResponseDecodable(completionHandler: { (response: DataResponse<[AttachmentDTO], AFError>) in
             completion(mapResponseArr(response))
         })
     }
@@ -251,7 +257,7 @@ class DriftAPIManager: Alamofire.Session {
             
             if let response = response as? HTTPURLResponse, let data = data , accepted.contains(response.statusCode){
                 do {
-                    let jsonDecoder = JSONDecoder()
+                    let jsonDecoder = DriftAPIManager.jsonDecoder()
                     let attachmendDTO = try jsonDecoder.decode(AttachmentDTO.self, from: data)
                     if let attachment = attachmendDTO.mapToObject() {
                         DispatchQueue.main.async(execute: {
@@ -355,7 +361,19 @@ class DriftAPIManager: Alamofire.Session {
             return .failure(DriftError.apiFailure)
         }
     }
-    
+}
+
+fileprivate extension DataRequest {
+
+    @discardableResult
+    func driftResponseDecodable<T: Decodable>(of type: T.Type = T.self,
+                                                queue: DispatchQueue = .main,
+                                                decoder: DataDecoder = DriftAPIManager.jsonDecoder(),
+                                                completionHandler: @escaping (AFDataResponse<T>) -> Void) -> Self {
+        return response(queue: queue,
+                        responseSerializer: DecodableResponseSerializer(decoder: decoder),
+                        completionHandler: completionHandler)
+    }
 }
 
 class URLStore{
