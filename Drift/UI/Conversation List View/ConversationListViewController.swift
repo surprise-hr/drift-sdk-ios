@@ -191,7 +191,7 @@ extension ConversationListViewController: UITableViewDelegate, UITableViewDataSo
             }
             
             
-            if let lastMessageAuthorId = enrichedConversation.lastAgentMessage?.authorId ?? enrichedConversation.lastMessage?.preMessages.first?.userId {
+            if let lastMessageAuthorId = enrichedConversation.lastAgentMessage?.authorId ?? enrichedConversation.lastMessage?.preMessages.first?.user?.userId {
                 
                 UserManager.sharedInstance.userMetaDataForUserId(lastMessageAuthorId, completion: { (user) in
                     

@@ -7,39 +7,35 @@
 //
 
 
-import ObjectMapper
-
-enum ContentType: String{
+enum ContentType: String, Codable{
     case Chat = "CHAT"
     case Annoucement = "ANNOUNCEMENT"
     case Edit = "EDIT"
 }
-enum AuthorType: String{
+enum AuthorType: String, Codable{
     case User = "USER"
     case EndUser = "END_USER"
 }
 
-enum SendStatus: String{
+enum SendStatus: String, Codable{
     case Sent = "SENT"
     case Pending = "PENDING"
     case Failed = "FAILED"
 }
 
-
-class Message: Mappable, Equatable {
-    var id: Int64!
+class Message: Equatable {
+    let id: Int64
     var uuid: String?
-    var inboxId: Int!
+    let inboxId: Int
     var body: String?
     var attachmentIds: [Int64] = []
     var attachments: [Attachment] = []
-    var contentType:ContentType = ContentType.Chat
+    let contentType: ContentType
     var createdAt = Date()
-    var authorId: Int64!
-    var authorType: AuthorType!
+    var authorId: Int64
+    var authorType: AuthorType
     
-    var conversationId: Int64!
-    var requestId: Double = 0
+    let conversationId: Int64
     var sendStatus: SendStatus = SendStatus.Sent
     var formattedBody: NSAttributedString?
     var appointmentInformation: AppointmentInformation?
@@ -49,36 +45,26 @@ class Message: Mappable, Equatable {
     var offerSchedule: Int64 = -1
     
     var preMessages: [PreMessage] = []
+    var requestId: Double = 0
     var fakeMessage = false
     var preMessage = false
 
-    
-    required convenience init?(map: Map) {
-        if map.JSON["contentType"] as? String == nil || ContentType(rawValue: map.JSON["contentType"] as! String) == nil{
-            return nil
-        }
-        
-        self.init()
-    }
-    
-    func mapping(map: Map) {
-        id                      <- map["id"]
-        uuid                    <- map["uuid"]
-        inboxId                 <- map["inboxId"]
-        body                    <- map["body"]
-            
-        attachmentIds           <- map["attachments"]
-        contentType             <- (map["contentType"], EnumTransform<ContentType>())
-        createdAt               <- (map["createdAt"], DriftDateTransformer())
-        authorId                <- map["authorId"]
-        authorType              <- map["authorType"]
-        conversationId          <- map["conversationId"]
-        
-        appointmentInformation  <- map["attributes.appointmentInfo"]
-        preMessages             <- map["attributes.preMessages"]
-        presentSchedule         <- map["attributes.presentSchedule"]
-        offerSchedule           <- map["attributes.offerSchedule"]
-        scheduleMeetingFlow     <- map["attributes.scheduleMeetingFlow"]
+    init(id: Int64,
+    uuid: String?,
+    inboxId: Int,
+    body: String?,
+    attachmentIds: [Int64],
+    attachments: [Attachment],
+    contentType:ContentType,
+    createdAt: Date,
+    authorId: Int64,
+    authorType: AuthorType,
+    conversationId: Int64,
+    appointmentInformation: AppointmentInformation?,
+    presentSchedule: Int64?,
+    scheduleMeetingFlow: Bool = false,
+    offerSchedule: Int64 = -1,
+    preMessages: [PreMessage]) {
         
     }
     
@@ -87,7 +73,62 @@ class Message: Mappable, Equatable {
             formattedBody = TextHelper.attributedTextForString(text: body ?? "")
         }
     }
+}
 
+class MessageDTO: Codable, DTO {
+    typealias DataObject = Message
+    
+    var id: Int64?
+    var uuid: String?
+    var inboxId: Int?
+    var body: String?
+    var attachmentIds: [Int64]?
+    var attachments: [AttachmentDTO]?
+    var contentType:ContentType?
+    var createdAt: Date?
+    var authorId: Int64?
+    var authorType: AuthorType?
+    
+    var conversationId: Int64?
+    
+    var attributes: MessageAttributesDTO?
+        
+    func mapToObject() -> Message? {
+        
+        guard let contentType = contentType else { return nil }
+        
+        return Message(
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case id             = "id"
+        case uuid           = "uuid"
+        case inboxId        = "inboxId"
+        case body           = "body"
+        case attachmentIds  = "attachments"
+        case contentType    = "contentType"
+        case createdAt      = "createdAt"
+        case authorId       = "authorId"
+        case authorType     = "authorType"
+        case conversationId = "conversationId"
+        case attributes     = "attributes"
+    }
+}
+
+class MessageAttributesDTO: Codable{
+    var appointmentInformation: AppointmentInformationDTO?
+    var presentSchedule: Int64?
+    var scheduleMeetingFlow: Bool?
+    var offerSchedule: Int64?
+    var preMessages: [PreMessageDTO]?
+    
+    enum CodingKeys: String, CodingKey {
+        case appointmentInformation     = "appointmentInfo"
+        case presentSchedule            = "presentSchedule"
+        case scheduleMeetingFlow        = "scheduleMeetingFlow"
+        case offerSchedule              = "offerSchedule"
+        case preMessages                = "preMessages"
+    }
 }
 
 extension Array where Iterator.Element == Message

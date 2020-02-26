@@ -28,7 +28,6 @@ class GoogleMeetingDTO: Codable, DTO {
         case endTime       = "end"
         case meetingId     = "id"
         case meetingURL    = "url"
-
     }
 
     func mapToObject() -> GoogleMeeting? {
