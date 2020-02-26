@@ -207,19 +207,19 @@ class DriftAPIManager: Alamofire.Session {
         } .resume()
     }
     
-    class func getAttachmentsMetaData(_ attachmentIds: [Int64], authToken: String, completion: @escaping (_ result: Result<[Attachment]>) -> ()){
+    class func getAttachmentsMetaData(_ attachmentIds: [Int64], authToken: String, completion: @escaping (_ result: Swift.Result<[Attachment], Error>) -> ()){
         
         guard let url = URLStore.getAttachmentsURL(attachmentIds, authToken: authToken) else {
             LoggerManager.log("Failed in Get Attachment Metadata URL Creation")
             return
         }
         
-        sharedManager.request(URLRequest(url: url)).responseJSON(completionHandler: { (result) in
-            completion(mapMapperResponse(result))
+        sharedManager.request(URLRequest(url: url)).responseDecodable(completionHandler: { (response: DataResponse<[AttachmentDTO], AFError>) in
+            completion(mapResponseArr(response))
         })
     }
     
-    class func postAttachment(_ attachment: Attachment, authToken: String, completion: @escaping (_ result: Result<Attachment>) ->()){
+    class func postAttachment(_ attachment: AttachmentPayload, authToken: String, completion: @escaping (_ result: Result<Attachment>) ->()){
 
         let boundary = "Boundary-\(UUID().uuidString)"
         let requestURL = URLStore.postAttachmentURL(authToken)
@@ -251,14 +251,20 @@ class DriftAPIManager: Alamofire.Session {
             
             if let response = response as? HTTPURLResponse, let data = data , accepted.contains(response.statusCode){
                 do {
-                    if let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String : Any] {
-                        if let attachment: Attachment = Mapper<Attachment>().map(JSON: json){
-                            DispatchQueue.main.async(execute: {
-                                completion(.success(attachment))
-                            })
-                            return
-                        }
+                    let jsonDecoder = JSONDecoder()
+                    let attachmendDTO = try jsonDecoder.decode(AttachmentDTO.self, from: data)
+                    if let attachment = attachmendDTO.mapToObject() {
+                        DispatchQueue.main.async(execute: {
+                              completion(.success(attachment))
+                          })
+                          return
+                    } else {
+                        DispatchQueue.main.async(execute: {
+                            completion(.failure(DriftError.dataSerializationError))
+                        })
+                        return
                     }
+                    
                 } catch {
                     print(response.statusCode)
                     DispatchQueue.main.async(execute: {

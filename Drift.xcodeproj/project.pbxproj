@@ -17,6 +17,7 @@
 		483E2FFD24040D34000E57AE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 483E2FFC24040D34000E57AE /* Assets.xcassets */; };
 		483E300024040D34000E57AE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 483E2FFE24040D34000E57AE /* LaunchScreen.storyboard */; };
 		487EB4532406AAE500A3E1D8 /* DTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487EB4522406AAE500A3E1D8 /* DTO.swift */; };
+		487EB4552406BEB600A3E1D8 /* AttachmentPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487EB4542406BEB600A3E1D8 /* AttachmentPayload.swift */; };
 		492F77EC1F55A72300A05094 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492F77E71F55A72300A05094 /* Channel.swift */; };
 		492F77ED1F55A72300A05094 /* Presence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492F77E81F55A72300A05094 /* Presence.swift */; };
 		492F77EE1F55A72300A05094 /* Push.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492F77E91F55A72300A05094 /* Push.swift */; };
@@ -132,6 +133,7 @@
 		483E2FFF24040D34000E57AE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		483E300124040D34000E57AE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		487EB4522406AAE500A3E1D8 /* DTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DTO.swift; path = Drift/Models/DTO.swift; sourceTree = SOURCE_ROOT; };
+		487EB4542406BEB600A3E1D8 /* AttachmentPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AttachmentPayload.swift; path = Drift/Models/AttachmentPayload.swift; sourceTree = SOURCE_ROOT; };
 		492F77E71F55A72300A05094 /* Channel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Channel.swift; path = Drift/Birdsong/Channel.swift; sourceTree = SOURCE_ROOT; };
 		492F77E81F55A72300A05094 /* Presence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Presence.swift; path = Drift/Birdsong/Presence.swift; sourceTree = SOURCE_ROOT; };
 		492F77E91F55A72300A05094 /* Push.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Push.swift; path = Drift/Birdsong/Push.swift; sourceTree = SOURCE_ROOT; };
@@ -338,6 +340,7 @@
 				633F2B5E202B60A100D675B7 /* GoogleMeeting.swift */,
 				633F2B60202B707B00D675B7 /* AppointmentInformation.swift */,
 				487EB4522406AAE500A3E1D8 /* DTO.swift */,
+				487EB4542406BEB600A3E1D8 /* AttachmentPayload.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -820,6 +823,7 @@
 				630E89621C57944400195062 /* PresentationManager.swift in Sources */,
 				632EC9492023307400761E72 /* PreMessage.swift in Sources */,
 				A8DECB361DF9B5BF00CE008D /* UIDevice+ModelName.swift in Sources */,
+				487EB4552406BEB600A3E1D8 /* AttachmentPayload.swift in Sources */,
 				A8E7057B1EF4051F00BC1429 /* ConnectionBarView.swift in Sources */,
 				A8C6ADED1D632CD10024CFDC /* ConversationEmptyStateView.swift in Sources */,
 				A83E41681D50D20800B4EA35 /* MessageTableHeaderView.swift in Sources */,

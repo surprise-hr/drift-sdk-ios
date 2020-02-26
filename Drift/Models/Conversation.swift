@@ -8,7 +8,7 @@
 
 import ObjectMapper
 
-enum ConversationStatus: String{
+enum ConversationStatus: String, Codable {
     case Open = "OPEN"
     case Closed = "CLOSED"
     case Pending = "PENDING"

@@ -8,7 +8,6 @@
 
 import UIKit
 import QuickLook
-import ObjectMapper
 
 protocol ConversationCellDelegate: class{
     func presentScheduleOfferingForUserId(userId: Int64)
@@ -793,12 +792,11 @@ extension ConversationViewController: UIImagePickerControllerDelegate, UINavigat
 
         if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             if let imageRep = image.jpegData(compressionQuality: 0.2){
-                let newAttachment = Attachment()
-                newAttachment.data = imageRep
-                newAttachment.conversationId = conversationId!
-                newAttachment.mimeType = "image/jpeg"
-                newAttachment.fileName = "image.jpg"
-                
+                let newAttachment = AttachmentPayload(fileName: "image.jpg",
+                                                      data: imageRep,
+                                                      mimeType: "image/jpeg",
+                                                      conversationId: conversationId!)
+                                
                 DriftAPIManager.postAttachment(newAttachment, authToken: DriftDataStore.sharedInstance.auth!.accessToken) { (result) in
                     switch result{
                     case .success(let attachment):

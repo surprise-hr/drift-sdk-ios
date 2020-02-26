@@ -6,39 +6,24 @@
 //  Copyright © 2016 Drift. All rights reserved.
 //
 
-import ObjectMapper
 import Alamofire
 
-class Attachment: Mappable {
-    var id: Int64 = 0
-    var fileName = ""
-    var size = 0
-    var data = Data()
-    var mimeType = ""
-    var conversationId: Int64 = 0
-    var publicId = ""
-    var publicPreviewURL: String?
+struct Attachment {
+    let id: Int64
+    let fileName: String
+    let size: Int
+    let data: Data
+    let mimeType: String
+    let conversationId: Int64
+    let publicId: String
+    let publicPreviewURL: String?
     
-    func mapping(map: Map) {
-        id                  <- map["id"]
-        fileName            <- map["fileName"]
-        size                <- map["size"]
-        data                <- map["data"]
-        mimeType            <- map["mimeType"]
-        conversationId      <- map["conversationId"]
-        publicId            <- map["publicId"]
-        publicPreviewURL    <- map["publicPreviewUrl"]
-    }
-        
-    required convenience init?(map: Map) {
-        self.init()
-    }
     
-    open func isImage() -> Bool {
+    func isImage() -> Bool {
         return (mimeType.lowercased() ==  "image/jpeg") || (mimeType.lowercased() ==  "image/png") || (mimeType.lowercased() ==  "image/gif") || (mimeType.lowercased() ==  "image/jpg")
     }
     
-    open func getAttachmentURL(accessToken: String?) -> URLRequest? {
+    func getAttachmentURL(accessToken: String?) -> URLRequest? {
         let headers: HTTPHeaders = [
             "Authorization": "bearer \(accessToken ?? "")"
         ]
@@ -49,4 +34,40 @@ class Attachment: Mappable {
 
 func ==(lhs: Attachment, rhs: Attachment) -> Bool {
     return lhs.id == rhs.id
+}
+
+
+class AttachmentDTO: Codable, DTO {
+    typealias DataObject = Attachment
+    
+    var id: Int64?
+    var fileName: String?
+    var size: Int?
+    var data: Data?
+    var mimeType: String?
+    var conversationId: Int64?
+    var publicId: String?
+    var publicPreviewURL: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case id = "id"
+        case fileName = "fileName"
+        case size = "size"
+        case data = "data"
+        case mimeType = "mimeType"
+        case conversationId = "conversationId"
+        case publicId = "publicId"
+        case publicPreviewURL = "publicPreviewUrl"
+    }
+    
+    func mapToObject() -> Attachment? {
+        return Attachment(id: id ?? 0,
+                          fileName: fileName ?? "",
+                          size: size ?? 0,
+                          data: data ?? Data(),
+                          mimeType: mimeType ?? "",
+                          conversationId: conversationId ?? 0,
+                          publicId: publicId ?? "",
+                          publicPreviewURL: publicPreviewURL)
+    }
 }
