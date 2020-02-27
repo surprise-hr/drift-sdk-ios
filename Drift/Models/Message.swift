@@ -50,20 +50,20 @@ class Message: Equatable {
     let preMessage = false
 
     init(id: Int64,
-    uuid: String?,
-    inboxId: Int,
-    body: String?,
-    attachmentIds: [Int64],
-    contentType:ContentType,
-    createdAt: Date,
-    authorId: Int64,
-    authorType: AuthorType,
-    conversationId: Int64,
-    appointmentInformation: AppointmentInformation?,
-    presentSchedule: Int64?,
-    scheduleMeetingFlow: Bool,
-    offerSchedule: Int64,
-    preMessages: [PreMessage]) {
+        uuid: String?,
+        inboxId: Int,
+        body: String?,
+        attachmentIds: [Int64] = [],
+        contentType:ContentType,
+        createdAt: Date,
+        authorId: Int64,
+        authorType: AuthorType,
+        conversationId: Int64,
+        appointmentInformation: AppointmentInformation? = nil,
+        presentSchedule: Int64? = nil,
+        scheduleMeetingFlow: Bool = false,
+        offerSchedule: Int64 = -1,
+        preMessages: [PreMessage] = []) {
         
         self.id = id
         self.uuid = uuid
@@ -217,17 +217,11 @@ extension Array where Iterator.Element == Message
                                           uuid: UUID().uuidString,
                                           inboxId: message.inboxId,
                                           body: preMessage.messageBody,
-                                          attachmentIds: [],
                                           contentType: .Chat,
                                           createdAt: date.addingTimeInterval(TimeInterval(-(index + 1))),
                                           authorId: authorId,
                                           authorType: .User,
-                                          conversationId: message.conversationId,
-                                          appointmentInformation: nil,
-                                          presentSchedule: <#T##Int64?#>,
-                                          scheduleMeetingFlow: <#T##Bool#>,
-                                          offerSchedule: <#T##Int64#>,
-                                          preMessages: <#T##[PreMessage]#>)
+                                          conversationId: message.conversationId)
                 
 //                fakeMessage.createdAt = date.addingTimeInterval(TimeInterval(-(index + 1)))
 //                fakeMessage.conversationId = message.conversationId

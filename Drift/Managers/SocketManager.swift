@@ -6,8 +6,6 @@
 //  Copyright © 2017 Drift. All rights reserved.
 //
 
-import ObjectMapper
-
 extension Notification.Name {
     static let driftOnNewMessageReceived = Notification.Name("drift-sdk-new-message-received")
     static let driftSocketStatusUpdated = Notification.Name("drift-sdk-socket-status-updated")
@@ -48,11 +46,14 @@ class SocketManager {
                     case "MESSAGE":
                         let decoder = DriftAPIManager.jsonDecoder()
                         do {
-                            if let message = Mapper<Message>().map(JSON: data), message.contentType == ContentType.Chat{
-                                self.didRecieveNewMessage(message: message)
-                            }
+//                            if let message = Mapper<Message>().map(JSON: data), message.contentType == ContentType.Chat{
+//                                self.didRecieveNewMessage(message: message)
+//                            }
                             
-                            let messageDTO = try decoder.decode(MessageDTO.self, from: <#T##Data#>)
+                            let messageAsData = try JSONSerialization.data(withJSONObject: data, options: .fragmentsAllowed)
+
+                            
+                            let messageDTO = try decoder.decode(MessageDTO.self, from: messageAsData)
                             if let message = messageDTO.mapToObject(), message.contentType == .Chat {
                                 self.didRecieveNewMessage(message: message)
                             }

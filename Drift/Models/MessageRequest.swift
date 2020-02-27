@@ -85,7 +85,15 @@ class MessageRequest {
     
     func generateFakeMessage(conversationId:Int64, userId: Int64) -> Message {
         
-        let message = Message()
+        let message = Message(id: <#T##Int64#>,
+                              uuid: UUID().uuidString,
+                              inboxId: <#T##Int#>,
+                              body: body,
+                              contentType: type,
+                              createdAt: Date(),
+                              authorId: userId,
+                              authorType: .EndUser,
+                              conversationId: conversationId)
         message.authorId = userId
         message.body = body
         message.formattedBody = TextHelper.attributedTextForString(text: body)

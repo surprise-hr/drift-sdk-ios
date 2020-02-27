@@ -147,21 +147,21 @@ class DriftAPIManager: Alamofire.Session {
         }
     }
         
-    class func getMessages(_ conversationId: Int64, authToken: String, completion: @escaping (_ result: Result<[Message]>) -> ()){
-        sharedManager.request(DriftConversationRouter.getMessagesForConversation(conversationId: conversationId)).responseJSON(completionHandler: { (result) -> Void in
-            completion(mapMapperResponse(result))
+    class func getMessages(_ conversationId: Int64, authToken: String, completion: @escaping (_ result: Swift.Result<[Message], Error>) -> ()){
+        sharedManager.request(DriftConversationRouter.getMessagesForConversation(conversationId: conversationId)).driftResponseDecodable(completionHandler: { (response: DataResponse<[MessageDTO], AFError>) in
+            completion(mapResponseArr(response))
         })
     }
     
-    class func postMessage(_ conversationId: Int64, messageRequest: MessageRequest, completion: @escaping (_ result: Result<Message>) -> ()){
+    class func postMessage(_ conversationId: Int64, messageRequest: MessageRequest, completion: @escaping (_ result: Swift.Result<Message, Error>) -> ()){
         let json = messageRequest.toJSON()
         
-        sharedManager.request(DriftMessagingRouter.postMessageToConversation(conversationId: conversationId, message: json)).responseJSON(completionHandler: { (result) -> Void in
-            completion(mapMapperResponse(result))
+        sharedManager.request(DriftMessagingRouter.postMessageToConversation(conversationId: conversationId, message: json)).driftResponseDecodable(completionHandler: { (response: DataResponse<MessageDTO, AFError>) in
+            completion(mapResponse(response))
         })
     }
     
-    class func createConversation(_ body: String, welcomeUserId: Int64?, welcomeMessage: String?, authToken: String, completion: @escaping (_ result: Result<Message>) -> ()){
+    class func createConversation(_ body: String, welcomeUserId: Int64?, welcomeMessage: String?, authToken: String, completion: @escaping (_ result: Swift.Result<Message, Error>) -> ()){
         
         var data: [String: Any] = [:]
         
@@ -180,8 +180,8 @@ class DriftAPIManager: Alamofire.Session {
             
         }
         
-        sharedManager.request(DriftMessagingRouter.createConversation(data: data)).responseJSON(completionHandler: { (result) -> Void in
-            completion(mapMapperResponse(result))
+        sharedManager.request(DriftMessagingRouter.createConversation(data: data)).driftResponseDecodable(completionHandler: { (response: DataResponse<MessageDTO, AFError>) in
+            completion(mapResponse(response))
         })
     }
     
