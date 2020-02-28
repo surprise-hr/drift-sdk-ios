@@ -182,41 +182,41 @@ extension ConversationListViewController: UITableViewDelegate, UITableViewDataSo
         let cell = tableView.dequeueReusableCell(withIdentifier: "ConversationListTableViewCell") as! ConversationListTableViewCell
 
         let enrichedConversation = enrichedConversations[indexPath.row]
-        if let conversation = enrichedConversation.conversation {
-            if enrichedConversation.unreadMessages > 0 {
-                cell.unreadCountLabel.isHidden = false
-                cell.unreadCountLabel.text = " \(enrichedConversation.unreadMessages) "
-            }else{
-                cell.unreadCountLabel.isHidden = true
-            }
-            
-            
-            if let lastMessageAuthorId = enrichedConversation.lastAgentMessage?.authorId ?? enrichedConversation.lastMessage?.preMessages.first?.user?.userId {
-                
-                UserManager.sharedInstance.userMetaDataForUserId(lastMessageAuthorId, completion: { (user) in
-                    
-                    cell.avatarImageView.setupForUser(user: user)
-                    
-                    if let user = user {
-                        if let creatorName = user.name {
-                            cell.nameLabel.text = creatorName
-                        }
-                    }
-                })
-                
-            } else {
-                cell.avatarImageView.imageView.image = UIImage(named: "placeholderAvatar", in: Bundle(for: Drift.self), compatibleWith: nil)
-                cell.nameLabel.text = "Unknown User"
-            }
-            
-            if let preview = conversation.preview, preview != ""{
-                cell.messageLabel.text = preview.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-            }else{
-                cell.messageLabel.text = "📎 [Attachment]"
-            }
-            
-            cell.updatedAtLabel.text = dateFormatter.updatedAtStringFromDate(conversation.updatedAt)
+        let conversation = enrichedConversation.conversation
+        
+        if enrichedConversation.unreadMessages > 0 {
+            cell.unreadCountLabel.isHidden = false
+            cell.unreadCountLabel.text = " \(enrichedConversation.unreadMessages) "
+        }else{
+            cell.unreadCountLabel.isHidden = true
         }
+        
+        
+        if let lastMessageAuthorId = enrichedConversation.lastAgentMessage?.authorId ?? enrichedConversation.lastMessage?.preMessages.first?.user?.userId {
+            
+            UserManager.sharedInstance.userMetaDataForUserId(lastMessageAuthorId, completion: { (user) in
+                
+                cell.avatarImageView.setupForUser(user: user)
+                
+                if let user = user {
+                    if let creatorName = user.name {
+                        cell.nameLabel.text = creatorName
+                    }
+                }
+            })
+            
+        } else {
+            cell.avatarImageView.imageView.image = UIImage(named: "placeholderAvatar", in: Bundle(for: Drift.self), compatibleWith: nil)
+            cell.nameLabel.text = "Unknown User"
+        }
+        
+        if let preview = conversation.preview, preview != ""{
+            cell.messageLabel.text = preview.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+        }else{
+            cell.messageLabel.text = "📎 [Attachment]"
+        }
+        
+        cell.updatedAtLabel.text = dateFormatter.updatedAtStringFromDate(conversation.updatedAt)
         
         return cell
     }

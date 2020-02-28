@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import ObjectMapper
 import Alamofire
 
 class DriftAPIManager: Alamofire.Session {
@@ -141,10 +140,10 @@ class DriftAPIManager: Alamofire.Session {
         
     }
         
-    class func getEnrichedConversations(_ endUserId: Int64, completion: @escaping (_ result: Result<[EnrichedConversation]>) -> ()){
-        sharedManager.request(DriftConversationRouter.getEnrichedConversationsForEndUser(endUserId: endUserId)).responseJSON { (result) in
-            completion(mapMapperResponse(result))
-        }
+    class func getEnrichedConversations(_ endUserId: Int64, completion: @escaping (_ result: Swift.Result<[EnrichedConversation], Error>) -> ()){
+        sharedManager.request(DriftConversationRouter.getEnrichedConversationsForEndUser(endUserId: endUserId)).driftResponseDecodable(completionHandler: { (response: DataResponse<[EnrichedConversationDTO], AFError>) in
+            completion(mapResponseArr(response))
+        })
     }
         
     class func getMessages(_ conversationId: Int64, authToken: String, completion: @escaping (_ result: Swift.Result<[Message], Error>) -> ()){
@@ -326,39 +325,6 @@ class DriftAPIManager: Alamofire.Session {
             }
         case .failure(let error):
             return .failure(error)
-        }
-    }
-    
-    
-    //Maps response to result T using ObjectMapper JSON parsing
-    fileprivate class func mapMapperResponse<T: Mappable>(_ result: DataResponse<Any, AFError>) -> Result<T> {
-        
-        switch result.result {
-        case .success(let res):
-            if let json = res as? [String : Any] {
-                let response = Mapper<T>().map(JSON: json)     ///If initialisation is done in if let this can result in getting an object back when nil is returned - This is a bug in swift
-                if let response = response {
-                    return .success(response)
-                }
-            }
-            fallthrough
-        default:
-            return .failure(DriftError.apiFailure)
-        }
-    }
-    
-    //Maps response to result [T] using ObjectMapper JSON parsing
-    fileprivate class func mapMapperResponse<T: Mappable>(_ result: DataResponse<Any, AFError>) -> Result<[T]> {
-        
-        switch result.result {
-        case .success(let res):
-            if let json = res as? [[String: Any]] {
-                let response: [T] = Mapper<T>().mapArray(JSONArray: json)
-                return .success(response)
-            }
-            fallthrough
-        default:
-            return .failure(DriftError.apiFailure)
         }
     }
 }

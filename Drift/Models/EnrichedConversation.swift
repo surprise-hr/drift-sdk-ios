@@ -6,28 +6,44 @@
 //  Copyright © 2017 Drift. All rights reserved.
 //
 
-import ObjectMapper
+struct EnrichedConversation {
+    
+    let conversation: Conversation
+    let unreadMessages: Int
+    let lastMessage: Message?
+    let lastAgentMessage: Message?
+}
 
-class EnrichedConversation: Mappable {
+
+class EnrichedConversationDTO: DTO, Codable {
+    typealias DataObject = EnrichedConversation
     
-    var conversation: Conversation!
-    var unreadMessages: Int = 0
-    var lastMessage: Message?
-    var lastAgentMessage: Message?
+    var conversation: ConversationDTO?
+    var unreadMessages: Int?
+    var lastMessage: MessageDTO?
+    var lastAgentMessage: MessageDTO?
     
-    required convenience init?(map: Map) {
-        if let conversationJSON = map.JSON["conversation"] as? [String: Any], conversationJSON["type"] as? String == "EMAIL"{
+    enum CodingKeys: String, CodingKey {
+        case conversation       = "conversation"
+        case unreadMessages     = "unreadMessages"
+        case lastMessage        = "lastMessage"
+        case lastAgentMessage   = "lastAgentMessage"
+    }
+    
+    func mapToObject() -> EnrichedConversation? {
+        guard let conversation = conversation?.mapToObject() else {
             return nil
         }
-        self.init()
+        
+        //Filter out email conversations
+        if conversation.type == "EMAIL" {
+            return nil
+        }
+        
+        return EnrichedConversation(conversation: conversation,
+                                    unreadMessages: unreadMessages ?? 0,
+                                    lastMessage: lastMessage?.mapToObject(),
+                                    lastAgentMessage: lastAgentMessage?.mapToObject())
+        
     }
-    
-    
-    func mapping(map: Map) {
-        conversation        <- map["conversation"]
-        unreadMessages      <- map["unreadMessages"]
-        lastMessage         <- map["lastMessage"]
-        lastAgentMessage    <- map["lastAgentMessage"]
-    }
-
 }
