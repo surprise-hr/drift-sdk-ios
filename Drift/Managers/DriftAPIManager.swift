@@ -184,32 +184,33 @@ class DriftAPIManager: Alamofire.Session {
         })
     }
     
-    class func downloadAttachmentFile(_ attachment: Attachment, authToken: String, completion: @escaping (_ result: Result<URL>) -> ()){
+    class func downloadAttachmentFile(_ attachment: Attachment, authToken: String, completion: @escaping (_ result: Swift.Result<URL, Error>) -> ()){
         guard let url = URLStore.downloadAttachmentURL(attachment.id, authToken: authToken) else {
             LoggerManager.log("Failed in Download Attachment URL Creation")
+            completion(.failure(DriftError.apiFailure))
             return
         }
         
         var request = URLRequest(url: url)
         request.setValue("bearer \(authToken)", forHTTPHeaderField: "Authorization")
         
-        sharedManager.session.dataTask(with: request) { (data, response, error) in
-            if let response = response as? HTTPURLResponse {
+        sharedManager.download(request).response { (response) in
+            
+            if let response = response.response {
                 LoggerManager.log("API Complete: \(response.statusCode) \(response.url?.path ?? "")")
             }
             
-            if let data = data, let directoryURL = DriftManager.sharedInstance.directoryURL {
-                let fileURL = directoryURL.appendingPathComponent("\(attachment.id)_\(attachment.fileName)")
-                do {
-                    try data.write(to: fileURL, options: .atomicWrite)
-                    completion(.success(fileURL))
-                } catch {
-                    completion(.failure(DriftError.dataCreationFailure))
-                }
-            }else{
-                completion(.failure(DriftError.apiFailure))
+            switch response.result {
+                case .success(let url):
+                    if let fileURL = url {
+                        completion(.success(fileURL))
+                    } else {
+                        completion(.failure(DriftError.dataCreationFailure))
+                    }
+                case .failure(let error):
+                    completion(.failure(error))
             }
-        } .resume()
+        }
     }
     
     class func getAttachmentsMetaData(_ attachmentIds: [Int64], authToken: String, completion: @escaping (_ result: Swift.Result<[Attachment], Error>) -> ()){
