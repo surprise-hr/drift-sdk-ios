@@ -7,11 +7,12 @@
 //
 
 import XCTest
-import ObjectMapper
 @testable import Drift
 
 
 class APITests: XCTestCase {
+    
+    let decoder = DriftAPIManager.jsonDecoder()
     
     override func setUp() {
         super.setUp()
@@ -24,12 +25,12 @@ class APITests: XCTestCase {
         
         let testExpectation = expectation(description: "API Will call Auth")
         
-        let embed = Mapper<Embed>().map(JSON: JSONStore.convertStringToDictionary(text: JSONStore.embedJSONCorrect)!)
-
+        let embed = try? decoder.decode(EmbedDTO.self, from: JSONStore.embedJSONCorrect.data(using: .utf8)!).mapToObject()
+        
         XCTAssertNotNil(embed)
         DriftDataStore.sharedInstance.setEmbed(embed!)
         
-        DriftManager.getAuth("eoin+app@8bytes.ie", userId: "123743810") { (success) -> () in
+        DriftManager.getAuth("eoin+app@8bytes.ie", userId: "123743810", userJwt: nil) { (success) -> () in
             testExpectation.fulfill()
         }
         

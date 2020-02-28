@@ -24,7 +24,7 @@ struct AuthDTO: Codable, DTO {
     }
     
     func mapToObject() -> Auth? {
-        guard let accessTokenDTO = accessToken else { return nil }
+        guard let accessTokenDTO = accessToken, !accessTokenDTO.isEmpty else { return nil }
         return Auth(accessToken: accessTokenDTO, endUser: endUser?.mapToObject())
     }
 }

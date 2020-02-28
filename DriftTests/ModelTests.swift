@@ -7,21 +7,22 @@
 //
 
 import XCTest
-import ObjectMapper
 @testable import Drift
 
 class ModelTests: XCTestCase {
-       
+
+    let decoder = DriftAPIManager.jsonDecoder()
+
+    
     func testAuth() {
-        XCTAssertNotNil(Mapper<Auth>().map(JSON: JSONStore.convertStringToDictionary(text: JSONStore.correctAuthJSON)!), "Auth Did not Map For correct JSON")
-        XCTAssertNil(Mapper<Auth>().map(JSON: JSONStore.convertStringToDictionary(text: JSONStore.incompleteAuthJSON)!), "Auth mapped incorrect JSON")
-        XCTAssertNil(Mapper<Auth>().map(JSON: JSONStore.convertStringToDictionary(text: JSONStore.authJSONEmptyAccessToken)!), "Auth mapped incorrect JSON when access token is empty String")
-        XCTAssertNotNil(Mapper<Auth>().map(JSON: JSONStore.convertStringToDictionary(text: JSONStore.authJSONNoUser)!), "Auth mapping failed when no user")
+        XCTAssertNotNil(try decoder.decode(AuthDTO.self, from: JSONStore.correctAuthJSON.data(using: .utf8)!).mapToObject(), "Auth Did not Map For correct JSON")
+        XCTAssertNil(try decoder.decode(AuthDTO.self, from: JSONStore.incompleteAuthJSON.data(using: .utf8)!).mapToObject(), "Auth mapped incorrect JSON")
+        XCTAssertNil(try decoder.decode(AuthDTO.self, from: JSONStore.authJSONEmptyAccessToken.data(using: .utf8)!).mapToObject(), "Auth mapped incorrect JSON when access token is empty String")
+        XCTAssertNotNil(try decoder.decode(AuthDTO.self, from: JSONStore.authJSONNoUser.data(using: .utf8)!).mapToObject(), "Auth mapping failed when no user")
     }
     
     func testEmbed(){
-        XCTAssertNotNil(Mapper<Embed>().map(JSON: JSONStore.convertStringToDictionary(text: JSONStore.embedJSONCorrect)!), "Embed Did not Map For correct JSON")
-        XCTAssertNil(Mapper<Embed>().map(JSON: JSONStore.convertStringToDictionary(text: JSONStore.embedJSONNoOrgId)!), "Embed Mapped embed with no orgId")
-        XCTAssertNil(Mapper<Embed>().map(JSON: JSONStore.convertStringToDictionary(text: JSONStore.embedJSONEmptyOrgId)!), "Embed Mapped embed with string org Id")
+        XCTAssertNotNil(try decoder.decode(EmbedDTO.self, from: JSONStore.embedJSONCorrect.data(using: .utf8)!).mapToObject(), "Embed Did not Map For correct JSON")
+        XCTAssertNil(try decoder.decode(EmbedDTO.self, from: JSONStore.embedJSONNoOrgId.data(using: .utf8)!).mapToObject(), "Embed Mapped embed with no orgId")
     }
 }

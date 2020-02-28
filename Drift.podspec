@@ -18,6 +18,5 @@ Pod::Spec.new do |spec|
   spec.swift_version = '5.0'
 
   spec.dependency 'Starscream', '3.1.1'
-  spec.dependency 'ObjectMapper', '~> 3.0'
   spec.dependency 'AlamofireImage', '~> 4.0'
 end

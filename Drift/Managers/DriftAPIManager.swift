@@ -119,7 +119,7 @@ class DriftAPIManager: Alamofire.Session {
     class func markMessageAsRead(messageId: Int64, completion: @escaping (_ result: Result<Bool>) -> ()){
         sharedManager.request(DriftConversation2Router.markMessageAsRead(messageId: messageId)).responseString { (result) in
             switch result.result{
-            case .success(_):
+            case .success:
                 completion(.success(true))
             case .failure(let error):
                 completion(.failure(error))
@@ -131,7 +131,7 @@ class DriftAPIManager: Alamofire.Session {
     class func markConversationAsRead(messageId: Int64, completion: @escaping (_ result: Result<Bool>) -> ()){
         sharedManager.request(DriftConversation2Router.markConversationAsRead(messageId: messageId)).responseString { (result) in
             switch result.result{
-            case .success(_):
+            case .success:
                 completion(.success(true))
             case .failure(let error):
                 completion(.failure(error))
