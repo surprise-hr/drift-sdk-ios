@@ -170,9 +170,7 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
                 messageTextView.text = message.body ?? " "
             }
 
-            if let authorId = message.authorId{
-                getUser(authorId)
-            }
+            getUser(message.authorId)
         }
     }
     

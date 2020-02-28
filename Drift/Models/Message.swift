@@ -24,11 +24,10 @@ enum SendStatus: String {
 }
 
 class Message: Equatable {
-    let id: Int64
+    let id: Int64?
     let uuid: String?
-    let inboxId: Int
     let body: String?
-    let attachmentIds: [Int64] = []
+    let attachmentIds: [Int64]
     var attachments: [Attachment] = []
     let contentType: ContentType
     let createdAt: Date
@@ -41,17 +40,16 @@ class Message: Equatable {
     let appointmentInformation: AppointmentInformation?
 
     var presentSchedule: Int64?
-    let scheduleMeetingFlow: Bool = false
-    let offerSchedule: Int64 = -1
+    let scheduleMeetingFlow: Bool
+    let offerSchedule: Int64
     
-    let preMessages: [PreMessage] = []
-    let requestId: Double = 0
-    let fakeMessage = false
-    let preMessage = false
+    let preMessages: [PreMessage]
+    let requestId: Double
+    let fakeMessage: Bool
+    let preMessage: Bool
 
-    init(id: Int64,
+    init(id: Int64? = nil,
         uuid: String?,
-        inboxId: Int,
         body: String?,
         attachmentIds: [Int64] = [],
         contentType:ContentType,
@@ -63,11 +61,13 @@ class Message: Equatable {
         presentSchedule: Int64? = nil,
         scheduleMeetingFlow: Bool = false,
         offerSchedule: Int64 = -1,
-        preMessages: [PreMessage] = []) {
+        preMessages: [PreMessage] = [],
+        requestId: Double = 0,
+        fakeMessage: Bool = false,
+        preMessage: Bool = false) {
         
         self.id = id
         self.uuid = uuid
-        self.inboxId = inboxId
         self.body = body
         self.attachmentIds = attachmentIds
         self.contentType = contentType
@@ -80,6 +80,9 @@ class Message: Equatable {
         self.scheduleMeetingFlow = scheduleMeetingFlow
         self.offerSchedule = offerSchedule
         self.preMessages = preMessages
+        self.requestId = requestId
+        self.fakeMessage = fakeMessage
+        self.preMessage = preMessage
     }
     
     func formatHTMLBody() {
@@ -94,7 +97,6 @@ class MessageDTO: Codable, DTO {
     
     var id: Int64?
     var uuid: String?
-    var inboxId: Int?
     var body: String?
     var attachmentIds: [Int64]?
     var contentType:ContentType?
@@ -110,13 +112,11 @@ class MessageDTO: Codable, DTO {
         
         guard let contentType = contentType,
             let id = id,
-            let inboxId = inboxId,
             let authorType = authorType,
             let conversationId = conversationId else { return nil }
         
         return Message(id: id,
                        uuid: uuid,
-                       inboxId: inboxId,
                        body: body,
                        attachmentIds: attachmentIds ?? [],
                        contentType: contentType,
@@ -134,7 +134,6 @@ class MessageDTO: Codable, DTO {
     enum CodingKeys: String, CodingKey {
         case id             = "id"
         case uuid           = "uuid"
-        case inboxId        = "inboxId"
         case body           = "body"
         case attachmentIds  = "attachments"
         case contentType    = "contentType"
@@ -213,26 +212,15 @@ extension Array where Iterator.Element == Message
             
             if let authorId = preMessage.user?.userId {
                 
-                let fakeMessage = Message(id: -1,
-                                          uuid: UUID().uuidString,
-                                          inboxId: message.inboxId,
+                let fakeMessage = Message(uuid: UUID().uuidString,
                                           body: preMessage.messageBody,
                                           contentType: .Chat,
                                           createdAt: date.addingTimeInterval(TimeInterval(-(index + 1))),
                                           authorId: authorId,
                                           authorType: .User,
-                                          conversationId: message.conversationId)
-                
-//                fakeMessage.createdAt = date.addingTimeInterval(TimeInterval(-(index + 1)))
-//                fakeMessage.conversationId = message.conversationId
-//                fakeMessage.body = preMessage.messageBody
-//                fakeMessage.fakeMessage = true
-//                fakeMessage.preMessage = true
-//                fakeMessage.uuid = UUID().uuidString
-//
-//                fakeMessage.sendStatus = .Sent
-//                fakeMessage.contentType = ContentType.Chat
-//                fakeMessage.authorType = AuthorType.User
+                                          conversationId: message.conversationId,
+                                          fakeMessage: true,
+                                          preMessage: true)
                 
                 output.append(fakeMessage)
             }

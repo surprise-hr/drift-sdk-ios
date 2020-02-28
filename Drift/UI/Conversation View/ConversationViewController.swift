@@ -640,7 +640,9 @@ extension ConversationViewController : UITableViewDelegate, UITableViewDataSourc
 extension ConversationViewController {
         
     func newMessage(_ message: Message) {
-        ConversationsManager.markMessageAsRead(message.id)
+        if let messageId = message.id {
+            ConversationsManager.markMessageAsRead(messageId)
+        }
         message.formatHTMLBody()
         //User created message with appointment information should be allowed through
         if message.authorId == DriftDataStore.sharedInstance.auth?.endUser?.userId && message.contentType == .Chat && message.appointmentInformation == nil && !message.fakeMessage{

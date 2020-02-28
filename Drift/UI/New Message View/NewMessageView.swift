@@ -173,8 +173,9 @@ class NewMessageView: CampaignView {
                 ConversationsManager.markMessageAsRead(msgId)
             }
         }
-        
-        ConversationsManager.markMessageAsRead(message.id)
+        if let messageId = message.id {
+            ConversationsManager.markMessageAsRead(messageId)
+        }
     }
     
 }
