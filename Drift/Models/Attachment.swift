@@ -12,7 +12,6 @@ struct Attachment {
     let id: Int64
     let fileName: String
     let size: Int
-    let data: Data
     let mimeType: String
     let conversationId: Int64
     let publicId: String
@@ -43,7 +42,6 @@ class AttachmentDTO: Codable, DTO {
     var id: Int64?
     var fileName: String?
     var size: Int?
-    var data: Data?
     var mimeType: String?
     var conversationId: Int64?
     var publicId: String?
@@ -53,7 +51,6 @@ class AttachmentDTO: Codable, DTO {
         case id = "id"
         case fileName = "fileName"
         case size = "size"
-        case data = "data"
         case mimeType = "mimeType"
         case conversationId = "conversationId"
         case publicId = "publicId"
@@ -64,7 +61,6 @@ class AttachmentDTO: Codable, DTO {
         return Attachment(id: id ?? 0,
                           fileName: fileName ?? "",
                           size: size ?? 0,
-                          data: data ?? Data(),
                           mimeType: mimeType ?? "",
                           conversationId: conversationId ?? 0,
                           publicId: publicId ?? "",
