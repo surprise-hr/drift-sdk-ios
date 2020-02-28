@@ -783,15 +783,17 @@ extension ConversationViewController: UIDocumentInteractionControllerDelegate{
 extension ConversationViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        picker.dismiss(animated: true, completion: nil)
+        picker.dismiss(animated: true)
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
 
-        picker.dismiss(animated: true, completion: nil)
+        picker.dismiss(animated: true)
 
         if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
-            if let imageRep = image.jpegData(compressionQuality: 0.2){
+            let normalizedImage = fixOrientation(image)
+
+            if let imageRep = normalizedImage.jpegData(compressionQuality: 0.2){
                 let newAttachment = AttachmentPayload(fileName: "image.jpg",
                                                       data: imageRep,
                                                       mimeType: "image/jpeg",
@@ -805,11 +807,26 @@ extension ConversationViewController: UIImagePickerControllerDelegate, UINavigat
                     case .failure:
                         let alert = UIAlertController(title: "Unable to upload file", message: nil, preferredStyle: UIAlertController.Style.alert)
                         alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
-                        self.present(alert, animated: true, completion: nil)
+                        self.present(alert, animated: true)
                         LoggerManager.log("Unable to upload file with mimeType: \(newAttachment.mimeType)")
                     }
                 }
             }
         }
-    }    
+    }
+    
+    func fixOrientation(_ img: UIImage) -> UIImage {
+        if (img.imageOrientation == .up) {
+            return img
+        }
+        
+        UIGraphicsBeginImageContextWithOptions(img.size, false, img.scale)
+        let rect = CGRect(x: 0, y: 0, width: img.size.width, height: img.size.height)
+        img.draw(in: rect)
+        
+        let normalizedImage = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        
+        return normalizedImage
+    }
 }

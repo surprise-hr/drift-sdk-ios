@@ -116,7 +116,7 @@ class DriftAPIManager: Alamofire.Session {
         })
     }
     
-    class func markMessageAsRead(messageId: Int64, completion: @escaping (_ result: Result<Bool>) -> ()){
+    class func markMessageAsRead(messageId: Int64, completion: @escaping (_ result: Result<Bool, Error>) -> ()){
         sharedManager.request(DriftConversation2Router.markMessageAsRead(messageId: messageId)).responseString { (result) in
             switch result.result{
             case .success:
@@ -128,7 +128,7 @@ class DriftAPIManager: Alamofire.Session {
         
     }
     
-    class func markConversationAsRead(messageId: Int64, completion: @escaping (_ result: Result<Bool>) -> ()){
+    class func markConversationAsRead(messageId: Int64, completion: @escaping (_ result: Result<Bool, Error>) -> ()){
         sharedManager.request(DriftConversation2Router.markConversationAsRead(messageId: messageId)).responseString { (result) in
             switch result.result{
             case .success:
@@ -185,12 +185,7 @@ class DriftAPIManager: Alamofire.Session {
     }
     
     class func downloadAttachmentFile(_ attachment: Attachment, authToken: String, completion: @escaping (_ result: Swift.Result<URL, Error>) -> ()){
-        guard let url = URLStore.downloadAttachmentURL(attachment.id, authToken: authToken) else {
-            LoggerManager.log("Failed in Download Attachment URL Creation")
-            completion(.failure(DriftError.apiFailure))
-            return
-        }
-        
+        let url = URLStore.downloadAttachmentURL(attachment.id, authToken: authToken)
         var request = URLRequest(url: url)
         request.setValue("bearer \(authToken)", forHTTPHeaderField: "Authorization")
         
@@ -225,69 +220,18 @@ class DriftAPIManager: Alamofire.Session {
         })
     }
     
-    class func postAttachment(_ attachment: AttachmentPayload, authToken: String, completion: @escaping (_ result: Result<Attachment>) ->()){
+    class func postAttachment(_ attachment: AttachmentPayload, authToken: String, completion: @escaping (_ result: Result<Attachment, Error>) ->()){
 
-        let boundary = "Boundary-\(UUID().uuidString)"
         let requestURL = URLStore.postAttachmentURL(authToken)
-        
-        let request = NSMutableURLRequest(url: requestURL!)
-        
-        request.httpMethod = "POST"
-        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
-        
-        let multipartBody = NSMutableData()
-        multipartBody.append("--\(boundary)\r\n".data(using: String.Encoding.utf8, allowLossyConversion: false)!)
-        multipartBody.append("Content-Disposition: form-data; name=\"conversationId\"\r\n\r\n".data(using: String.Encoding.utf8, allowLossyConversion: false)!)
-        multipartBody.append("\(attachment.conversationId)\r\n".data(using: String.Encoding.utf8, allowLossyConversion: false)!)
-        
-        multipartBody.append("--\(boundary)\r\n".data(using: String.Encoding.utf8, allowLossyConversion: false)!)
-        multipartBody.append("Content-Disposition: form-data; name=\"file\"; filename=\"image.jpg\"\r\n".data(using: String.Encoding.utf8, allowLossyConversion: false)!)
-        multipartBody.append("Content-Type: \(attachment.mimeType)\r\n\r\n".data(using: String.Encoding.utf8, allowLossyConversion: false)!)
-        multipartBody.append(attachment.data as Data)
-        multipartBody.append("\r\n".data(using: String.Encoding.utf8, allowLossyConversion: false)!)
-        
-        multipartBody.append("--\(boundary)--\r\n".data(using: String.Encoding.utf8, allowLossyConversion: false)!)
-        request.httpBody = multipartBody as Data
-        sharedManager.session.dataTask(with: request as URLRequest, completionHandler: { (data, response, error) in
-            if let response = response as? HTTPURLResponse {
-                LoggerManager.log("API Complete: \(response.statusCode) \(response.url?.path ?? "")")
-            }
+
+        sharedManager.upload(multipartFormData: { multipartFormData in
+            multipartFormData.append(attachment.data, withName: "file", fileName: attachment.fileName, mimeType: attachment.mimeType)
+            multipartFormData.append("\(attachment.conversationId)".data(using: .utf8, allowLossyConversion: false)!, withName: "conversationId")
             
-            let accepted = [200, 201]
-            
-            if let response = response as? HTTPURLResponse, let data = data , accepted.contains(response.statusCode){
-                do {
-                    let jsonDecoder = DriftAPIManager.jsonDecoder()
-                    let attachmendDTO = try jsonDecoder.decode(AttachmentDTO.self, from: data)
-                    if let attachment = attachmendDTO.mapToObject() {
-                        DispatchQueue.main.async(execute: {
-                              completion(.success(attachment))
-                          })
-                          return
-                    } else {
-                        DispatchQueue.main.async(execute: {
-                            completion(.failure(DriftError.dataSerializationError))
-                        })
-                        return
-                    }
-                    
-                } catch {
-                    print(response.statusCode)
-                    DispatchQueue.main.async(execute: {
-                        completion(.failure(DriftError.apiFailure))
-                    })
-                }
-            }else if let error = error {
-                DispatchQueue.main.async(execute: {
-                    completion(.failure(error))
-                })
-            }else{
-                DispatchQueue.main.async(execute: {
-                    completion(.failure(DriftError.apiFailure))
-                })
-            }
-            
-        }) .resume()
+        }, to: requestURL)
+            .driftResponseDecodable(completionHandler: { (response: DataResponse<AttachmentDTO, AFError>) in
+                completion(mapResponse(response))
+            })
     }
     
     //Maps response to result T using Codable JSON parsing
@@ -345,12 +289,12 @@ fileprivate extension DataRequest {
 
 class URLStore{
     
-    class func postAttachmentURL(_ authToken: String) -> URL? {
-        return URL(string: "https://conversation.api.drift.com/attachments?access_token=\(authToken)")
+    class func postAttachmentURL(_ authToken: String) -> URL {
+        return URL(string: "https://conversation.api.drift.com/attachments?access_token=\(authToken)")!
     }
     
-    class func downloadAttachmentURL(_ attachmentId: Int64, authToken: String) -> URL? {
-        return URL(string: "https://conversation.api.drift.com/attachments/\(attachmentId)/data?")
+    class func downloadAttachmentURL(_ attachmentId: Int64, authToken: String) -> URL {
+        return URL(string: "https://conversation.api.drift.com/attachments/\(attachmentId)/data?")!
     }
     
     class func getAttachmentsURL(_ attachmentIds: [Int64], authToken: String) -> URL? {
@@ -363,10 +307,4 @@ class URLStore{
         return URL(string: "https://conversation.api.drift.com/attachments?access_token=\(authToken)\(params)")
     }
     
-}
-
-///Result object for either Success with sucessfully parsed T
-enum Result<T> {
-    case success(T)
-    case failure(Error)
 }
