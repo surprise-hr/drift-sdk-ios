@@ -18,6 +18,8 @@
 		483E300024040D34000E57AE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 483E2FFE24040D34000E57AE /* LaunchScreen.storyboard */; };
 		487EB4532406AAE500A3E1D8 /* DTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487EB4522406AAE500A3E1D8 /* DTO.swift */; };
 		487EB4552406BEB600A3E1D8 /* AttachmentPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487EB4542406BEB600A3E1D8 /* AttachmentPayload.swift */; };
+		4886F288240D7CC6006B8376 /* CurrentUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4886F287240D7CC6006B8376 /* CurrentUser.swift */; };
+		4886F28A240D7E2C006B8376 /* UserDisplayable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4886F289240D7E2C006B8376 /* UserDisplayable.swift */; };
 		492F77EC1F55A72300A05094 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492F77E71F55A72300A05094 /* Channel.swift */; };
 		492F77ED1F55A72300A05094 /* Presence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492F77E81F55A72300A05094 /* Presence.swift */; };
 		492F77EE1F55A72300A05094 /* Push.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492F77E91F55A72300A05094 /* Push.swift */; };
@@ -133,6 +135,8 @@
 		487EB4522406AAE500A3E1D8 /* DTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DTO.swift; path = Drift/Models/DTO.swift; sourceTree = SOURCE_ROOT; };
 		487EB4542406BEB600A3E1D8 /* AttachmentPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AttachmentPayload.swift; path = Drift/Models/AttachmentPayload.swift; sourceTree = SOURCE_ROOT; };
 		48846240240935EE00D52E21 /* Drift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Drift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4886F287240D7CC6006B8376 /* CurrentUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CurrentUser.swift; path = Drift/Models/CurrentUser.swift; sourceTree = SOURCE_ROOT; };
+		4886F289240D7E2C006B8376 /* UserDisplayable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserDisplayable.swift; path = Drift/Models/UserDisplayable.swift; sourceTree = SOURCE_ROOT; };
 		492F77E71F55A72300A05094 /* Channel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Channel.swift; path = Drift/Birdsong/Channel.swift; sourceTree = SOURCE_ROOT; };
 		492F77E81F55A72300A05094 /* Presence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Presence.swift; path = Drift/Birdsong/Presence.swift; sourceTree = SOURCE_ROOT; };
 		492F77E91F55A72300A05094 /* Push.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Push.swift; path = Drift/Birdsong/Push.swift; sourceTree = SOURCE_ROOT; };
@@ -323,6 +327,7 @@
 				A8E5A4721EF02FAB00113113 /* OpenHours.swift */,
 				6302051B1C52AD7900C02F5E /* Embed.swift */,
 				6302051D1C56739000C02F5E /* User.swift */,
+				4886F287240D7CC6006B8376 /* CurrentUser.swift */,
 				63F95DBE1C5B8676003BCEE0 /* Auth.swift */,
 				A80A64471D4665E500A41A41 /* Conversation.swift */,
 				A80A64491D46671B00A41A41 /* Message.swift */,
@@ -337,6 +342,7 @@
 				633F2B60202B707B00D675B7 /* AppointmentInformation.swift */,
 				487EB4522406AAE500A3E1D8 /* DTO.swift */,
 				487EB4542406BEB600A3E1D8 /* AttachmentPayload.swift */,
+				4886F289240D7E2C006B8376 /* UserDisplayable.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -776,6 +782,7 @@
 				A853871B1D4A8EAE00C1D3C1 /* ConversationViewController.swift in Sources */,
 				A85387161D4A4F5100C1D3C1 /* ConversationListViewController.swift in Sources */,
 				492F77EE1F55A72300A05094 /* Push.swift in Sources */,
+				4886F288240D7CC6006B8376 /* CurrentUser.swift in Sources */,
 				A88682DD1EE982D600E396D8 /* EnrichedConversation.swift in Sources */,
 				6306F4211D6379CC00722D15 /* NewMessageView.swift in Sources */,
 				6302051C1C52AD7900C02F5E /* Embed.swift in Sources */,
@@ -826,6 +833,7 @@
 				6302051E1C56739000C02F5E /* User.swift in Sources */,
 				A8E705791EF2C77900BC1429 /* ReachabilityManager.swift in Sources */,
 				633F2B5F202B60A100D675B7 /* GoogleMeeting.swift in Sources */,
+				4886F28A240D7E2C006B8376 /* UserDisplayable.swift in Sources */,
 				634EC1F52018BA670020DF97 /* ConversationInputAccessoryView.swift in Sources */,
 				635462E51EDF0C0B0012358E /* DriftAPIManager.swift in Sources */,
 			);

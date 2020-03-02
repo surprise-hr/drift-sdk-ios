@@ -128,35 +128,6 @@ class DriftDataStore {
         userId = nil
         userEmail = nil
     }
-    
-    
-    ///Converts string to JSON - Used in loading from cache
-    fileprivate func convertStringToDictionary(_ text: String) -> [String:AnyObject]? {
-        if let data = text.data(using: String.Encoding.utf8) {
-            do {
-                return try JSONSerialization.jsonObject(with: data, options: []) as? [String:AnyObject]
-            } catch let error as NSError {
-                LoggerManager.didRecieveError(error)
-            }
-        }
-        return nil
-    }
-    
-    ///Converst JSON to string for caching in NSUserDefaults
-    fileprivate func convertDictionaryToString(_ json: [String: AnyObject]) -> String? {
-        
-        if JSONSerialization.isValidJSONObject(json) {
-        
-            do {
-                let jsonData = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
-                return String(data: jsonData, encoding: String.Encoding.utf8)
-            } catch let error as NSError {
-                LoggerManager.didRecieveError(error)
-            }
-        }
-        return nil
-    }
-    
 }
 
 extension DriftDataStore{

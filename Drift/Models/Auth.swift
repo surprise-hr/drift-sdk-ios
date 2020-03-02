@@ -9,14 +9,14 @@
 ///Codable for caching
 struct Auth: Codable {
     let accessToken: String
-    let endUser: User?
+    let endUser: CurrentUser?
 }
 
 struct AuthDTO: Codable, DTO {
     typealias DataObject = Auth
         
     var accessToken: String?
-    var endUser: UserDTO?
+    var endUser: CurrentUserDTO?
     
     enum CodingKeys: String, CodingKey {
         case accessToken = "accessToken"
