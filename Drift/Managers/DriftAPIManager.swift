@@ -188,8 +188,15 @@ class DriftAPIManager: Alamofire.Session {
         let url = URLStore.downloadAttachmentURL(attachment.id, authToken: authToken)
         var request = URLRequest(url: url)
         request.setValue("bearer \(authToken)", forHTTPHeaderField: "Authorization")
+               
+        let destination: DownloadRequest.Destination = { _, _ in
+            let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            let fileURL = documentsURL.appendingPathComponent("image.png")
+
+            return (fileURL, [.removePreviousFile, .createIntermediateDirectories])
+        }
         
-        sharedManager.download(request).response { (response) in
+        sharedManager.download(request, to: destination).response { (response) in
             
             if let response = response.response {
                 LoggerManager.log("API Complete: \(response.statusCode) \(response.url?.path ?? "")")
