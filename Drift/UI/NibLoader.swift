@@ -25,13 +25,9 @@ extension UIView {
             name = "\(self)".components(separatedBy: ".").last!
         }
         
-        let bundle = Bundle(for: self)
-
-        let nib = UINib(nibName: name, bundle: bundle)
-//        let nib = UINib(nibName: name, bundle: Bundle.drift_getResourcesBundle())
-        view = nib.instantiate(withOwner: self, options: nil)[0] as? T
+        let nibViews = Bundle.drift_getResourcesBundle()!.loadNibNamed(name, owner: nil, options: nil)
         
-        return view
+        return nibViews?.first as! T
     }
     
 }

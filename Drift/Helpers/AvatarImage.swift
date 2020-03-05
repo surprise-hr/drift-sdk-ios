@@ -56,7 +56,7 @@ class AvatarView: UIView {
                 imageView.backgroundColor = UIColor.clear
                 imageView.isHidden = false
                 
-                let placeholder = UIImage(named: "placeholderAvatar", in: Bundle(for: Drift.self), compatibleWith: nil)
+                let placeholder = UIImage(named: "placeholderAvatar", in: Bundle.drift_getResourcesBundle(), compatibleWith: nil)
                 
                 imageView.af.setImage(withURL: url, placeholderImage: nil, filter: nil, imageTransition: .crossDissolve(0.1), runImageTransitionIfCached: false, completion: { result in
                     
@@ -74,13 +74,13 @@ class AvatarView: UIView {
                 })
             }
         }else{
-            let placeholder = UIImage(named: "placeholderAvatar", in: Bundle(for: Drift.self), compatibleWith: nil)
+            let placeholder = UIImage(named: "placeholderAvatar", in: Bundle.drift_getResourcesBundle(), compatibleWith: nil)
             self.imageView.image = placeholder
         }
     }
     
     func setupForBot(embed: Embed?){
-        imageView.image = UIImage(named: "robot", in: Bundle(for: Drift.self), compatibleWith: nil)
+        imageView.image = UIImage(named: "robot", in: Bundle.drift_getResourcesBundle(), compatibleWith: nil)
         if let backgroundColorString = embed?.backgroundColor {
             let color = UIColor(hexString: "#\(backgroundColorString)")
             imageView.backgroundColor = color
@@ -97,7 +97,7 @@ class AvatarView: UIView {
                 setUpForAvatarURL(avatarUrl: user.avatarURL)
             }
         } else {
-            let placeholder = UIImage(named: "placeholderAvatar", in: Bundle(for: Drift.self), compatibleWith: nil)
+            let placeholder = UIImage(named: "placeholderAvatar", in: Bundle.drift_getResourcesBundle(), compatibleWith: nil)
             self.imageView.image = placeholder
         }
     }

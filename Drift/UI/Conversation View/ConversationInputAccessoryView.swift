@@ -61,14 +61,14 @@ class ConversationInputAccessoryView: UIView {
         let addButton = UIButton()
         addButton.translatesAutoresizingMaskIntoConstraints = false
         addButton.addTarget(self, action: #selector(didPressPlus), for: .touchUpInside)
-        addButton.setImage(UIImage(named: "attachImage", in: Bundle(for: Drift.self), compatibleWith: nil), for: .normal)
+        addButton.setImage(UIImage(named: "attachImage", in: Bundle.drift_getResourcesBundle(), compatibleWith: nil), for: .normal)
         addButton.tintColor = ColorPalette.titleTextColor
         return addButton
     }()
     
     var expandButton: UIButton = {
         let expandButton = UIButton()
-        expandButton.setImage(UIImage(named: "expandButton", in: Bundle(for: Drift.self), compatibleWith: nil), for: .normal)
+        expandButton.setImage(UIImage(named: "expandButton", in: Bundle.drift_getResourcesBundle(), compatibleWith: nil), for: .normal)
         expandButton.translatesAutoresizingMaskIntoConstraints = false
         expandButton.addTarget(self, action: #selector(didPressExpand), for: .touchUpInside)
         expandButton.imageView?.contentMode = .center

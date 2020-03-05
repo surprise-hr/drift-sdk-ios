@@ -7,7 +7,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ConversationListViewController" customModule="Drift" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ConversationListViewController" customModule="Drift">
             <connections>
                 <outlet property="activityIndicator" destination="j3x-ZT-63m" id="tjd-l2-P4S"/>
                 <outlet property="emptyStateButton" destination="MTV-4M-szS" id="R4K-T2-muN"/>

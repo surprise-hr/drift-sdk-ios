@@ -37,10 +37,10 @@ class ConversationListViewController: UIViewController {
         let vc = ConversationListViewController()
         vc.endUserId = endUserId
         let navVC = UINavigationController(rootViewController: vc)
-        let leftButton = UIBarButtonItem(image: UIImage(named: "closeIcon", in: Bundle(for: Drift.self), compatibleWith: nil), style: UIBarButtonItem.Style.plain, target:vc, action: #selector(ConversationListViewController.dismissVC))
+        let leftButton = UIBarButtonItem(image: UIImage(named: "closeIcon", in: Bundle.drift_getResourcesBundle(), compatibleWith: nil), style: UIBarButtonItem.Style.plain, target:vc, action: #selector(ConversationListViewController.dismissVC))
         leftButton.tintColor = DriftDataStore.sharedInstance.generateForegroundColor()
         
-        let rightButton = UIBarButtonItem(image:  UIImage(named: "newChatIcon", in: Bundle(for: Drift.self), compatibleWith: nil), style: UIBarButtonItem.Style.plain, target: vc, action: #selector(ConversationListViewController.startNewConversation))
+        let rightButton = UIBarButtonItem(image:  UIImage(named: "newChatIcon", in: Bundle.drift_getResourcesBundle(), compatibleWith: nil), style: UIBarButtonItem.Style.plain, target: vc, action: #selector(ConversationListViewController.startNewConversation))
         rightButton.tintColor = DriftDataStore.sharedInstance.generateForegroundColor()
         
         navVC.modalPresentationStyle = .fullScreen
@@ -56,7 +56,7 @@ class ConversationListViewController: UIViewController {
     }
     
     convenience init() {
-        self.init(nibName: "ConversationListViewController", bundle: Bundle(for: ConversationListViewController.classForCoder()))
+        self.init(nibName: "ConversationListViewController", bundle: Bundle.drift_getResourcesBundle())
     }
     
     override func viewDidLoad() {
@@ -88,7 +88,7 @@ class ConversationListViewController: UIViewController {
         tableView.estimatedRowHeight = 90
         tableView.separatorColor = ColorPalette.dividerColor
         tableView.separatorInset = .zero
-        tableView.register(UINib(nibName: "ConversationListTableViewCell", bundle:  Bundle(for: ConversationListTableViewCell.classForCoder())), forCellReuseIdentifier: "ConversationListTableViewCell")
+        tableView.register(UINib(nibName: "ConversationListTableViewCell", bundle:  Bundle.drift_getResourcesBundle()), forCellReuseIdentifier: "ConversationListTableViewCell")
         
         let tvc = UITableViewController()
         tvc.tableView = tableView
@@ -206,7 +206,7 @@ extension ConversationListViewController: UITableViewDelegate, UITableViewDataSo
             })
             
         } else {
-            cell.avatarImageView.imageView.image = UIImage(named: "placeholderAvatar", in: Bundle(for: Drift.self), compatibleWith: nil)
+            cell.avatarImageView.imageView.image = UIImage(named: "placeholderAvatar", in: Bundle.drift_getResourcesBundle(), compatibleWith: nil)
             cell.nameLabel.text = "Unknown User"
         }
         

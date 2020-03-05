@@ -11,10 +11,9 @@ Pod::Spec.new do |spec|
   spec.requires_arc = true
   spec.source = { git: "https://github.com/Driftt/drift-sdk-ios.git", tag: "#{spec.version}", submodules: false }
   spec.source_files = "Drift/**/*.{h,swift}"
-  spec.resources = ['Drift/**/*.xib','Drift/**/*.xcassets']
-  # spec.resource_bundles = {
-  #   'DriftResources' => ['Drift/**/*.xib','Drift/**/*.xcassets']
-  # }
+  spec.resource_bundles = {
+    'DriftResources' => ['Drift/**/*.xib','Drift/**/*.xcassets']
+  }
   spec.swift_version = '5.0'
 
   spec.dependency 'Starscream', '3.1.1'

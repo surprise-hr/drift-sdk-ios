@@ -60,7 +60,7 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
         messageTextView.textContainer.lineFragmentPadding = 0
         messageTextView.textContainerInset = UIEdgeInsets.zero
         selectionStyle = .none
-        attachmentsCollectionView.register(UINib.init(nibName: "AttachmentCollectionViewCell", bundle: Bundle(for: AttachmentCollectionViewCell.classForCoder())), forCellWithReuseIdentifier: "AttachmentCollectionViewCell")
+        attachmentsCollectionView.register(UINib.init(nibName: "AttachmentCollectionViewCell", bundle: Bundle.drift_getResourcesBundle()), forCellWithReuseIdentifier: "AttachmentCollectionViewCell")
         attachmentsCollectionView.dataSource = self
         attachmentsCollectionView.delegate = self
         attachmentsCollectionView.backgroundColor = UIColor.clear
@@ -111,7 +111,7 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
         if let offerMeetingUser = message.presentSchedule {
             scheduleMeetingHeightConstraint.constant = 140
             scheduleMeetingBorderView.isHidden = false
-            scheduleMeetingAvatarView.imageView.image = UIImage(named: "placeholderAvatar", in: Bundle(for: Drift.self), compatibleWith: nil)
+            scheduleMeetingAvatarView.imageView.image = UIImage(named: "placeholderAvatar", in: Bundle.drift_getResourcesBundle(), compatibleWith: nil)
             scheduleMeetingLabel.text = "Schedule Meeting"
             
             UserManager.sharedInstance.userMetaDataForUserId(offerMeetingUser, completion: { (user) in
@@ -132,7 +132,7 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
     }
     
     func setStyle(){
-        avatarView.imageView.image = UIImage(named: "placeholderAvatar", in: Bundle(for: Drift.self), compatibleWith: nil)
+        avatarView.imageView.image = UIImage(named: "placeholderAvatar", in: Bundle.drift_getResourcesBundle(), compatibleWith: nil)
         
         if let message = message{
             let textColor: UIColor
@@ -256,7 +256,7 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
             let attachment = attachments.first!
             
             if attachment.isImage(){
-                let placeholder = UIImage(named: "imagePlaceholder", in: Bundle(for: Drift.self), compatibleWith: nil)
+                let placeholder = UIImage(named: "imagePlaceholder", in: Bundle.drift_getResourcesBundle(), compatibleWith: nil)
 
                 self.setupForAttachmentStyle(attachmentStyle: .single)
                 if let urlRequest = attachment.getAttachmentURL(accessToken: DriftDataStore.sharedInstance.auth?.accessToken) {

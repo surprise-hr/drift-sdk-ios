@@ -83,7 +83,7 @@ class ScheduleMeetingViewController: UIViewController {
     var times: [Date] = []
     
     convenience init(userId: Int64, conversationId: Int64, delegate: ScheduleMeetingViewControllerDelegate) {
-        self.init(nibName: "ScheduleMeetingViewController", bundle: Bundle(for: ScheduleMeetingViewController.classForCoder()))
+        self.init(nibName: "ScheduleMeetingViewController", bundle: Bundle.drift_getResourcesBundle())
         self.userId = userId
         self.conversationId = conversationId
         self.delegate = delegate
@@ -134,7 +134,7 @@ class ScheduleMeetingViewController: UIViewController {
             }
         }
         
-        userAvatarView.imageView.image = UIImage(named: "placeholderAvatar", in: Bundle(for: Drift.self), compatibleWith: nil)
+        userAvatarView.imageView.image = UIImage(named: "placeholderAvatar", in: Bundle.drift_getResourcesBundle(), compatibleWith: nil)
         userNameLabel.text = ""
         UserManager.sharedInstance.userMetaDataForUserId(userId, completion: { (user) in
             

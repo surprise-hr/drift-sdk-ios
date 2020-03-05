@@ -104,7 +104,7 @@ class ConversationViewController: UIViewController {
         let vc = ConversationViewController(conversationType: conversationType, initialMessage: initialMessage)
         let navVC = UINavigationController(rootViewController: vc)
         navVC.modalPresentationStyle = .fullScreen
-        let leftButton = UIBarButtonItem(image: UIImage(named: "closeIcon", in: Bundle(for: Drift.self), compatibleWith: nil), style: UIBarButtonItem.Style.plain, target:vc, action: #selector(ConversationViewController.dismissVC))
+        let leftButton = UIBarButtonItem(image: UIImage(named: "closeIcon", in: Bundle.drift_getResourcesBundle(), compatibleWith: nil), style: UIBarButtonItem.Style.plain, target:vc, action: #selector(ConversationViewController.dismissVC))
         leftButton.tintColor = DriftDataStore.sharedInstance.generateForegroundColor()
         vc.navigationItem.leftBarButtonItem  = leftButton
 
@@ -168,9 +168,9 @@ class ConversationViewController: UIViewController {
             conversationInputView.textView.placeholder = "Type your message..."
         }
         
-        tableView.register(UINib(nibName: "ConversationMessageTableViewCell", bundle: Bundle(for: ConversationMessageTableViewCell.classForCoder())), forCellReuseIdentifier: "ConversationMessageTableViewCell")
+        tableView.register(UINib(nibName: "ConversationMessageTableViewCell", bundle: Bundle.drift_getResourcesBundle()), forCellReuseIdentifier: "ConversationMessageTableViewCell")
         
-        tableView.register(UINib(nibName: "MeetingMessageTableViewCell", bundle: Bundle(for: MeetingMessageTableViewCell.classForCoder())), forCellReuseIdentifier: "MeetingMessageTableViewCell")
+        tableView.register(UINib(nibName: "MeetingMessageTableViewCell", bundle: Bundle.drift_getResourcesBundle()), forCellReuseIdentifier: "MeetingMessageTableViewCell")
 
         if let navVC = navigationController {
             navVC.navigationBar.barTintColor = DriftDataStore.sharedInstance.generateBackgroundColor()
@@ -326,7 +326,7 @@ class ConversationViewController: UIViewController {
                 if let welcomeUser = welcomeUser {
                     if welcomeUser.bot {
                         
-                        emptyState.avatarImageView.image = UIImage(named: "robot", in: Bundle(for: Drift.self), compatibleWith: nil)
+                        emptyState.avatarImageView.image = UIImage(named: "robot", in: Bundle.drift_getResourcesBundle(), compatibleWith: nil)
                         emptyState.avatarImageView.backgroundColor = DriftDataStore.sharedInstance.generateBackgroundColor()
                         
                     } else if let avatarURLString = welcomeUser.avatarURL, let avatarURL = URL(string: avatarURLString) {
