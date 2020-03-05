@@ -730,8 +730,10 @@ extension ConversationViewController: ConversationCellDelegate {
                 guard let strongSelf = self else { return }
                 switch result{
                 case .success(let tempFileURL):
-                    if attachment.isImage(){
-                        self?.previewItem = DriftPreviewItem(url: tempFileURL, title: attachment.fileName)
+                    let previewItem = DriftPreviewItem(url: tempFileURL, title: attachment.fileName)
+                    self?.previewItem = previewItem
+
+                    if QLPreviewController.canPreview(previewItem) {
                         self?.qlController.dataSource = self
                         self?.qlController.reloadData()
                         self?.present(strongSelf.qlController, animated: true)
