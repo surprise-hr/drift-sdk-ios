@@ -46,12 +46,8 @@ class SocketManager {
                     case "MESSAGE":
                         let decoder = DriftAPIManager.jsonDecoder()
                         do {
-//                            if let message = Mapper<Message>().map(JSON: data), message.contentType == ContentType.Chat{
-//                                self.didRecieveNewMessage(message: message)
-//                            }
-                            
-                            let messageAsData = try JSONSerialization.data(withJSONObject: data, options: .fragmentsAllowed)
 
+                            let messageAsData = try JSONSerialization.data(withJSONObject: data, options: .fragmentsAllowed)
                             
                             let messageDTO = try decoder.decode(MessageDTO.self, from: messageAsData)
                             if let message = messageDTO.mapToObject(), message.contentType == .Chat {
