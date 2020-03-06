@@ -21,7 +21,7 @@ DriftSDK is the official Drift SDK written in Swift!
 DriftSDK can be added to your project using CocoaPods by adding the following line to your `Podfile`:
 
 ```ruby
-pod 'Drift', '~> 2.3.1'
+pod 'Drift', '~> 2.4.0'
 ```
 
 ## Registering
