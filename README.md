@@ -13,6 +13,7 @@ DriftSDK is the official Drift SDK written in Swift!
 # Requirements:
 - Xcode 11.0+
 - Swift 5+
+- iOS 10
 
 # Getting Setup
 
