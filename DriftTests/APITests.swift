@@ -7,33 +7,30 @@
 //
 
 import XCTest
-import ObjectMapper
 @testable import Drift
 
 
 class APITests: XCTestCase {
+    
+    let decoder = DriftAPIManager.jsonDecoder()
     
     override func setUp() {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
         Drift.logout()
     }
-    
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
-    }
+
     
     func testAuth() {
         
         let testExpectation = expectation(description: "API Will call Auth")
         
-        let embed = Mapper<Embed>().map(JSON: JSONStore.convertStringToDictionary(text: JSONStore.embedJSONCorrect)!)
-
+        let embed = try? decoder.decode(EmbedDTO.self, from: JSONStore.embedJSONCorrect.data(using: .utf8)!).mapToObject()
+        
         XCTAssertNotNil(embed)
         DriftDataStore.sharedInstance.setEmbed(embed!)
         
-        DriftManager.getAuth("eoin+app@8bytes.ie", userId: "123743810") { (success) -> () in
+        DriftManager.getAuth("eoin+app@8bytes.ie", userId: "123743810", userJwt: nil) { (success) -> () in
             testExpectation.fulfill()
         }
         

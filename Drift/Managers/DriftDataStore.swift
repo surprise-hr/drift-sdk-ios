@@ -6,9 +6,6 @@
 //  Copyright © 2016 Drift. All rights reserved.
 //
 
-import UIKit
-import ObjectMapper
-
 ///Datastore for caching Embed and Auth object between app opens
 class DriftDataStore {
 
@@ -58,26 +55,24 @@ class DriftDataStore {
     
     func loadData(){
         let userDefs = UserDefaults.standard
-        
-        if let data = userDefs.string(forKey: DriftDataStore.driftAuthCacheString), let json = convertStringToDictionary(data) {
-            let tempAuth = Auth(JSON: json)
-            if let auth =  tempAuth{
-                self.auth = auth
-            }else{
-                LoggerManager.log("Failed to load auth")
-            }
+        let decoder = DriftAPIManager.jsonDecoder()
+
+        if let jsonString = userDefs.string(forKey: DriftDataStore.driftAuthCacheString),
+            let data = jsonString.data(using: .utf8),
+            let auth = try? decoder.decode(Auth.self, from: data) {
+            self.auth = auth
+        } else {
+            LoggerManager.log("Failed to load auth")
         }
         
-        if let data = userDefs.string(forKey: DriftDataStore.driftEmbedCacheString), let json = convertStringToDictionary(data) {
-            let tempEmbed = Mapper<Embed>().map(JSON: json)
-            
-            if let embed = tempEmbed {
-                self.embed = embed
-            }else{
-                LoggerManager.log("Failed to load embed")
-            }
+        if let jsonString = userDefs.string(forKey: DriftDataStore.driftEmbedCacheString),
+            let data = jsonString.data(using: .utf8),
+            let embed = try? decoder.decode(Embed.self, from: data) {
+            self.embed = embed
+        } else {
+            LoggerManager.log("Failed to load embed")
         }
-        
+                
         if let userId = userDefs.string(forKey: DriftDataStore.driftUserIdCacheString) {
             self.userId = userId
         }
@@ -92,14 +87,19 @@ class DriftDataStore {
     
     func saveData(){
         let userDefs = UserDefaults.standard
-        
-        if let embed = embed, let json = convertDictionaryToString(embed.toJSON() as [String : AnyObject]) {
+        let encoder = JSONEncoder()
+
+        if let embed = embed,
+            let data = try? encoder.encode(embed),
+            let json = String(data: data, encoding: .utf8) {
             userDefs.set(json, forKey: DriftDataStore.driftEmbedCacheString)
-        }else{
+        } else {
             LoggerManager.log("Failed to save embed")
         }
-        
-        if let auth = auth, let json = convertDictionaryToString( auth.toJSON() as [String : AnyObject]) {
+            
+        if let auth = auth,
+            let data = try? encoder.encode(auth),
+            let json = String(data: data, encoding: .utf8) {
             userDefs.set(json, forKey: DriftDataStore.driftAuthCacheString)
         }
         
@@ -128,35 +128,6 @@ class DriftDataStore {
         userId = nil
         userEmail = nil
     }
-    
-    
-    ///Converts string to JSON - Used in loading from cache
-    fileprivate func convertStringToDictionary(_ text: String) -> [String:AnyObject]? {
-        if let data = text.data(using: String.Encoding.utf8) {
-            do {
-                return try JSONSerialization.jsonObject(with: data, options: []) as? [String:AnyObject]
-            } catch let error as NSError {
-                LoggerManager.didRecieveError(error)
-            }
-        }
-        return nil
-    }
-    
-    ///Converst JSON to string for caching in NSUserDefaults
-    fileprivate func convertDictionaryToString(_ json: [String: AnyObject]) -> String? {
-        
-        if JSONSerialization.isValidJSONObject(json) {
-        
-            do {
-                let jsonData = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
-                return String(data: jsonData, encoding: String.Encoding.utf8)
-            } catch let error as NSError {
-                LoggerManager.didRecieveError(error)
-            }
-        }
-        return nil
-    }
-    
 }
 
 extension DriftDataStore{

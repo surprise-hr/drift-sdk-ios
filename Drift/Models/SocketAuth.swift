@@ -6,23 +6,31 @@
 //  Copyright © 2017 Drift. All rights reserved.
 //
 
-import UIKit
-import ObjectMapper
-
-class SocketAuth: Mappable {
-    
-    var sessionToken: String = ""
-    var userId: String = ""
-    var orgId: Int = -1
-    
-    required convenience init?(map: Map) {
-        self.init()
-    }
-    
-    func mapping(map: Map) {
-        userId          <- map["user_id"]
-        sessionToken    <- map["session_token"]
-        orgId           <- map["org_id"]
-    }
-    
+struct SocketAuth {
+    let sessionToken: String
+    let userId: String
+    let orgId: Int
 }
+
+class SocketAuthDTO: Codable, DTO {
+    typealias DataObject = SocketAuth
+    
+    
+    var sessionToken: String?
+    var userId: String?
+    var orgId: Int?
+    
+    
+    func mapToObject() -> SocketAuth? {
+        return SocketAuth(sessionToken: sessionToken ?? "",
+                          userId: userId ?? "",
+                          orgId: orgId ?? -1)
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case userId         = "user_id"
+        case sessionToken   = "session_token"
+        case orgId          = "org_id"
+    }
+}
+

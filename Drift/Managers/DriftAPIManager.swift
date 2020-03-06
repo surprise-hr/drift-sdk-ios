@@ -6,83 +6,96 @@
 //
 
 import Foundation
-import ObjectMapper
 import Alamofire
 
-class DriftAPIManager: Alamofire.SessionManager {
+class DriftAPIManager: Alamofire.Session {
     
     static let sharedManager: DriftAPIManager = {
-        let configuration = URLSessionConfiguration.default
+        let configuration = URLSessionConfiguration.af.default
         if let info = Bundle.main.infoDictionary {
-            let verion = info["CFBundleShortVersionString"] as? String ?? "Unknown"
+            let driftVersion: String = {
+                guard let afInfo = Bundle(for: Drift.self).infoDictionary, let build = afInfo["CFBundleShortVersionString"] as? String else { return "Unknown" }
+                return build
+            }()
+            
             let identifer = info["CFBundleIdentifier"] as? String ?? "Unknown"
             let build = info["CFBundleVersion"] as? String ?? "Unknown"
             let osName = UIDevice.current.systemName
             let osVersion = UIDevice.current.systemVersion
             let alamofireVersion: String = {
-                guard let afInfo = Bundle(for: SessionManager.self).infoDictionary,let build = afInfo["CFBundleShortVersionString"] else { return "Unknown" }
+                guard let afInfo = Bundle(for: Session.self).infoDictionary, let build = afInfo["CFBundleShortVersionString"] as? String else { return "Unknown" }
                 return "Alamofire/\(build)"
             }()
-            
-            let userAgent = "Drift-SDK/\(verion) (\(identifer); build:\(build); \(osName) \(osVersion)) \(alamofireVersion)"
-            var defaultHeaders =  Alamofire.SessionManager.defaultHTTPHeaders
-            defaultHeaders["User-Agent"] = userAgent
-            configuration.httpAdditionalHeaders = defaultHeaders
+            let userAgent = "Drift-SDK/\(driftVersion) (\(identifer); build:\(build); \(osName) \(osVersion)) \(alamofireVersion)"
+            configuration.httpAdditionalHeaders?["User-Agent"] = userAgent
         }
         return DriftAPIManager(configuration: configuration)
     }()
     
-    class func getAuth(_ email: String?, userId: String, userJwt: String?, redirectURL: String, orgId: Int, clientId: String, completion: @escaping (Result<Auth>) -> ()) {
-        sharedManager.request(DriftCustomerRouter.getAuth(email: email, userId: userId, userJwt:userJwt, redirectURL: redirectURL, orgId: orgId, clientId: clientId)).responseJSON(completionHandler: { (response) -> Void in
+    class func jsonDecoder() -> JSONDecoder {
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .millisecondsSince1970
+        return decoder
+    }
+    
+    class func getAuth(_ email: String?, userId: String, userJwt: String?, redirectURL: String, orgId: Int, clientId: String, completion: @escaping (Swift.Result<Auth, Error>) -> ()) {
+        sharedManager.request(DriftCustomerRouter.getAuth(email: email,
+                                                          userId: userId,
+                                                          userJwt:userJwt,
+                                                          redirectURL: redirectURL,
+                                                          orgId: orgId,
+                                                          clientId: clientId)).driftResponseDecodable(completionHandler: { (response: DataResponse<AuthDTO, AFError>) in
+                                                            completion(mapResponse(response))
+                                                          })
+    }
+    
+    class func getSocketAuth(orgId: Int, accessToken: String, completion: @escaping (Swift.Result<SocketAuth, Error>) -> ()) {
+        sharedManager.request(DriftRouter.getSocketData(orgId: orgId,
+                                                        accessToken: accessToken)).driftResponseDecodable(completionHandler: { (response: DataResponse<SocketAuthDTO, AFError>) in
+                                                            completion(mapResponse(response))
+                                                        })
+    }
+
+    class func getEmbeds(_ embedId: String, refreshRate: Int?, completion: @escaping (Swift.Result<Embed, Error>) -> ()){
+        sharedManager.request(DriftRouter.getEmbed(embedId: embedId,
+                                                   refreshRate: refreshRate)).driftResponseDecodable(completionHandler: { (response: DataResponse<EmbedDTO, AFError>) in
+                                                    completion(mapResponse(response))
+                                                   })
+    }
+    
+    class func getUser(_ userId: Int64, orgId: Int, authToken:String, completion: @escaping (Swift.Result<[User], Error>) -> ()) {
+        sharedManager.request(DriftCustomerRouter.getUser(orgId: orgId, userId: userId)).driftResponseDecodable(completionHandler: { (response: DataResponse<[UserDTO], AFError>) in
+            completion(mapResponseArr(response))
+        })
+    }
+    
+    class func getEndUser(_ endUserId: Int64, authToken:String, completion: @escaping (Swift.Result<User, Error>) -> ()){
+        sharedManager.request(DriftCustomerRouter.getEndUser(endUserId: endUserId)).driftResponseDecodable(completionHandler: { (response: DataResponse<UserDTO, AFError>) in
             completion(mapResponse(response))
         })
     }
     
-    class func getSocketAuth(orgId: Int, accessToken: String, completion: @escaping (Result<SocketAuth>) -> ()) {
-        sharedManager.request(DriftRouter.getSocketData(orgId: orgId, accessToken: accessToken)).responseJSON(completionHandler: { (result) -> Void in
-            completion(mapResponse(result))
-        })
-    }
-
-    class func getEmbeds(_ embedId: String, refreshRate: Int?, completion: @escaping (Result<Embed>) -> ()){
-        sharedManager.request(DriftRouter.getEmbed(embedId: embedId, refreshRate: refreshRate)).responseJSON(completionHandler: { (result) -> Void in
-            completion(mapResponse(result))
+    class func getUserAvailability(_ userId: Int64, completion: @escaping (Swift.Result<UserAvailability, Error>) -> ()) {
+        sharedManager.request(DriftCustomerRouter.getUserAvailability(userId: userId)).driftResponseDecodable(completionHandler: { (response: DataResponse<UserAvailabilityDTO, AFError>) in
+            completion(mapResponse(response))
         })
     }
     
-    class func getUser(_ userId: Int64, orgId: Int, authToken:String, completion: @escaping (Result<[User]>) -> ()) {
-        sharedManager.request(DriftCustomerRouter.getUser(orgId: orgId, userId: userId)).responseJSON(completionHandler: { (result) -> Void in
-            completion(mapResponse(result))
-        })
-    }
-    
-    class func getEndUser(_ endUserId: Int64, authToken:String, completion: @escaping (Result<User>) -> ()){
-        sharedManager.request(DriftCustomerRouter.getEndUser(endUserId: endUserId)).responseJSON(completionHandler: { (result) -> Void in
-            completion(mapResponse(result))
-        })
-    }
-    
-    class func getUserAvailability(_ userId: Int64, completion: @escaping (Result<UserAvailability>) -> ()) {
-        sharedManager.request(DriftCustomerRouter.getUserAvailability(userId: userId)).responseJSON(completionHandler: { (result) -> Void in
-            completion(mapResponse(result))
-        })
-    }
-    
-    class func scheduleMeeting(_ userId: Int64, conversationId: Int64, timestamp: Double, completion: @escaping (Result<GoogleMeeting>) -> ()) {
-        sharedManager.request(DriftCustomerRouter.scheduleMeeting(userId: userId, conversationId: conversationId, timestamp: timestamp)).responseJSON(completionHandler: { (result) -> Void in
-            
-            if result.response?.statusCode == 200 {
-                LoggerManager.log("Scheduled Meeting Success: \(String(describing: result.result.value))")
-                completion(mapResponse(result))
+    class func scheduleMeeting(_ userId: Int64, conversationId: Int64, timestamp: Double, completion: @escaping (Swift.Result<GoogleMeeting, Error>) -> ()) {
+        sharedManager.request(DriftCustomerRouter.scheduleMeeting(userId: userId, conversationId: conversationId, timestamp: timestamp)).driftResponseDecodable(completionHandler: { (response: DataResponse<GoogleMeetingDTO, AFError>) in
+          
+            if response.response?.statusCode == 200 {
+                LoggerManager.log("Scheduled Meeting Success: \(String(describing: response.value))")
+                completion(mapResponse(response))
             } else {
-                LoggerManager.log("Scheduled Meeting Failure: \(String(describing: result.result.error))")
+                LoggerManager.log("Scheduled Meeting Failure: \(String(describing: response.response?.statusCode))")
                 completion(.failure(DriftError.apiFailure))
             }
         })
     }
     
     
-    class func postIdentify(_ orgId: Int, userId: String, email: String?, userJwt: String?, attributes: [String: Any]?, completion: @escaping (Result<User>) -> ()) {
+    class func postIdentify(_ orgId: Int, userId: String, email: String?, userJwt: String?, attributes: [String: Any]?, completion: @escaping (Swift.Result<User, Error>) -> ()) {
         var params: [String: Any] = [
             "orgId": orgId,
             "userId": userId,
@@ -98,15 +111,15 @@ class DriftAPIManager: Alamofire.SessionManager {
             params["attributes"] = attributes
         }
         
-        sharedManager.request(DriftRouter.postIdentify(params: params)).responseJSON(completionHandler: { (result) -> Void in
-            completion(mapResponse(result))
+        sharedManager.request(DriftRouter.postIdentify(params: params)).driftResponseDecodable(completionHandler: { (response: DataResponse<UserDTO, AFError>) in
+            completion(mapResponse(response))
         })
     }
     
-    class func markMessageAsRead(messageId: Int64, completion: @escaping (_ result: Result<Bool>) -> ()){
+    class func markMessageAsRead(messageId: Int64, completion: @escaping (_ result: Result<Bool, Error>) -> ()){
         sharedManager.request(DriftConversation2Router.markMessageAsRead(messageId: messageId)).responseString { (result) in
             switch result.result{
-            case .success(_):
+            case .success:
                 completion(.success(true))
             case .failure(let error):
                 completion(.failure(error))
@@ -115,10 +128,10 @@ class DriftAPIManager: Alamofire.SessionManager {
         
     }
     
-    class func markConversationAsRead(messageId: Int64, completion: @escaping (_ result: Result<Bool>) -> ()){
+    class func markConversationAsRead(messageId: Int64, completion: @escaping (_ result: Result<Bool, Error>) -> ()){
         sharedManager.request(DriftConversation2Router.markConversationAsRead(messageId: messageId)).responseString { (result) in
             switch result.result{
-            case .success(_):
+            case .success:
                 completion(.success(true))
             case .failure(let error):
                 completion(.failure(error))
@@ -127,27 +140,27 @@ class DriftAPIManager: Alamofire.SessionManager {
         
     }
         
-    class func getEnrichedConversations(_ endUserId: Int64, completion: @escaping (_ result: Result<[EnrichedConversation]>) -> ()){
-        sharedManager.request(DriftConversationRouter.getEnrichedConversationsForEndUser(endUserId: endUserId)).responseJSON { (result) in
-            completion(mapResponse(result))
-        }
+    class func getEnrichedConversations(_ endUserId: Int64, completion: @escaping (_ result: Swift.Result<[EnrichedConversation], Error>) -> ()){
+        sharedManager.request(DriftConversationRouter.getEnrichedConversationsForEndUser(endUserId: endUserId)).driftResponseDecodable(completionHandler: { (response: DataResponse<[EnrichedConversationDTO], AFError>) in
+            completion(mapResponseArr(response))
+        })
     }
         
-    class func getMessages(_ conversationId: Int64, authToken: String, completion: @escaping (_ result: Result<[Message]>) -> ()){
-        sharedManager.request(DriftConversationRouter.getMessagesForConversation(conversationId: conversationId)).responseJSON(completionHandler: { (result) -> Void in
-            completion(mapResponse(result))
+    class func getMessages(_ conversationId: Int64, authToken: String, completion: @escaping (_ result: Swift.Result<[Message], Error>) -> ()){
+        sharedManager.request(DriftConversationRouter.getMessagesForConversation(conversationId: conversationId)).driftResponseDecodable(completionHandler: { (response: DataResponse<[MessageDTO], AFError>) in
+            completion(mapResponseArr(response))
         })
     }
     
-    class func postMessage(_ conversationId: Int64, messageRequest: MessageRequest, completion: @escaping (_ result: Result<Message>) -> ()){
+    class func postMessage(_ conversationId: Int64, messageRequest: MessageRequest, completion: @escaping (_ result: Swift.Result<Message, Error>) -> ()){
         let json = messageRequest.toJSON()
         
-        sharedManager.request(DriftMessagingRouter.postMessageToConversation(conversationId: conversationId, message: json)).responseJSON(completionHandler: { (result) -> Void in
-            completion(mapResponse(result))
+        sharedManager.request(DriftMessagingRouter.postMessageToConversation(conversationId: conversationId, message: json)).driftResponseDecodable(completionHandler: { (response: DataResponse<MessageDTO, AFError>) in
+            completion(mapResponse(response))
         })
     }
     
-    class func createConversation(_ body: String, welcomeUserId: Int64?, welcomeMessage: String?, authToken: String, completion: @escaping (_ result: Result<Message>) -> ()){
+    class func createConversation(_ body: String, welcomeUserId: Int64?, welcomeMessage: String?, authToken: String, completion: @escaping (_ result: Swift.Result<Message, Error>) -> ()){
         
         var data: [String: Any] = [:]
         
@@ -166,152 +179,129 @@ class DriftAPIManager: Alamofire.SessionManager {
             
         }
         
-        sharedManager.request(DriftMessagingRouter.createConversation(data: data)).responseJSON(completionHandler: { (result) -> Void in
-            completion(mapResponse(result))
+        sharedManager.request(DriftMessagingRouter.createConversation(data: data)).driftResponseDecodable(completionHandler: { (response: DataResponse<MessageDTO, AFError>) in
+            completion(mapResponse(response))
         })
     }
     
-    class func downloadAttachmentFile(_ attachment: Attachment, authToken: String, completion: @escaping (_ result: Result<URL>) -> ()){
-        guard let url = URLStore.downloadAttachmentURL(attachment.id, authToken: authToken) else {
-            LoggerManager.log("Failed in Download Attachment URL Creation")
-            return
-        }
-        
+    class func downloadAttachmentFile(_ attachment: Attachment, authToken: String, completion: @escaping (_ result: Swift.Result<URL, Error>) -> ()){
+        let url = URLStore.downloadAttachmentURL(attachment.id, authToken: authToken)
         var request = URLRequest(url: url)
         request.setValue("bearer \(authToken)", forHTTPHeaderField: "Authorization")
+               
+        let destination: DownloadRequest.Destination = { _, _ in
+            let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            let fileURL = documentsURL.appendingPathComponent("image.png")
+
+            return (fileURL, [.removePreviousFile, .createIntermediateDirectories])
+        }
         
-        sharedManager.session.dataTask(with: request) { (data, response, error) in
-            if let response = response as? HTTPURLResponse {
+        sharedManager.download(request, to: destination).response { (response) in
+            
+            if let response = response.response {
                 LoggerManager.log("API Complete: \(response.statusCode) \(response.url?.path ?? "")")
             }
             
-            if let data = data, let directoryURL = DriftManager.sharedInstance.directoryURL {
-                let fileURL = directoryURL.appendingPathComponent("\(attachment.id)_\(attachment.fileName)")
-                do {
-                    try data.write(to: fileURL, options: .atomicWrite)
-                    completion(.success(fileURL))
-                } catch {
-                    completion(.failure(DriftError.dataCreationFailure))
-                }
-            }else{
-                completion(.failure(DriftError.apiFailure))
+            switch response.result {
+                case .success(let url):
+                    if let fileURL = url {
+                        completion(.success(fileURL))
+                    } else {
+                        completion(.failure(DriftError.dataCreationFailure))
+                    }
+                case .failure(let error):
+                    completion(.failure(error))
             }
-        } .resume()
+        }
     }
     
-    class func getAttachmentsMetaData(_ attachmentIds: [Int64], authToken: String, completion: @escaping (_ result: Result<[Attachment]>) -> ()){
+    class func getAttachmentsMetaData(_ attachmentIds: [Int64], authToken: String, completion: @escaping (_ result: Swift.Result<[Attachment], Error>) -> ()){
         
         guard let url = URLStore.getAttachmentsURL(attachmentIds, authToken: authToken) else {
             LoggerManager.log("Failed in Get Attachment Metadata URL Creation")
             return
         }
         
-        sharedManager.request(URLRequest(url: url)).responseJSON(completionHandler: { (result) in
-            completion(mapResponse(result))
+        sharedManager.request(URLRequest(url: url)).driftResponseDecodable(completionHandler: { (response: DataResponse<[AttachmentDTO], AFError>) in
+            completion(mapResponseArr(response))
         })
     }
     
-    class func postAttachment(_ attachment: Attachment, authToken: String, completion: @escaping (_ result: Result<Attachment>) ->()){
+    class func postAttachment(_ attachment: AttachmentPayload, authToken: String, completion: @escaping (_ result: Result<Attachment, Error>) ->()){
 
-        let boundary = "Boundary-\(UUID().uuidString)"
         let requestURL = URLStore.postAttachmentURL(authToken)
-        
-        let request = NSMutableURLRequest(url: requestURL!)
-        
-        request.httpMethod = "POST"
-        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
-        
-        let multipartBody = NSMutableData()
-        multipartBody.append("--\(boundary)\r\n".data(using: String.Encoding.utf8, allowLossyConversion: false)!)
-        multipartBody.append("Content-Disposition: form-data; name=\"conversationId\"\r\n\r\n".data(using: String.Encoding.utf8, allowLossyConversion: false)!)
-        multipartBody.append("\(attachment.conversationId)\r\n".data(using: String.Encoding.utf8, allowLossyConversion: false)!)
-        
-        multipartBody.append("--\(boundary)\r\n".data(using: String.Encoding.utf8, allowLossyConversion: false)!)
-        multipartBody.append("Content-Disposition: form-data; name=\"file\"; filename=\"image.jpg\"\r\n".data(using: String.Encoding.utf8, allowLossyConversion: false)!)
-        multipartBody.append("Content-Type: \(attachment.mimeType)\r\n\r\n".data(using: String.Encoding.utf8, allowLossyConversion: false)!)
-        multipartBody.append(attachment.data as Data)
-        multipartBody.append("\r\n".data(using: String.Encoding.utf8, allowLossyConversion: false)!)
-        
-        multipartBody.append("--\(boundary)--\r\n".data(using: String.Encoding.utf8, allowLossyConversion: false)!)
-        request.httpBody = multipartBody as Data
-        sharedManager.session.dataTask(with: request as URLRequest, completionHandler: { (data, response, error) in
-            if let response = response as? HTTPURLResponse {
-                LoggerManager.log("API Complete: \(response.statusCode) \(response.url?.path ?? "")")
-            }
+
+        sharedManager.upload(multipartFormData: { multipartFormData in
+            multipartFormData.append(attachment.data, withName: "file", fileName: attachment.fileName, mimeType: attachment.mimeType)
+            multipartFormData.append("\(attachment.conversationId)".data(using: .utf8, allowLossyConversion: false)!, withName: "conversationId")
             
-            let accepted = [200, 201]
-            
-            if let response = response as? HTTPURLResponse, let data = data , accepted.contains(response.statusCode){
-                do {
-                    if let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String : Any] {
-                        if let attachment: Attachment = Mapper<Attachment>().map(JSON: json){
-                            DispatchQueue.main.async(execute: {
-                                completion(.success(attachment))
-                            })
-                            return
-                        }
-                    }
-                } catch {
-                    print(response.statusCode)
-                    DispatchQueue.main.async(execute: {
-                        completion(.failure(DriftError.apiFailure))
-                    })
-                }
-            }else if let error = error {
-                DispatchQueue.main.async(execute: {
-                    completion(.failure(error))
-                })
-            }else{
-                DispatchQueue.main.async(execute: {
-                    completion(.failure(DriftError.apiFailure))
-                })
-            }
-            
-        }) .resume()
+        }, to: requestURL)
+            .driftResponseDecodable(completionHandler: { (response: DataResponse<AttachmentDTO, AFError>) in
+                completion(mapResponse(response))
+            })
     }
     
-    //Maps response to result T using ObjectMapper JSON parsing
-    fileprivate class func mapResponse<T: Mappable>(_ result: DataResponse<Any>) -> Result<T> {
+    //Maps response to result T using Codable JSON parsing
+    fileprivate class func mapResponse<T: DTO>(_ response: DataResponse<T, AFError>) -> Swift.Result<T.DataObject, Error> {
         
-        switch result.result {
-        case .success(let res):
-            if let json = res as? [String : Any] {
-                let response = Mapper<T>().map(JSON: json)     ///If initialisation is done in if let this can result in getting an object back when nil is returned - This is a bug in swift
-                if let response = response {
-                    return .success(response)
-                }
+        switch response.result {
+        case .success(let dto):
+            if let obj = dto.mapToObject() {
+                return .success(obj)
+            } else {
+                return .failure(DriftError.dataSerializationError)
             }
-            fallthrough
-        default:
-            return .failure(DriftError.apiFailure)
+        case .failure(let error):
+            return .failure(error)
         }
     }
     
-    //Maps response to result [T] using ObjectMapper JSON parsing
-    fileprivate class func mapResponse<T: Mappable>(_ result: DataResponse<Any>) -> Result<[T]> {
+    //Maps response array to result T using Codable JSON parsing
+    fileprivate class func mapResponseArr<T: DTO>(_ response: DataResponse<[T], AFError>) -> Swift.Result<[T.DataObject], Error> {
         
-        switch result.result {
-        case .success(let res):
-            if let json = res as? [[String: Any]] {
-                let response: [T] = Mapper<T>().mapArray(JSONArray: json)
-                return .success(response)
+        switch response.result {
+        case .success(let dto):
+            //if dto is empty return empty maping
+            if dto.isEmpty {
+                return .success([])
+            } else {
+                //If dto not empty parse and then if empty return error
+                let objArr = dto.compactMap({$0.mapToObject()})
+                
+                if objArr.isEmpty {
+                    //Parse Error
+                    return .failure(DriftError.dataSerializationError)
+                } else {
+                    return .success(objArr)
+                }
             }
-            fallthrough
-        default:
-            return .failure(DriftError.apiFailure)
+        case .failure(let error):
+            return .failure(error)
         }
     }
-    
+}
+
+fileprivate extension DataRequest {
+
+    @discardableResult
+    func driftResponseDecodable<T: Decodable>(of type: T.Type = T.self,
+                                                queue: DispatchQueue = .main,
+                                                decoder: DataDecoder = DriftAPIManager.jsonDecoder(),
+                                                completionHandler: @escaping (AFDataResponse<T>) -> Void) -> Self {
+        return response(queue: queue,
+                        responseSerializer: DecodableResponseSerializer(decoder: decoder),
+                        completionHandler: completionHandler)
+    }
 }
 
 class URLStore{
     
-    class func postAttachmentURL(_ authToken: String) -> URL? {
-        return URL(string: "https://conversation.api.drift.com/attachments?access_token=\(authToken)")
+    class func postAttachmentURL(_ authToken: String) -> URL {
+        return URL(string: "https://conversation.api.drift.com/attachments?access_token=\(authToken)")!
     }
     
-    class func downloadAttachmentURL(_ attachmentId: Int64, authToken: String) -> URL? {
-        return URL(string: "https://conversation.api.drift.com/attachments/\(attachmentId)/data?")
+    class func downloadAttachmentURL(_ attachmentId: Int64, authToken: String) -> URL {
+        return URL(string: "https://conversation.api.drift.com/attachments/\(attachmentId)/data?")!
     }
     
     class func getAttachmentsURL(_ attachmentIds: [Int64], authToken: String) -> URL? {
@@ -324,10 +314,4 @@ class URLStore{
         return URL(string: "https://conversation.api.drift.com/attachments?access_token=\(authToken)\(params)")
     }
     
-}
-
-///Result object for either Success with sucessfully parsed T
-enum Result<T> {
-    case success(T)
-    case failure(Error)
 }

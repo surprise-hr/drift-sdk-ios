@@ -6,30 +6,41 @@
 //  Copyright © 2018 Drift. All rights reserved.
 //
 
-import UIKit
-import ObjectMapper
-
-class AppointmentInformation: Mappable{
-    
-    required convenience init?(map: Map) {
-        self.init()
-    }
-    
-    var availabilitySlot = Date()
-    var slotDuration = -1
-    var agentId: Int64 = -1
-    var conversationId = -1
-    var endUserTimeZone: String?
-    var agentTimeZone: String?
-    
-    open func mapping(map: Map) {
-        
-        availabilitySlot    <- (map["availabilitySlot"], DriftDateTransformer())
-        slotDuration        <- map["slotDuration"]
-        agentId             <- map["agentId"]
-        conversationId      <- map["conversationId"]
-        endUserTimeZone     <- map["endUserTimeZone"]
-        agentTimeZone       <- map["agentTimeZone"]
-    }
+struct AppointmentInformation{
+    let availabilitySlot: Date
+    let slotDuration: Int
+    let agentId: Int64
+    let conversationId: Int64
+    let endUserTimeZone: String?
+    let agentTimeZone: String?
 }
 
+class AppointmentInformationDTO: Codable, DTO {
+    typealias DataObject = AppointmentInformation
+    
+    var availabilitySlot: Date?
+    var slotDuration: Int?
+    var agentId: Int64?
+    var conversationId: Int64?
+    var endUserTimeZone: String?
+    var agentTimeZone: String?
+        
+    enum CodingKeys: String, CodingKey {
+        case availabilitySlot   = "availabilitySlot"
+        case slotDuration       = "slotDuration"
+        case agentId            = "agentId"
+        case conversationId     = "conversationId"
+        case endUserTimeZone    = "endUserTimeZone"
+        case agentTimeZone      = "agentTimeZone"
+    }
+    
+    func mapToObject() -> AppointmentInformation? {
+        return AppointmentInformation(availabilitySlot: availabilitySlot ?? Date(),
+                                      slotDuration: slotDuration ?? -1,
+                                      agentId: agentId ?? -1,
+                                      conversationId: conversationId ?? -1,
+                                      endUserTimeZone: endUserTimeZone,
+                                      agentTimeZone: agentTimeZone)
+    }
+    
+}

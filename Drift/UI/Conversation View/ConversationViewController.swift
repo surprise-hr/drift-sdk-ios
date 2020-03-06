@@ -8,9 +8,6 @@
 
 import UIKit
 import QuickLook
-import ObjectMapper
-import SVProgressHUD
-
 
 protocol ConversationCellDelegate: class{
     func presentScheduleOfferingForUserId(userId: Int64)
@@ -52,6 +49,26 @@ class ConversationViewController: UIViewController {
         return view
     }()
     
+    var loadingOverlayView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor(white: 0, alpha: 0.3)
+        view.alpha = 0
+        return view
+    }()
+    
+    var activityIndicator: UIActivityIndicatorView = {
+        let style: UIActivityIndicatorView.Style
+        if #available(iOS 13.0, *) {
+            style = .large
+        } else {
+            style = .gray
+        }
+        let activityIndicator = UIActivityIndicatorView(style: style)
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        return activityIndicator
+    }()
+    
     var scheduleMeetingVC: ScheduleMeetingViewController?
     
     private var isFirstLayout: Bool = true
@@ -87,7 +104,7 @@ class ConversationViewController: UIViewController {
         let vc = ConversationViewController(conversationType: conversationType, initialMessage: initialMessage)
         let navVC = UINavigationController(rootViewController: vc)
         navVC.modalPresentationStyle = .fullScreen
-        let leftButton = UIBarButtonItem(image: UIImage(named: "closeIcon", in: Bundle(for: Drift.self), compatibleWith: nil), style: UIBarButtonItem.Style.plain, target:vc, action: #selector(ConversationViewController.dismissVC))
+        let leftButton = UIBarButtonItem(image: UIImage(named: "closeIcon", in: Bundle.drift_getResourcesBundle(), compatibleWith: nil), style: UIBarButtonItem.Style.plain, target:vc, action: #selector(ConversationViewController.dismissVC))
         leftButton.tintColor = DriftDataStore.sharedInstance.generateForegroundColor()
         vc.navigationItem.leftBarButtonItem  = leftButton
 
@@ -123,9 +140,25 @@ class ConversationViewController: UIViewController {
             dimmingView.topAnchor.constraint(equalTo: view.topAnchor),
             dimmingView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
             ])
+        
+        view.addSubview(loadingOverlayView)
+        NSLayoutConstraint.activate([
+            loadingOverlayView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            loadingOverlayView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            loadingOverlayView.topAnchor.constraint(equalTo: view.topAnchor),
+            loadingOverlayView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            ])
+        
+        loadingOverlayView.addSubview(activityIndicator)
+        NSLayoutConstraint.activate([
+            activityIndicator.centerYAnchor.constraint(equalTo: loadingOverlayView.centerYAnchor),
+            activityIndicator.centerXAnchor.constraint(equalTo: loadingOverlayView.centerXAnchor)
+            ])
 
         tableView.backgroundColor = ColorPalette.backgroundColor
         tableView.separatorStyle = .none
+        
+        activityIndicator.color = DriftDataStore.sharedInstance.generateBackgroundColor()
         
         conversationInputView.addButton.isEnabled = false
         conversationInputView.textView.font = UIFont(name: "Avenir-Book", size: 15)
@@ -135,9 +168,9 @@ class ConversationViewController: UIViewController {
             conversationInputView.textView.placeholder = "Type your message..."
         }
         
-        tableView.register(UINib(nibName: "ConversationMessageTableViewCell", bundle: Bundle(for: ConversationMessageTableViewCell.classForCoder())), forCellReuseIdentifier: "ConversationMessageTableViewCell")
+        tableView.register(UINib(nibName: "ConversationMessageTableViewCell", bundle: Bundle.drift_getResourcesBundle()), forCellReuseIdentifier: "ConversationMessageTableViewCell")
         
-        tableView.register(UINib(nibName: "MeetingMessageTableViewCell", bundle: Bundle(for: MeetingMessageTableViewCell.classForCoder())), forCellReuseIdentifier: "MeetingMessageTableViewCell")
+        tableView.register(UINib(nibName: "MeetingMessageTableViewCell", bundle: Bundle.drift_getResourcesBundle()), forCellReuseIdentifier: "MeetingMessageTableViewCell")
 
         if let navVC = navigationController {
             navVC.navigationBar.barTintColor = DriftDataStore.sharedInstance.generateBackgroundColor()
@@ -293,11 +326,11 @@ class ConversationViewController: UIViewController {
                 if let welcomeUser = welcomeUser {
                     if welcomeUser.bot {
                         
-                        emptyState.avatarImageView.image = UIImage(named: "robot", in: Bundle(for: Drift.self), compatibleWith: nil)
+                        emptyState.avatarImageView.image = UIImage(named: "robot", in: Bundle.drift_getResourcesBundle(), compatibleWith: nil)
                         emptyState.avatarImageView.backgroundColor = DriftDataStore.sharedInstance.generateBackgroundColor()
                         
                     } else if let avatarURLString = welcomeUser.avatarURL, let avatarURL = URL(string: avatarURLString) {
-                        emptyState.avatarImageView.af_setImage(withURL: avatarURL)
+                        emptyState.avatarImageView.af.setImage(withURL: avatarURL)
                     }
                 } else {
                     emptyState.avatarImageView.image = nil
@@ -362,10 +395,10 @@ class ConversationViewController: UIViewController {
     }
     
     func getMessages(_ conversationId: Int64){
-        SVProgressHUD.show()
+        showLoader()
         DriftAPIManager.getMessages(conversationId, authToken: DriftDataStore.sharedInstance.auth!.accessToken) { [weak self] (result) in
             switch result{
-            case .success(var messages):
+            case .success(let messages):
                 self?.messages = messages.sortMessagesForConversation()
                 self?.messages.forEach({ $0.formatHTMLBody() })
                 self?.markConversationRead()
@@ -374,7 +407,7 @@ class ConversationViewController: UIViewController {
                 LoggerManager.log("Unable to get messages for conversationId: \(conversationId)")
             }
             //Hide loader after we have parsed HTML and loaded tableview
-            SVProgressHUD.dismiss()
+            self?.hideLoader()
         }
     }
     
@@ -397,7 +430,7 @@ class ConversationViewController: UIViewController {
         case .createConversation:
             createConversationWithMessage(messageRequest)
         case .continueConversation(let conversationId):
-            newMessage(messageRequest.generateFakeMessage(conversationId: conversationId, userId: DriftDataStore.sharedInstance.auth?.enduser?.userId ?? -1))
+            newMessage(messageRequest.generateFakeMessage(conversationId: conversationId, userId: DriftDataStore.sharedInstance.auth?.endUser?.userId ?? -1))
             postMessageToConversation(conversationId, messageRequest: messageRequest)
         }
     }
@@ -424,13 +457,13 @@ class ConversationViewController: UIViewController {
     }
     
     func createConversationWithMessage(_ messageRequest: MessageRequest) {
-        SVProgressHUD.show()
+        showLoader()
         InboxManager.sharedInstance.createConversation(messageRequest, welcomeMessageUser: welcomeUser, welcomeMessage: DriftDataStore.sharedInstance.embed?.getWelcomeMessageForUser()) { [weak self] (message, requestId) in
             if let message = message{
                 self?.conversationType = ConversationType.continueConversation(conversationId: message.conversationId)
                 self?.didOpen()
             }else{
-                SVProgressHUD.dismiss()
+                self?.hideLoader()
                 self?.failedToCreateConversation()
                 self?.conversationInputView.setText(text: messageRequest.body)
             }
@@ -447,6 +480,22 @@ class ConversationViewController: UIViewController {
         present(alert, animated: true)
     }
     
+    func showLoader() {
+        conversationInputView.isUserInteractionEnabled = false
+        activityIndicator.startAnimating()
+        UIView.animate(withDuration: 0.2) { [weak self] in
+            self?.loadingOverlayView.alpha = 1
+        }
+    }
+    
+    func hideLoader() {
+        UIView.animate(withDuration: 0.2, animations: { [weak self] in
+            self?.loadingOverlayView.alpha = 0
+        }) { [weak self] (success) in
+            self?.activityIndicator.stopAnimating()
+            self?.conversationInputView.isUserInteractionEnabled = true
+        }
+    }
 }
 
 extension ConversationViewController: ConversationInputAccessoryViewDelegate {
@@ -591,12 +640,12 @@ extension ConversationViewController : UITableViewDelegate, UITableViewDataSourc
 extension ConversationViewController {
         
     func newMessage(_ message: Message) {
-        if let id = message.id{
-            ConversationsManager.markMessageAsRead(id)
+        if let messageId = message.id {
+            ConversationsManager.markMessageAsRead(messageId)
         }
         message.formatHTMLBody()
         //User created message with appointment information should be allowed through
-        if message.authorId == DriftDataStore.sharedInstance.auth?.enduser?.userId && message.contentType == .Chat && message.appointmentInformation == nil && !message.fakeMessage{
+        if message.authorId == DriftDataStore.sharedInstance.auth?.endUser?.userId && message.contentType == .Chat && message.appointmentInformation == nil && !message.fakeMessage{
             print("Ignoring own message")
             return
         }
@@ -674,32 +723,31 @@ extension ConversationViewController: ConversationCellDelegate {
     }
     
     func attachmentSelected(_ attachment: Attachment, sender: AnyObject) {
-        SVProgressHUD.show()
-        DriftAPIManager.downloadAttachmentFile(attachment, authToken: (DriftDataStore.sharedInstance.auth?.accessToken)!) { (result) in
+        showLoader()
+        DriftAPIManager.downloadAttachmentFile(attachment, authToken: (DriftDataStore.sharedInstance.auth?.accessToken)!) { [weak self] (result) in
             DispatchQueue.main.async {
-                SVProgressHUD.dismiss()
-            }
-            switch result{
-            case .success(let tempFileURL):
-                if attachment.isImage(){
-                    DispatchQueue.main.async {
-                        self.previewItem = DriftPreviewItem(url: tempFileURL, title: attachment.fileName)
-                        self.qlController.dataSource = self
-                        self.qlController.reloadData()
-                        self.present(self.qlController, animated: true, completion:nil)
+                self?.hideLoader()
+                guard let strongSelf = self else { return }
+                switch result{
+                case .success(let tempFileURL):
+                    let previewItem = DriftPreviewItem(url: tempFileURL, title: attachment.fileName)
+                    self?.previewItem = previewItem
+
+                    if QLPreviewController.canPreview(previewItem) {
+                        self?.qlController.dataSource = self
+                        self?.qlController.reloadData()
+                        self?.present(strongSelf.qlController, animated: true)
+                    }else{
+                        self?.interactionController.url = tempFileURL
+                        self?.interactionController.name = attachment.fileName
+                        self?.interactionController.presentOptionsMenu(from: CGRect.zero, in: strongSelf.view, animated: true)
                     }
-                }else{
-                    DispatchQueue.main.async {
-                        self.interactionController.url = tempFileURL
-                        self.interactionController.name = attachment.fileName
-                        self.interactionController.presentOptionsMenu(from: CGRect.zero, in: self.view, animated: true)
-                    }
+                case .failure:
+                    let alert = UIAlertController(title: "Unable to preview file", message: "This file cannot be previewed", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                    self?.present(alert, animated: true)
+                    LoggerManager.log("Unable to preview file with mimeType: \(attachment.mimeType)")
                 }
-            case .failure:
-                let alert = UIAlertController(title: "Unable to preview file", message: "This file cannot be previewed", preferredStyle: UIAlertController.Style.alert)
-                alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
-                LoggerManager.log("Unable to preview file with mimeType: \(attachment.mimeType)")
             }
         }
     }
@@ -737,21 +785,22 @@ extension ConversationViewController: UIDocumentInteractionControllerDelegate{
 extension ConversationViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        picker.dismiss(animated: true, completion: nil)
+        picker.dismiss(animated: true)
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
 
-        picker.dismiss(animated: true, completion: nil)
+        picker.dismiss(animated: true)
 
         if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
-            if let imageRep = image.jpegData(compressionQuality: 0.2){
-                let newAttachment = Attachment()
-                newAttachment.data = imageRep
-                newAttachment.conversationId = conversationId!
-                newAttachment.mimeType = "image/jpeg"
-                newAttachment.fileName = "image.jpg"
-                
+            let normalizedImage = fixOrientation(image)
+
+            if let imageRep = normalizedImage.jpegData(compressionQuality: 0.2){
+                let newAttachment = AttachmentPayload(fileName: "image.jpg",
+                                                      data: imageRep,
+                                                      mimeType: "image/jpeg",
+                                                      conversationId: conversationId!)
+                                
                 DriftAPIManager.postAttachment(newAttachment, authToken: DriftDataStore.sharedInstance.auth!.accessToken) { (result) in
                     switch result{
                     case .success(let attachment):
@@ -760,11 +809,26 @@ extension ConversationViewController: UIImagePickerControllerDelegate, UINavigat
                     case .failure:
                         let alert = UIAlertController(title: "Unable to upload file", message: nil, preferredStyle: UIAlertController.Style.alert)
                         alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
-                        self.present(alert, animated: true, completion: nil)
+                        self.present(alert, animated: true)
                         LoggerManager.log("Unable to upload file with mimeType: \(newAttachment.mimeType)")
                     }
                 }
             }
         }
-    }    
+    }
+    
+    func fixOrientation(_ img: UIImage) -> UIImage {
+        if (img.imageOrientation == .up) {
+            return img
+        }
+        
+        UIGraphicsBeginImageContextWithOptions(img.size, false, img.scale)
+        let rect = CGRect(x: 0, y: 0, width: img.size.width, height: img.size.height)
+        img.draw(in: rect)
+        
+        let normalizedImage = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        
+        return normalizedImage
+    }
 }

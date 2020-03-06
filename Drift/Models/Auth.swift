@@ -6,24 +6,25 @@
 //  Copyright © 2016 Drift. All rights reserved.
 //
 
-import UIKit
-import ObjectMapper
+///Codable for caching
+struct Auth: Codable {
+    let accessToken: String
+    let endUser: CurrentUser?
+}
 
-struct Auth: Mappable {
+struct AuthDTO: Codable, DTO {
+    typealias DataObject = Auth
+        
+    var accessToken: String?
+    var endUser: CurrentUserDTO?
     
-    var accessToken: String!
-    var enduser: User?
-    
-    init?(map: Map) {
-        //These fields are required, without them we fail to init the object
-        if map["accessToken"].currentValue == nil || map["accessToken"].currentValue as? String == ""{
-            return nil
-        }
+    enum CodingKeys: String, CodingKey {
+        case accessToken = "accessToken"
+        case endUser = "endUser"
     }
     
-    mutating func mapping(map: Map) {
-        accessToken <- map["accessToken"]
-        enduser     <- map["endUser"]
+    func mapToObject() -> Auth? {
+        guard let accessTokenDTO = accessToken, !accessTokenDTO.isEmpty else { return nil }
+        return Auth(accessToken: accessTokenDTO, endUser: endUser?.mapToObject())
     }
-    
 }

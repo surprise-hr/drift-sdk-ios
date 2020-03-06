@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ScheduleMeetingViewController" customModule="Drift" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ScheduleMeetingViewController" customModule="Drift">
             <connections>
+                <outlet property="activityIndicator" destination="0iy-6X-iKH" id="lI8-b5-vbq"/>
                 <outlet property="backButton" destination="5vV-Pz-oQ2" id="iCV-GE-uiq"/>
                 <outlet property="blurView" destination="ju4-0A-SrT" id="PYW-Bl-fKY"/>
                 <outlet property="confirmationDateLabel" destination="oYe-Il-0ja" id="Khj-Yv-EUO"/>
@@ -41,8 +42,8 @@
                     </view>
                     <blurEffect style="light"/>
                 </visualEffectView>
-                <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="akz-TA-HjC">
-                    <rect key="frame" x="67" y="269" width="240" height="128"/>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="akz-TA-HjC">
+                    <rect key="frame" x="37.5" y="133.5" width="300" height="400"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7a9-f6-kBR">
@@ -95,7 +96,7 @@
                                 <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="ZsD-Py-er5">
                                     <rect key="frame" x="60" y="50" width="225" height="25"/>
                                     <subviews>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Xgu-Oh-Pxb" customClass="AvatarView" customModule="Drift" customModuleProvider="target">
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Xgu-Oh-Pxb" customClass="AvatarView" customModule="Drift">
                                             <rect key="frame" x="0.0" y="0.0" width="25" height="25"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
@@ -214,6 +215,9 @@
                                 <constraint firstItem="m2d-r3-Wgr" firstAttribute="leading" secondItem="Xa8-6o-eOd" secondAttribute="leading" constant="15" id="yDf-i9-Ldz"/>
                             </constraints>
                         </view>
+                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="0iy-6X-iKH">
+                            <rect key="frame" x="140" y="254" width="20" height="20"/>
+                        </activityIndicatorView>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
@@ -225,7 +229,9 @@
                         <constraint firstItem="jVT-c2-221" firstAttribute="leading" secondItem="7a9-f6-kBR" secondAttribute="leading" id="HBt-QW-qUA"/>
                         <constraint firstAttribute="trailing" secondItem="Q3y-a7-a19" secondAttribute="trailing" id="IJp-xk-au5"/>
                         <constraint firstAttribute="width" constant="300" id="Jsl-Uk-cDJ"/>
+                        <constraint firstItem="0iy-6X-iKH" firstAttribute="centerX" secondItem="Xa8-6o-eOd" secondAttribute="centerX" id="QLm-64-k6i"/>
                         <constraint firstItem="Q3y-a7-a19" firstAttribute="leading" secondItem="7a9-f6-kBR" secondAttribute="leading" id="bwC-Rv-SVI"/>
+                        <constraint firstItem="0iy-6X-iKH" firstAttribute="centerY" secondItem="Xa8-6o-eOd" secondAttribute="centerY" id="dly-Ya-Fjy"/>
                         <constraint firstItem="jVT-c2-221" firstAttribute="top" secondItem="Q3y-a7-a19" secondAttribute="bottom" id="iki-8g-c3c"/>
                         <constraint firstItem="Xa8-6o-eOd" firstAttribute="leading" secondItem="jVT-c2-221" secondAttribute="leading" id="iy9-C1-Ny2"/>
                         <constraint firstAttribute="height" constant="400" id="qnX-9S-pdr"/>

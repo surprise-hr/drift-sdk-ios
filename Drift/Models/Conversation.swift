@@ -6,28 +6,48 @@
 //  Copyright © 2016 Drift. All rights reserved.
 //
 
-import ObjectMapper
 
-enum ConversationStatus: String{
+enum ConversationStatus: String, Codable {
     case Open = "OPEN"
     case Closed = "CLOSED"
     case Pending = "PENDING"
 }
 
-class Conversation: Mappable{
-    var id: Int64!
+struct Conversation {
+    let id: Int64
+    let status: ConversationStatus?
+    let preview: String?
+    let updatedAt: Date
+    let type: String?
+}
+
+class ConversationDTO: DTO, Codable {
+    typealias DataObject = Conversation
+    
+    var id: Int64?
     var status: ConversationStatus?
     var preview: String?
-    var updatedAt = Date()
+    var updatedAt: Date?
+    let type: String?
         
-    required convenience init?(map: Map) {
-        self.init()
+    enum CodingKeys: String, CodingKey {
+        case id         = "id"
+        case preview    = "preview"
+        case updatedAt  = "updatedAt"
+        case status     = "status"
+        case type       = "type"
+    }
+
+    func mapToObject() -> Conversation? {
+        
+        guard let id = id else { return nil }
+        
+        return Conversation(id: id,
+                            status: status,
+                            preview: preview,
+                            updatedAt: updatedAt ?? Date(),
+                            type: type)
     }
     
-    func mapping(map: Map) {
-        id          <- map["id"]
-        preview     <- map["preview"]
-        updatedAt   <- (map["updatedAt"], DriftDateTransformer())
-        status      <- (map["status"], EnumTransform<ConversationStatus>())
-    }
+    
 }

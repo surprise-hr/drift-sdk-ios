@@ -86,7 +86,7 @@ class MeetingMessageTableViewCell: UITableViewCell {
         dateLabel.text = meetingFormatter.dateFormatForMeetings(date: startDate)
         timezoneLabel.text = appointmentInformation.agentTimeZone ?? ""
         
-        scheduleMeetingAvatarView.imageView.image = UIImage(named: "placeholderAvatar", in: Bundle(for: Drift.self), compatibleWith: nil)
+        scheduleMeetingAvatarView.imageView.image = UIImage(named: "placeholderAvatar", in: Bundle.drift_getResourcesBundle(), compatibleWith: nil)
         
         UserManager.sharedInstance.userMetaDataForUserId(appointmentInformation.agentId, completion: { [weak self] (user) in
             

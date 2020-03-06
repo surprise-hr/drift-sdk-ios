@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import SVProgressHUD
 
 protocol ScheduleMeetingViewControllerDelegate: class {
     func didDismissScheduleVC()
@@ -61,6 +60,16 @@ class ScheduleMeetingViewController: UIViewController {
     @IBOutlet var userNameLabel: UILabel!
     @IBOutlet var selectDateLabel: UILabel!
     
+    @IBOutlet var activityIndicator: UIActivityIndicatorView! {
+        didSet {
+            if #available(iOS 13.0, *) {
+                activityIndicator.style = .large
+            } else {
+                activityIndicator.style = .gray
+            }
+            activityIndicator.hidesWhenStopped = true
+        }
+    }
     
     var scheduleMode: ScheduleMode = .day
     var userAvailability: UserAvailability?
@@ -74,7 +83,7 @@ class ScheduleMeetingViewController: UIViewController {
     var times: [Date] = []
     
     convenience init(userId: Int64, conversationId: Int64, delegate: ScheduleMeetingViewControllerDelegate) {
-        self.init(nibName: "ScheduleMeetingViewController", bundle: Bundle(for: ScheduleMeetingViewController.classForCoder()))
+        self.init(nibName: "ScheduleMeetingViewController", bundle: Bundle.drift_getResourcesBundle())
         self.userId = userId
         self.conversationId = conversationId
         self.delegate = delegate
@@ -85,7 +94,8 @@ class ScheduleMeetingViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         blurView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didDismissScheduleVC)))
         
-        
+        activityIndicator.color = DriftDataStore.sharedInstance.generateBackgroundColor()
+
         topHeaderContainerView.backgroundColor = DriftDataStore.sharedInstance.generateBackgroundColor()
         
         containerView.layer.cornerRadius = 6
@@ -111,9 +121,9 @@ class ScheduleMeetingViewController: UIViewController {
     
     func updateForUserId(userId: Int64) {
         self.userId = userId
-        SVProgressHUD.show()
+        activityIndicator.startAnimating()
         DriftAPIManager.getUserAvailability(userId) { [weak self] (result) in
-            SVProgressHUD.dismiss()
+            self?.activityIndicator.stopAnimating()
             switch result {
             case .success(let userAvailability):
                 self?.userAvailability = userAvailability
@@ -124,7 +134,7 @@ class ScheduleMeetingViewController: UIViewController {
             }
         }
         
-        userAvatarView.imageView.image = UIImage(named: "placeholderAvatar", in: Bundle(for: Drift.self), compatibleWith: nil)
+        userAvatarView.imageView.image = UIImage(named: "placeholderAvatar", in: Bundle.drift_getResourcesBundle(), compatibleWith: nil)
         userNameLabel.text = ""
         UserManager.sharedInstance.userMetaDataForUserId(userId, completion: { (user) in
             
@@ -150,8 +160,6 @@ class ScheduleMeetingViewController: UIViewController {
         } else {
             meetingDurationLabel.text = ""
         }
-        
-        
         
     }
     
@@ -181,7 +189,8 @@ class ScheduleMeetingViewController: UIViewController {
             return
         }
         
-        SVProgressHUD.show()
+        activityIndicator.startAnimating()
+        confirmationView.isHidden = true
         DriftAPIManager.scheduleMeeting(userId, conversationId: conversationId, timestamp: date.timeIntervalSince1970*1000) { [weak self] (result) in
             
             switch result {
@@ -197,13 +206,12 @@ class ScheduleMeetingViewController: UIViewController {
         
         let messageRequest = MessageRequest(googleMeeting: googleMeeting, userAvailability: userAvailability, meetingUserId: userId, conversationId: conversationId, timeSlot: slotDate)
         DriftAPIManager.postMessage(conversationId, messageRequest: messageRequest) { [weak self] (result) in
-            SVProgressHUD.dismiss()
+            self?.activityIndicator.stopAnimating()
  
             switch (result) {
             case .success(_):
                 self?.delegate?.didDismissScheduleVC()
             case .failure(_):
-                
                 self?.scheduleMeetingError()
             }
         }
@@ -211,7 +219,8 @@ class ScheduleMeetingViewController: UIViewController {
     
     
     func scheduleMeetingError(){
-        SVProgressHUD.dismiss()
+        activityIndicator.stopAnimating()
+        confirmationView.isHidden = false
         let alert = UIAlertController(title: "Error", message: "Failed to schedule meeting", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Retry", style: .default, handler: { [weak self] (_) in
             self?.schedulePressed()
@@ -221,7 +230,7 @@ class ScheduleMeetingViewController: UIViewController {
     }
     
     func showAPIError(){
-        SVProgressHUD.dismiss()
+        activityIndicator.stopAnimating()
         let alert = UIAlertController(title: "Error", message: "Failed to get calendar information", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
         present(alert, animated: true)

@@ -7,78 +7,82 @@
 //
 
 
-import ObjectMapper
-
-enum ContentType: String{
+enum ContentType: String, Codable{
     case Chat = "CHAT"
     case Annoucement = "ANNOUNCEMENT"
     case Edit = "EDIT"
 }
-enum AuthorType: String{
+enum AuthorType: String, Codable{
     case User = "USER"
     case EndUser = "END_USER"
 }
 
-enum SendStatus: String{
+enum SendStatus: String {
     case Sent = "SENT"
     case Pending = "PENDING"
     case Failed = "FAILED"
 }
 
-
-class Message: Mappable, Equatable {
-    var id: Int64!
-    var uuid: String?
-    var inboxId: Int!
-    var body: String?
-    var attachmentIds: [Int64] = []
+class Message: Equatable {
+    let id: Int64?
+    let uuid: String?
+    let body: String?
+    let attachmentIds: [Int64]
     var attachments: [Attachment] = []
-    var contentType:ContentType = ContentType.Chat
-    var createdAt = Date()
-    var authorId: Int64!
-    var authorType: AuthorType!
+    let contentType: ContentType
+    let createdAt: Date
+    let authorId: Int64
+    let authorType: AuthorType
     
-    var conversationId: Int64!
-    var requestId: Double = 0
+    let conversationId: Int64
     var sendStatus: SendStatus = SendStatus.Sent
     var formattedBody: NSAttributedString?
-    var appointmentInformation: AppointmentInformation?
+    let appointmentInformation: AppointmentInformation?
 
     var presentSchedule: Int64?
-    var scheduleMeetingFlow: Bool = false
-    var offerSchedule: Int64 = -1
+    let scheduleMeetingFlow: Bool
+    let offerSchedule: Int64
     
-    var preMessages: [PreMessage] = []
-    var fakeMessage = false
-    var preMessage = false
+    let preMessages: [PreMessage]
+    let requestId: Double
+    let fakeMessage: Bool
+    let preMessage: Bool
 
-    
-    required convenience init?(map: Map) {
-        if map.JSON["contentType"] as? String == nil || ContentType(rawValue: map.JSON["contentType"] as! String) == nil{
-            return nil
-        }
+    init(id: Int64? = nil,
+        uuid: String?,
+        body: String?,
+        attachmentIds: [Int64] = [],
+        contentType:ContentType,
+        createdAt: Date,
+        authorId: Int64,
+        authorType: AuthorType,
+        conversationId: Int64,
+        appointmentInformation: AppointmentInformation? = nil,
+        presentSchedule: Int64? = nil,
+        scheduleMeetingFlow: Bool = false,
+        offerSchedule: Int64 = -1,
+        preMessages: [PreMessage] = [],
+        requestId: Double = 0,
+        fakeMessage: Bool = false,
+        preMessage: Bool = false) {
         
-        self.init()
-    }
-    
-    func mapping(map: Map) {
-        id                      <- map["id"]
-        uuid                    <- map["uuid"]
-        inboxId                 <- map["inboxId"]
-        body                    <- map["body"]
-            
-        attachmentIds           <- map["attachments"]
-        contentType             <- (map["contentType"], EnumTransform<ContentType>())
-        createdAt               <- (map["createdAt"], DriftDateTransformer())
-        authorId                <- map["authorId"]
-        authorType              <- map["authorType"]
-        conversationId          <- map["conversationId"]
-        appointmentInformation  <- map["attributes.appointmentInfo"]
-        preMessages             <- map["attributes.preMessages"]
-        presentSchedule         <- map["attributes.presentSchedule"]
-        offerSchedule           <- map["attributes.offerSchedule"]
-        scheduleMeetingFlow     <- map["attributes.scheduleMeetingFlow"]
-        
+        self.id = id
+        self.uuid = uuid
+        self.body = body
+        self.attachmentIds = attachmentIds
+        self.contentType = contentType
+        self.createdAt = createdAt
+        self.authorId = authorId
+        self.authorType = authorType
+        self.conversationId = conversationId
+        self.appointmentInformation = appointmentInformation
+        self.presentSchedule = presentSchedule
+        self.scheduleMeetingFlow = scheduleMeetingFlow
+        self.offerSchedule = offerSchedule
+        self.preMessages = preMessages
+        self.requestId = requestId
+        self.fakeMessage = fakeMessage
+        self.preMessage = preMessage
     }
     
     func formatHTMLBody() {
@@ -86,7 +90,75 @@ class Message: Mappable, Equatable {
             formattedBody = TextHelper.attributedTextForString(text: body ?? "")
         }
     }
+}
 
+class MessageDTO: Codable, DTO {
+    typealias DataObject = Message
+    
+    var id: Int64?
+    var uuid: String?
+    var body: String?
+    var attachmentIds: [Int64]?
+    var contentType:ContentType?
+    var createdAt: Date?
+    var authorId: Int64?
+    var authorType: AuthorType?
+    
+    var conversationId: Int64?
+    
+    var attributes: MessageAttributesDTO?
+        
+    func mapToObject() -> Message? {
+        
+        guard let contentType = contentType,
+            let id = id,
+            let authorType = authorType,
+            let conversationId = conversationId else { return nil }
+        
+        return Message(id: id,
+                       uuid: uuid,
+                       body: body,
+                       attachmentIds: attachmentIds ?? [],
+                       contentType: contentType,
+                       createdAt: createdAt ?? Date(),
+                       authorId: authorId ?? -1,
+                       authorType: authorType,
+                       conversationId: conversationId,
+                       appointmentInformation: attributes?.appointmentInformation?.mapToObject(),
+                       presentSchedule: attributes?.presentSchedule,
+                       scheduleMeetingFlow: attributes?.scheduleMeetingFlow ?? false,
+                       offerSchedule: attributes?.offerSchedule ?? -1,
+                       preMessages: attributes?.preMessages?.compactMap({$0.mapToObject()}) ?? [])
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case id             = "id"
+        case uuid           = "uuid"
+        case body           = "body"
+        case attachmentIds  = "attachments"
+        case contentType    = "contentType"
+        case createdAt      = "createdAt"
+        case authorId       = "authorId"
+        case authorType     = "authorType"
+        case conversationId = "conversationId"
+        case attributes     = "attributes"
+    }
+}
+
+class MessageAttributesDTO: Codable{
+    var appointmentInformation: AppointmentInformationDTO?
+    var presentSchedule: Int64?
+    var scheduleMeetingFlow: Bool?
+    var offerSchedule: Int64?
+    var preMessages: [PreMessageDTO]?
+    
+    enum CodingKeys: String, CodingKey {
+        case appointmentInformation     = "appointmentInfo"
+        case presentSchedule            = "presentSchedule"
+        case scheduleMeetingFlow        = "scheduleMeetingFlow"
+        case offerSchedule              = "offerSchedule"
+        case preMessages                = "preMessages"
+    }
 }
 
 extension Array where Iterator.Element == Message
@@ -137,21 +209,19 @@ extension Array where Iterator.Element == Message
         let date = message.createdAt
         var output: [Message] = []
         for (index, preMessage) in preMessages.enumerated() {
-            let fakeMessage = Message()
             
-            fakeMessage.createdAt = date.addingTimeInterval(TimeInterval(-(index + 1)))
-            fakeMessage.conversationId = message.conversationId
-            fakeMessage.body = preMessage.messageBody
-            fakeMessage.fakeMessage = true
-            fakeMessage.preMessage = true
-            fakeMessage.uuid = UUID().uuidString
-            
-            fakeMessage.sendStatus = .Sent
-            fakeMessage.contentType = ContentType.Chat
-            fakeMessage.authorType = AuthorType.User
-            
-            if let sender = preMessage.user {
-                fakeMessage.authorId = sender.userId
+            if let authorId = preMessage.user?.userId {
+                
+                let fakeMessage = Message(uuid: UUID().uuidString,
+                                          body: preMessage.messageBody,
+                                          contentType: .Chat,
+                                          createdAt: date.addingTimeInterval(TimeInterval(-(index + 1))),
+                                          authorId: authorId,
+                                          authorType: .User,
+                                          conversationId: message.conversationId,
+                                          fakeMessage: true,
+                                          preMessage: true)
+                
                 output.append(fakeMessage)
             }
         }

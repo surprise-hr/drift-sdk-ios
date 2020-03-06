@@ -60,7 +60,7 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
         messageTextView.textContainer.lineFragmentPadding = 0
         messageTextView.textContainerInset = UIEdgeInsets.zero
         selectionStyle = .none
-        attachmentsCollectionView.register(UINib.init(nibName: "AttachmentCollectionViewCell", bundle: Bundle(for: AttachmentCollectionViewCell.classForCoder())), forCellWithReuseIdentifier: "AttachmentCollectionViewCell")
+        attachmentsCollectionView.register(UINib.init(nibName: "AttachmentCollectionViewCell", bundle: Bundle.drift_getResourcesBundle()), forCellWithReuseIdentifier: "AttachmentCollectionViewCell")
         attachmentsCollectionView.dataSource = self
         attachmentsCollectionView.delegate = self
         attachmentsCollectionView.backgroundColor = UIColor.clear
@@ -111,7 +111,7 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
         if let offerMeetingUser = message.presentSchedule {
             scheduleMeetingHeightConstraint.constant = 140
             scheduleMeetingBorderView.isHidden = false
-            scheduleMeetingAvatarView.imageView.image = UIImage(named: "placeholderAvatar", in: Bundle(for: Drift.self), compatibleWith: nil)
+            scheduleMeetingAvatarView.imageView.image = UIImage(named: "placeholderAvatar", in: Bundle.drift_getResourcesBundle(), compatibleWith: nil)
             scheduleMeetingLabel.text = "Schedule Meeting"
             
             UserManager.sharedInstance.userMetaDataForUserId(offerMeetingUser, completion: { (user) in
@@ -132,7 +132,7 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
     }
     
     func setStyle(){
-        avatarView.imageView.image = UIImage(named: "placeholderAvatar", in: Bundle(for: Drift.self), compatibleWith: nil)
+        avatarView.imageView.image = UIImage(named: "placeholderAvatar", in: Bundle.drift_getResourcesBundle(), compatibleWith: nil)
         
         if let message = message{
             let textColor: UIColor
@@ -170,9 +170,7 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
                 messageTextView.text = message.body ?? " "
             }
 
-            if let authorId = message.authorId{
-                getUser(authorId)
-            }
+            getUser(message.authorId)
         }
     }
     
@@ -189,7 +187,7 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
             })
             
         }else {
-            if let endUser = DriftDataStore.sharedInstance.auth?.enduser {
+            if let endUser = DriftDataStore.sharedInstance.auth?.endUser {
                 avatarView.setupForUser(user: endUser)
                             
                 if let creatorName = endUser.name {
@@ -238,13 +236,13 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
                     setupForAttachmentStyle(attachmentStyle: .multiple)
                 }
                 
-                DriftAPIManager.getAttachmentsMetaData(message.attachmentIds, authToken: (DriftDataStore.sharedInstance.auth?.accessToken)!, completion: { (result) in
+                DriftAPIManager.getAttachmentsMetaData(message.attachmentIds, authToken: (DriftDataStore.sharedInstance.auth?.accessToken)!, completion: { [weak self] (result) in
                     switch result{
                     case .success(let attachments):
                         message.attachments.append(contentsOf: attachments)
-                        self.displayAttachments(attachments: attachments)
+                        self?.displayAttachments(attachments: attachments)
                     case .failure:
-                        LoggerManager.log("Failed to get attachment metadata for message: \(message.id)")
+                        LoggerManager.log("Failed to get attachment metadata for message: \(message.id ?? -1)")
                     }
                 })
             }
@@ -258,11 +256,11 @@ class ConversationMessageTableViewCell: UITableViewCell, UICollectionViewDelegat
             let attachment = attachments.first!
             
             if attachment.isImage(){
-                let placeholder = UIImage(named: "imagePlaceholder", in: Bundle(for: Drift.self), compatibleWith: nil)
+                let placeholder = UIImage(named: "imagePlaceholder", in: Bundle.drift_getResourcesBundle(), compatibleWith: nil)
 
                 self.setupForAttachmentStyle(attachmentStyle: .single)
                 if let urlRequest = attachment.getAttachmentURL(accessToken: DriftDataStore.sharedInstance.auth?.accessToken) {
-                    self.attachmentImageView.af_setImage(withURLRequest: urlRequest, placeholderImage: placeholder)
+                    self.attachmentImageView.af.setImage(withURLRequest: urlRequest, placeholderImage: placeholder)
                 } else {
                     self.attachmentImageView.image = placeholder
                 }

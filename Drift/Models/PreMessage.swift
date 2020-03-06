@@ -6,22 +6,24 @@
 //  Copyright © 2018 Drift. All rights reserved.
 //
 
-import UIKit
-import ObjectMapper
+struct PreMessage {
+    let messageBody: String
+    let user: User?
+}
 
-class PreMessage: Mappable {
+class PreMessageDTO: Codable, DTO {
+    typealias DataObject = PreMessage
     
-    var messageBody: String = ""
-    var user: User?
-    var userId: Int64?
+    var messageBody: String?
+    var user: UserDTO?
     
-    required init?(map: Map) {
-        
+    func mapToObject() -> PreMessage? {
+        return PreMessage(messageBody: messageBody ?? "",
+                          user: user?.mapToObject())
     }
-    
-    func mapping(map: Map) {
-        messageBody     <- map["body"]
-        user            <- map["sender"]
-        userId          <- map["sender.id"]
+   
+    enum CodingKeys: String, CodingKey {
+        case messageBody = "body"
+        case user        = "sender"
     }
 }
