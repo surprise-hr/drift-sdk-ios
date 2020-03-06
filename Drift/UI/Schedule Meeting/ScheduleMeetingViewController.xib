@@ -96,7 +96,7 @@
                                 <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="ZsD-Py-er5">
                                     <rect key="frame" x="60" y="50" width="225" height="25"/>
                                     <subviews>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Xgu-Oh-Pxb" customClass="AvatarView" customModule="Drift" customModuleProvider="target">
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Xgu-Oh-Pxb" customClass="AvatarView" customModule="Drift">
                                             <rect key="frame" x="0.0" y="0.0" width="25" height="25"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
