@@ -76,13 +76,13 @@ class DriftAPIManager: Alamofire.Session {
     }
     
     class func getUserAvailability(_ userId: Int64, completion: @escaping (Swift.Result<UserAvailability, Error>) -> ()) {
-        sharedManager.request(DriftCustomerRouter.getUserAvailability(userId: userId)).driftResponseDecodable(completionHandler: { (response: DataResponse<UserAvailabilityDTO, AFError>) in
+        sharedManager.request(DriftMeetingRouter.getUserAvailability(userId: userId)).driftResponseDecodable(completionHandler: { (response: DataResponse<UserAvailabilityDTO, AFError>) in
             completion(mapResponse(response))
         })
     }
     
     class func scheduleMeeting(_ userId: Int64, conversationId: Int64, timestamp: Double, completion: @escaping (Swift.Result<GoogleMeeting, Error>) -> ()) {
-        sharedManager.request(DriftCustomerRouter.scheduleMeeting(userId: userId, conversationId: conversationId, timestamp: timestamp)).driftResponseDecodable(completionHandler: { (response: DataResponse<GoogleMeetingDTO, AFError>) in
+        sharedManager.request(DriftMeetingRouter.scheduleMeeting(userId: userId, conversationId: conversationId, timestamp: timestamp)).driftResponseDecodable(completionHandler: { (response: DataResponse<GoogleMeetingDTO, AFError>) in
           
             if response.response?.statusCode == 200 {
                 LoggerManager.log("Scheduled Meeting Success: \(String(describing: response.value))")
