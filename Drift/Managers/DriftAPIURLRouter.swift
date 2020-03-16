@@ -13,6 +13,7 @@ enum APIBase: String {
     case Conversation = "https://conversation.api.drift.com/"
     case Conversation2 = "https://conversation2.api.drift.com/"
     case Messaging = "https://messaging.api.drift.com/"
+    case Meetings = "https://meetings.api.drift.com/"
 }
 
 
@@ -62,8 +63,6 @@ enum DriftCustomerRouter: URLRequestConvertible {
     case getAuth(email: String?, userId: String, userJwt:String?, redirectURL: String, orgId: Int, clientId: String)
     case getUser(orgId: Int, userId: Int64)
     case getEndUser(endUserId: Int64)
-    case getUserAvailability(userId: Int64)
-    case scheduleMeeting(userId: Int64, conversationId: Int64, timestamp: Double)
     
     var request: (method: Alamofire.HTTPMethod, path: String, parameters: [String: Any]?, encoding: ParameterEncoding){
         switch self {
@@ -98,10 +97,6 @@ enum DriftCustomerRouter: URLRequestConvertible {
             return (.get, "organizations/\(orgId)/users", params, URLEncoding.default)
         case .getEndUser(let endUserId):
             return (.get, "end_users/\(endUserId)", nil, URLEncoding.default)
-        case .getUserAvailability(let userId):
-            return (.get, "scheduling/\(userId)/availability", nil, URLEncoding.default)
-        case .scheduleMeeting(let userId, let conversationId, let timestamp):
-            return (.post, "scheduling/\(userId)/schedule", nil, ScheduleEncoding(conversationId: conversationId, timestamp: timestamp))
         }
     }
     
@@ -206,6 +201,37 @@ enum DriftMessagingRouter: URLRequestConvertible {
     func asURLRequest() throws -> URLRequest {
         
         var components = URLComponents(string: APIBase.Messaging.rawValue)
+        if let accessToken = DriftDataStore.sharedInstance.auth?.accessToken{
+            let authItem = URLQueryItem(name: "access_token", value: accessToken)
+            components?.queryItems = [authItem]
+        }
+        var urlRequest = URLRequest(url: (components?.url!.appendingPathComponent(request.path))!)
+        urlRequest.httpMethod = request.method.rawValue
+        let encoding = request.encoding
+        var req = try encoding.encode(urlRequest, with: request.parameters)
+        
+        req.url = URL(string: (req.url?.absoluteString.replacingOccurrences(of: "%5B%5D=", with: "="))!)
+        
+        return req
+    }
+}
+
+enum DriftMeetingRouter: URLRequestConvertible {
+    case getUserAvailability(userId: Int64)
+    case scheduleMeeting(userId: Int64, conversationId: Int64, timestamp: Double)
+    
+    var request: (method: Alamofire.HTTPMethod, path: String, parameters: [String: Any]?, encoding: ParameterEncoding){
+        switch self {
+        case .getUserAvailability(let userId):
+            return (.get, "scheduling/\(userId)/availability", nil, URLEncoding.default)
+        case .scheduleMeeting(let userId, let conversationId, let timestamp):
+            return (.post, "scheduling/\(userId)/schedule", nil, ScheduleEncoding(conversationId: conversationId, timestamp: timestamp))
+        }
+    }
+    
+    func asURLRequest() throws -> URLRequest {
+        
+        var components = URLComponents(string: APIBase.Meetings.rawValue)
         if let accessToken = DriftDataStore.sharedInstance.auth?.accessToken{
             let authItem = URLQueryItem(name: "access_token", value: accessToken)
             components?.queryItems = [authItem]
