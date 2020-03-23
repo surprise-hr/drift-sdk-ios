@@ -1,8 +1,8 @@
 PODS:
-  - Alamofire (5.0.2)
-  - AlamofireImage (4.0.1):
+  - Alamofire (5.0.4)
+  - AlamofireImage (4.0.3):
     - Alamofire (< 6.0.0, >= 5.0.2)
-  - Drift (2.3.1):
+  - Drift (2.4.0):
     - AlamofireImage (~> 4.0)
     - Starscream (= 3.1.1)
   - Starscream (3.1.1)
@@ -23,9 +23,9 @@ EXTERNAL SOURCES:
     :path: "."
 
 SPEC CHECKSUMS:
-  Alamofire: 3ba7a4db18b4f62c4a1c0e1cb39d7f3d52e10ada
-  AlamofireImage: a8a5289046ac46b4d0183bcf73ce12ce30564cb7
-  Drift: c2c7f665c0ef51e22a1243d4bc85073228898e42
+  Alamofire: 0fe5fd24b4298dc377a6550da7d5f1b30e286fcb
+  AlamofireImage: 3d1a2010519e58675318735580eb856e88840ff7
+  Drift: a8e369e5c3caadf9881e2161c56844b24010b268
   Starscream: 4bb2f9942274833f7b4d296a55504dcfc7edb7b0
 
 PODFILE CHECKSUM: 7cd5be47ac4451914767678f2dfb15656815a2f0
