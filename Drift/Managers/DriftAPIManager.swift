@@ -95,7 +95,7 @@ class DriftAPIManager: Alamofire.Session {
     }
     
     
-    class func postIdentify(_ orgId: Int, userId: String, email: String?, userJwt: String?, attributes: [String: Any]?, completion: @escaping (Swift.Result<User, Error>) -> ()) {
+    class func postIdentify(_ orgId: Int, userId: String, email: String?, userJwt: String?, attributes: [String: Any]?, completion: @escaping (Swift.Result<Bool, Error>) -> ()) {
         var params: [String: Any] = [
             "orgId": orgId,
             "userId": userId,
@@ -111,8 +111,13 @@ class DriftAPIManager: Alamofire.Session {
             params["attributes"] = attributes
         }
         
-        sharedManager.request(DriftRouter.postIdentify(params: params)).driftResponseDecodable(completionHandler: { (response: DataResponse<UserDTO, AFError>) in
-            completion(mapResponse(response))
+        sharedManager.request(DriftRouter.postIdentify(params: params)).responseData(completionHandler: { (response) in
+            switch response.result{
+            case .success:
+                completion(.success(true))
+            case .failure(let error):
+                completion(.failure(error))
+            }
         })
     }
     
