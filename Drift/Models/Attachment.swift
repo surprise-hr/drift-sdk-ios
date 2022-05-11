@@ -6,6 +6,7 @@
 //  Copyright © 2016 Drift. All rights reserved.
 //
 
+import Foundation
 import Alamofire
 
 struct Attachment {

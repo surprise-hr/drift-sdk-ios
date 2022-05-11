@@ -6,6 +6,8 @@
 //  Copyright © 2018 Drift. All rights reserved.
 //
 
+import Foundation
+
 struct GoogleMeeting {
     let startTime:Date?
     let endTime:Date?

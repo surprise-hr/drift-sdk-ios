@@ -6,6 +6,8 @@
 //  Copyright © 2018 Drift. All rights reserved.
 //
 
+import Foundation
+
 struct AppointmentInformation{
     let availabilitySlot: Date
     let slotDuration: Int

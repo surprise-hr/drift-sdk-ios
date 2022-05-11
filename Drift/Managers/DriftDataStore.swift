@@ -6,6 +6,8 @@
 //  Copyright © 2016 Drift. All rights reserved.
 //
 
+import UIKit
+
 ///Datastore for caching Embed and Auth object between app opens
 class DriftDataStore {
 

@@ -6,6 +6,8 @@
 //  Copyright © 2016 Drift. All rights reserved.
 //
 
+import UIKit
+
 ///Abstract class for campaigns to subclass
 class CampaignView: UIView {
     

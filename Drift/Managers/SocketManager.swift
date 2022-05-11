@@ -6,6 +6,8 @@
 //  Copyright © 2017 Drift. All rights reserved.
 //
 
+import Foundation
+
 extension Notification.Name {
     static let driftOnNewMessageReceived = Notification.Name("drift-sdk-new-message-received")
     static let driftSocketStatusUpdated = Notification.Name("drift-sdk-socket-status-updated")

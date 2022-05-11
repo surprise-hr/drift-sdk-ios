@@ -6,6 +6,8 @@
 //  Copyright © 2016 Drift. All rights reserved.
 //
 
+import Foundation
+
 enum WidgetStatus: String, Codable{
     case on = "ON"
     case away = "AWAY"

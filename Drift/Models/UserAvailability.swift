@@ -6,6 +6,8 @@
 //  Copyright © 2018 Drift. All rights reserved.
 //
 
+import Foundation
+
 struct UserAvailability {
 
     let duration: Int?

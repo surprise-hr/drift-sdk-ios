@@ -6,6 +6,8 @@
 //  Copyright © 2017 Drift. All rights reserved.
 //
 
+import Foundation
+
 class OpenHours: Codable {
 
     enum Weekday: String {

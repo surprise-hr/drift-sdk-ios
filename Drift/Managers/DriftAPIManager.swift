@@ -5,7 +5,7 @@
 //  Copyright © 2016 Drift. All rights reserved.
 //
 
-import Foundation
+import UIKit
 import Alamofire
 
 class DriftAPIManager: Alamofire.Session {

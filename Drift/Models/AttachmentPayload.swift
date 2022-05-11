@@ -6,6 +6,8 @@
 //  Copyright © 2020 Drift. All rights reserved.
 //
 
+import Foundation
+
 struct AttachmentPayload {
     let fileName: String
     let data: Data
